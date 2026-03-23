@@ -1,0 +1,29 @@
+```java
+public void buildDB(java.io.PrintWriter out, InputStream ddlFile) throws Exception {
+    if (ddlFile == null) {
+        out.println("TradeBuildDB: **** Unable to parse DDL file for the specified database ****</BR></BODY>");
+        return;
+    }
+
+    Object[] sqlBuffer = parseDDLToBuffer(ddlFile);
+    if (sqlBuffer.length == 0) {
+        out.println("TradeBuildDB: **** Parsing DDL file returned empty buffer, please check that a valid DB specific DDL file is available and retry ****</BR></BODY>");
+        return;
+    }
+
+    boolean success = recreateDBTables(sqlBuffer, out);
+
+    if (success) {
+        out.println("TradeBuildDB: **** DayTrader tables successfully created! ****</BR><BR><b> Please Stop and Re-start your Daytrader application (or your application server) and then use the \"Repopulate Daytrader Database\" link to populate your database.</b></BR><BR><BR></BODY>");
+    } else {
+        out.println("TradeBuildDB: **** Failed to create DayTrader tables ****</BR></BODY>");
+    }
+
+    try {
+        resetTrade(false);
+    } catch (Exception e) {
+        Log.error("Failed to reset trade", e);
+        out.println("TradeBuildDB: **** Failed to reset trade ****</BR></BODY>");
+    }
+}
+```

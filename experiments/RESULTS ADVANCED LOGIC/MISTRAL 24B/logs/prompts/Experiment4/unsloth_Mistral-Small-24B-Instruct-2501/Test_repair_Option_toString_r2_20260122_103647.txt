@@ -1,0 +1,172 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): Option_toStringTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.cli;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.apache.commons.cli.DeprecatedAttributes;
+import org.apache.commons.cli.Deprecated;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Option_toStringTestGenerated {
+
+    private Option option;
+
+    @BeforeEach
+    public void setUp() {
+        option = new Option("o", true, "description");
+    }
+
+    @Test
+    public void testToStringWithNoLongOptOrDeprecated() {
+        option.setLongOpt(null);
+        option.setDeprecated(false);
+
+        String result = option.toString();
+        assertEquals("[ Option o  [ARG]  :: description :: null ]", result);
+    }
+
+    @Test
+    public void testToStringWithLongOpt() {
+        option.setLongOpt("long-opt");
+        option.setDeprecated(false);
+
+        String result = option.toString();
+        assertEquals("[ Option o long-opt  [ARG]  :: description :: null ]", result);
+    }
+
+    @Test
+    public void testToStringWithDeprecated() {
+        DeprecatedAttributes deprecated = new DeprecatedAttributes("deprecated message", null, false);
+        option.setDeprecated(deprecated);
+
+        String result = option.toString();
+        assertEquals("[ Option o  [ARG]  :: deprecated message :: null ]", result);
+    }
+
+    @Test
+    public void testToStringWithLongOptAndDeprecated() {
+        option.setLongOpt("long-opt");
+        DeprecatedAttributes deprecated = new DeprecatedAttributes("deprecated message", null, false);
+        option.setDeprecated(deprecated);
+
+        String result = option.toString();
+        assertEquals("[ Option o long-opt  [ARG]  :: deprecated message :: null ]", result);
+    }
+
+    @Test
+    public void testToStringWithArgCountUnlimited() {
+        option.setArgs(Option.UNLIMITED_VALUES);
+        option.setDeprecated(false);
+
+        String result = option.toString();
+        assertEquals("[ Option o  [ARG...]  :: description :: null ]", result);
+    }
+
+    @Test
+    public void testToStringWithNoArgCount() {
+        option.setArgs(0);
+        option.setDeprecated(false);
+
+        String result = option.toString();
+        assertEquals("[ Option o  :: description :: null ]", result);
+    }
+
+    @Test
+    public void testToStringWithDescriptionNull() {
+        option.setDescription(null);
+        option.setDeprecated(false);
+
+        String result = option.toString();
+        assertEquals("[ Option o  [ARG]  :: null :: null ]", result);
+    }
+
+    @Test
+    public void testToStringWithTypeSet() {
+        option.setType(String.class);
+        option.setDeprecated(false);
+
+        String result = option.toString();
+        assertEquals("[ Option o  [ARG]  :: description :: class java.lang.String ]", result);
+    }
+
+    @Test
+    public void testToStringWithNoArgs() {
+        option.setArgs(0);
+        option.setDeprecated(false);
+
+        String result = option.toString();
+        assertEquals("[ Option o  :: description :: null ]", result);
+    }
+
+    @Test
+    public void testToStringWithOptionalArg() {
+        option.setOptionalArg(true);
+        option.setDeprecated(false);
+
+        String result = option.toString();
+        assertEquals("[ Option o  [ARG]  :: description :: null ]", result);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Option_toStringTestGenerated.java:[9] cannot find symbol
+  symbol:   class Deprecated
+  location: package org.apache.commons.cli
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Option_toStringTestGenerated.java:[25] cannot find symbol
+  symbol:   method setDeprecated(boolean)
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Option_toStringTestGenerated.java:[34] cannot find symbol
+  symbol:   method setDeprecated(boolean)
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Option_toStringTestGenerated.java:[42] DeprecatedAttributes(java.lang.String,java.lang.String,boolean) has private access in org.apache.commons.cli.DeprecatedAttributes
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Option_toStringTestGenerated.java:[43] cannot find symbol
+  symbol:   method setDeprecated(org.apache.commons.cli.DeprecatedAttributes)
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Option_toStringTestGenerated.java:[52] DeprecatedAttributes(java.lang.String,java.lang.String,boolean) has private access in org.apache.commons.cli.DeprecatedAttributes
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Option_toStringTestGenerated.java:[53] cannot find symbol
+  symbol:   method setDeprecated(org.apache.commons.cli.DeprecatedAttributes)
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Option_toStringTestGenerated.java:[62] cannot find symbol
+  symbol:   method setDeprecated(boolean)
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Option_toStringTestGenerated.java:[71] cannot find symbol
+  symbol:   method setDeprecated(boolean)
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Option_toStringTestGenerated.java:[80] cannot find symbol
+  symbol:   method setDeprecated(boolean)
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Option_toStringTestGenerated.java:[89] cannot find symbol
+  symbol:   method setDeprecated(boolean)
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Option_toStringTestGenerated.java:[98] cannot find symbol
+  symbol:   method setDeprecated(boolean)
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Option_toStringTestGenerated.java:[107] cannot find symbol
+  symbol:   method setDeprecated(boolean)
+  location: variable option of type org.apache.commons.cli.Option
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: Option_toStringTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

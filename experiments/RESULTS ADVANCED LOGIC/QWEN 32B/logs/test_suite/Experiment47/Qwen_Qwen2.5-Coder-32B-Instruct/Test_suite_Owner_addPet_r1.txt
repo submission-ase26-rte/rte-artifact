@@ -1,0 +1,116 @@
+package org.springframework.samples.petclinic.owner;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Owner_addPetTestGenerated {
+    @Mock
+    private PetType mockPetType;
+    @Mock
+    private Set mockVisits;
+    private Owner owner;
+    private Pet pet;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        owner = new Owner();
+        pet = new Pet();
+        pet.setType(mockPetType);
+        pet.setBirthDate(LocalDate.now());
+        ReflectionTestUtils.setField(pet, "visits", mockVisits);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        owner = null;
+        pet = null;
+    }
+
+    @Test
+    public void testAddPet_NewPet() {
+        pet.setId(null);
+        owner.addPet(pet);
+        assertTrue(owner.getPets().contains(pet));
+    }
+
+    @Test
+    public void testAddPet_ExistingPet() {
+        pet.setId(1);
+        owner.addPet(pet);
+        assertFalse(owner.getPets().contains(pet));
+    }
+
+    @Test
+    public void testAddPet_NullPet() {
+        assertThrows(NullPointerException.class, () -> {
+            owner.addPet(null);
+        });
+    }
+
+    @Test
+    public void testAddPet_NewPetWithSpecificName() {
+        pet.setId(null);
+        pet.setName("Buddy");
+        owner.addPet(pet);
+        assertTrue(owner.getPets().contains(pet));
+        assertEquals("Buddy", owner.getPets().get(0).getName());
+    }
+
+    @Test
+    public void testAddPet_NewPetWithSpecificBirthDate() {
+        pet.setId(null);
+        LocalDate birthDate = LocalDate.of(2020, 5, 15);
+        pet.setBirthDate(birthDate);
+        owner.addPet(pet);
+        assertTrue(owner.getPets().contains(pet));
+        assertEquals(birthDate, owner.getPets().get(0).getBirthDate());
+    }
+
+    @Test
+    public void testAddPet_NewPetWithSpecificType() {
+        pet.setId(null);
+        pet.setType(mockPetType);
+        owner.addPet(pet);
+        assertTrue(owner.getPets().contains(pet));
+        assertEquals(mockPetType, owner.getPets().get(0).getType());
+    }
+
+    @Test
+    public void testAddPet_MultipleNewPets() {
+        pet.setId(null);
+        Pet pet2 = new Pet();
+        pet2.setType(mockPetType);
+        pet2.setBirthDate(LocalDate.now());
+        ReflectionTestUtils.setField(pet2, "visits", mockVisits);
+        pet2.setId(null);
+        owner.addPet(pet);
+        owner.addPet(pet2);
+        assertTrue(owner.getPets().contains(pet));
+        assertTrue(owner.getPets().contains(pet2));
+        assertEquals(2, owner.getPets().size());
+    }
+
+    @Test
+    public void testAddPet_NewPetWithNoVisits() {
+        pet.setId(null);
+        ReflectionTestUtils.setField(pet, "visits", new LinkedHashSet<>());
+        owner.addPet(pet);
+        assertTrue(owner.getPets().contains(pet));
+        assertTrue(owner.getPets().get(0).getVisits().isEmpty());
+    }
+
+}

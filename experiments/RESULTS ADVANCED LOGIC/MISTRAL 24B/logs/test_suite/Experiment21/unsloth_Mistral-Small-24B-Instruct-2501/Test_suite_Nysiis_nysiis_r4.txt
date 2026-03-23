@@ -1,0 +1,162 @@
+package org.apache.commons.codec.language;
+
+import java.util.regex.Pattern;
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.language.SoundexUtils;
+import org.apache.commons.codec.StringEncoder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.function.ThrowingConsumer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.springframework.test.util.ReflectionTestUtils;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Nysiis_nysiisTestGenerated {
+    private Nysiis nysiis;
+    private Nysiis strictNysiis;
+
+    @BeforeEach
+    void setUp() {
+        nysiis = new Nysiis();
+        strictNysiis = new Nysiis(true);
+    }
+
+    @Test
+    void testNysiisNullInput() {
+        assertNull(nysiis.nysiis(null));
+    }
+
+    @Test
+    void testNysiisEmptyString() {
+        assertEquals("", nysiis.nysiis(""));
+    }
+
+    @Test
+    void testNysiisWithLongString() {
+        String longString = "MCCKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKN";
+        assertEquals("MCN", nysiis.nysiis(longString));
+    }
+
+    @Test
+    void testNysiisWithAsterisksString() {
+        String asteriskString = "MCC**KN*";
+        assertEquals("MCN", nysiis.nysiis(asteriskString));
+    }
+
+    @Test
+    void testNysiisWithSpecialCharacters() {
+        String specialString = "MCC!KN@";
+        assertEquals("MCN", nysiis.nysiis(specialString));
+    }
+
+    @Test
+    void testNysiisWithSpaces() {
+        String spaceString = "M C C K N";
+        assertEquals("MCN", nysiis.nysiis(spaceString));
+    }
+
+    @Test
+    void testNysiisWithAsterisk() {
+        String asteriskString = "MCC*KN";
+        assertEquals("MCN", nysiis.nysiis(asteriskString));
+    }
+
+    @Test
+    void testNysiisWithRemainingCharacters() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            ReflectionTestUtils.setField(nysiis, "transcodeRemaining", null);
+            assertArrayEquals(new char[]{'A'}, (char[]) ReflectionTestUtils.getField(nysiis, "transcodeRemaining"));
+        });
+    }
+
+    @Test
+    void testNysiisLastCharacterS() {
+        assertEquals("MC", nysiis.nysiis("MCCS"));
+    }
+
+    @Test
+    void testNysiisLastCharacterAY() {
+        assertEquals("MY", nysiis.nysiis("MAY"));
+    }
+
+    @Test
+    void testNysiisLastCharacterA() {
+        assertEquals("M", nysiis.nysiis("MA"));
+    }
+
+    @Test
+    void testNysiisStrictModeLength() {
+        assertEquals("MC", strictNysiis.nysiis("MCCCCCCCCCCCCCC"));
+    }
+
+    @Test
+    void testNysiisBasicCase() {
+        assertEquals("S", nysiis.nysiis("SCH"));
+        assertEquals("Y", nysiis.nysiis("EE"));
+        assertEquals("Y", nysiis.nysiis("IE"));
+        assertEquals("D", nysiis.nysiis("DT"));
+        assertEquals("D", nysiis.nysiis("RT"));
+        assertEquals("D", nysiis.nysiis("RD"));
+        assertEquals("D", nysiis.nysiis("NT"));
+        assertEquals("D", nysiis.nysiis("ND"));
+    }
+
+    @Test
+    void testNysiisWithStrictModeAndLongString() {
+        String longString = "MCCKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKN";
+        assertEquals("MCN", strictNysiis.nysiis(longString));
+    }
+
+    @Test
+    void testNysiisWithStrictModeAndAsterisksString() {
+        String asteriskString = "MCC**KN*";
+        assertEquals("MCN", strictNysiis.nysiis(asteriskString));
+    }
+
+    @Test
+    void testNysiisWithStrictModeAndAsterisk() {
+        String asteriskString = "MCC*KN";
+        assertEquals("MCN", strictNysiis.nysiis(asteriskString));
+    }
+
+    @Test
+    void testNysiisWithStrictModeAndSpecialCharacters() {
+        String specialString = "MCC!KN@";
+        assertEquals("MCN", strictNysiis.nysiis(specialString));
+    }
+
+    @Test
+    void testNysiisWithStrictModeAndSpaces() {
+        String spaceString = "M C C K N";
+        assertEquals("MCN", strictNysiis.nysiis(spaceString));
+    }
+
+    @Test
+    void testNysiisTranscodeRemaining() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            ReflectionTestUtils.setField(nysiis, "transcodeRemaining", null);
+        });
+    }
+
+    @Test
+    void testNysiisStrictMode() {
+        assertEquals("M", strictNysiis.nysiis("M"));
+        assertEquals("M", strictNysiis.nysiis("MA"));
+        assertEquals("M", strictNysiis.nysiis("MAIN"));
+        assertEquals("MAN", strictNysiis.nysiis("MAN"));
+        assertEquals("MAN", strictNysiis.nysiis("MANN"));
+        assertEquals("MAN", strictNysiis.nysiis("MANNY"));
+    }
+
+    @Test
+    void testNysiisComplexCase() {
+        assertEquals("M", nysiis.nysiis("M"));
+        assertEquals("M", nysiis.nysiis("MA"));
+        assertEquals("M", nysiis.nysiis("MAIN"));
+        assertEquals("MAN", nysiis.nysiis("MAN"));
+        assertEquals("MAN", nysiis.nysiis("MANN"));
+        assertEquals("MAN", nysiis.nysiis("MANNY"));
+    }
+
+}

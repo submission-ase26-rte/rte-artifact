@@ -1,0 +1,353 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.codec.language;
+
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.StringEncoder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Caverphone2_encodeTestGenerated {
+    private final StringEncoder caverphone2 = new Caverphone2();
+    private static final String TEN_1 = "1111111111";
+
+    @Test
+    void testEncodeWithEmptyString() throws EncoderException {
+        assertEquals("AAAAAAAAAAA", caverphone2.encode(""));
+    }
+
+    @Test
+    void testEncodeWithNullString() throws EncoderException {
+        assertEquals("AAAAAAAAAAA", caverphone2.encode(null));
+    }
+
+    @Test
+    void testEncodeWithWhitespaceOnly() throws EncoderException {
+        assertEquals("AAAAAAAAAAA", caverphone2.encode("   \t\n"));
+    }
+
+    @Test
+    void testEncodeWithSimpleWord() throws EncoderException {
+        assertEquals("AK100000000", caverphone2.encode("cat"));
+    }
+
+    @Test
+    void testEncodeWithFinalE() throws EncoderException {
+        assertEquals("AK100000000", caverphone2.encode("cate"));
+    }
+
+    @Test
+    void testEncodeWithStartingCough() throws EncoderException {
+        assertEquals("KU2F1000000", caverphone2.encode("cough"));
+    }
+
+    @Test
+    void testEncodeWithStartingRough() throws EncoderException {
+        assertEquals("RU2F1000000", caverphone2.encode("rough"));
+    }
+
+    @Test
+    void testEncodeWithStartingTough() throws EncoderException {
+        assertEquals("TU2F1000000", caverphone2.encode("tough"));
+    }
+
+    @Test
+    void testEncodeWithStartingEnough() throws EncoderException {
+        assertEquals("ENOU2F10000", caverphone2.encode("enough"));
+    }
+
+    @Test
+    void testEncodeWithStartingTrough() throws EncoderException {
+        assertEquals("TROU2F10000", caverphone2.encode("trough"));
+    }
+
+    @Test
+    void testEncodeWithStartingGn() throws EncoderException {
+        assertEquals("2NK1000000", caverphone2.encode("gnome"));
+    }
+
+    @Test
+    void testEncodeWithFinalMb() throws EncoderException {
+        assertEquals("TAM2000000", caverphone2.encode("tomb"));
+    }
+
+    @Test
+    void testEncodeWithMultipleReplacements() throws EncoderException {
+        assertEquals("KI10000000", caverphone2.encode("quick"));
+    }
+
+    @Test
+    void testEncodeWithVowels() throws EncoderException {
+        assertEquals("A3A1000000", caverphone2.encode("eat"));
+    }
+
+    @Test
+    void testEncodeWithSpecialCharacters() throws EncoderException {
+        assertEquals("AK100000000", caverphone2.encode("cat!@#"));
+    }
+
+    @Test
+    void testEncodeWithLongString() throws EncoderException {
+        StringBuilder longStr = new StringBuilder("a");
+        for (int i = 0; i < 100; i++) {
+            longStr.append("a");
+        }
+        assertEquals("A100000000", caverphone2.encode(longStr.toString()));
+    }
+
+    @Test
+    void testEncodeWithOnlyVowels() throws EncoderException {
+        assertEquals("A3A1000000", caverphone2.encode("aeiou"));
+    }
+
+    @Test
+    void testEncodeWithMixedCases() throws EncoderException {
+        assertEquals("AK100000000", caverphone2.encode("CaT"));
+    }
+
+    @Test
+    void testEncodeWithWh3() throws EncoderException {
+        assertEquals("WH31000000", caverphone2.encode("when"));
+    }
+
+    @Test
+    void testEncodeWithR3() throws EncoderException {
+        assertEquals("R310000000", caverphone2.encode("right"));
+    }
+
+    @Test
+    void testEncodeWithL3() throws EncoderException {
+        assertEquals("L310000000", caverphone2.encode("light"));
+    }
+
+    @Test
+    void testEncodeWithFinalW() throws EncoderException {
+        assertEquals("K310000000", caverphone2.encode("cow"));
+    }
+
+    @Test
+    void testEncodeWithFinalR() throws EncoderException {
+        assertEquals("T310000000", caverphone2.encode("car"));
+    }
+
+    @Test
+    void testEncodeWithFinalL() throws EncoderException {
+        assertEquals("T310000000", caverphone2.encode("cal"));
+    }
+
+    @Test
+    void testEncodeWithMultipleConsonants() throws EncoderException {
+        assertEquals("SS10000000", caverphone2.encode("Mississippi"));
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 100.00%
+- Tests: 0/25 passed
+
+TEST STATUS:
+- PASSED (0): none
+- FAILED (25): testEncodeWithEmptyString, testEncodeWithNullString, testEncodeWithWhitespaceOnly, testEncodeWithSimpleWord, testEncodeWithFinalE, testEncodeWithStartingCough, testEncodeWithStartingRough, testEncodeWithStartingTough, testEncodeWithStartingEnough, testEncodeWithStartingTrough, testEncodeWithStartingGn, testEncodeWithFinalMb, testEncodeWithMultipleReplacements, testEncodeWithVowels, testEncodeWithSpecialCharacters, testEncodeWithLongString, testEncodeWithOnlyVowels, testEncodeWithMixedCases, testEncodeWithWh3, testEncodeWithR3, testEncodeWithL3, testEncodeWithFinalW, testEncodeWithFinalR, testEncodeWithFinalL, testEncodeWithMultipleConsonants
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PREVIOUSLY GENERATED METHOD:
+public String encode(final String source) {
+    if (SoundexUtils.isEmpty(source)) {
+        return TEN_1;
+    }
+
+    String input = source.toUpperCase();
+    StringBuilder cleaned = new StringBuilder();
+
+    // Remove non-alphabetic characters
+    for (int i = 0; i < input.length(); i++) {
+        char c = input.charAt(i);
+        if (Character.isLetter(c)) {
+            cleaned.append(c);
+        }
+    }
+
+    if (cleaned.length() == 0) {
+        return TEN_1;
+    }
+
+    StringBuilder encoded = new StringBuilder();
+
+    // Handle initial 'GN'
+    if (cleaned.length() > 1 && cleaned.charAt(0) == 'G' && cleaned.charAt(1) == 'N') {
+        encoded.append('2');
+        cleaned.deleteCharAt(0);
+        cleaned.deleteCharAt(0);
+    }
+
+    // Handle initial 'K' followed by 'W'
+    if (cleaned.length() > 1 && cleaned.charAt(0) == 'K' && cleaned.charAt(1) == 'W') {
+        encoded.append('K');
+        encoded.append('W');
+        cleaned.deleteCharAt(0);
+        cleaned.deleteCharAt(0);
+    }
+
+    // Handle initial 'WH'
+    if (cleaned.length() > 1 && cleaned.charAt(0) == 'W' && cleaned.charAt(1) == 'H') {
+        encoded.append('W');
+        encoded.append('H');
+        cleaned.deleteCharAt(0);
+        cleaned.deleteCharAt(0);
+    }
+
+    // Handle initial 'X'
+    if (cleaned.length() > 0 && cleaned.charAt(0) == 'X') {
+        encoded.append('S');
+        cleaned.deleteCharAt(0);
+    }
+
+    // Process remaining characters
+    for (int i = 0; i < cleaned.length(); i++) {
+        char c = cleaned.charAt(i);
+
+        // Handle consonants
+        if (c == 'B' || c == 'C' || c == 'D' || c == 'F' || c == 'G' ||
+            c == 'H' || c == 'J' || c == 'K' || c == 'L' || c == 'M' ||
+            c == 'N' || c == 'P' || c == 'Q' || c == 'R' || c == 'S' ||
+            c == 'T' || c == 'V' || c == 'W' || c == 'X' || c == 'Y' || c == 'Z') {
+
+            // Handle 'C' followed by 'H'
+            if (i < cleaned.length() - 1 && c == 'C' && cleaned.charAt(i + 1) == 'H') {
+                encoded.append('K');
+                i++;
+                continue;
+            }
+
+            // Handle 'C' followed by 'K'
+            if (i < cleaned.length() - 1 && c == 'C' && cleaned.charAt(i + 1) == 'K') {
+                encoded.append('K');
+                i++;
+                continue;
+            }
+
+            // Handle 'D' followed by 'G'
+            if (i < cleaned.length() - 1 && c == 'D' && cleaned.charAt(i + 1) == 'G') {
+                encoded.append('J');
+                i++;
+                continue;
+            }
+
+            // Handle 'N' followed by 'G'
+            if (i < cleaned.length() - 1 && c == 'N' && cleaned.charAt(i + 1) == 'G') {
+                encoded.append('N');
+                i++;
+                continue;
+            }
+
+            // Handle 'S' followed by 'H'
+            if (i < cleaned.length() - 1 && c == 'S' && cleaned.charAt(i + 1) == 'H') {
+                encoded.append('S');
+                encoded.append('K');
+                i++;
+                continue;
+            }
+
+            // Handle 'T' followed by 'H'
+            if (i < cleaned.length() - 1 && c == 'T' && cleaned.charAt(i + 1) == 'H') {
+                encoded.append('T');
+                i++;
+                continue;
+            }
+
+            // Handle 'W' followed by 'H'
+            if (i < cleaned.length() - 1 && c == 'W' && cleaned.charAt(i + 1) == 'H') {
+                encoded.append('F');
+                i++;
+                continue;
+            }
+
+            // Default consonant handling
+            encoded.append(c);
+        }
+
+        // Handle vowels
+        if (c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') {
+            encoded.append(c);
+        }
+    }
+
+    // Handle final 'H', 'W', or 'Y'
+    if (encoded.length() > 0 && (encoded.charAt(encoded.length() - 1) == 'H' ||
+                                encoded.charAt(encoded.length() - 1) == 'W' ||
+                                encoded.charAt(encoded.length() - 1) == 'Y')) {
+        encoded.setCharAt(encoded.length() - 1, 'A');
+    }
+
+    // Pad with zeros to make length 10
+    while (encoded.length() < 10) {
+        encoded.append('0');
+    }
+
+    return encoded.substring(0, 10);
+}
+
+ADDITIONAL INSTRUCTIONS:
+- Compare the previous method with the one you are about to generate
+- Improve quality and correctness compared to the previous version
+- Maintain compatibility with all provided tests
+
+
+PROJECT CONTEXT:
+// === Class: Caverphone2 ===
+// Fields (with actual visibility):
+    private static final String TEN_1;
+
+// === External Class: SoundexUtils ===
+// Import paths:
+//   EncoderException -> org.apache.commons.codec.EncoderException
+//   StringEncoder -> org.apache.commons.codec.StringEncoder
+// Method Signatures (used by target method):
+static boolean isEmpty(final CharSequence cs);
+
+
+TASK:
+Regenerate ONLY the method "encode" OF CLASS "Caverphone2" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public String encode(final String source) {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.codec.language
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in Caverphone2
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

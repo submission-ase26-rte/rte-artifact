@@ -1,0 +1,135 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.ejb3;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Collection;
+
+import javax.persistence.EntityManager;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoJUnit5Extension;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import javax.ejb.EJBException;
+
+@ExtendWith(MockitoJUnit5Extension.class)
+public class TradeSLSBBean_completeOrderTestGenerated {
+
+    @Mock
+    private EntityManager entityManager;
+
+    private TradeSLSBBean tradeSLSBBean;
+
+    @BeforeEach
+    public void setUp() {
+        tradeSLSBBean = new TradeSLSBBean(entityManager);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.resetMocks();
+    }
+
+    @Test
+    public void testCompleteOrderBuy() throws Exception {
+        OrderDataBean order = createMockOrderDataBean(true);
+        AccountDataBean account = createMockAccountDataBean();
+        QuoteDataBean quote = createMockQuoteDataBean();
+        HoldingDataBean holding = createMockHoldingDataBean();
+
+        order.setAccount(account);
+        order.setQuote(quote);
+        order.setHolding(holding);
+
+        when(entityManager.find(OrderDataBean.class, order.getOrderID())).thenReturn(order);
+        when(entityManager.remove(holding)).thenReturn(null);
+
+        OrderDataBean completedOrder = tradeSLSBBean.completeOrder(order.getOrderID(), false);
+
+        assertEquals(completedOrder.getOrderStatus(), "closed");
+    }
+
+    @Test
+    public void testCompleteOrderSell() throws Exception {
+        OrderDataBean order = createMockOrderDataBean(false);
+        AccountDataBean account = createMockAccountDataBean();
+        QuoteDataBean quote = createMockQuoteDataBean();
+        HoldingDataBean holding = createMockHoldingDataBean();
+
+        order.setAccount(account);
+        order.setQuote(quote);
+        order.setHolding(holding);
+
+        when(entityManager.find(OrderDataBean.class, order.getOrderID())).thenReturn(order);
+        when(entityManager.remove(holding)).thenReturn(null);
+
+        OrderDataBean completedOrder = tradeSLSBBean.completeOrder(order.getOrderID(), false);
+
+        assertEquals(completedOrder.getOrderStatus(), "closed");
+    }
+
+    @Test
+    public void testCompleteOrderNullOrder() throws Exception {
+        when(entityManager.find(OrderDataBean.class, 1)).thenReturn(null);
+
+        assertThrows(EJBException.class, () -> {
+            tradeSLSBBean.completeOrder(1, false);
+        });
+    }
+
+    @Test
+    public void testCompleteOrderAlreadyCompleted() throws Exception {
+        OrderDataBean order = createMockOrderDataBean(true);
+        order.setOrderStatus("completed");
+        when(entityManager.find(OrderDataBean.class, order.getOrderID())).thenReturn(order);
+
+        assertThrows(EJBException.class, () -> {
+            tradeSLSBBean.completeOrder(order.getOrderID(), false);
+        });
+    }
+
+    private OrderDataBean createMockOrderDataBean(boolean isBuy) {
+        OrderDataBean order = new OrderDataBean();
+        order.setOrderID(1);
+        order.setBuy(isBuy);
+        order.setQuantity(10);
+        order.setPrice(BigDecimal.valueOf(10.0));
+        order.setOrderStatus("pending");
+        return order;
+    }
+
+    private AccountDataBean createMockAccountDataBean() {
+        AccountDataBean account = new AccountDataBean();
+        account.setUserID("testUser");
+        return account;
+    }
+
+    private QuoteDataBean createMockQuoteDataBean() {
+        QuoteDataBean quote = new QuoteDataBean("IBM", "IBM", 100, BigDecimal.valueOf(10.0), BigDecimal.valueOf(9.5), BigDecimal.valueOf(9.0), BigDecimal.valueOf(10.5), 0.5);
+        return quote;
+    }
+
+    private HoldingDataBean createMockHoldingDataBean() {
+        HoldingDataBean holding = new HoldingDataBean();
+        holding.setHoldingID(1);
+        return holding;
+    }
+}
+```

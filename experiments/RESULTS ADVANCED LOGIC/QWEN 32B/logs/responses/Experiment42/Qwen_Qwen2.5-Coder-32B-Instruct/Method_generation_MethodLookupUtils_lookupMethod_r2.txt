@@ -1,0 +1,27 @@
+```java
+public static Method lookupMethod(Class targetClass, final String name, final Object[] parameters) {
+    if (parameters == null || parameters.length == 0) {
+        return null;
+    }
+
+    Method[] methods = targetClass.getMethods();
+    Method bestMatch = null;
+    int bestMatchType = NO_MATCH;
+
+    for (Method method : methods) {
+        if (method.getName().equals(name)) {
+            int matchType = matchParameterTypes(method.getParameterTypes(), parameters);
+            if (matchType != NO_MATCH) {
+                if (bestMatch == null || matchType > bestMatchType) {
+                    bestMatch = method;
+                    bestMatchType = matchType;
+                } else if (matchType == bestMatchType) {
+                    throw new JXPathException("Ambiguous method call: " + name);
+                }
+            }
+        }
+    }
+
+    return bestMatch;
+}
+```

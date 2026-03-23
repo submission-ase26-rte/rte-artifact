@@ -1,0 +1,470 @@
+{
+  "experiments": {
+    "version_": {
+      "tested_method": "toString",
+      "similarity_threshold": 0.7,
+      "passes_evaluation": false,
+      "timestamp": "2026-01-12T14:58:41.604918",
+      "executed_phases": {
+        "first_phase": true,
+        "second_phase": true
+      },
+      "metrics": {
+        "crystalbleu_similarity": 0.12291609035349646,
+        "string_similarity": 0.25608907446068196,
+        "token_similarity": 0.48484848484848486,
+        "ast_similarity": 0.7575757575757576,
+        "embedding_similarity": 0.9549514651298523,
+        "clone_detection": {
+          "exact_match": false,
+          "clone_percentage": 0.1111111111111111,
+          "similar_blocks": 3,
+          "total_blocks": 54
+        },
+        "weights": {
+          "crystalbleu_similarity": 0.2,
+          "string_similarity": 0.08,
+          "token_similarity": 0.15,
+          "ast_similarity": 0.22,
+          "embedding_similarity": 0.35
+        },
+        "overall_similarity": 0.6186972962169415,
+        "passes_threshold": false
+      },
+      "test_results": {
+        "original": {
+          "success": false,
+          "tests_passed": 0,
+          "tests_total": 12,
+          "tests_failed": 12,
+          "line_coverage": 0.0,
+          "branch_coverage": 0.0,
+          "has_compilation_errors": false,
+          "test_info": {
+            "valid_tests": [],
+            "invalid_tests": [
+              "testToString_basicOption",
+              "testToString_optionWithArg",
+              "testToString_optionWithArgs",
+              "testToString_optionWithDeprecated",
+              "testToString_optionWithAllFeatures",
+              "testToString_nullType",
+              "testToString_noLongOption",
+              "testToString_onlyOption",
+              "testToString_longOptionOnly",
+              "testToString_noLongOptionNoDescription",
+              "testToString_deprecatedOnly",
+              "testToString_longOptionDeprecated"
+            ],
+            "failed_assert_tests": [
+              "testToString_basicOption",
+              "testToString_optionWithArg",
+              "testToString_optionWithArgs",
+              "testToString_optionWithDeprecated",
+              "testToString_optionWithAllFeatures",
+              "testToString_nullType",
+              "testToString_noLongOption",
+              "testToString_onlyOption",
+              "testToString_longOptionOnly",
+              "testToString_noLongOptionNoDescription",
+              "testToString_deprecatedOnly",
+              "testToString_longOptionDeprecated"
+            ],
+            "runtime_error_tests": []
+          }
+        },
+        "regenerated": {
+          "success": false,
+          "tests_passed": 0,
+          "tests_total": 0,
+          "tests_failed": 0,
+          "line_coverage": 0.0,
+          "branch_coverage": 0.0,
+          "has_compilation_errors": true,
+          "test_info": {
+            "valid_tests": [],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          }
+        }
+      },
+      "test_filtering": {},
+      "context": {
+        "dependency_selection": {
+          "active": true,
+          "method": "structural",
+          "top_k": null,
+          "weights": null,
+          "selected_classes": [],
+          "rankings": {},
+          "project_type_flags": {
+            "has_servlet": false,
+            "has_spring": false,
+            "has_jpa": false,
+            "has_ejb": false,
+            "has_cdi": false,
+            "has_jndi": false,
+            "has_static_utils": false
+          }
+        }
+      },
+      "paths": {
+        "original_file": "./../JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/main/java/org/apache/commons/cli/Option.java",
+        "regenerated_file": "results/outputs\\Final_Option_toString.java"
+      },
+      "original_metrics": {
+        "loc": 31,
+        "sloc": 24,
+        "complexity": 5
+      },
+      "retry_history": [
+        {
+          "type": "initial_test_execution",
+          "test_results_originale": {
+            "tests_passed": 0,
+            "tests_total": 7,
+            "tests_failed": 7,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "test_info": {
+              "valid_tests": [],
+              "invalid_tests": [
+                "testToString_basicOption",
+                "testToString_optionWithArg",
+                "testToString_optionWithArgs",
+                "testToString_optionWithDeprecated",
+                "testToString_optionWithAllFeatures",
+                "testToString_nullType",
+                "testToString_noLongOption"
+              ],
+              "failed_assert_tests": [
+                "testToString_basicOption",
+                "testToString_optionWithArg",
+                "testToString_optionWithArgs",
+                "testToString_optionWithDeprecated",
+                "testToString_optionWithAllFeatures",
+                "testToString_nullType"
+              ],
+              "runtime_error_tests": [
+                "testToString_noLongOption"
+              ]
+            }
+          }
+        },
+        {
+          "type": "initial_regenerated_test_execution",
+          "test_results_rigenerato": {
+            "tests_passed": 0,
+            "tests_total": 0,
+            "tests_failed": 0,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "test_info": {
+              "valid_tests": [],
+              "invalid_tests": [],
+              "failed_assert_tests": [],
+              "runtime_error_tests": []
+            }
+          }
+        },
+        {
+          "type": "initial_method_generation",
+          "refinement_iteration": 0,
+          "original_method": "    /**\n     * Creates a String suitable for debugging.\n     *\n     * @return a String suitable for debugging.\n     */\n    @Override\n    public String toString() {\n        final StringBuilder buf = new StringBuilder().append(\"[ \");\n        buf.append(\"Option \");\n        buf.append(option);\n        if (longOption != null) {\n            buf.append(Char.SP).append(longOption);\n        }\n        if (isDeprecated()) {\n            buf.append(Char.SP);\n            buf.append(deprecated.toString());\n        }\n        if (hasArgs()) {\n            buf.append(\"[ARG...]\");\n        } else if (hasArg()) {\n            buf.append(\" [ARG]\");\n        }\n        // @formatter:off\n        return buf.append(\" :: \")\n            .append(description)\n            .append(\" :: \")\n            .append(type)\n            .append(\" ]\")\n            .toString();\n        // @formatter:on\n    }",
+          "regenerated_method": "public String toString() {\n    StringBuilder buffer = new StringBuilder();\n    buffer.append(\"[ Option \");\n    buffer.append(getOpt());\n    if (getLongOpt() != null && !getLongOpt().isEmpty()) {\n        buffer.append(\" \").append(getLongOpt());\n    }\n    if (isDeprecated()) {\n        buffer.append(\" :: deprecated\");\n    }\n    buffer.append(\" :: \");\n    buffer.append(getDescription());\n    if (getType() != null) {\n        buffer.append(\" :: class \").append(getType().getName());\n    } else {\n        buffer.append(\" :: null\");\n    }\n    if (hasArg()) {\n        buffer.append(\" [ARG]\");\n    }\n    if (hasArgs()) {\n        buffer.append(\" [ARG...]\");\n    }\n    buffer.append(\" ]\");\n    return buffer.toString();\n}",
+          "overall_similarity": 0.6186972962169415,
+          "passes_threshold": false,
+          "similarity_metrics": {
+            "crystalbleu_similarity": 0.12291609035349646,
+            "string_similarity": 0.25608907446068196,
+            "token_similarity": 0.48484848484848486,
+            "ast_similarity": 0.7575757575757576,
+            "embedding_similarity": 0.9549514651298523,
+            "clone_detection": {
+              "exact_match": false,
+              "clone_percentage": 0.1111111111111111,
+              "similar_blocks": 3,
+              "total_blocks": 54
+            },
+            "weights": {
+              "crystalbleu_similarity": 0.2,
+              "string_similarity": 0.08,
+              "token_similarity": 0.15,
+              "ast_similarity": 0.22,
+              "embedding_similarity": 0.35
+            },
+            "overall_similarity": 0.6186972962169415,
+            "passes_threshold": false
+          },
+          "test_results_originale": {
+            "tests_passed": 0,
+            "tests_total": 7,
+            "tests_failed": 0,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "test_info": {
+              "valid_tests": [],
+              "invalid_tests": [
+                "testToString_basicOption",
+                "testToString_optionWithArg",
+                "testToString_optionWithArgs",
+                "testToString_optionWithDeprecated",
+                "testToString_optionWithAllFeatures",
+                "testToString_nullType",
+                "testToString_noLongOption"
+              ],
+              "failed_assert_tests": [
+                "testToString_basicOption",
+                "testToString_optionWithArg",
+                "testToString_optionWithArgs",
+                "testToString_optionWithDeprecated",
+                "testToString_optionWithAllFeatures",
+                "testToString_nullType"
+              ],
+              "runtime_error_tests": [
+                "testToString_noLongOption"
+              ]
+            }
+          },
+          "test_results_rigenerato": {
+            "tests_passed": 0,
+            "tests_total": 0,
+            "tests_failed": 0,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "test_info": {
+              "valid_tests": [],
+              "invalid_tests": [],
+              "failed_assert_tests": [],
+              "runtime_error_tests": []
+            }
+          }
+        },
+        {
+          "refinement_iteration": 1,
+          "overall_similarity": 0.6186972962169415,
+          "passes_threshold": false,
+          "similarity_metrics": {
+            "crystalbleu_similarity": 0.12291609035349646,
+            "string_similarity": 0.25608907446068196,
+            "token_similarity": 0.48484848484848486,
+            "ast_similarity": 0.7575757575757576,
+            "embedding_similarity": 0.9549514651298523,
+            "clone_detection": {
+              "exact_match": false,
+              "clone_percentage": 0.1111111111111111,
+              "similar_blocks": 3,
+              "total_blocks": 54
+            },
+            "weights": {
+              "crystalbleu_similarity": 0.2,
+              "string_similarity": 0.08,
+              "token_similarity": 0.15,
+              "ast_similarity": 0.22,
+              "embedding_similarity": 0.35
+            },
+            "overall_similarity": 0.6186972962169415,
+            "passes_threshold": false
+          },
+          "original_method": "    /**\n     * Creates a String suitable for debugging.\n     *\n     * @return a String suitable for debugging.\n     */\n    @Override\n    public String toString() {\n        final StringBuilder buf = new StringBuilder().append(\"[ \");\n        buf.append(\"Option \");\n        buf.append(option);\n        if (longOption != null) {\n            buf.append(Char.SP).append(longOption);\n        }\n        if (isDeprecated()) {\n            buf.append(Char.SP);\n            buf.append(deprecated.toString());\n        }\n        if (hasArgs()) {\n            buf.append(\"[ARG...]\");\n        } else if (hasArg()) {\n            buf.append(\" [ARG]\");\n        }\n        // @formatter:off\n        return buf.append(\" :: \")\n            .append(description)\n            .append(\" :: \")\n            .append(type)\n            .append(\" ]\")\n            .toString();\n        // @formatter:on\n    }",
+          "regenerated_method": "public String toString() {\n    StringBuilder buffer = new StringBuilder();\n    buffer.append(\"[ Option \");\n    buffer.append(getOpt());\n    if (getLongOpt() != null && !getLongOpt().isEmpty()) {\n        buffer.append(\" \").append(getLongOpt());\n    }\n    if (isDeprecated()) {\n        buffer.append(\" :: deprecated\");\n    }\n    buffer.append(\" :: \");\n    buffer.append(getDescription());\n    if (getType() != null) {\n        buffer.append(\" :: class \").append(getType().getName());\n    } else {\n        buffer.append(\" :: null\");\n    }\n    if (hasArg()) {\n        buffer.append(\" [ARG]\");\n    }\n    if (hasArgs()) {\n        buffer.append(\" [ARG...]\");\n    }\n    buffer.append(\" ]\");\n    return buffer.toString();\n}",
+          "test_results_originale": {
+            "tests_passed": 0,
+            "tests_total": 9,
+            "tests_failed": 9,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "valid_tests": [],
+            "invalid_tests": [
+              "testToString_basicOption",
+              "testToString_optionWithArg",
+              "testToString_optionWithArgs",
+              "testToString_optionWithDeprecated",
+              "testToString_optionWithAllFeatures",
+              "testToString_nullType",
+              "testToString_noLongOption",
+              "testToString_onlyOption",
+              "testToString_longOptionOnly"
+            ],
+            "failed_assert_tests": [
+              "testToString_basicOption",
+              "testToString_optionWithArg",
+              "testToString_optionWithArgs",
+              "testToString_optionWithDeprecated",
+              "testToString_optionWithAllFeatures",
+              "testToString_nullType",
+              "testToString_noLongOption",
+              "testToString_onlyOption",
+              "testToString_longOptionOnly"
+            ],
+            "runtime_error_tests": []
+          },
+          "test_results_rigenerato": {
+            "tests_passed": 0,
+            "tests_total": 0,
+            "tests_failed": 0,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "valid_tests": [],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          },
+          "type": "refinement"
+        },
+        {
+          "refinement_iteration": 2,
+          "overall_similarity": 0.6186972962169415,
+          "passes_threshold": false,
+          "similarity_metrics": {
+            "crystalbleu_similarity": 0.12291609035349646,
+            "string_similarity": 0.25608907446068196,
+            "token_similarity": 0.48484848484848486,
+            "ast_similarity": 0.7575757575757576,
+            "embedding_similarity": 0.9549514651298523,
+            "clone_detection": {
+              "exact_match": false,
+              "clone_percentage": 0.1111111111111111,
+              "similar_blocks": 3,
+              "total_blocks": 54
+            },
+            "weights": {
+              "crystalbleu_similarity": 0.2,
+              "string_similarity": 0.08,
+              "token_similarity": 0.15,
+              "ast_similarity": 0.22,
+              "embedding_similarity": 0.35
+            },
+            "overall_similarity": 0.6186972962169415,
+            "passes_threshold": false
+          },
+          "original_method": "    /**\n     * Creates a String suitable for debugging.\n     *\n     * @return a String suitable for debugging.\n     */\n    @Override\n    public String toString() {\n        final StringBuilder buf = new StringBuilder().append(\"[ \");\n        buf.append(\"Option \");\n        buf.append(option);\n        if (longOption != null) {\n            buf.append(Char.SP).append(longOption);\n        }\n        if (isDeprecated()) {\n            buf.append(Char.SP);\n            buf.append(deprecated.toString());\n        }\n        if (hasArgs()) {\n            buf.append(\"[ARG...]\");\n        } else if (hasArg()) {\n            buf.append(\" [ARG]\");\n        }\n        // @formatter:off\n        return buf.append(\" :: \")\n            .append(description)\n            .append(\" :: \")\n            .append(type)\n            .append(\" ]\")\n            .toString();\n        // @formatter:on\n    }",
+          "regenerated_method": "public String toString() {\n    StringBuilder buffer = new StringBuilder();\n    buffer.append(\"[ Option \");\n    buffer.append(getOpt());\n    if (getLongOpt() != null && !getLongOpt().isEmpty()) {\n        buffer.append(\" \").append(getLongOpt());\n    }\n    if (isDeprecated()) {\n        buffer.append(\" :: deprecated\");\n    }\n    buffer.append(\" :: \");\n    buffer.append(getDescription());\n    if (getType() != null) {\n        buffer.append(\" :: class \").append(getType().getName());\n    } else {\n        buffer.append(\" :: null\");\n    }\n    if (hasArg()) {\n        buffer.append(\" [ARG]\");\n    }\n    if (hasArgs()) {\n        buffer.append(\" [ARG...]\");\n    }\n    buffer.append(\" ]\");\n    return buffer.toString();\n}",
+          "test_results_originale": {
+            "tests_passed": 0,
+            "tests_total": 12,
+            "tests_failed": 12,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "valid_tests": [],
+            "invalid_tests": [
+              "testToString_basicOption",
+              "testToString_optionWithArg",
+              "testToString_optionWithArgs",
+              "testToString_optionWithDeprecated",
+              "testToString_optionWithAllFeatures",
+              "testToString_nullType",
+              "testToString_noLongOption",
+              "testToString_onlyOption",
+              "testToString_longOptionOnly",
+              "testToString_noLongOptionNoDescription",
+              "testToString_deprecatedOnly",
+              "testToString_longOptionDeprecated"
+            ],
+            "failed_assert_tests": [
+              "testToString_basicOption",
+              "testToString_optionWithArg",
+              "testToString_optionWithArgs",
+              "testToString_optionWithDeprecated",
+              "testToString_optionWithAllFeatures",
+              "testToString_nullType",
+              "testToString_noLongOption",
+              "testToString_onlyOption",
+              "testToString_longOptionOnly",
+              "testToString_noLongOptionNoDescription",
+              "testToString_deprecatedOnly",
+              "testToString_longOptionDeprecated"
+            ],
+            "runtime_error_tests": []
+          },
+          "test_results_rigenerato": {
+            "tests_passed": 0,
+            "tests_total": 0,
+            "tests_failed": 0,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "valid_tests": [],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          },
+          "type": "refinement"
+        }
+      ],
+      "original_method_display": "    /**\n     * Creates a String suitable for debugging.\n     *\n     * @return a String suitable for debugging.\n     */\n    @Override\n    public String toString() {\n        final StringBuilder buf = new StringBuilder().append(\"[ \");\n        buf.append(\"Option \");\n        buf.append(option);\n        if (longOption != null) {\n            buf.append(Char.SP).append(longOption);\n        }\n        if (isDeprecated()) {\n            buf.append(Char.SP);\n            buf.append(deprecated.toString());\n        }\n        if (hasArgs()) {\n            buf.append(\"[ARG...]\");\n        } else if (hasArg()) {\n            buf.append(\" [ARG]\");\n        }\n        // @formatter:off\n        return buf.append(\" :: \")\n            .append(description)\n            .append(\" :: \")\n            .append(type)\n            .append(\" ]\")\n            .toString();\n        // @formatter:on\n    }",
+      "regenerated_method_display": "public String toString() {\n    StringBuilder buffer = new StringBuilder();\n    buffer.append(\"[ Option \");\n    buffer.append(getOpt());\n    if (getLongOpt() != null && !getLongOpt().isEmpty()) {\n        buffer.append(\" \").append(getLongOpt());\n    }\n    if (isDeprecated()) {\n        buffer.append(\" :: deprecated\");\n    }\n    buffer.append(\" :: \");\n    buffer.append(getDescription());\n    if (getType() != null) {\n        buffer.append(\" :: class \").append(getType().getName());\n    } else {\n        buffer.append(\" :: null\");\n    }\n    if (hasArg()) {\n        buffer.append(\" [ARG]\");\n    }\n    if (hasArgs()) {\n        buffer.append(\" [ARG...]\");\n    }\n    buffer.append(\" ]\");\n    return buffer.toString();\n}",
+      "token_usage": {
+        "test_generation": {
+          "input_tokens": 1091,
+          "output_tokens": 1332
+        },
+        "method_generation": {
+          "calls": 3,
+          "details": [
+            {
+              "input_tokens": 2314,
+              "output_tokens": 204,
+              "refinement_iteration": "initial"
+            },
+            {
+              "input_tokens": 2939,
+              "output_tokens": 204,
+              "refinement_iteration": 0
+            },
+            {
+              "input_tokens": 3505,
+              "output_tokens": 204,
+              "refinement_iteration": 1
+            }
+          ],
+          "total_input_tokens": 8758,
+          "total_output_tokens": 612
+        },
+        "test_refinement": {
+          "calls": 2,
+          "details": [
+            {
+              "input_tokens": 3165,
+              "output_tokens": 1731,
+              "iteration": 1
+            },
+            {
+              "input_tokens": 3643,
+              "output_tokens": 2273,
+              "iteration": 2
+            }
+          ],
+          "total_input_tokens": 6808,
+          "total_output_tokens": 4004
+        },
+        "totals": {
+          "total_input_tokens": 16657,
+          "total_output_tokens": 5948,
+          "total_tokens": 22605
+        }
+      },
+      "test_naturalness": {
+        "num_test_methods": 12,
+        "assertion_complexity": 0.0865,
+        "pct_null_assertions": 0.0,
+        "pct_duplicate_assertions": 0.0,
+        "pct_exception_assertions": 0.0,
+        "pct_no_assertion": 0.0,
+        "naturalness_method_name": 0.7586,
+        "pct_focal_method_covered": 1.0,
+        "diversity_literal_values": 0.1765,
+        "overall_naturalness_score": 0.7338
+      }
+    }
+  },
+  "general_info": {
+    "tested_class": "Option",
+    "tested_method": "toString",
+    "last_update": "2026-01-12T14:58:41.825176",
+    "description": "Test toString() - Medium - unsloth/gemma-3-12b-it",
+    "provider": "chutes",
+    "model": "unsloth/gemma-3-12b-it",
+    "similarity_threshold": 0.7
+  }
+}

@@ -1,0 +1,35 @@
+package org.springframework.samples.petclinic.owner;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import org.springframework.core.style.ToStringCreator;
+import org.springframework.samples.petclinic.model.Person;
+import org.springframework.samples.petclinic.owner.Owner;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Owner_toStringTestGenerated {
+
+    @Test
+    public void testToString() {
+        Owner owner = new Owner();
+        owner.setFirstName("John");
+        owner.setLastName("Doe");
+        owner.setAddress("123 Main St");
+        owner.setCity("Anytown");
+        owner.setTelephone("555-1212");
+
+        String expected = new ToStringCreator(owner).append("id", owner.getId())
+                .append("new", owner.isNew())
+                .append("lastName", owner.getLastName())
+                .append("firstName", owner.getFirstName())
+                .append("address", owner.getAddress())
+                .append("city", owner.getCity())
+                .append("telephone", owner.getTelephone())
+                .toString();
+
+        String actual = owner.toString();
+        assertEquals(expected, actual);
+    }
+}

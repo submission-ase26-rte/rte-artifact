@@ -1,0 +1,236 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.cli;
+
+import java.util.Map;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.apache.commons.cli.OptionBuilder.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class OptionBuilder_createTestGenerated {
+    private static OptionValidator resetValidator;
+    private static String longOption;
+    private static String description;
+    private static String argName;
+    private static boolean required;
+    private static int argCount;
+    private static Class<?> type;
+    private static boolean optionalArg;
+    private static char valueSeparator;
+
+    @BeforeEach
+    public void setUp() {
+        resetValidator = new OptionValidator();
+        reset();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        resetValidator = null;
+        reset();
+    }
+
+    private static void reset() {
+        longOption = null;
+        description = null;
+        argName = null;
+        required = false;
+        argCount = 0;
+        type = null;
+        optionalArg = false;
+        valueSeparator = ' ';
+    }
+
+    @Test
+        void testCreateWithInvalidOptionCharacter() {
+            longOption = "longOpt";
+            description = "Description";
+            argName = "argName";
+            required = false;
+            argCount = 1;
+            type = String.class;
+            optionalArg = false;
+            valueSeparator = ' ';
+            assertThrows(IllegalArgumentException.class, () -> create("\0"));
+        }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 0.00%
+- Tests: 0/1 passed
+
+TEST STATUS:
+- PASSED (0): none
+- FAILED (1): testCreateWithInvalidOptionCharacter
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   OptionBuilder -> org.apache.commons.cli.OptionBuilder
+//   Option -> org.apache.commons.cli.Option
+//   TypeHandler -> org.apache.commons.cli.TypeHandler
+
+// === Class: OptionBuilder ===
+// Fields (with actual visibility):
+    private static String longOption;
+    private static String description;
+    private static String argName;
+    private static boolean required;
+    private static int argCount;
+    private static Class type;
+    private static boolean optionalArg;
+    private static char valueSeparator;
+    private static final OptionBuilder INSTANCE;
+
+// Constructors:
+private OptionBuilder();
+
+// Getter/Setter Methods (for test assertions):
+public static OptionBuilder isRequired();
+public static OptionBuilder isRequired(final boolean newRequired);
+
+// Internal Methods (full implementation for context):
+    private static void reset() {
+        description = null;
+        argName = null;
+        longOption = null;
+        type = String.class;
+        required = false;
+        argCount = Option.UNINITIALIZED;
+        optionalArg = false;
+        valueSeparator = (char) 0;
+    }
+
+// === External Class: Option ===
+// Full import path: org.apache.commons.cli.Option
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   Objects -> java.util.Objects
+// Fields (with actual visibility):
+    private static final Class DEFAULT_TYPE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private int argCount;
+    private String argName;
+    private Converter converter;
+    private final DeprecatedAttributes deprecated;
+    private String description;
+    private String longOption;
+    private final String option;
+    private boolean optionalArg;
+    private boolean required;
+    private Class type;
+    private char valueSeparator;
+    package-private static final Option[] EMPTY_ARRAY;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int UNINITIALIZED;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int UNLIMITED_VALUES;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private List values;
+    private char valuesep;
+
+// Constructors:
+private Builder(String option);
+private Option(Builder builder);
+public Option(String option, boolean hasArg, String description);
+public Option(String option, String description);
+public Option(String option, String longOption, boolean hasArg, String description);
+
+// Method Signatures (used by target method):
+public void setOptionalArg(final boolean optionalArg);
+public void setLongOpt(final String longOpt);
+public void setRequired(final boolean required);
+public void setArgName(final String argName);
+public void setArgs(final int num);
+public void setConverter(final Converter converter);
+public void setType(final Class type);
+public void setValueSeparator(final char sep);
+
+// Public Getter Methods (for test assertions):
+public Builder hasArg();
+public Builder hasArg(boolean hasArg);
+public Builder hasArgs();
+public String getArgName();
+public int getArgs();
+public Converter getConverter();
+public DeprecatedAttributes getDeprecated();
+public String getDescription();
+public int getId();
+public String getKey();
+public String getLongOpt();
+public String getOpt();
+public Object getType();
+public String getValue();
+public String getValue(int index);
+
+// === External Class: TypeHandler ===
+// Full import path: org.apache.commons.cli.TypeHandler
+// Import paths:
+//   File -> java.io.File
+//   FileInputStream -> java.io.FileInputStream
+//   BigDecimal -> java.math.BigDecimal
+//   BigInteger -> java.math.BigInteger
+//   URL -> java.net.URL
+// Fields (with actual visibility):
+    private static final TypeHandler DEFAULT;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int HEX_RADIX;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private final Map converterMap;
+
+// Constructors:
+public TypeHandler();
+public TypeHandler(Map converterMap);
+
+// Method Signatures (used by target method):
+static public TypeHandler getDefault();
+
+// Public Getter Methods (for test assertions):
+public Converter<T> getConverter(Class clazz);
+
+
+TASK:
+Regenerate ONLY the method "create" OF CLASS "OptionBuilder" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public static Option create(final String opt) throws IllegalArgumentException {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.cli
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "create"
+– Allowed imports: exactly those already present in OptionBuilder
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

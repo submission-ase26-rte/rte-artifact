@@ -1,0 +1,78 @@
+{
+  "method_id": 38,
+  "tested_method": "login",
+  "tested_class": "TradeDirect",
+  "project": "Daytrader",
+  "timestamp": "2026-02-03T13:25:38.131265",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\GPT-4 - ASTER\\Daytrader\\Run-1\\src\\test\\java\\com\\ibm\\websphere\\samples\\daytrader\\impl\\direct\\Metodo38_login_TradeDirect_Test.java",
+  "test_results": {
+    "success": false,
+    "tests_passed": 0,
+    "tests_total": 4,
+    "tests_failed": 4,
+    "line_coverage": 18.75,
+    "branch_coverage": 0.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testLoginSuccess_vNJa0 --\nERROR: java.lang.NullPointerException: Cannot invoke \"javax.sql.DataSource.getConnection()\" because \"this.datasource\" is null\n--------------------------------------------------\nTEST: testLoginFailureUserNotFound_mtOW2 --\nERROR: java.lang.NullPointerException: Cannot invoke \"javax.sql.DataSource.getConnection()\" because \"this.datasource\" is null\n--------------------------------------------------\nTEST: testLoginFailureIncorrectPassword_ZGrl1 --\nERROR: org.opentest4j.AssertionFailedError:\nexpected: <TradeDirect:Login failure for user: validUser\nIncorrect password-->validUser:wrongPassword> but was: <Cannot invoke \"javax.sql.DataSource.getConnection()\" because \"this.datasource\" is null>\n--------------------------------------------------\nTEST: testLoginSQLExceptionHandling_rOvX3 --\nERROR: org.opentest4j.AssertionFailedError: expected: <true> but was: <false>",
+    "test_info": {
+      "valid_tests": [],
+      "invalid_tests": [
+        "testLoginFailureIncorrectPassword_ZGrl1",
+        "testLoginSQLExceptionHandling_rOvX3",
+        "testLoginSuccess_vNJa0",
+        "testLoginFailureUserNotFound_mtOW2"
+      ],
+      "failed_assert_tests": [
+        "testLoginFailureIncorrectPassword_ZGrl1",
+        "testLoginSQLExceptionHandling_rOvX3"
+      ],
+      "runtime_error_tests": [
+        "testLoginSuccess_vNJa0",
+        "testLoginFailureUserNotFound_mtOW2"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 4,
+    "assertion_complexity": 0.2381,
+    "pct_null_assertions": 0.125,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.375,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.6751,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.8222,
+    "overall_naturalness_score": 0.865
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.3000114835486326,
+    "string_similarity": 0.38413685847589424,
+    "token_similarity": 0.5733333333333334,
+    "ast_similarity": 0.575,
+    "embedding_similarity": 0.8954011797904968,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.2222222222222222,
+      "similar_blocks": 11,
+      "total_blocks": 99
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.616623658314472,
+    "passes_threshold": false
+  },
+  "original_method": "  public AccountDataBean login(String userID, String password) throws Exception {\n\n    AccountDataBean accountData = null;\n    Connection conn = null;\n    try {\n      Log.trace(\"TradeDirect:login - inSession(\" + this.inSession + \")\", userID, password);\n\n      conn = getConn();\n      PreparedStatement stmt = getStatement(conn, getAccountProfileSQL);\n      stmt.setString(1, userID);\n\n      ResultSet rs = stmt.executeQuery();\n      if (!rs.next()) {\n        Log.error(\"TradeDirect:login -- failure to find account for\" + userID);\n        throw new javax.ejb.FinderException(\"Cannot find account for\" + userID);\n      }\n\n      String pw = rs.getString(\"passwd\");\n      stmt.close();\n      if ((pw == null) || (pw.equals(password) == false)) {\n        String error = \"TradeDirect:Login failure for user: \" + userID + \"\\n\\tIncorrect password-->\" + userID + \":\" + password;\n        Log.error(error);\n        throw new Exception(error);\n      }\n\n      stmt = getStatement(conn, loginSQL);\n      stmt.setTimestamp(1, new Timestamp(System.currentTimeMillis()));\n      stmt.setString(2, userID);\n\n      stmt.executeUpdate();\n      stmt.close();\n\n      stmt = getStatement(conn, getAccountForUserSQL);\n      stmt.setString(1, userID);\n      rs = stmt.executeQuery();\n\n      accountData = getAccountDataFromResultSet(rs);\n\n      stmt.close();\n\n      commit(conn);\n    } catch (Exception e) {\n      Log.error(\"TradeDirect:login -- error logging in user\", e);\n      rollBack(conn, e);\n    } finally {\n      releaseConn(conn);\n    }\n    return accountData;\n\n    /*\n     * setLastLogin( new Timestamp(System.currentTimeMillis()) );\n     * setLoginCount( getLoginCount() + 1 );\n     */\n  }",
+  "regenerated_method": "public AccountDataBean login(String userID, String password) throws Exception {\n    Connection conn = null;\n    PreparedStatement stmt = null;\n    ResultSet rs = null;\n    try {\n        conn = getConn();\n        String sql = \"SELECT * FROM account WHERE profile_userID = ? AND passwd = ?\";\n        stmt = getStatement(conn, sql);\n        stmt.setString(1, userID);\n        stmt.setString(2, password);\n        rs = stmt.executeQuery();\n        AccountDataBean accountData = getAccountDataFromResultSet(rs);\n        if (accountData == null) {\n            throw new FinderException(\"Cannot find account for \" + userID);\n        }\n        if (!password.equals(accountData.getProfile().getPassword())) {\n            throw new Exception(\"TradeDirect:Login failure for user: \" + userID + \"\\n\\tIncorrect password-->\" + userID + \":\" + password);\n        }\n        commit(conn);\n        return accountData;\n    } catch (SQLException e) {\n        rollBack(conn, e);\n        throw e;\n    } finally {\n        releaseConn(conn);\n    }\n}",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.670446769648675,
+  "original_metrics": {
+    "loc": 54,
+    "sloc": 39,
+    "complexity": 10
+  }
+}

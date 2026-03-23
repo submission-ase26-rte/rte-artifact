@@ -1,0 +1,327 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.codec.language;
+
+import java.util.regex.Pattern;
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.language.Nysiis;
+import org.apache.commons.codec.language.SoundexUtils;
+import org.apache.commons.codec.StringEncoder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Nysiis_nysiisTestGenerated {
+    private Nysiis nysiis;
+
+    @BeforeEach
+    void setUp() {
+        nysiis = new Nysiis();
+    }
+
+    @Test
+    void testNysiis_nullInput() {
+        assertNull(nysiis.nysiis(null));
+    }
+
+    @Test
+    void testNysiis_emptyInput() {
+        assertEquals("", nysiis.nysiis(""));
+    }
+
+    @Test
+    void testNysiis_simpleCase3() {
+        assertEquals("C", nysiis.nysiis("K"));
+    }
+
+    @Test
+    void testNysiis_complexCase1() {
+        assertEquals("D", nysiis.nysiis("DT"));
+    }
+
+    @Test
+    void testNysiis_complexCase2() {
+        assertEquals("D", nysiis.nysiis("RT"));
+    }
+
+    @Test
+    void testNysiis_complexCase3() {
+        assertEquals("D", nysiis.nysiis("RD"));
+    }
+
+    @Test
+    void testNysiis_complexCase4() {
+        assertEquals("D", nysiis.nysiis("NT"));
+    }
+
+    @Test
+    void testNysiis_complexCase5() {
+        assertEquals("D", nysiis.nysiis("ND"));
+    }
+
+    @Test
+            void testNysiis_simpleCase1() {
+                assertEquals("MCC", nysiis.nysiis("MAC"));
+            }
+
+    @Test
+            void testNysiis_simpleCase2() {
+                assertEquals("NN", nysiis.nysiis("KN"));
+            }
+
+    @Test
+            void testNysiis_simpleCase4() {
+                assertEquals("FF", nysiis.nysiis("PH"));
+            }
+
+    @Test
+            void testNysiis_simpleCase5() {
+                assertEquals("SSS", nysiis.nysiis("SCH"));
+            }
+
+    @Test
+            void testNysiis_vowel() {
+                assertEquals("A", nysiis.nysiis("E"));
+            }
+
+    @Test
+            void testNysiis_withStrict() {
+                Nysiis strictNysiis = new Nysiis(true);
+                assertEquals("MCC", strictNysiis.nysiis("MAC"));
+                assertEquals("NN", strictNysiis.nysiis("KN"));
+                assertEquals("C", strictNysiis.nysiis("K"));
+                assertEquals("FF", strictNysiis.nysiis("PH"));
+                assertEquals("SSS", strictNysiis.nysiis("SCH"));
+            }
+
+    @Test
+            void testNysiis_longString() {
+                assertEquals("MCCNNCC", nysiis.nysiis("MACKNCC"));
+            }
+
+    @Test
+            void testNysiis_specialChars() {
+                assertEquals("MCC", nysiis.nysiis("mAc"));
+            }
+
+    @Test
+            void testNysiis_AYremoval() {
+                assertEquals("Y", nysiis.nysiis("AY"));
+            }
+
+    @Test
+            void testNysiis_Sremoval() {
+                assertEquals("MCC", nysiis.nysiis("MCS"));
+            }
+
+    @Test
+        void testNysiis_AYremoval_strict() {
+            Nysiis strictNysiis = new Nysiis(true);
+            assertEquals("Y", strictNysiis.nysiis("AY"));
+        }
+
+    @Test
+        void testNysiis_Aremoval_strict() {
+            Nysiis strictNysiis = new Nysiis(true);
+            assertEquals("MCC", strictNysiis.nysiis("MAC"));
+        }
+
+    @Test
+        void testNysiis_longString_strict() {
+            Nysiis strictNysiis = new Nysiis(true);
+            assertEquals("MCCNNCC", strictNysiis.nysiis("MACKNCC"));
+        }
+
+    @Test
+    void testNysiis_AYremoval_strict_test() {
+        Nysiis strictNysiis = new Nysiis(true);
+        assertEquals("Y", strictNysiis.nysiis("AY"));
+    }
+
+    @Test
+    void testNysiis_Aremoval_strict_test() {
+        Nysiis strictNysiis = new Nysiis(true);
+        assertEquals("MCC", strictNysiis.nysiis("MAC"));
+    }
+
+    @Test
+    void testNysiis_longString_strict_test() {
+        Nysiis strictNysiis = new Nysiis(true);
+        assertEquals("MCCNNCC", strictNysiis.nysiis("MACKNCC"));
+    }
+
+    @Test
+    void testNysiis_AYremoval_test() {
+        assertEquals("Y", nysiis.nysiis("AY"));
+    }
+
+    @Test
+    void testNysiis_Aremoval_test() {
+        assertEquals("MCC", nysiis.nysiis("MAC"));
+    }
+
+    @Test
+    void testNysiis_longString_test() {
+        assertEquals("MCCNNCC", nysiis.nysiis("MACKNCC"));
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 94.44% | Branch: 80.77%
+- Tests: 8/27 passed
+
+TEST STATUS:
+- PASSED (8): testNysiis_nullInput, testNysiis_emptyInput, testNysiis_simpleCase3, testNysiis_complexCase1, testNysiis_complexCase2, testNysiis_complexCase3, testNysiis_complexCase4, testNysiis_complexCase5
+- FAILED (19): testNysiis_simpleCase1, testNysiis_simpleCase2, testNysiis_simpleCase4, testNysiis_simpleCase5, testNysiis_vowel, testNysiis_withStrict, testNysiis_longString, testNysiis_specialChars, testNysiis_AYremoval, testNysiis_Sremoval, testNysiis_AYremoval_strict, testNysiis_Aremoval_strict, testNysiis_longString_strict, testNysiis_AYremoval_strict_test, testNysiis_Aremoval_strict_test, testNysiis_longString_strict_test, testNysiis_AYremoval_test, testNysiis_Aremoval_test, testNysiis_longString_test
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Pattern -> java.util.regex.Pattern
+//   EncoderException -> org.apache.commons.codec.EncoderException
+//   StringEncoder -> org.apache.commons.codec.StringEncoder
+//   Nysiis -> org.apache.commons.codec.language.Nysiis
+//   SoundexUtils -> org.apache.commons.codec.language.SoundexUtils
+
+// === Class: Nysiis ===
+// Fields (with actual visibility):
+    private static final char[] CHARS_A;
+    private static final char[] CHARS_AF;
+    private static final char[] CHARS_C;
+    private static final char[] CHARS_FF;
+    private static final char[] CHARS_G;
+    private static final char[] CHARS_N;
+    private static final char[] CHARS_NN;
+    private static final char[] CHARS_S;
+    private static final char[] CHARS_SSS;
+    private static final Pattern PAT_MAC;
+    private static final Pattern PAT_KN;
+    private static final Pattern PAT_K;
+    private static final Pattern PAT_PH_PF;
+    private static final Pattern PAT_SCH;
+    private static final Pattern PAT_EE_IE;
+    private static final Pattern PAT_DT_ETC;
+    private static final char SPACE;
+    private static final int TRUE_LENGTH;
+    private final boolean strict;
+
+// Constructors:
+public Nysiis();
+public Nysiis(boolean strict);
+
+// Getter/Setter Methods (for test assertions):
+private static boolean isVowel(final char c);
+public boolean isStrict();
+
+// Internal Methods (full implementation for context):
+    private static char[] transcodeRemaining(final char prev, final char curr, final char next, final char aNext) {
+        // 1. EV -> AF
+        if (curr == 'E' && next == 'V') {
+            return CHARS_AF;
+        }
+
+        // A, E, I, O, U -> A
+        if (isVowel(curr)) {
+            return CHARS_A;
+        }
+
+        // 2. Q -> G, Z -> S, M -> N
+
+        // 3. KN -> NN else K -> C
+        switch (curr) {
+        case 'Q':
+            return CHARS_G;
+        case 'Z':
+            return CHARS_S;
+        case 'M':
+            return CHARS_N;
+        case 'K':
+            if (next == 'N') {
+                return CHARS_NN;
+            }
+            return CHARS_C;
+        default:
+            break;
+        }
+
+        // 4. SCH -> SSS
+        if (curr == 'S' && next == 'C' && aNext == 'H') {
+            return CHARS_SSS;
+        }
+
+        // PH -> FF
+        if (curr == 'P' && next == 'H') {
+            return CHARS_FF;
+        }
+
+        // 5. H -> If previous or next is a non vowel, previous.
+        if (curr == 'H' && (!isVowel(prev) || !isVowel(next))) {
+            return new char[] { prev };
+        }
+
+        // 6. W -> If previous is vowel, previous.
+        if (curr == 'W' && isVowel(prev)) {
+            return new char[] { prev };
+        }
+
+        return new char[] { curr };
+    }
+    public boolean isStrict() {
+        return this.strict;
+    }
+
+// === External Class: SoundexUtils ===
+// Full import path: org.apache.commons.codec.language.SoundexUtils
+// Import paths:
+//   EncoderException -> org.apache.commons.codec.EncoderException
+//   StringEncoder -> org.apache.commons.codec.StringEncoder
+// Method Signatures (used by target method):
+static String clean(final String str);
+
+
+TASK:
+Regenerate ONLY the method "nysiis" OF CLASS "Nysiis" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public String nysiis(String str) {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.codec.language
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "nysiis"
+– Allowed imports: exactly those already present in Nysiis
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

@@ -1,0 +1,201 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Extracted tests for method: create(final String opt)
+ * Original class: OptionBuilder
+ * Source: ASTER GPT-4
+ */
+package org.apache.commons.cli;
+
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo6_create_OptionBuilder_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateWithSingleCharOption_ENDz0_1() {
+    char opt = 'a';
+    Option result = OptionBuilder.create(opt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateWithSingleCharOption_ENDz0_2() {
+    char opt = 'a';
+    Option result = OptionBuilder.create(opt);
+    assertEquals("a", result.getOpt());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateWithNullLongOptionThrowsException_wEvc0() {
+    try {
+    OptionBuilder.create();
+    fail("Expected IllegalArgumentException was not thrown");
+    } catch (IllegalArgumentException e) {
+    assertEquals("must specify longopt", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateWithSingleCharOption_ENDz0() {
+    char opt = 'a';
+    Option result = OptionBuilder.create(opt);
+    assertNotNull(result);
+    assertEquals("a", result.getOpt());
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 4/4 passed
+
+TEST STATUS:
+- PASSED (4): testCreateWithSingleCharOption_ENDz0_1, testCreateWithSingleCharOption_ENDz0_2, testCreateWithNullLongOptionThrowsException_wEvc0, testCreateWithSingleCharOption_ENDz0
+- FAILED (0): none
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   OptionBuilder -> org.apache.commons.cli.OptionBuilder
+
+// === Class: OptionBuilder ===
+// Fields (with actual visibility):
+    private static String longOption;
+    private static String description;
+    private static String argName;
+    private static boolean required;
+    private static int argCount;
+    private static Class type;
+    private static boolean optionalArg;
+    private static char valueSeparator;
+    private static final OptionBuilder INSTANCE;
+
+// Constructors:
+private OptionBuilder();
+
+// Getter/Setter Methods (for test assertions):
+public static OptionBuilder isRequired();
+public static OptionBuilder isRequired(final boolean newRequired);
+
+// Internal Methods (full implementation for context):
+    private static void reset() {
+        description = null;
+        argName = null;
+        longOption = null;
+        type = String.class;
+        required = false;
+        argCount = Option.UNINITIALIZED;
+        optionalArg = false;
+        valueSeparator = (char) 0;
+    }
+
+// === External Class: Option ===
+// Full import path: org.apache.commons.cli.Option
+// Fields (with actual visibility):
+    private static final Class DEFAULT_TYPE;
+    private int argCount;
+    private String argName;
+    private Converter converter;
+    private final DeprecatedAttributes deprecated;
+    private String description;
+    private String longOption;
+    private final String option;
+    private boolean optionalArg;
+    private boolean required;
+    private Class type;
+    private char valueSeparator;
+    package-private static final Option[] EMPTY_ARRAY;
+    private static final long serialVersionUID;
+    public static final int UNINITIALIZED;
+    public static final int UNLIMITED_VALUES;
+    private List values;
+    private char valuesep;
+// Constructors:
+private Builder(String option);
+private Option(Builder builder);
+public Option(String option, boolean hasArg, String description);
+public Option(String option, String description);
+public Option(String option, String longOption, boolean hasArg, String description);
+// Method Signatures (used by target method):
+public void setOptionalArg(final boolean optionalArg);
+public void setArgName(final String argName);
+public void setArgs(final int num);
+public void setConverter(final Converter converter);
+public void setValueSeparator(final char sep);
+public void setType(final Class type);
+public void setLongOpt(final String longOpt);
+public void setRequired(final boolean required);
+// Public Getter Methods (for test assertions):
+public Builder hasArg();
+public Builder hasArg(boolean hasArg);
+public Builder hasArgs();
+public String getArgName();
+public int getArgs();
+public Converter getConverter();
+public DeprecatedAttributes getDeprecated();
+public String getDescription();
+public int getId();
+public String getKey();
+
+// === External Class: TypeHandler ===
+// Full import path: org.apache.commons.cli.TypeHandler
+// Fields (with actual visibility):
+    private static final TypeHandler DEFAULT;
+    private static final int HEX_RADIX;
+    private final Map converterMap;
+// Constructors:
+public TypeHandler();
+public TypeHandler(Map converterMap);
+// Method Signatures (used by target method):
+static public TypeHandler getDefault();
+// Public Getter Methods (for test assertions):
+public Converter<T> getConverter(Class clazz);
+
+
+TASK:
+Regenerate ONLY the method "create" OF CLASS "OptionBuilder" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public static Option create(final String opt) throws IllegalArgumentException {
+    // your implementation here
+}
+```
+
+- Package: org.apache.commons.cli
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "create"
+- Allowed imports: exactly those already present in OptionBuilder
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

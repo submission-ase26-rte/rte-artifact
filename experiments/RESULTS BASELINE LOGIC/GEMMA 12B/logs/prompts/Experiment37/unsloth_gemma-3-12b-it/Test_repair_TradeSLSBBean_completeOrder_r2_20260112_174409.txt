@@ -1,0 +1,247 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.ejb3;
+Class name (MUST be exactly): TradeSLSBBean_completeOrderTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.impl.ejb3;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Collection;
+
+import javax.ejb.EJBException;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
+
+import com.ibm.websphere.samples.daytrader.beans.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.beans.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.beans.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.beans.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeEJB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeSLSBBean_completeOrderTestGenerated {
+
+    private TradeSLSBBean tradeSLSBBean;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        tradeSLSBBean = new TradeSLSBBean();
+    }
+
+    @AfterEach
+    public void tearDown() {
+    }
+
+    @Test
+    public void testCompleteOrderBuySuccess() throws Exception {
+        // Mock dependencies
+        OrderDataBean order = mock(OrderDataBean.class);
+        when(order.getOrderID()).thenReturn(1);
+        when(order.isCompleted()).thenReturn(false);
+        when(order.isBuy()).thenReturn(true);
+
+        AccountDataBean account = mock(AccountDataBean.class);
+        when(order.getAccount()).thenReturn(account);
+
+        QuoteDataBean quote = mock(QuoteDataBean.class);
+        when(order.getQuote()).thenReturn(quote);
+
+        HoldingDataBean holding = mock(HoldingDataBean.class);
+        when(order.getHolding()).thenReturn(holding);
+
+        BigDecimal price = new BigDecimal("10.00");
+        double quantity = 10;
+        when(order.getPrice()).thenReturn(price);
+        when(order.getQuantity()).thenReturn(quantity);
+
+        when(tradeSLSBBean.updateQuotePriceVolume(anyString(), any(), anyDouble())).thenReturn(quote);
+
+        // Execute
+        OrderDataBean result = tradeSLSBBean.completeOrder(1, false);
+
+        // Verify
+        assertEquals(1, result.getOrderID());
+        assertEquals("closed", result.getOrderStatus());
+        assertNotNull(result.getHolding());
+        verify(tradeSLSBBean).updateQuotePriceVolume(quote.getSymbol(), TradeConfig.getRandomPriceChangeFactor(), quantity);
+    }
+
+    @Test
+    public void testCompleteOrderSellSuccess() throws Exception {
+        // Mock dependencies
+        OrderDataBean order = mock(OrderDataBean.class);
+        when(order.getOrderID()).thenReturn(2);
+        when(order.isCompleted()).thenReturn(false);
+        when(order.isSell()).thenReturn(true);
+
+        AccountDataBean account = mock(AccountDataBean.class);
+        when(order.getAccount()).thenReturn(account);
+
+        QuoteDataBean quote = mock(QuoteDataBean.class);
+        when(order.getQuote()).thenReturn(quote);
+
+        HoldingDataBean holding = mock(HoldingDataBean.class);
+        when(order.getHolding()).thenReturn(holding);
+
+        BigDecimal price = new BigDecimal("10.00");
+        double quantity = 10;
+        when(order.getPrice()).thenReturn(price);
+        when(order.getQuantity()).thenReturn(quantity);
+
+        when(tradeSLSBBean.updateQuotePriceVolume(anyString(), any(), anyDouble())).thenReturn(quote);
+
+        // Execute
+        OrderDataBean result = tradeSLSBBean.completeOrder(2, false);
+
+        // Verify
+        assertEquals(2, result.getOrderID());
+        assertEquals("closed", result.getOrderStatus());
+        assertNull(result.getHolding());
+        verify(tradeSLSBBean).updateQuotePriceVolume(quote.getSymbol(), TradeConfig.getRandomPriceChangeFactor(), quantity);
+    }
+
+    @Test
+    public void testCompleteOrderAlreadyCompleted() throws Exception {
+        // Mock dependencies
+        OrderDataBean order = mock(OrderDataBean.class);
+        when(order.getOrderID()).thenReturn(3);
+        when(order.isCompleted()).thenReturn(true);
+
+        // Execute
+        Exception exception = assertThrows(EJBException.class, () -> {
+            tradeSLSBBean.completeOrder(3, false);
+        });
+
+        // Verify
+        assertEquals("Error: attempt to complete Order that is already completed", exception.getMessage());
+    }
+
+    @Test
+    public void testCompleteOrderNullOrder() throws Exception {
+        // Execute
+        Exception exception = assertThrows(EJBException.class, () -> {
+            tradeSLSBBean.completeOrder(4, false);
+        });
+
+        // Verify
+        assertEquals("Error: attempt to complete Order that is null", exception.getMessage());
+    }
+
+    @Test
+    public void testCompleteOrderSellNullHolding() throws Exception {
+        // Mock dependencies
+        OrderDataBean order = mock(OrderDataBean.class);
+        when(order.getOrderID()).thenReturn(5);
+        when(order.isCompleted()).thenReturn(false);
+        when(order.isSell()).thenReturn(true);
+
+        AccountDataBean account = mock(AccountDataBean.class);
+        when(order.getAccount()).thenReturn(account);
+
+        QuoteDataBean quote = mock(QuoteDataBean.class);
+        when(order.getQuote()).thenReturn(quote);
+
+        when(order.getHolding()).thenReturn(null);
+
+        BigDecimal price = new BigDecimal("10.00");
+        double quantity = 10;
+        when(order.getPrice()).thenReturn(price);
+        when(order.getQuantity()).thenReturn(quantity);
+
+        // Execute
+        OrderDataBean result = tradeSLSBBean.completeOrder(5, false);
+
+        // Verify
+        assertEquals(5, result.getOrderID());
+        assertEquals("closed", result.getOrderStatus());
+        assertNull(result.getHolding());
+    }
+
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[17] cannot find symbol
+  symbol:   class AccountDataBean
+  location: package com.ibm.websphere.samples.daytrader.beans
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[18] cannot find symbol
+  symbol:   class HoldingDataBean
+  location: package com.ibm.websphere.samples.daytrader.beans
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[20] cannot find symbol
+  symbol:   class OrderDataBean
+  location: package com.ibm.websphere.samples.daytrader.beans
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[21] cannot find symbol
+  symbol:   class QuoteDataBean
+  location: package com.ibm.websphere.samples.daytrader.beans
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[46] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean_completeOrderTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[51] cannot find symbol
+  symbol:   class AccountDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean_completeOrderTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[54] cannot find symbol
+  symbol:   class QuoteDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean_completeOrderTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[57] cannot find symbol
+  symbol:   class HoldingDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean_completeOrderTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[68] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean_completeOrderTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[80] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean_completeOrderTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[85] cannot find symbol
+  symbol:   class AccountDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean_completeOrderTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[88] cannot find symbol
+  symbol:   class QuoteDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean_completeOrderTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[91] cannot find symbol
+  symbol:   class HoldingDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean_completeOrderTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[102] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean_completeOrderTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[114] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean_completeOrderTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[141] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean_completeOrderTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[146] cannot find symbol
+  symbol:   class AccountDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean_completeOrderTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[149] cannot find symbol
+  symbol:   class QuoteDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean_completeOrderTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[160] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean_completeOrderTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: TradeSLSBBean_completeOrderTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

@@ -1,0 +1,76 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): Option_toStringTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.cli;
+
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Option_toStringTestGenerated {
+
+    @Test
+        public void testToString_basic() {
+            Option option = new Option("a", false, "Description");
+            assertEquals("[ Option a :: Description :: null ]", option.toString());
+        }
+
+    @Test
+        public void testToString_withLongOption() {
+            Option option = new Option("a", "long-a", false, "Description");
+            assertEquals("[ Option a long-a :: Description :: null ]", option.toString());
+        }
+
+    @Test
+        public void testToString_withArgs() {
+            Option option = new Option("a", true, "Description");
+            option.hasArgs();
+            assertEquals("[ Option a [ARG... ] :: Description :: null ]", option.toString());
+        }
+
+    @Test
+        public void testToString_withArg() {
+            Option option = new Option("a", false, "Description");
+            option.hasArg();
+            assertEquals("[ Option a [ARG] :: Description :: null ]", option.toString());
+        }
+
+    @Test
+    public void testToString_withType() {
+        Option option = new Option("b", false, "Description");
+        option.setType(Integer.class);
+        assertEquals("[ Option b :: Description :: class java.lang.Integer ]", option.toString());
+    }
+
+    @Test
+    public void testToString_withDeprecated() {
+        Option option = new Option("c", false, "Description");
+        option.setDeprecated(new DeprecatedAttributes());
+        assertEquals("[ Option c :: Description :: null ]", option.toString());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Option_toStringTestGenerated.java:[48] constructor DeprecatedAttributes in class org.apache.commons.cli.DeprecatedAttributes cannot be applied to given types;
+  required: java.lang.String,java.lang.String,boolean
+  found:    no arguments
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: Option_toStringTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

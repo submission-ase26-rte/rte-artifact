@@ -1,0 +1,69 @@
+{
+  "method_id": 24,
+  "tested_method": "createCompressorInputStream",
+  "tested_class": "CompressorStreamFactory",
+  "project": "Compress",
+  "timestamp": "2026-02-03T13:19:00.948401",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\GPT-4 - ASTER\\Compress\\Run-1\\src\\test\\java\\org\\apache\\commons\\compress\\compressors\\Metodo24_createCompressorInputStream_CompressorStreamFactory_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 1,
+    "tests_total": 1,
+    "tests_failed": 0,
+    "line_coverage": 4.444444444444445,
+    "branch_coverage": 4.761904761904762,
+    "has_compilation_errors": false,
+    "compilation_errors": null,
+    "test_info": {
+      "valid_tests": [
+        "testCreateCompressorInputStreamWithNullInputStream_PYXN15_EbMS0"
+      ],
+      "invalid_tests": [],
+      "failed_assert_tests": [],
+      "runtime_error_tests": []
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 1,
+    "assertion_complexity": 0.5,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 1.0,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.6065,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.0,
+    "overall_naturalness_score": 0.6516
+  },
+  "metrics": {
+    "crystalbleu_similarity": 2.815831694201299e-05,
+    "string_similarity": 0.14107235814679855,
+    "token_similarity": 0.25925925925925924,
+    "ast_similarity": 0.034482758620689655,
+    "embedding_similarity": 0.8276162147521973,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.06666666666666667,
+      "similar_blocks": 5,
+      "total_blocks": 150
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.3474321912638419,
+    "passes_threshold": false
+  },
+  "original_method": "    public CompressorInputStream createCompressorInputStream(final String name, final InputStream in, final boolean actualDecompressConcatenated)\n            throws CompressorException {\n        if (name == null || in == null) {\n            throw new IllegalArgumentException(\"Compressor name and stream must not be null.\");\n        }\n\n        try {\n\n            if (GZIP.equalsIgnoreCase(name)) {\n                return new GzipCompressorInputStream(in, actualDecompressConcatenated);\n            }\n\n            if (BZIP2.equalsIgnoreCase(name)) {\n                return new BZip2CompressorInputStream(in, actualDecompressConcatenated);\n            }\n\n            if (BROTLI.equalsIgnoreCase(name)) {\n                if (!BrotliUtils.isBrotliCompressionAvailable()) {\n                    throw new CompressorException(\"Brotli compression is not available.\" + YOU_NEED_BROTLI_DEC);\n                }\n                return new BrotliCompressorInputStream(in);\n            }\n\n            if (XZ.equalsIgnoreCase(name)) {\n                if (!XZUtils.isXZCompressionAvailable()) {\n                    throw new CompressorException(\"XZ compression is not available.\" + YOU_NEED_XZ_JAVA);\n                }\n                return new XZCompressorInputStream(in, actualDecompressConcatenated, memoryLimitInKb);\n            }\n\n            if (ZSTANDARD.equalsIgnoreCase(name)) {\n                if (!ZstdUtils.isZstdCompressionAvailable()) {\n                    throw new CompressorException(\"Zstandard compression is not available.\" + YOU_NEED_ZSTD_JNI);\n                }\n                return new ZstdCompressorInputStream(in);\n            }\n\n            if (LZMA.equalsIgnoreCase(name)) {\n                if (!LZMAUtils.isLZMACompressionAvailable()) {\n                    throw new CompressorException(\"LZMA compression is not available\" + YOU_NEED_XZ_JAVA);\n                }\n                return new LZMACompressorInputStream(in, memoryLimitInKb);\n            }\n\n            if (PACK200.equalsIgnoreCase(name)) {\n                return new Pack200CompressorInputStream(in);\n            }\n\n            if (SNAPPY_RAW.equalsIgnoreCase(name)) {\n                return new SnappyCompressorInputStream(in);\n            }\n\n            if (SNAPPY_FRAMED.equalsIgnoreCase(name)) {\n                return new FramedSnappyCompressorInputStream(in);\n            }\n\n            if (Z.equalsIgnoreCase(name)) {\n                return new ZCompressorInputStream(in, memoryLimitInKb);\n            }\n\n            if (DEFLATE.equalsIgnoreCase(name)) {\n                return new DeflateCompressorInputStream(in);\n            }\n\n            if (DEFLATE64.equalsIgnoreCase(name)) {\n                return new Deflate64CompressorInputStream(in);\n            }\n\n            if (LZ4_BLOCK.equalsIgnoreCase(name)) {\n                return new BlockLZ4CompressorInputStream(in);\n            }\n\n            if (LZ4_FRAMED.equalsIgnoreCase(name)) {\n                return new FramedLZ4CompressorInputStream(in, actualDecompressConcatenated);\n            }\n\n        } catch (final IOException e) {\n            throw new CompressorException(\"Could not create CompressorInputStream.\", e);\n        }\n        final CompressorStreamProvider compressorStreamProvider = getCompressorInputStreamProviders().get(toKey(name));\n        if (compressorStreamProvider != null) {\n            return compressorStreamProvider.createCompressorInputStream(name, in, actualDecompressConcatenated);\n        }\n\n        throw new CompressorException(\"Compressor: \" + name + \" not found.\");\n    }",
+  "regenerated_method": "public CompressorInputStream createCompressorInputStream(final String name, final InputStream in, final boolean actualDecompressConcatenated) throws CompressorException {\n    if (in == null) {\n        throw new IllegalArgumentException(\"Stream must not be null.\");\n    }\n    // Placeholder for actual implementation\n    return null;\n}",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6580575454631372,
+  "original_metrics": {
+    "loc": 86,
+    "sloc": 69,
+    "complexity": 30
+  }
+}

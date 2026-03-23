@@ -1,0 +1,194 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.springframework.samples.petclinic.owner;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.core.style.ToStringCreator;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Owner_toStringTestGenerated {
+
+    @Mock
+    private List<Pet> pets;
+
+    @InjectMocks
+    private Owner owner;
+
+    private AutoCloseable closeable;
+
+    @BeforeEach
+    public void setUp() {
+        closeable = MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(owner, "address", "123 Main St");
+        ReflectionTestUtils.setField(owner, "city", "Springfield");
+        ReflectionTestUtils.setField(owner, "telephone", "555-1234");
+        ReflectionTestUtils.setField(owner, "pets", new ArrayList<>());
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        closeable.close();
+    }
+
+    @Test
+    public void testToStringWithAllFieldsSet() {
+        ReflectionTestUtils.setField(owner, "id", 1);
+        when(owner.isNew()).thenReturn(false);
+        when(owner.getLastName()).thenReturn("Doe");
+        when(owner.getFirstName()).thenReturn("John");
+
+        String expected = new ToStringCreator(owner)
+                .append("id", 1)
+                .append("new", false)
+                .append("lastName", "Doe")
+                .append("firstName", "John")
+                .append("address", "123 Main St")
+                .append("city", "Springfield")
+                .append("telephone", "555-1234")
+                .toString();
+
+        assertEquals(expected, owner.toString());
+    }
+
+    @Test
+    public void testToStringWithNullFields() {
+        ReflectionTestUtils.setField(owner, "id", null);
+        when(owner.isNew()).thenReturn(true);
+        when(owner.getLastName()).thenReturn(null);
+        when(owner.getFirstName()).thenReturn(null);
+
+        String expected = new ToStringCreator(owner)
+                .append("id", null)
+                .append("new", true)
+                .append("lastName", null)
+                .append("firstName", null)
+                .append("address", "123 Main St")
+                .append("city", "Springfield")
+                .append("telephone", "555-1234")
+                .toString();
+
+        assertEquals(expected, owner.toString());
+    }
+
+    @Test
+    public void testToStringWithEmptyFields() {
+        ReflectionTestUtils.setField(owner, "id", 0);
+        when(owner.isNew()).thenReturn(false);
+        when(owner.getLastName()).thenReturn("");
+        when(owner.getFirstName()).thenReturn("");
+
+        String expected = new ToStringCreator(owner)
+                .append("id", 0)
+                .append("new", false)
+                .append("lastName", "")
+                .append("firstName", "")
+                .append("address", "123 Main St")
+                .append("city", "Springfield")
+                .append("telephone", "555-1234")
+                .toString();
+
+        assertEquals(expected, owner.toString());
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 0.00% | Branch: 0.00%
+- Tests: 0/3 passed
+
+TEST STATUS:
+- PASSED (0): none
+- FAILED (0): none
+- ERRORS (3): testToStringWithAllFieldsSet, testToStringWithNullFields, testToStringWithEmptyFields
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   ToStringCreator -> org.springframework.core.style.ToStringCreator
+//   Person -> org.springframework.samples.petclinic.model.Person
+//   Assert -> org.springframework.util.Assert
+//   CascadeType -> jakarta.persistence.CascadeType
+//   Column -> jakarta.persistence.Column
+//   Entity -> jakarta.persistence.Entity
+//   FetchType -> jakarta.persistence.FetchType
+//   JoinColumn -> jakarta.persistence.JoinColumn
+//   OneToMany -> jakarta.persistence.OneToMany
+//   OrderBy -> jakarta.persistence.OrderBy
+//   Table -> jakarta.persistence.Table
+//   Pattern -> jakarta.validation.constraints.Pattern
+//   NotBlank -> jakarta.validation.constraints.NotBlank
+
+// === Class: Owner ===
+// Fields (with actual visibility):
+    private String address;
+    private String city;
+    private String telephone;
+    private List pets;
+
+// Getter/Setter Methods (for test assertions):
+public String getAddress();
+public void setAddress(String address);
+public String getCity();
+public void setCity(String city);
+public String getTelephone();
+public void setTelephone(String telephone);
+public List<Pet> getPets();
+public Pet getPet(String name);
+public Pet getPet(Integer id);
+public Pet getPet(String name, boolean ignoreNew);
+
+
+TASK:
+Regenerate ONLY the method "toString" OF CLASS "Owner" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public String toString() {
+    // your implementation here
+}
+```
+
+
+- Package: org.springframework.samples.petclinic.owner
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in Owner
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

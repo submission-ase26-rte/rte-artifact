@@ -1,0 +1,188 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language.bm;
+Class name (MUST be exactly): PhoneticEngine_encodeTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.codec.language.bm;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PhoneticEngine_encodeTestGenerated {
+
+    private PhoneticEngine phoneticEngine;
+
+    @BeforeEach
+    public void setUp() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.APPROX, true);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        phoneticEngine = null;
+    }
+
+    @Test
+    public void testEncodeNullInput() {
+        Executable executable = () -> phoneticEngine.encode(null, Languages.LanguageSet.from(Arrays.asList("en")));
+        assertThrows(NullPointerException.class, executable);
+    }
+
+    @Test
+    public void testEncodeEmptyInput() {
+        String result = phoneticEngine.encode("", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertEquals("", result);
+    }
+
+    @Test
+    public void testEncodeSingleWord() {
+        String result = phoneticEngine.encode("Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeMultiWordName() {
+        String result = phoneticEngine.encode("John Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithDPrefix() {
+        String result = phoneticEngine.encode("d'Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithGenericPrefix() {
+        phoneticEngine.NAME_PREFIXES = new EnumMap<>(NameType.class);
+        phoneticEngine.NAME_PREFIXES.put(NameType.GENERIC, Arrays.asList("de"));
+        String result = phoneticEngine.encode("de Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeSephardicName() {
+        phoneticEngine.nameType = NameType.SEPHARDIC;
+        String result = phoneticEngine.encode("Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeAshkenaziName() {
+        phoneticEngine.nameType = NameType.ASHKENAZI;
+        String result = phoneticEngine.encode("Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithConcatModeDisabled() {
+        phoneticEngine.concat = false;
+        String result = phoneticEngine.encode("John Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithEmptyLanguageSet() {
+        String result = phoneticEngine.encode("Smith", Languages.LanguageSet.from(Collections.emptyList()));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithInvalidLanguageSet() {
+        String result = phoneticEngine.encode("Smith", Languages.LanguageSet.from(Arrays.asList("invalid")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithSpecialCharacters() {
+        String result = phoneticEngine.encode("Smi-th", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithTrailingSpaces() {
+        String result = phoneticEngine.encode("Smith   ", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithLeadingSpaces() {
+        String result = phoneticEngine.encode("   Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithMultipleSpaces() {
+        String result = phoneticEngine.encode("John   Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithDashSeparator() {
+        String result = phoneticEngine.encode("John-Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithUnreachableCase() {
+        phoneticEngine.nameType = NameType.values()[NameType.values().length]; // Simulate unreachable case
+        Executable executable = () -> phoneticEngine.encode("Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertThrows(IllegalStateException.class, executable);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[34] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[40] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[46] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[52] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[58] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[64] NAME_PREFIXES has private access in org.apache.commons.codec.language.bm.PhoneticEngine
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[64] cannot find symbol
+  symbol:   class EnumMap
+  location: class org.apache.commons.codec.language.bm.PhoneticEngine_encodeTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[65] NAME_PREFIXES has private access in org.apache.commons.codec.language.bm.PhoneticEngine
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[65] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[66] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[72] nameType has private access in org.apache.commons.codec.language.bm.PhoneticEngine
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[73] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[79] nameType has private access in org.apache.commons.codec.language.bm.PhoneticEngine
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[80] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[86] concat has private access in org.apache.commons.codec.language.bm.PhoneticEngine
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[87] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[93] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[99] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[105] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[111] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[117] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[123] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[129] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[135] nameType has private access in org.apache.commons.codec.language.bm.PhoneticEngine
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[136] incompatible types: no instance(s) of type variable(s) T exist so that java.util.List<T> conforms to java.util.Set<java.lang.String>
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: PhoneticEngine_encodeTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

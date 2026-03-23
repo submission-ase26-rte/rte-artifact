@@ -1,0 +1,77 @@
+```java
+public boolean canConvert(final Object object, final Class toType) {
+    if (object == null) {
+        return toType.isAssignableFrom(null);
+    }
+
+    if (toType == boolean.class || toType == Boolean.class) {
+        return object instanceof Number;
+    }
+
+    if (toType == Integer.class) {
+        return object instanceof Number || object instanceof String;
+    }
+
+    if (toType == Long.class) {
+        return object instanceof Number || object instanceof String;
+    }
+
+    if (toType == Double.class) {
+        return object instanceof Number || object instanceof String;
+    }
+
+    if (toType == Float.class) {
+        return object instanceof Number || object instanceof String;
+    }
+
+    if (toType == Byte.class) {
+        return object instanceof Number || object instanceof String;
+    }
+
+    if (toType == Short.class) {
+        return object instanceof Number || object instanceof String;
+    }
+
+    if (toType == Character.class) {
+        return object instanceof String;
+    }
+
+    if (toType.isArray()) {
+        if (object.getClass().isArray()) {
+            return true;
+        }
+        if (object instanceof Collection) {
+            return true;
+        }
+        if (object instanceof List) {
+            return true;
+        }
+        if (object instanceof Set) {
+            return true;
+        }
+        return false;
+    }
+
+    if (object instanceof Collection) {
+        return true;
+    }
+
+    if (object instanceof List) {
+        return true;
+    }
+
+    if (object instanceof Set) {
+        return true;
+    }
+
+    if (object instanceof Pointer) {
+        return toType.isInstance(((Pointer) object).getValue());
+    }
+
+    if (object instanceof NodeSet) {
+        return true;
+    }
+
+    return toType.isInstance(object);
+}
+```

@@ -1,0 +1,192 @@
+package org.apache.commons.cli;
+
+import java.io.File;
+import java.net.URL;
+import java.util.Date;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class PatternOptionBuilder_parsePatternTestGenerated {
+
+    @Test
+    void testParsePatternWithValueTypeString() {
+        Options options = PatternOptionBuilder.parsePattern("aS");
+        assertEquals(1, options.getOptions().size());
+        assertEquals(String.class, options.getOption("a").getType());
+    }
+
+    @Test
+    void testParsePatternWithValueTypeNumber() {
+        Options options = PatternOptionBuilder.parsePattern("aN");
+        assertEquals(1, options.getOptions().size());
+        assertEquals(Number.class, options.getOption("a").getType());
+    }
+
+    @Test
+    void testParsePatternWithValueTypeDate() {
+        Options options = PatternOptionBuilder.parsePattern("aD");
+        assertEquals(1, options.getOptions().size());
+        assertEquals(Date.class, options.getOption("a").getType());
+    }
+
+    @Test
+    void testParsePatternWithValueTypeClass() {
+        Options options = PatternOptionBuilder.parsePattern("aC");
+        assertEquals(1, options.getOptions().size());
+        assertEquals(Class.class, options.getOption("a").getType());
+    }
+
+    @Test
+    void testParsePatternWithValueTypeExistingFile() {
+        Options options = PatternOptionBuilder.parsePattern("aF");
+        assertEquals(1, options.getOptions().size());
+        assertEquals(File.class, options.getOption("a").getType());
+    }
+
+    @Test
+    void testParsePatternWithValueTypeFile() {
+        Options options = PatternOptionBuilder.parsePattern("aE");
+        assertEquals(1, options.getOptions().size());
+        assertEquals(File.class, options.getOption("a").getType());
+    }
+
+    @Test
+    void testParsePatternWithValueTypeFiles() {
+        Options options = PatternOptionBuilder.parsePattern("aP");
+        assertEquals(1, options.getOptions().size());
+        assertEquals(File[].class, options.getOption("a").getType());
+    }
+
+    @Test
+    void testParsePatternWithValueTypeURL() {
+        Options options = PatternOptionBuilder.parsePattern("aU");
+        assertEquals(1, options.getOptions().size());
+        assertEquals(URL.class, options.getOption("a").getType());
+    }
+
+    @Test
+    void testParsePatternWithRequiredAndValueType() {
+        Options options = PatternOptionBuilder.parsePattern("a!S");
+        assertEquals(1, options.getOptions().size());
+        assertTrue(options.getOption("a").isRequired());
+        assertEquals(String.class, options.getOption("a").getType());
+    }
+
+    @Test
+    void testParsePatternWithMultipleOptionsAndValueTypes() {
+        Options options = PatternOptionBuilder.parsePattern("aS!bN");
+        assertEquals(2, options.getOptions().size());
+        assertEquals("a", options.getOption("a").getOpt());
+        assertEquals(String.class, options.getOption("a").getType());
+        assertTrue(options.getOption("b").isRequired());
+        assertEquals("b", options.getOption("b").getOpt());
+        assertEquals(Number.class, options.getOption("b").getType());
+    }
+
+    @Test
+    void testParsePatternWithInvalidValueCode() {
+        Options options = PatternOptionBuilder.parsePattern("aX");
+        assertEquals(1, options.getOptions().size());
+        assertEquals("a", options.getOption("a").getOpt());
+        assertNull(options.getOption("a").getType());
+    }
+
+    @Test
+    void testParsePatternWithTrailingValueCode() {
+        Options options = PatternOptionBuilder.parsePattern("S");
+        assertEquals(0, options.getOptions().size());
+    }
+
+    @Test
+    void testParsePatternWithMixedValidAndInvalidOptions() {
+        Options options = PatternOptionBuilder.parsePattern("aS!bXc");
+        assertEquals(3, options.getOptions().size());
+        assertEquals("a", options.getOption("a").getOpt());
+        assertEquals(String.class, options.getOption("a").getType());
+        assertEquals("b", options.getOption("b").getOpt());
+        assertNull(options.getOption("b").getType());
+        assertEquals("c", options.getOption("c").getOpt());
+        assertNull(options.getOption("c").getType());
+    }
+
+    @Test
+    void testParsePatternWithEmptyOption() {
+        Options options = PatternOptionBuilder.parsePattern("");
+        assertEquals(0, options.getOptions().size());
+    }
+
+    @Test
+    void testParsePatternWithSingleOptionNoValueType() {
+        Options options = PatternOptionBuilder.parsePattern("a");
+        assertEquals(1, options.getOptions().size());
+        assertEquals("a", options.getOption("a").getOpt());
+        assertNull(options.getOption("a").getType());
+    }
+
+    @Test
+    void testParsePatternWithConsecutiveOptions() {
+        Options options = PatternOptionBuilder.parsePattern("ab");
+        assertEquals(2, options.getOptions().size());
+        assertEquals("a", options.getOption("a").getOpt());
+        assertEquals("b", options.getOption("b").getOpt());
+        assertNull(options.getOption("a").getType());
+        assertNull(options.getOption("b").getType());
+    }
+
+    @Test
+    void testParsePatternWithMultipleRequiredOptions() {
+        Options options = PatternOptionBuilder.parsePattern("a!b!c");
+        assertEquals(3, options.getOptions().size());
+        assertTrue(options.getOption("a").isRequired());
+        assertTrue(options.getOption("b").isRequired());
+        assertTrue(options.getOption("c").isRequired());
+        assertNull(options.getOption("a").getType());
+        assertNull(options.getOption("b").getType());
+        assertNull(options.getOption("c").getType());
+    }
+
+    @Test
+    void testParsePatternWithOptionAndValueTypeAtEnd() {
+        Options options = PatternOptionBuilder.parsePattern("aS");
+        assertEquals(1, options.getOptions().size());
+        assertEquals("a", options.getOption("a").getOpt());
+        assertEquals(String.class, options.getOption("a").getType());
+    }
+
+    @Test
+    void testParsePatternWithRequiredOptionAndValueTypeAtEnd() {
+        Options options = PatternOptionBuilder.parsePattern("a!S");
+        assertEquals(1, options.getOptions().size());
+        assertTrue(options.getOption("a").isRequired());
+        assertEquals(String.class, options.getOption("a").getType());
+    }
+
+    @Test
+    void testParsePatternWithMultipleOptions() {
+        Options options = PatternOptionBuilder.parsePattern("ab");
+        assertEquals(2, options.getOptions().size());
+        assertEquals("a", options.getOption("a").getOpt());
+        assertEquals("b", options.getOption("b").getOpt());
+    }
+
+    @Test
+    void testParsePatternWithRequiredOption() {
+        Options options = PatternOptionBuilder.parsePattern("a!");
+        assertEquals(1, options.getOptions().size());
+        assertTrue(options.getOption("a").isRequired());
+    }
+
+    @Test
+    void testParsePatternWithEmptyString() {
+        Options options = PatternOptionBuilder.parsePattern("");
+        assertEquals(0, options.getOptions().size());
+    }
+
+    @Test
+    void testParsePatternWithNullInput() {
+        assertThrows(NullPointerException.class, () -> PatternOptionBuilder.parsePattern(null));
+    }
+
+}

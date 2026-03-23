@@ -1,0 +1,149 @@
+/**
+ * Filtered unit tests for method: setInode(long inode)
+ * Original class: CpioArchiveEntry
+ * Tests that actually call the target method
+ */
+package org.apache.commons.compress.archivers.cpio;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.LinkOption;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo28_unit_setInode_CpioArchiveEntry_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetInode_mDuZ0() {
+    CpioArchiveEntry entry = new CpioArchiveEntry((short) 1);
+    entry.setInode(123);
+    assertEquals(123, entry.getInode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetInode2_ESDC1() {
+    CpioArchiveEntry entry = new CpioArchiveEntry((short) 1, "test", 123);
+    entry.setInode(456);
+    assertEquals(456, entry.getInode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetInode3_ejQU2() {
+    CpioArchiveEntry entry = new CpioArchiveEntry("test");
+    entry.setInode(789);
+    assertEquals(789, entry.getInode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetInode4_oUqF3() {
+    CpioArchiveEntry entry = new CpioArchiveEntry((short) 1, new File("test"), "test");
+    entry.setInode(901);
+    assertEquals(901, entry.getInode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetInode6_Hewy5() {
+    CpioArchiveEntry entry = new CpioArchiveEntry((short) 1, "test", 123);
+    entry.setInode(567);
+    assertEquals(567, entry.getInode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetInode7_GnmT6() {
+    CpioArchiveEntry entry = new CpioArchiveEntry((short) 1, "test", 123);
+    entry.setInode(890);
+    assertEquals(890, entry.getInode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetInode8_LJtw7() {
+    CpioArchiveEntry entry = new CpioArchiveEntry((short) 1, "test");
+    entry.setInode(111);
+    assertEquals(111, entry.getInode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetInode9_zOQt8() {
+    CpioArchiveEntry entry = new CpioArchiveEntry((short) 1, "test", 123);
+    entry.setInode(222);
+    assertEquals(222, entry.getInode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetInode10_KPOe9() {
+    CpioArchiveEntry entry = new CpioArchiveEntry((short) 1, "test", 123);
+    entry.setInode(333);
+    assertEquals(333, entry.getInode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetInode11_CMlm10() {
+    CpioArchiveEntry entry = new CpioArchiveEntry((short) 1, "test", 123);
+    entry.setInode(444);
+    assertEquals(444, entry.getInode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetInode12_HnaV11() {
+    CpioArchiveEntry entry = new CpioArchiveEntry((short) 1, "test", 123);
+    entry.setInode(555);
+    assertEquals(555, entry.getInode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetInode13_pwai12() {
+    CpioArchiveEntry entry = new CpioArchiveEntry((short) 1, "test", 123);
+    entry.setInode(666);
+    assertEquals(666, entry.getInode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetInode14_UZds13() {
+    CpioArchiveEntry entry = new CpioArchiveEntry((short) 1, "test", 123);
+    entry.setInode(777);
+    assertEquals(777, entry.getInode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetInode15_FxSG14() {
+    CpioArchiveEntry entry = new CpioArchiveEntry((short) 1, "test", 123);
+    entry.setInode(888);
+    assertEquals(888, entry.getInode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetInode16_vJoU15() {
+    CpioArchiveEntry entry = new CpioArchiveEntry((short) 1, "test", 123);
+    entry.setInode(999);
+    assertEquals(999, entry.getInode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetInode17_pOBB16() {
+    CpioArchiveEntry entry = new CpioArchiveEntry((short) 1, "test", 123);
+    entry.setInode(1010);
+    assertEquals(1010, entry.getInode());
+    }
+}

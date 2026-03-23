@@ -1,0 +1,149 @@
+```java
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.ar.ArArchiveInputStream;
+import org.apache.commons.compress.archivers.arj.ArjArchiveInputStream;
+import org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.utils.IOUtils;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class ArchiveStreamFactory_detectTestGenerated {
+
+    @Test
+    void testDetectNoMarkSupport() throws IOException {
+        InputStream in = new ByteArrayInputStream(new byte[]{});
+        assertThrows(IllegalArgumentException.class, () -> ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectEmptySignatureTar() throws IOException {
+        InputStream in = new ByteArrayInputStream(new byte[]{});
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectUnknownSignature() throws IOException {
+        byte[] unknownSignature = new byte[]{1, 2, 3, 4, 5};
+        InputStream in = new ByteArrayInputStream(unknownSignature);
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectTarSignature() throws IOException {
+        byte[] tarSignature = {'0', '0', '0', '0'};
+        InputStream in = new ByteArrayInputStream(tarSignature);
+        assertEquals("tar", ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectZipSignature() throws IOException {
+        byte[] zipSignature = {0x50, 0x4B, 0x03, 0x04};
+        InputStream in = new ByteArrayInputStream(zipSignature);
+        assertEquals("zip", ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectArSignature() throws IOException {
+        byte[] arSignature = {(byte) 0, (byte) 0, (byte) 0, (byte) 1};
+        InputStream in = new ByteArrayInputStream(arSignature);
+        assertEquals("ar", ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectCpioSignature() throws IOException {
+        byte[] cpioSignature = {(byte) 0, (byte) 0, (byte) 1, (byte) 0};
+        InputStream in = new ByteArrayInputStream(cpioSignature);
+        assertEquals("cpio", ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectArjSignature() throws IOException {
+        byte[] arjSignature = {(byte) 0, (byte) 0, (byte) 1, (byte) 0, (byte) 2};
+        InputStream in = new ByteArrayInputStream(arjSignature);
+        assertEquals("arj", ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectSevenZSignature() throws IOException {
+        byte[] sevenZSignature = {7, 7, 0, 0, 0, 0, 0, 0};
+        InputStream in = new ByteArrayInputStream(sevenZSignature);
+        assertEquals("sevenz", ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectDumpSignature() throws IOException {
+        byte[] dumpSignature = {(byte) 0, (byte) 0, (byte) 0, (byte) 1, (byte) 2, (byte) 3, (byte) 4, (byte) 5};
+        InputStream in = new ByteArrayInputStream(dumpSignature);
+        assertEquals("dump", ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectTarSignatureWithSparseHeaders() throws IOException {
+        byte[] tarSignature = {'0', '0', '0', '0'};
+        InputStream in = new ByteArrayInputStream(tarSignature);
+        assertEquals("tar", ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectTarWithNonDirectoryEntry() throws IOException {
+         byte[] tarHeader = {
+                '0', '0', '0', '0', // Name
+                '0', '0', '0', '0', // Version
+                '0', '0', '0', '0', // Owner
+                '0', '0', '0', '0', // Group
+                '0', '0', '0', '0', // Permissions
+                '0', '0', '0', '0', // Size
+                '0', '0', '0', '0', // Mod time
+                '0', '0', '0', '0', // Checksum
+                '0', '0', '0', '0'  // Link flag
+        };
+        InputStream in = new ByteArrayInputStream(tarHeader);
+        assertEquals("tar", ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectTarWithDirectoryEntry() throws IOException {
+        byte[] tarHeader = {
+                '0', '0', '0', '0', // Name
+                '0', '0', '0', '0', // Version
+                '0', '0', '0', '0', // Owner
+                '0', '0', '0', '0', // Group
+                '0', '0', '0', '0', // Permissions
+                '0', '0', '0', '0', // Size
+                '0', '0', '0', '0', // Mod time
+                '0', '0', '0', '0', // Checksum
+                '0', '0', '0', '0'  // Link flag
+        };
+        InputStream in = new ByteArrayInputStream(tarHeader);
+        assertEquals("tar", ArchiveStreamFactory.detect(in));
+    }
+
+     @Test
+    void testDetectTarWithZeroSizeFile() throws IOException {
+        byte[] tarHeader = {
+            '0', '0', '0', '0', // Name
+            '0', '0', '0', '0', // Version
+            '0', '0', '0', '0', // Owner
+            '0', '0', '0', '0', // Group
+            '0', '0', '0', '0', // Permissions
+            '0', '0', '0', '0', // Size
+            '0', '0', '0', '0', // Mod time
+            '0', '0', '0', '0', // Checksum
+            '0', '0', '0', '0'  // Link flag
+        };
+        InputStream in = new ByteArrayInputStream(tarHeader);
+        assertEquals("tar", ArchiveStreamFactory.detect(in));
+    }
+}
+```

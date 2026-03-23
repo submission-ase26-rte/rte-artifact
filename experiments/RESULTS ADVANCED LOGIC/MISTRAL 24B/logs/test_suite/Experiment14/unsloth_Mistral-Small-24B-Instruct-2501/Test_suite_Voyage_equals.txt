@@ -1,0 +1,55 @@
+package org.eclipse.cargotracker.domain.model.voyage;
+
+import jakarta.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.lang3.Validate;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Voyage_equalsTestGenerated {
+
+    private Voyage voyage1;
+    private Voyage voyage2;
+    private Voyage voyage3;
+
+    @BeforeEach
+    void setUp() {
+        List<CarrierMovement> carrierMovements = new ArrayList<>();
+        voyage1 = new Voyage(new VoyageNumber("V123"), new Schedule(carrierMovements));
+        voyage2 = new Voyage(new VoyageNumber("V123"), new Schedule(carrierMovements));
+        voyage3 = new Voyage(new VoyageNumber("V456"), new Schedule(carrierMovements));
+    }
+
+    @Test
+    void testEquals_WhenSameObject() {
+        assertTrue(voyage1.equals(voyage1));
+    }
+
+    @Test
+    void testEquals_WhenNull() {
+        assertFalse(voyage1.equals(null));
+    }
+
+    @Test
+    void testEquals_WhenDifferentClass() {
+        assertFalse(voyage1.equals("Not a Voyage"));
+    }
+
+    @Test
+    void testEquals_WhenSameVoyageNumber() {
+        assertTrue(voyage1.equals(voyage2));
+    }
+
+    @Test
+    void testEquals_WhenDifferentVoyageNumber() {
+        assertFalse(voyage1.equals(voyage3));
+    }
+}

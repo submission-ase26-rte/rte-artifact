@@ -1,0 +1,210 @@
+```java
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+
+public class TradeScenarioServlet_performTaskTestGenerated {
+
+  @BeforeEach
+  public void setUp() throws Exception {
+  }
+
+  @AfterEach
+  public void tearDown() throws Exception {
+  }
+
+  @Test
+  public void testPerformTask_actionNull() throws ServletException, IOException {
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    PrintWriter out = mock(PrintWriter.class);
+    when(resp.getOutputStream()).thenReturn(out);
+    ServletContext ctx = mock(ServletContext.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getSession(true)).thenReturn(session);
+
+    TradeScenarioServlet servlet = new TradeScenarioServlet();
+    servlet.setServletConfig(mock(javax.servlet.ServletConfig.class));
+    servlet.tasPathPrefix = "prefix";
+    servlet.performTask(req, resp);
+
+    // Verify that the printwriter has been called.
+    verify(out).println("<HTML><HEAD>TradeScenarioServlet</HEAD><BODY>Hello</BODY></HTML>");
+    verify(out).close();
+  }
+
+  @Test
+  public void testPerformTask_userIDNull_actionBlank() throws ServletException, IOException {
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getSession(true)).thenReturn(session);
+
+    TradeScenarioServlet servlet = new TradeScenarioServlet();
+    servlet.setServletConfig(mock(javax.servlet.ServletConfig.class));
+    servlet.tasPathPrefix = "prefix";
+    servlet.performTask(req, resp);
+  }
+
+  @Test
+  public void testPerformTask_actionQ() throws ServletException, IOException {
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getSession(true)).thenReturn(session);
+
+    TradeScenarioServlet servlet = new TradeScenarioServlet();
+    servlet.setServletConfig(mock(javax.servlet.ServletConfig.class));
+    servlet.tasPathPrefix = "prefix";
+
+    when(req.getParameter("action")).thenReturn("q");
+    servlet.performTask(req, resp);
+
+    // Verify the dispatcher is called
+  }
+
+  @Test
+  public void testPerformTask_actionU() throws ServletException, IOException {
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getSession(true)).thenReturn(session);
+
+    TradeScenarioServlet servlet = new TradeScenarioServlet();
+    servlet.setServletConfig(mock(javax.servlet.ServletConfig.class));
+    servlet.tasPathPrefix = "prefix";
+
+    when(req.getParameter("action")).thenReturn("u");
+    servlet.performTask(req, resp);
+
+  }
+
+  @Test
+  public void testPerformTask_actionL() throws ServletException, IOException {
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getSession(true)).thenReturn(session);
+
+    TradeScenarioServlet servlet = new TradeScenarioServlet();
+    servlet.setServletConfig(mock(javax.servlet.ServletConfig.class));
+    servlet.tasPathPrefix = "prefix";
+
+    when(req.getParameter("action")).thenReturn("l");
+    servlet.performTask(req, resp);
+  }
+
+  @Test
+  public void testPerformTask_actionR() throws ServletException, IOException {
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getSession(true)).thenReturn(session);
+
+    TradeScenarioServlet servlet = new TradeScenarioServlet();
+    servlet.setServletConfig(mock(javax.servlet.ServletConfig.class));
+    servlet.tasPathPrefix = "prefix";
+
+    when(req.getParameter("action")).thenReturn("r");
+    servlet.performTask(req, resp);
+
+  }
+
+  @Test
+  public void testPerformTask_actionS() throws ServletException, IOException {
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getSession(true)).thenReturn(session);
+
+    TradeScenarioServlet servlet = new TradeScenarioServlet();
+    servlet.setServletConfig(mock(javax.servlet.ServletConfig.class));
+    servlet.tasPathPrefix = "prefix";
+
+    when(req.getParameter("action")).thenReturn("s");
+    HoldingDataBean holdingData = mock(HoldingDataBean.class);
+    when(holdingData.getPurchaseDate()).thenReturn(new java.util.Date(0));
+
+    java.util.Collection holdings = new java.util.ArrayList<>();
+    holdings.add(holdingData);
+    req.setAttribute("holdingDataBeans", holdings);
+    servlet.performTask(req, resp);
+  }
+
+  @Test
+  public void testPerformTask_actionB() throws ServletException, IOException {
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getSession(true)).thenReturn(session);
+
+    TradeScenarioServlet servlet = new TradeScenarioServlet();
+    servlet.setServletConfig(mock(javax.servlet.ServletConfig.class));
+    servlet.tasPathPrefix = "prefix";
+
+    when(req.getParameter("action")).thenReturn("b");
+    when(TradeConfig.rndSymbol()).thenReturn("testSymbol");
+    servlet.performTask(req, resp);
+  }
+
+  @Test
+  public void testPerformTask_errorGettingServletContext() throws ServletException, IOException {
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getSession(true)).thenReturn(session);
+
+    TradeScenarioServlet servlet = new TradeScenarioServlet();
+    servlet.setServletConfig(mock(javax.servlet.ServletConfig.class));
+    servlet.tasPathPrefix = "prefix";
+
+    servlet.getServletConfig().getServletContext();
+    servlet.performTask(req, resp);
+  }
+
+  private HttpServletRequest mock(HttpServletRequest request) {
+    return mock(HttpServletRequest.class);
+  }
+
+  private HttpServletResponse mock(HttpServletResponse response) {
+    return mock(HttpServletResponse.class);
+  }
+
+  private ServletContext mock(ServletContext context) {
+    return mock(ServletContext.class);
+  }
+
+  private HttpSession mock(HttpSession session) {
+    return mock(HttpSession.class);
+  }
+}
+```

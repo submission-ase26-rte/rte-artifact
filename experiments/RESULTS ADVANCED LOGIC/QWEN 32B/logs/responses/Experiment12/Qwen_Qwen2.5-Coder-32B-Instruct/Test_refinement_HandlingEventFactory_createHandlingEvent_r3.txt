@@ -1,0 +1,152 @@
+```java
+package org.eclipse.cargotracker.domain.model.handling;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.Month;
+import org.eclipse.cargotracker.domain.model.cargo.Cargo;
+import org.eclipse.cargotracker.domain.model.cargo.CargoRepository;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class HandlingEventFactory_createHandlingEventTestGenerated {
+    @Mock
+    private CargoRepository cargoRepository;
+    @Mock
+    private VoyageRepository voyageRepository;
+    @Mock
+    private LocationRepository locationRepository;
+    @InjectMocks
+    private HandlingEventFactory handlingEventFactory;
+    private LocalDateTime registrationTime;
+    private LocalDateTime completionTime;
+    private TrackingId trackingId;
+    private VoyageNumber voyageNumber;
+    private UnLocode unLocode;
+    private HandlingEvent.Type type;
+    private Cargo cargo;
+    private Voyage voyage;
+    private Location location;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        registrationTime = LocalDateTime.of(2023, Month.OCTOBER, 1, 12, 0);
+        completionTime = LocalDateTime.of(2023, Month.OCTOBER, 1, 13, 0);
+        trackingId = new TrackingId("XYZ123");
+        voyageNumber = new VoyageNumber("VOY123");
+        unLocode = new UnLocode("USNYC");
+        type = HandlingEvent.Type.LOAD;
+        cargo = mock(Cargo.class);
+        voyage = mock(Voyage.class);
+        location = mock(Location.class);
+        when(cargoRepository.find(trackingId)).thenReturn(cargo);
+        when(voyageRepository.find(voyageNumber)).thenReturn(voyage);
+        when(locationRepository.find(unLocode)).thenReturn(location);
+    }
+
+    @Test
+    public void testCreateHandlingEventWithUnknownCargo() throws CannotCreateHandlingEventException {
+        when(cargoRepository.find(trackingId)).thenReturn(null);
+        Exception exception = assertThrows(CannotCreateHandlingEventException.class, () -> {
+            handlingEventFactory.createHandlingEvent(
+                    registrationTime, completionTime, trackingId, voyageNumber, unLocode, type);
+        });
+        assertTrue(exception.getCause() instanceof UnknownCargoException);
+    }
+
+    @Test
+    public void testCreateHandlingEventWithUnknownVoyage() throws CannotCreateHandlingEventException {
+        voyageNumber = new VoyageNumber("UNKNOWN");
+        when(voyageRepository.find(voyageNumber)).thenReturn(null);
+        Exception exception = assertThrows(CannotCreateHandlingEventException.class, () -> {
+            handlingEventFactory.createHandlingEvent(
+                    registrationTime, completionTime, trackingId, voyageNumber, unLocode, type);
+        });
+        assertTrue(exception.getCause() instanceof UnknownVoyageException);
+    }
+
+    @Test
+    public void testCreateHandlingEventWithoutVoyage() throws CannotCreateHandlingEventException {
+        voyageNumber = null;
+        HandlingEvent handlingEvent = handlingEventFactory.createHandlingEvent(
+                registrationTime, completionTime, trackingId, voyageNumber, unLocode, type);
+        assertNotNull(handlingEvent);
+        assertEquals(cargo, handlingEvent.getCargo());
+        assertEquals(completionTime, handlingEvent.getCompletionTime());
+        assertEquals(registrationTime, handlingEvent.getRegistrationTime());
+        assertEquals(type, handlingEvent.getType());
+        assertEquals(location, handlingEvent.getLocation());
+        assertNull(handlingEvent.getVoyage());
+    }
+
+    @Test
+    public void testCreateHandlingEventWithUnknownLocation() throws CannotCreateHandlingEventException {
+        unLocode = new UnLocode("UNKNOWN");
+        when(locationRepository.find(unLocode)).thenReturn(null);
+        Exception exception = assertThrows(CannotCreateHandlingEventException.class, () -> {
+            handlingEventFactory.createHandlingEvent(
+                    registrationTime, completionTime, trackingId, voyageNumber, unLocode, type);
+        });
+        assertTrue(exception.getCause() instanceof UnknownLocationException);
+    }
+
+    @Test
+    public void testCreateHandlingEventWithKnownVoyage() throws CannotCreateHandlingEventException {
+        HandlingEvent handlingEvent = handlingEventFactory.createHandlingEvent(
+                registrationTime, completionTime, trackingId, voyageNumber, unLocode, type);
+        assertNotNull(handlingEvent);
+        assertEquals(cargo, handlingEvent.getCargo());
+        assertEquals(completionTime, handlingEvent.getCompletionTime());
+        assertEquals(registrationTime, handlingEvent.getRegistrationTime());
+        assertEquals(type, handlingEvent.getType());
+        assertEquals(location, handlingEvent.getLocation());
+        assertEquals(voyage, handlingEvent.getVoyage());
+    }
+
+    @Test
+    public void testCreateHandlingEventWithDifferentEventType() throws CannotCreateHandlingEventException {
+        type = HandlingEvent.Type.UNLOAD;
+        HandlingEvent handlingEvent = handlingEventFactory.createHandlingEvent(
+                registrationTime, completionTime, trackingId, voyageNumber, unLocode, type);
+        assertNotNull(handlingEvent);
+        assertEquals(cargo, handlingEvent.getCargo());
+        assertEquals(completionTime, handlingEvent.getCompletionTime());
+        assertEquals(registrationTime, handlingEvent.getRegistrationTime());
+        assertEquals(type, handlingEvent.getType());
+        assertEquals(location, handlingEvent.getLocation());
+        assertEquals(voyage, handlingEvent.getVoyage());
+    }
+
+    @Test
+    public void testCreateHandlingEventWithNoVoyageRequired() throws CannotCreateHandlingEventException {
+        type = HandlingEvent.Type.RECEIVE;
+        HandlingEvent handlingEvent = handlingEventFactory.createHandlingEvent(
+                registrationTime, completionTime, trackingId, null, unLocode, type);
+        assertNotNull(handlingEvent);
+        assertEquals(cargo, handlingEvent.getCargo());
+        assertEquals(completionTime, handlingEvent.getCompletionTime());
+        assertEquals(registrationTime, handlingEvent.getRegistrationTime());
+        assertEquals(type, handlingEvent.getType());
+        assertEquals(location, handlingEvent.getLocation());
+        assertNull(handlingEvent.getVoyage());
+    }
+}
+```

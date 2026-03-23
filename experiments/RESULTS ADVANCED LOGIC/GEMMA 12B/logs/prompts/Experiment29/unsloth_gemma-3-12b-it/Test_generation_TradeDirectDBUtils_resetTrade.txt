@@ -1,0 +1,359 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   RunStatsDataBean -> com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean
+//   AccountDataBean -> com.ibm.websphere.samples.daytrader.entities.AccountDataBean
+//   TradeDB -> com.ibm.websphere.samples.daytrader.interfaces.TradeDB
+//   TradeJDBC -> com.ibm.websphere.samples.daytrader.interfaces.TradeJDBC
+//   TradeServices -> com.ibm.websphere.samples.daytrader.interfaces.TradeServices
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   MDBStats -> com.ibm.websphere.samples.daytrader.util.MDBStats
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   BufferedReader -> java.io.BufferedReader
+//   IOException -> java.io.IOException
+//   InputStream -> java.io.InputStream
+//   InputStreamReader -> java.io.InputStreamReader
+//   BigDecimal -> java.math.BigDecimal
+//   Connection -> java.sql.Connection
+//   DatabaseMetaData -> java.sql.DatabaseMetaData
+//   PreparedStatement -> java.sql.PreparedStatement
+//   ResultSet -> java.sql.ResultSet
+//   SQLException -> java.sql.SQLException
+//   Statement -> java.sql.Statement
+//   ArrayList -> java.util.ArrayList
+//   Resource -> javax.annotation.Resource
+//   ApplicationScoped -> javax.enterprise.context.ApplicationScoped
+//   Inject -> javax.inject.Inject
+//   DataSource -> javax.sql.DataSource
+//   TradeDirectDBUtils -> com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils
+
+// === Class: TradeDirectDBUtils ===
+// Fields (with actual visibility):
+    private DataSource datasource;
+    package-private TradeServices ts;
+
+// Getter/Setter Methods (for test assertions):
+private PreparedStatement getStatement(Connection conn, String sql) throws Exception;
+
+// Internal Methods (full implementation for context):
+  private PreparedStatement getStatement(Connection conn, String sql) throws Exception {
+    return conn.prepareStatement(sql);
+  }
+
+// === External Class: MDBStats ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.MDBStats
+// Fields (with actual visibility):
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static MDBStats mdbStats;
+
+// Constructors:
+private MDBStats();
+
+// Method Signatures (used by target method):
+static public synchronized MDBStats getInstance();
+
+// === External Class: Log ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.Log
+// Import paths:
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   Level -> java.util.logging.Level
+//   Logger -> java.util.logging.Logger
+// Fields (with actual visibility):
+    private static final Logger log;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+
+// Method Signatures (used by target method):
+static public void error(String message);
+
+// === External Class: RunStatsDataBean ===
+// Full import path: com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean
+// Import paths:
+//   Serializable -> java.io.Serializable
+// Fields (with actual visibility):
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private int tradeUserCount;
+    private int tradeStockCount;
+    private int newUserCount;
+    private int sumLoginCount;
+    private int sumLogoutCount;
+    private int holdingCount;
+    private int orderCount;
+    private int buyOrderCount;
+    private int sellOrderCount;
+    private int cancelledOrderCount;
+    private int openOrderCount;
+    private int deletedOrderCount;
+
+// Constructors:
+public RunStatsDataBean();
+
+// Method Signatures (used by target method):
+public void setCancelledOrderCount(int cancelledOrderCount);
+public void setDeletedOrderCount(int deletedOrderCount);
+public void setSumLogoutCount(int sumLogoutCount);
+public void setOpenOrderCount(int openOrderCount);
+public void setNewUserCount(int newUserCount);
+public void setHoldingCount(int holdingCount);
+public void setSellOrderCount(int sellOrderCount);
+public void setOrderCount(int orderCount);
+public void setSumLoginCount(int sumLoginCount);
+public void setTradeStockCount(int tradeStockCount);
+public void setTradeUserCount(int tradeUserCount);
+public void setBuyOrderCount(int buyOrderCount);
+
+// Public Getter Methods (for test assertions):
+public String toString();
+public int getTradeUserCount();
+public int getNewUserCount();
+public int getSumLoginCount();
+public int getSumLogoutCount();
+public int getHoldingCount();
+public int getBuyOrderCount();
+public int getSellOrderCount();
+public int getCancelledOrderCount();
+public int getOpenOrderCount();
+public int getDeletedOrderCount();
+public int getOrderCount();
+public int getTradeStockCount();
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+  public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception {
+    // Clear MDB Statistics
+    MDBStats.getInstance().reset();
+    // Reset Trade
+
+    RunStatsDataBean runStatsData = new RunStatsDataBean();
+    Connection conn = null;
+    try {
+
+      conn = datasource.getConnection();
+      conn.setAutoCommit(false);
+      PreparedStatement stmt = null;
+      ResultSet rs = null;
+
+      if (deleteAll) {
+        try {
+          stmt = getStatement(conn, "delete from quoteejb");
+          stmt.executeUpdate();
+          stmt.close();
+          stmt = getStatement(conn, "delete from accountejb");
+          stmt.executeUpdate();
+          stmt.close();
+          stmt = getStatement(conn, "delete from accountprofileejb");
+          stmt.executeUpdate();
+          stmt.close();
+          stmt = getStatement(conn, "delete from holdingejb");
+          stmt.executeUpdate();
+          stmt.close();
+          stmt = getStatement(conn, "delete from orderejb");
+          stmt.executeUpdate();
+          stmt.close();
+          // FUTURE: - DuplicateKeyException - For now, don't start at
+          // zero as KeySequenceDirect and KeySequenceBean will still
+          // give out
+          // the cached Block and then notice this change. Better
+          // solution is
+          // to signal both classes to drop their cached blocks
+          // stmt = getStatement(conn, "delete from keygenejb");
+          // stmt.executeUpdate();
+          // stmt.close();
+          conn.commit();
+        } catch (Exception e) {
+          Log.error(e, "TradeDirect:resetTrade(deleteAll) -- Error deleting Trade users and stock from the Trade database");
+        }
+        return runStatsData;
+      }
+
+      stmt = getStatement(conn, "delete from holdingejb where holdingejb.account_accountid is null");
+      stmt.executeUpdate();
+      stmt.close();
+
+      // Count and Delete newly registered users (users w/ id that start
+      // "ru:%":
+      stmt = getStatement(conn, "delete from accountprofileejb where userid like 'ru:%'");
+      stmt.executeUpdate();
+      stmt.close();
+
+      stmt = getStatement(conn, "delete from orderejb where account_accountid in (select accountid from accountejb a where a.profile_userid like 'ru:%')");
+      stmt.executeUpdate();
+      stmt.close();
+
+      stmt = getStatement(conn,
+          "delete from holdingejb where account_accountid in (select accountid from accountejb a where a.profile_userid like 'ru:%')");
+      stmt.executeUpdate();
+      stmt.close();
+
+      stmt = getStatement(conn, "delete from accountejb where profile_userid like 'ru:%'");
+      int newUserCount = stmt.executeUpdate();
+      runStatsData.setNewUserCount(newUserCount);
+      stmt.close();
+
+      // Count of trade users
+      stmt = getStatement(conn, "select count(accountid) as \"tradeUserCount\" from accountejb a where a.profile_userid like 'uid:%'");
+      rs = stmt.executeQuery();
+      rs.next();
+      int tradeUserCount = rs.getInt("tradeUserCount");
+      runStatsData.setTradeUserCount(tradeUserCount);
+      stmt.close();
+
+      rs.close();
+      // Count of trade stocks
+      stmt = getStatement(conn, "select count(symbol) as \"tradeStockCount\" from quoteejb a where a.symbol like 's:%'");
+      rs = stmt.executeQuery();
+      rs.next();
+      int tradeStockCount = rs.getInt("tradeStockCount");
+      runStatsData.setTradeStockCount(tradeStockCount);
+      stmt.close();
+
+      // Count of trade users login, logout
+      stmt = getStatement(conn,
+          "select sum(loginCount) as \"sumLoginCount\", sum(logoutCount) as \"sumLogoutCount\" from accountejb a where  a.profile_userID like 'uid:%'");
+      rs = stmt.executeQuery();
+      rs.next();
+      int sumLoginCount = rs.getInt("sumLoginCount");
+      int sumLogoutCount = rs.getInt("sumLogoutCount");
+      runStatsData.setSumLoginCount(sumLoginCount);
+      runStatsData.setSumLogoutCount(sumLogoutCount);
+      stmt.close();
+
+      rs.close();
+      // Update logoutcount and loginCount back to zero
+
+      stmt = getStatement(conn, "update accountejb set logoutCount=0,loginCount=0 where profile_userID like 'uid:%'");
+      stmt.executeUpdate();
+      stmt.close();
+
+      // count holdings for trade users
+      stmt = getStatement(conn, "select count(holdingid) as \"holdingCount\" from holdingejb h where h.account_accountid in "
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')");
+
+      rs = stmt.executeQuery();
+      rs.next();
+      int holdingCount = rs.getInt("holdingCount");
+      runStatsData.setHoldingCount(holdingCount);
+      stmt.close();
+      rs.close();
+
+      // count orders for trade users
+      stmt = getStatement(conn, "select count(orderid) as \"orderCount\" from orderejb o where o.account_accountid in "
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')");
+
+      rs = stmt.executeQuery();
+      rs.next();
+      int orderCount = rs.getInt("orderCount");
+      runStatsData.setOrderCount(orderCount);
+      stmt.close();
+      rs.close();
+
+      // count orders by type for trade users
+      stmt = getStatement(conn, "select count(orderid) \"buyOrderCount\"from orderejb o where (o.account_accountid in "
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')) AND " + " (o.orderType='buy')");
+
+      rs = stmt.executeQuery();
+      rs.next();
+      int buyOrderCount = rs.getInt("buyOrderCount");
+      runStatsData.setBuyOrderCount(buyOrderCount);
+      stmt.close();
+      rs.close();
+
+      // count orders by type for trade users
+      stmt = getStatement(conn, "select count(orderid) \"sellOrderCount\"from orderejb o where (o.account_accountid in "
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')) AND " + " (o.orderType='sell')");
+
+      rs = stmt.executeQuery();
+      rs.next();
+      int sellOrderCount = rs.getInt("sellOrderCount");
+      runStatsData.setSellOrderCount(sellOrderCount);
+      stmt.close();
+      rs.close();
+
+      // Delete cancelled orders
+      stmt = getStatement(conn, "delete from orderejb where orderStatus='cancelled'");
+      int cancelledOrderCount = stmt.executeUpdate();
+      runStatsData.setCancelledOrderCount(cancelledOrderCount);
+      stmt.close();
+      rs.close();
+
+      // count open orders by type for trade users
+      stmt = getStatement(conn, "select count(orderid) \"openOrderCount\"from orderejb o where (o.account_accountid in "
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')) AND " + " (o.orderStatus='open')");
+
+      rs = stmt.executeQuery();
+      rs.next();
+      int openOrderCount = rs.getInt("openOrderCount");
+      runStatsData.setOpenOrderCount(openOrderCount);
+
+      stmt.close();
+      rs.close();
+      // Delete orders for holding which have been purchased and sold
+      stmt = getStatement(conn, "delete from orderejb where holding_holdingid is null");
+      int deletedOrderCount = stmt.executeUpdate();
+      runStatsData.setDeletedOrderCount(deletedOrderCount);
+      stmt.close();
+      rs.close();
+
+      conn.commit();
+
+      System.out.println("TradeDirect:reset Run stats data\n\n" + runStatsData);
+    } catch (Exception e) {
+      Log.error(e, "Failed to reset Trade");
+      conn.rollback();
+      throw e;
+    } finally {
+      conn.close();
+    }
+    return runStatsData;
+
+  }
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "resetTrade" of class "TradeDirectDBUtils".
+
+REQUIREMENTS:
+- Test class name: TradeDirectDBUtils_resetTradeTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths that are:
+  - deterministically reachable from the method’s public API
+  - independent from hidden, external, or runtime-loaded data
+- Test error scenarios by asserting the actual runtime behavior
+  when invalid or null inputs are provided.
+- Do not assume defensive checks unless they are explicitly present.
+- Cover expected exceptions declared in the method signature if present
+- The target method throws Exception. Tests MUST properly handle or expect this exception in error scenarios.
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes or custom implementations.
+- Helper methods inside the test class are allowed if they do not reimplement production logic.
+- DO NOT use getter/setter methods that are not present in the provided class context
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing its actual behavior
+- You MAY mock DEPENDENCIES (constructor parameters, injected services) using @Mock, but NEVER the class under test
+- CRITICAL: DO NOT instantiate INTERFACES or ABSTRACT classes directly - use Mockito.mock(Interface.class) instead
+- DO NOT try to modify static final fields via ReflectionTestUtils - they are IMMUTABLE
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Use ONLY the import paths explicitly provided in the 'CORRECT IMPORT PATHS' section - do not guess or invent import paths.
+- Generate ONLY the test class without explanations or comments outside the code
+- For PRIVATE fields without public setters (e.g., @Inject, @Autowired), use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- For static method calls (e.g., Log.error(), TradeConfig.getUserID()), use Mockito.mockStatic() to mock static methods. Example: try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) { ... }
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

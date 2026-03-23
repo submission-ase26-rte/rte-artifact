@@ -1,0 +1,174 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.jxpath.util;
+
+import org.junit.jupiter.api.Test;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import org.apache.commons.jxpath.ExpressionContext;
+import org.apache.commons.jxpath.JXPathException;
+import java.util.HashMap;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.apache.commons.jxpath.util.MethodLookupUtils.*;
+import static org.apache.commons.jxpath.util.TypeUtils.convert;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class MethodLookupUtils_lookupMethodTestGenerated {
+
+    @Test
+    public void testLookupMethod_nullParameters() {
+        assertNull(MethodLookupUtils.lookupMethod(String.class, "toString", null));
+        assertNull(MethodLookupUtils.lookupMethod(String.class, "toString", new Object[] {}));
+    }
+
+    @Test
+    public void testLookupMethod_nullFirstParameter() {
+        assertNull(MethodLookupUtils.lookupMethod(String.class, "toString", new Object[] {null}));
+    }
+
+    @Test
+    public void testLookupMethod_noMatch() {
+        assertNull(MethodLookupUtils.lookupMethod(String.class, "nonExistentMethod", new Object[]{"test"}));
+    }
+
+    @Test
+    public void testLookupMethod_simpleMatch() {
+        Method method = MethodLookupUtils.lookupMethod(String.class, "toString", new Object[]{});
+        assertEquals("toString", method.getName());
+    }
+
+    @Test
+    public void testLookupMethod_withParameters() {
+        Method method = MethodLookupUtils.lookupMethod(String.class, "concat", new Object[]{"test"});
+        assertEquals("concat", method.getName());
+    }
+
+    @Test
+    public void testLookupMethod_withMultipleParameters() {
+        Method method = MethodLookupUtils.lookupMethod(String.class, "format", new Object[]{"%s", "test"});
+        assertEquals("format", method.getName());
+    }
+
+    @Test
+    public void testLookupMethod_withNullParameter() {
+        Method method = MethodLookupUtils.lookupMethod(String.class, "format", new Object[]{"%s", null});
+        assertEquals("format", method.getName());
+    }
+
+    @Test
+    public void testLookupMethod_typeConversion() {
+        Method method = MethodLookupUtils.lookupMethod(Integer.class, "toString", new Object[]{1});
+        assertEquals("toString", method.getName());
+    }
+
+    @Test
+    public void testLookupMethod_ambiguousMethodCall() {
+        assertThrows(JXPathException.class, () -> MethodLookupUtils.lookupMethod(Object.class, "equals", new Object[]{new String("test"), new Integer(1)}));
+    }
+
+    @Test
+    public void testLookupMethod_staticMethod() {
+        Method method = MethodLookupUtils.lookupMethod(String.class, "valueOf", new Object[]{"test"});
+        assertNotNull(method);
+        assertTrue(Modifier.isStatic(method.getModifiers()));
+    }
+
+    @Test
+    public void testLookupMethod_nonStaticMethod() {
+        Method method = MethodLookupUtils.lookupMethod(String.class, "toString", new Object[]{});
+        assertNotNull(method);
+        assertFalse(Modifier.isStatic(method.getModifiers()));
+    }
+
+    @Test
+    public void testLookupMethod_differentTargetClass() {
+        Method method = MethodLookupUtils.lookupMethod(Integer.class, "intValue", new Object[]{});
+        assertEquals("intValue", method.getName());
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 88.37% | Branch: 78.12%
+- Tests: 4/12 passed
+
+TEST STATUS:
+- PASSED (4): testLookupMethod_nullParameters, testLookupMethod_nullFirstParameter, testLookupMethod_noMatch, testLookupMethod_typeConversion
+- FAILED (3): testLookupMethod_ambiguousMethodCall, testLookupMethod_staticMethod, testLookupMethod_nonStaticMethod
+- ERRORS (5): testLookupMethod_simpleMatch, testLookupMethod_withParameters, testLookupMethod_withMultipleParameters, testLookupMethod_withNullParameter, testLookupMethod_differentTargetClass
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Constructor -> java.lang.reflect.Constructor
+//   Method -> java.lang.reflect.Method
+//   Modifier -> java.lang.reflect.Modifier
+//   Arrays -> java.util.Arrays
+//   ExpressionContext -> org.apache.commons.jxpath.ExpressionContext
+//   JXPathException -> org.apache.commons.jxpath.JXPathException
+
+// === Class: MethodLookupUtils ===
+// Fields (with actual visibility):
+    private static final int NO_MATCH;
+    private static final int APPROXIMATE_MATCH;
+    private static final int EXACT_MATCH;
+
+// Internal Method Signatures (used by target method):
+static private int matchType(final Class expected, final Object object);
+static private int matchParameterTypes(final Class[] types, final Object[] parameters);
+
+// === External Class: TypeUtils ===
+// Import paths:
+//   HashMap -> java.util.HashMap
+// Fields (with actual visibility):
+    private static TypeConverter typeConverter;
+    private static final HashMap PRIMITIVE_TYPE_MAP;
+    private static final long serialVersionUID;
+
+// Method Signatures (used by target method):
+static public Object convert(final Object object, final Class toType);
+
+
+TASK:
+Regenerate ONLY the method "lookupMethod" OF CLASS "MethodLookupUtils" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public static Method lookupMethod( Class targetClass, final String name, final Object[] parameters) {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.jxpath.util
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in MethodLookupUtils
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

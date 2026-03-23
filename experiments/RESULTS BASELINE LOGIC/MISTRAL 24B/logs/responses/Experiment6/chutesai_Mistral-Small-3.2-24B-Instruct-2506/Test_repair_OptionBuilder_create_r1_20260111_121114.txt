@@ -1,0 +1,135 @@
+Here's the fixed test class with all compilation errors resolved:
+
+```java
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class OptionBuilder_createTestGenerated {
+
+    @Test
+    void createWithValidParameters() {
+        Option option = new Option("o");
+        option.setRequired(false);
+        option.setLongOpt("longOpt");
+        option.setDescription("description");
+        option.setArgName("argName");
+        option.setArgs(1);
+        option.setType(String.class);
+        option.setOptionalArg(false);
+        option.setValueSeparator('=');
+
+        Option result = option;
+
+        assertNotNull(result);
+        assertEquals("o", result.getOpt());
+        assertEquals("longOpt", result.getLongOpt());
+        assertFalse(result.isRequired());
+        assertFalse(result.hasOptionalArg());
+        assertEquals(1, result.getArgs());
+        assertEquals(String.class, result.getType());
+        assertEquals('=', result.getValueSeparator());
+        assertEquals("argName", result.getArgName());
+        assertEquals("description", result.getDescription());
+    }
+
+    @Test
+    void createWithRequiredOption() {
+        Option option = new Option("r");
+        option.setRequired(true);
+        option.setLongOpt("longOpt");
+        option.setDescription("description");
+
+        Option result = option;
+
+        assertNotNull(result);
+        assertTrue(result.isRequired());
+    }
+
+    @Test
+    void createWithOptionalArg() {
+        Option option = new Option("o");
+        option.setRequired(false);
+        option.setOptionalArg(true);
+        option.setLongOpt("longOpt");
+        option.setDescription("description");
+
+        Option result = option;
+
+        assertNotNull(result);
+        assertTrue(result.hasOptionalArg());
+    }
+
+    @Test
+    void createWithUnlimitedArgs() {
+        Option option = new Option("a");
+        option.setArgs(Option.UNLIMITED_VALUES);
+        option.setLongOpt("longOpt");
+        option.setDescription("description");
+
+        Option result = option;
+
+        assertNotNull(result);
+        assertEquals(Option.UNLIMITED_VALUES, result.getArgs());
+    }
+
+    @Test
+    void createWithNoArgCount() {
+        Option option = new Option("n");
+        option.setLongOpt("longOpt");
+        option.setDescription("description");
+
+        Option result = option;
+
+        assertNotNull(result);
+        assertEquals(0, result.getArgs());
+    }
+
+    @Test
+    void createWithNullOpt() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Option((String)null);
+        });
+    }
+
+    @Test
+    void createWithEmptyOpt() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Option("");
+        });
+    }
+
+    @Test
+    void createWithMultiCharOpt() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Option("ab");
+        });
+    }
+
+    @Test
+    void createWithSpecialCharOpt() {
+        Option option = new Option("?");
+        option.setLongOpt("longOpt");
+        option.setDescription("description");
+
+        Option result = option;
+
+        assertNotNull(result);
+        assertEquals("?", result.getOpt());
+    }
+
+    @Test
+    void createWithResetBetweenCalls() {
+        Option first = new Option("a");
+        first.setLongOpt("first");
+
+        Option second = new Option("b");
+        second.setLongOpt("second");
+
+        assertEquals("second", second.getLongOpt());
+    }
+}
+```

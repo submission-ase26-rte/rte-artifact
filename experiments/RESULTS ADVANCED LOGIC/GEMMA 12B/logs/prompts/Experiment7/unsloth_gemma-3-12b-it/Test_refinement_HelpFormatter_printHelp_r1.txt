@@ -1,0 +1,259 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): HelpFormatter_printHelpTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testPrintHelp_withHeaderAndFooter_autoUsageFalse --
+ERROR: org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+--------------------------------------------------
+TEST: testPrintHelp_withEmptyHeaderAndFooter_autoUsageFalse --
+ERROR: org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+--------------------------------------------------
+TEST: testPrintHelp_withAutoUsageTrue --
+ERROR: org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+
+TEST CODE TO FIX:
+package org.apache.commons.cli;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class HelpFormatter_printHelpTestGenerated {
+
+    @Test
+        void testPrintHelp_withHeaderAndFooter_autoUsageFalse() throws Exception {
+            HelpFormatter formatter = new HelpFormatter();
+            PrintWriter pw = new PrintWriter(new StringWriter());
+            Options options = new Options();
+            String cmdLineSyntax = "myApp -h";
+            String header = "My Application Header";
+            String footer = "My Application Footer";
+    
+            formatter.printHelp(pw, 80, cmdLineSyntax, header, options, 0, 0, footer, false);
+    
+            String output = pw.toString();
+            assertTrue(output.contains(cmdLineSyntax));
+            assertTrue(output.contains(header));
+            assertTrue(output.contains(footer));
+            assertFalse(output.contains("Usage:"));
+        }
+
+    @Test
+        void testPrintHelp_withAutoUsageTrue() throws Exception {
+            HelpFormatter formatter = new HelpFormatter();
+            PrintWriter pw = new PrintWriter(new StringWriter());
+            Options options = new Options();
+            String cmdLineSyntax = "myApp -h";
+    
+            formatter.printHelp(pw, 80, cmdLineSyntax, null, options, 0, 0, null, true);
+    
+            String output = pw.toString();
+            assertTrue(output.contains("Usage:"));
+            assertTrue(output.contains(cmdLineSyntax));
+        }
+
+    @Test
+        void testPrintHelp_withEmptyHeaderAndFooter_autoUsageFalse() throws Exception {
+            HelpFormatter formatter = new HelpFormatter();
+            PrintWriter pw = new PrintWriter(new StringWriter());
+            Options options = new Options();
+            String cmdLineSyntax = "myApp -h";
+    
+            formatter.printHelp(pw, 80, cmdLineSyntax, null, options, 0, 0, null, false);
+    
+            String output = pw.toString();
+            assertTrue(output.contains(cmdLineSyntax));
+            assertFalse(output.contains("Usage:"));
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    void testPrintHelp_withNullCmdLineSyntax_throwsIllegalArgumentException() {}
+    @Test
+    void testPrintHelp_withEmptyCmdLineSyntax_throwsIllegalArgumentException() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   BufferedReader -> java.io.BufferedReader
+//   IOException -> java.io.IOException
+//   PrintWriter -> java.io.PrintWriter
+//   Serializable -> java.io.Serializable
+//   StringReader -> java.io.StringReader
+//   ArrayList -> java.util.ArrayList
+//   Arrays -> java.util.Arrays
+//   Collection -> java.util.Collection
+//   Collections -> java.util.Collections
+//   Comparator -> java.util.Comparator
+//   Iterator -> java.util.Iterator
+//   List -> java.util.List
+//   Objects -> java.util.Objects
+//   Supplier -> java.util.function.Supplier
+//   HelpFormatter -> org.apache.commons.cli.HelpFormatter
+
+// === Class: HelpFormatter ===
+// Fields (with actual visibility):
+    private final boolean showDeprecated;
+    private PrintWriter printStream;
+    private static final long serialVersionUID;
+    public static final int DEFAULT_WIDTH;
+    public static final int DEFAULT_LEFT_PAD;
+    public static final int DEFAULT_DESC_PAD;
+    public static final String DEFAULT_SYNTAX_PREFIX;
+    public static final String DEFAULT_OPT_PREFIX;
+    public static final String DEFAULT_LONG_OPT_PREFIX;
+    public static final String DEFAULT_LONG_OPT_SEPARATOR;
+    public static final String DEFAULT_ARG_NAME;
+    public int defaultWidth;
+    public int defaultLeftPad;
+    public int defaultDescPad;
+    public String defaultSyntaxPrefix;
+    public String defaultNewLine;
+    public String defaultOptPrefix;
+    public String defaultLongOptPrefix;
+    public String defaultArgName;
+    protected Comparator optionComparator;
+    private final PrintWriter printWriter;
+    private String longOptSeparator;
+
+// Constructors:
+public HelpFormatter();
+private HelpFormatter(boolean showDeprecated, PrintWriter printStream);
+
+// Getter/Setter Methods (for test assertions):
+public Builder setPrintWriter(final PrintWriter printWriter);
+public Builder setShowDeprecated(final boolean showDeprecated);
+public String getArgName();
+public int getDescPadding();
+public int getLeftPadding();
+public String getLongOptPrefix();
+public String getLongOptSeparator();
+public String getNewLine();
+public Comparator<Option> getOptionComparator();
+public String getOptPrefix();
+public String getSyntaxPrefix();
+public int getWidth();
+public void setArgName(final String name);
+public void setDescPadding(final int padding);
+public void setLeftPadding(final int padding);
+public void setLongOptPrefix(final String prefix);
+public void setLongOptSeparator(final String longOptSeparator);
+public void setNewLine(final String newline);
+public void setOptionComparator(final Comparator<Option> comparator);
+public void setOptPrefix(final String prefix);
+public void setSyntaxPrefix(final String prefix);
+public void setWidth(final int width);
+
+// Internal Methods (full implementation for context):
+    public void printUsage(final PrintWriter pw, final int width, final String cmdLineSyntax) {
+        final int argPos = cmdLineSyntax.indexOf(' ') + 1;
+        printWrapped(pw, width, getSyntaxPrefix().length() + argPos, getSyntaxPrefix() + cmdLineSyntax);
+    }
+    public void printOptions(final PrintWriter pw, final int width, final Options options, final int leftPad, final int descPad) {
+        final StringBuffer sb = new StringBuffer();
+        renderOptions(sb, width, options, leftPad, descPad);
+        pw.println(sb.toString());
+    }
+    public void printWrapped(final PrintWriter pw, final int width, final int nextLineTabStop, final String text) {
+        final StringBuffer sb = new StringBuffer(text.length());
+        renderWrappedTextBlock(sb, width, nextLineTabStop, text);
+        pw.println(sb.toString());
+    }
+
+
+ORIGINAL METHOD TO TEST:
+The following is the complete original method that needs to be tested. NOTE: The current test suite achieves 100% line coverage on this method:
+
+
+    /**
+     * Prints the help for {@code options} with the specified command line syntax.
+     *
+     * @param pw the writer to which the help will be written
+     * @param width the number of characters to be displayed on each line
+     * @param cmdLineSyntax the syntax for this application
+     * @param header the banner to display at the beginning of the help
+     * @param options the Options instance
+     * @param leftPad the number of characters of padding to be prefixed to each line
+     * @param descPad the number of characters of padding to be prefixed to each description line
+     * @param footer the banner to display at the end of the help
+     * @param autoUsage whether to print an automatically generated usage statement
+     * @throws IllegalStateException if there is no room to print a line
+     */
+    public void printHelp(final PrintWriter pw, final int width, final String cmdLineSyntax, final String header, final Options options, final int leftPad,
+        final int descPad, final String footer, final boolean autoUsage) {
+        if (cmdLineSyntax == null || cmdLineSyntax.isEmpty()) {
+            throw new IllegalArgumentException("cmdLineSyntax not provided");
+        }
+        if (autoUsage) {
+            printUsage(pw, width, cmdLineSyntax, options);
+        } else {
+            printUsage(pw, width, cmdLineSyntax);
+        }
+        if (header != null && !header.isEmpty()) {
+            printWrapped(pw, width, header);
+        }
+        printOptions(pw, width, options, leftPad, descPad);
+        if (footer != null && !footer.isEmpty()) {
+            printWrapped(pw, width, footer);
+        }
+    }
+
+
+COVERAGE: 100% line coverage achieved.
+Focus on fixing failed tests, not adding new coverage tests.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

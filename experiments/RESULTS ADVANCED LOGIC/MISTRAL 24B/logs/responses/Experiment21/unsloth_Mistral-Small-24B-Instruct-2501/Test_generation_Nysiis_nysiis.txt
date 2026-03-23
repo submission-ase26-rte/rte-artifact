@@ -1,0 +1,107 @@
+```java
+package org.apache.commons.codec.language;
+
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.StringEncoder;
+import org.apache.commons.codec.language.SoundexUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.ThrowingConsumer;
+
+import java.util.regex.Pattern;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class Nysiis_nysiisTestGenerated {
+
+    private Nysiis nysiis;
+    private Nysiis strictNysiis;
+
+    @BeforeEach
+    void setUp() {
+        nysiis = new Nysiis();
+        strictNysiis = new Nysiis(true);
+    }
+
+    @Test
+    void testNysiisNullInput() {
+        assertNull(nysiis.nysiis(null));
+    }
+
+    @Test
+    void testNysiisEmptyString() {
+        assertEquals("", nysiis.nysiis(""));
+    }
+
+    @Test
+    void testNysiisBasicCase() {
+        assertEquals("MCC", nysiis.nysiis("MAC"));
+        assertEquals("NN", nysiis.nysiis("KN"));
+        assertEquals("C", nysiis.nysiis("K"));
+        assertEquals("FF", nysiis.nysiis("PH"));
+        assertEquals("SSS", nysiis.nysiis("SCH"));
+        assertEquals("Y", nysiis.nysiis("EE"));
+        assertEquals("Y", nysiis.nysiis("IE"));
+        assertEquals("D", nysiis.nysiis("DT"));
+        assertEquals("D", nysiis.nysiis("RT"));
+        assertEquals("D", nysiis.nysiis("RD"));
+        assertEquals("D", nysiis.nysiis("NT"));
+        assertEquals("D", nysiis.nysiis("ND"));
+    }
+
+    @Test
+    void testNysiisComplexCase() {
+        assertEquals("MCC", nysiis.nysiis("MAC"));
+        assertEquals("MCC", nysiis.nysiis("MACK"));
+        assertEquals("MCC", nysiis.nysiis("MACKE"));
+        assertEquals("F", nysiis.nysiis("F"));
+        assertEquals("FF", nysiis.nysiis("PH"));
+        assertEquals("FF", nysiis.nysiis("PF"));
+        assertEquals("FF", nysiis.nysiis("FFF"));
+        assertEquals("M", nysiis.nysiis("M"));
+        assertEquals("M", nysiis.nysiis("MA"));
+        assertEquals("M", nysiis.nysiis("MAIN"));
+        assertEquals("M", nysiis.nysiis("MAN"));
+        assertEquals("M", nysiis.nysiis("MANN"));
+        assertEquals("M", nysiis.nysiis("MANNY"));
+        assertEquals("M", nysiis.nysiis("MANNY"));
+    }
+
+    @Test
+    void testNysiisStrictMode() {
+        assertEquals("MCC", strictNysiis.nysiis("MAC"));
+        assertEquals("MCC", strictNysiis.nysiis("MACK"));
+        assertEquals("MCC", strictNysiis.nysiis("MACKE"));
+        assertEquals("F", strictNysiis.nysiis("F"));
+        assertEquals("FF", strictNysiis.nysiis("PH"));
+        assertEquals("FF", strictNysiis.nysiis("PF"));
+        assertEquals("FF", strictNysiis.nysiis("FFF"));
+        assertEquals("M", strictNysiis.nysiis("M"));
+        assertEquals("M", strictNysiis.nysiis("MA"));
+        assertEquals("M", strictNysiis.nysiis("MAIN"));
+        assertEquals("M", strictNysiis.nysiis("MAN"));
+        assertEquals("M", strictNysiis.nysiis("MANN"));
+        assertEquals("M", strictNysiis.nysiis("MANNY"));
+        assertEquals("M", strictNysiis.nysiis("MANNY"));
+    }
+
+    @Test
+    void testNysiisTranscodeRemaining() {
+        assertArrayEquals(new char[]{'A'}, Nysiis.transcodeRemaining('E', 'E', 'V', 'A'));
+        assertArrayEquals(new char[]{'A'}, Nysiis.transcodeRemaining('A', 'A', 'V', 'A'));
+        assertArrayEquals(new char[]{'A'}, Nysiis.transcodeRemaining('E', 'I', 'V', 'A'));
+        assertArrayEquals(new char[]{'A'}, Nysiis.transcodeRemaining('A', 'O', 'V', 'A'));
+        assertArrayEquals(new char[]{'A'}, Nysiis.transcodeRemaining('A', 'U', 'V', 'A'));
+        assertArrayEquals(new char[]{'G'}, Nysiis.transcodeRemaining('A', 'Q', 'V', 'A'));
+        assertArrayEquals(new char[]{'S'}, Nysiis.transcodeRemaining('A', 'Z', 'V', 'A'));
+        assertArrayEquals(new char[]{'N'}, Nysiis.transcodeRemaining('A', 'M', 'V', 'A'));
+        assertArrayEquals(new char[]{'C'}, Nysiis.transcodeRemaining('A', 'K', 'V', 'A'));
+        assertArrayEquals(new char[]{'C'}, Nysiis.transcodeRemaining('A', 'K', 'N', 'A'));
+        assertArrayEquals(new char[]{'N'}, Nysiis.transcodeRemaining('A', 'K', 'N', 'V'));
+        assertArrayEquals(new char[]{'N'}, Nysiis.transcodeRemaining('A', 'K', 'N', 'A'));
+        assertArrayEquals(new char[]{'N'}, Nysiis.transcodeRemaining('A', 'K', 'N', 'A'));
+        assertArrayEquals(new char[]{'S'}, Nysiis.transcodeRemaining('S', 'S', 'C', 'H'));
+        assertArrayEquals(new char[]{'F'}, Nysiis.transcodeRemaining('P', 'P', 'H', 'A'));
+    }
+}
+```

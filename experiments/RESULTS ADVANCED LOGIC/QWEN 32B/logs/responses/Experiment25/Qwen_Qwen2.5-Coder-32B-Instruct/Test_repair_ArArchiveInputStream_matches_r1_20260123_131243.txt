@@ -1,0 +1,25 @@
+```java
+package org.apache.commons.compress.archivers.ar;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArArchiveInputStream_matchesTestGenerated {
+
+    @Test
+    public void testMatchesWithInputStreamMock() {
+        InputStream mockInputStream = Mockito.mock(InputStream.class);
+        ArArchiveInputStream arArchiveInputStream = new ArArchiveInputStream(mockInputStream);
+        byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertTrue(ArArchiveInputStream.matches(validSignature, validSignature.length));
+    }
+
+}
+```

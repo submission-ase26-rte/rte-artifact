@@ -1,0 +1,251 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.cli;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Comparator;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class HelpFormatter_printHelpTestGenerated {
+
+    private HelpFormatter helpFormatter;
+    private PrintWriter printWriter;
+    private StringWriter stringWriter;
+    private Options options;
+
+    @BeforeEach
+    public void setUp() {
+        stringWriter = new StringWriter();
+        printWriter = new PrintWriter(stringWriter);
+        helpFormatter = new HelpFormatter();
+        options = new Options();
+    }
+
+    @Test
+    public void testPrintHelpWithNullCmdLineSyntax() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            helpFormatter.printHelp(printWriter, 80, null, "header", options, 4, 4, "footer", true);
+        });
+        assertEquals("cmdLineSyntax not provided", exception.getMessage());
+    }
+
+    @Test
+    public void testPrintHelpWithEmptyCmdLineSyntax() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            helpFormatter.printHelp(printWriter, 80, "", "header", options, 4, 4, "footer", true);
+        });
+        assertEquals("cmdLineSyntax not provided", exception.getMessage());
+    }
+
+    @Test
+    public void testPrintHelpWithAutoUsage() {
+        helpFormatter.printHelp(printWriter, 80, "cmd", "header", options, 4, 4, "footer", true);
+        String output = stringWriter.toString();
+        assertTrue(output.contains("header"));
+        assertTrue(output.contains("footer"));
+    }
+
+    @Test
+    public void testPrintHelpWithoutAutoUsage() {
+        helpFormatter.printHelp(printWriter, 80, "cmd", "header", options, 4, 4, "footer", false);
+        String output = stringWriter.toString();
+        assertTrue(output.contains("header"));
+        assertTrue(output.contains("footer"));
+    }
+
+    @Test
+    public void testPrintHelpWithNullHeader() {
+        helpFormatter.printHelp(printWriter, 80, "cmd", null, options, 4, 4, "footer", true);
+        String output = stringWriter.toString();
+        assertFalse(output.contains("null"));
+        assertTrue(output.contains("footer"));
+    }
+
+    @Test
+    public void testPrintHelpWithEmptyHeader() {
+        helpFormatter.printHelp(printWriter, 80, "cmd", "", options, 4, 4, "footer", true);
+        String output = stringWriter.toString();
+        assertFalse(output.contains(""));
+        assertTrue(output.contains("footer"));
+    }
+
+    @Test
+    public void testPrintHelpWithNullFooter() {
+        helpFormatter.printHelp(printWriter, 80, "cmd", "header", options, 4, 4, null, true);
+        String output = stringWriter.toString();
+        assertTrue(output.contains("header"));
+        assertFalse(output.contains("null"));
+    }
+
+    @Test
+    public void testPrintHelpWithEmptyFooter() {
+        helpFormatter.printHelp(printWriter, 80, "cmd", "header", options, 4, 4, "", true);
+        String output = stringWriter.toString();
+        assertTrue(output.contains("header"));
+        assertFalse(output.contains(""));
+    }
+
+    @Test
+    public void testPrintHelpWithCustomPaddingAndWidth() {
+        helpFormatter.printHelp(printWriter, 120, "cmd", "header", options, 8, 8, "footer", true);
+        String output = stringWriter.toString();
+        assertTrue(output.contains("header"));
+        assertTrue(output.contains("footer"));
+    }
+
+    @Test
+    public void testPrintHelpWithCustomComparator() {
+        Comparator<Option> comparator = mock(Comparator.class);
+        helpFormatter.setOptionComparator(comparator);
+        helpFormatter.printHelp(printWriter, 80, "cmd", "header", options, 4, 4, "footer", true);
+        verify(comparator, times(0)).compare(any(), any());
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 100.00%
+- Tests: 7/10 passed
+
+TEST STATUS:
+- PASSED (7): testPrintHelpWithNullCmdLineSyntax, testPrintHelpWithEmptyCmdLineSyntax, testPrintHelpWithAutoUsage, testPrintHelpWithoutAutoUsage, testPrintHelpWithNullHeader, testPrintHelpWithNullFooter, testPrintHelpWithCustomPaddingAndWidth
+- FAILED (2): testPrintHelpWithEmptyHeader, testPrintHelpWithEmptyFooter
+- ERRORS (1): testPrintHelpWithCustomComparator
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   BufferedReader -> java.io.BufferedReader
+//   IOException -> java.io.IOException
+//   PrintWriter -> java.io.PrintWriter
+//   Serializable -> java.io.Serializable
+//   StringReader -> java.io.StringReader
+//   ArrayList -> java.util.ArrayList
+//   Arrays -> java.util.Arrays
+//   Collection -> java.util.Collection
+//   Collections -> java.util.Collections
+//   Comparator -> java.util.Comparator
+//   Iterator -> java.util.Iterator
+//   List -> java.util.List
+//   Objects -> java.util.Objects
+//   Supplier -> java.util.function.Supplier
+//   HelpFormatter -> org.apache.commons.cli.HelpFormatter
+
+// === Class: HelpFormatter ===
+// Fields (with actual visibility):
+    private final boolean showDeprecated;
+    private PrintWriter printStream;
+    private static final long serialVersionUID;
+    public static final int DEFAULT_WIDTH;
+    public static final int DEFAULT_LEFT_PAD;
+    public static final int DEFAULT_DESC_PAD;
+    public static final String DEFAULT_SYNTAX_PREFIX;
+    public static final String DEFAULT_OPT_PREFIX;
+    public static final String DEFAULT_LONG_OPT_PREFIX;
+    public static final String DEFAULT_LONG_OPT_SEPARATOR;
+    public static final String DEFAULT_ARG_NAME;
+    public int defaultWidth;
+    public int defaultLeftPad;
+    public int defaultDescPad;
+    public String defaultSyntaxPrefix;
+    public String defaultNewLine;
+    public String defaultOptPrefix;
+    public String defaultLongOptPrefix;
+    public String defaultArgName;
+    protected Comparator optionComparator;
+    private final PrintWriter printWriter;
+    private String longOptSeparator;
+
+// Constructors:
+public HelpFormatter();
+private HelpFormatter(boolean showDeprecated, PrintWriter printStream);
+
+// Getter/Setter Methods (for test assertions):
+public Builder setPrintWriter(final PrintWriter printWriter);
+public Builder setShowDeprecated(final boolean showDeprecated);
+public String getArgName();
+public int getDescPadding();
+public int getLeftPadding();
+public String getLongOptPrefix();
+public String getLongOptSeparator();
+public String getNewLine();
+public Comparator<Option> getOptionComparator();
+public String getOptPrefix();
+public String getSyntaxPrefix();
+public int getWidth();
+public void setArgName(final String name);
+public void setDescPadding(final int padding);
+public void setLeftPadding(final int padding);
+public void setLongOptPrefix(final String prefix);
+public void setLongOptSeparator(final String longOptSeparator);
+public void setNewLine(final String newline);
+public void setOptionComparator(final Comparator<Option> comparator);
+public void setOptPrefix(final String prefix);
+public void setSyntaxPrefix(final String prefix);
+public void setWidth(final int width);
+
+// Internal Methods (full implementation for context):
+    public void printUsage(final PrintWriter pw, final int width, final String cmdLineSyntax) {
+        final int argPos = cmdLineSyntax.indexOf(' ') + 1;
+        printWrapped(pw, width, getSyntaxPrefix().length() + argPos, getSyntaxPrefix() + cmdLineSyntax);
+    }
+    public void printOptions(final PrintWriter pw, final int width, final Options options, final int leftPad, final int descPad) {
+        final StringBuffer sb = new StringBuffer();
+        renderOptions(sb, width, options, leftPad, descPad);
+        pw.println(sb.toString());
+    }
+    public void printWrapped(final PrintWriter pw, final int width, final int nextLineTabStop, final String text) {
+        final StringBuffer sb = new StringBuffer(text.length());
+        renderWrappedTextBlock(sb, width, nextLineTabStop, text);
+        pw.println(sb.toString());
+    }
+
+
+TASK:
+Regenerate ONLY the method "printHelp" OF CLASS "HelpFormatter" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void printHelp(final PrintWriter pw, final int width, final String cmdLineSyntax, final String header, final Options options, final int leftPad, final int descPad, final String footer, final boolean autoUsage) {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.cli
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "printHelp"
+– Allowed imports: exactly those already present in HelpFormatter
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

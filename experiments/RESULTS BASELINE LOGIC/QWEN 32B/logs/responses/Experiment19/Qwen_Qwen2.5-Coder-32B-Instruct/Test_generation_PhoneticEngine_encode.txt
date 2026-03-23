@@ -1,0 +1,139 @@
+```java
+package org.apache.commons.codec.language.bm;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class PhoneticEngine_encodeTestGenerated {
+
+    private PhoneticEngine phoneticEngine;
+
+    @BeforeEach
+    public void setUp() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.APPROX, true);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        phoneticEngine = null;
+    }
+
+    @Test
+    public void testEncodeNullInput() {
+        Executable executable = () -> phoneticEngine.encode(null, Languages.LanguageSet.from(Arrays.asList("en")));
+        assertThrows(NullPointerException.class, executable);
+    }
+
+    @Test
+    public void testEncodeEmptyInput() {
+        String result = phoneticEngine.encode("", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertEquals("", result);
+    }
+
+    @Test
+    public void testEncodeSingleWord() {
+        String result = phoneticEngine.encode("Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeMultiWordName() {
+        String result = phoneticEngine.encode("John Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithDPrefix() {
+        String result = phoneticEngine.encode("d'Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithGenericPrefix() {
+        phoneticEngine.NAME_PREFIXES = new EnumMap<>(NameType.class);
+        phoneticEngine.NAME_PREFIXES.put(NameType.GENERIC, Arrays.asList("de"));
+        String result = phoneticEngine.encode("de Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeSephardicName() {
+        phoneticEngine.nameType = NameType.SEPHARDIC;
+        String result = phoneticEngine.encode("Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeAshkenaziName() {
+        phoneticEngine.nameType = NameType.ASHKENAZI;
+        String result = phoneticEngine.encode("Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithConcatModeDisabled() {
+        phoneticEngine.concat = false;
+        String result = phoneticEngine.encode("John Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithEmptyLanguageSet() {
+        String result = phoneticEngine.encode("Smith", Languages.LanguageSet.from(Collections.emptyList()));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithInvalidLanguageSet() {
+        String result = phoneticEngine.encode("Smith", Languages.LanguageSet.from(Arrays.asList("invalid")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithSpecialCharacters() {
+        String result = phoneticEngine.encode("Smi-th", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithTrailingSpaces() {
+        String result = phoneticEngine.encode("Smith   ", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithLeadingSpaces() {
+        String result = phoneticEngine.encode("   Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithMultipleSpaces() {
+        String result = phoneticEngine.encode("John   Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithDashSeparator() {
+        String result = phoneticEngine.encode("John-Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithUnreachableCase() {
+        phoneticEngine.nameType = NameType.values()[NameType.values().length]; // Simulate unreachable case
+        Executable executable = () -> phoneticEngine.encode("Smith", Languages.LanguageSet.from(Arrays.asList("en")));
+        assertThrows(IllegalStateException.class, executable);
+    }
+}
+```

@@ -1,0 +1,144 @@
+```java
+package org.eclipse.cargotracker.interfaces.handling.mobile;
+
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.FacesContextFactory;
+import jakarta.faces.lifecycle.Lifecycle;
+import jakarta.faces.lifecycle.LifecycleFactory;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.domain.model.cargo.Cargo;
+import org.eclipse.cargotracker.domain.model.cargo.CargoRepository;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEventRegistrationAttempt;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+public class EventLogger_submitTestGenerated {
+
+    @Mock
+    private CargoRepository cargoRepository;
+
+    @Mock
+    private LocationRepository locationRepository;
+
+    @Mock
+    private VoyageRepository voyageRepository;
+
+    @Mock
+    private ApplicationEvents applicationEvents;
+
+    @Mock
+    private FacesContext context;
+
+    @InjectMocks
+    private EventLogger eventLogger;
+
+    private AutoCloseable closeable;
+
+    @BeforeEach
+    public void setUp() {
+        closeable = MockitoAnnotations.openMocks(this);
+        eventLogger.setTrackingId("XYZ");
+        eventLogger.setLocation("USNYC");
+        eventLogger.setEventType(HandlingEvent.Type.LOAD);
+        eventLogger.setVoyageNumber("voy001");
+        eventLogger.setCompletionTime(LocalDateTime.now());
+
+        FacesContextFactory contextFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+        LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+        Lifecycle lifecycle = lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
+        eventLogger.context = contextFactory.getFacesContext(null, null, null, lifecycle);
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        closeable.close();
+    }
+
+    @Test
+    public void testSubmitWithVoyage() {
+        eventLogger.setEventType(HandlingEvent.Type.LOAD);
+        eventLogger.setVoyageNumber("voy001");
+
+        eventLogger.submit();
+
+        HandlingEventRegistrationAttempt attempt = new HandlingEventRegistrationAttempt(
+                LocalDateTime.now(), eventLogger.getCompletionTime(), new TrackingId("XYZ"),
+                new VoyageNumber("voy001"), HandlingEvent.Type.LOAD, new UnLocode("USNYC"));
+
+        verify(applicationEvents).receivedHandlingEventRegistrationAttempt(attempt);
+        assertTrue(eventLogger.context.getMessageList().size() == 1);
+        assertEquals("Event submitted", eventLogger.context.getMessageList().get(0).getSummary());
+    }
+
+    @Test
+    public void testSubmitWithoutVoyage() {
+        eventLogger.setEventType(HandlingEvent.Type.RECEIVE);
+        eventLogger.setVoyageNumber(null);
+
+        eventLogger.submit();
+
+        HandlingEventRegistrationAttempt attempt = new HandlingEventRegistrationAttempt(
+                LocalDateTime.now(), eventLogger.getCompletionTime(), new TrackingId("XYZ"),
+                null, HandlingEvent.Type.RECEIVE, new UnLocode("USNYC"));
+
+        verify(applicationEvents).receivedHandlingEventRegistrationAttempt(attempt);
+        assertTrue(eventLogger.context.getMessageList().size() == 1);
+        assertEquals("Event submitted", eventLogger.context.getMessageList().get(0).getSummary());
+    }
+
+    @Test
+    public void testSubmitWithNullTrackingId() {
+        eventLogger.setTrackingId(null);
+
+        assertThrows(NullPointerException.class, () -> {
+            eventLogger.submit();
+        });
+    }
+
+    @Test
+    public void testSubmitWithNullLocation() {
+        eventLogger.setLocation(null);
+
+        assertThrows(NullPointerException.class, () -> {
+            eventLogger.submit();
+        });
+    }
+
+    @Test
+    public void testSubmitWithNullEventType() {
+        eventLogger.setEventType(null);
+
+        assertThrows(NullPointerException.class, () -> {
+            eventLogger.submit();
+        });
+    }
+
+    @Test
+    public void testSubmitWithNullCompletionTime() {
+        eventLogger.setCompletionTime(null);
+
+        assertThrows(NullPointerException.class, () -> {
+            eventLogger.submit();
+        });
+    }
+}
+```

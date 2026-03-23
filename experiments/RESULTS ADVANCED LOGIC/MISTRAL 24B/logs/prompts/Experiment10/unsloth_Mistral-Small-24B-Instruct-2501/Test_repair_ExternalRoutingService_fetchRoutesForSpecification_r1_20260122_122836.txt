@@ -1,0 +1,240 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.infrastructure.routing;
+Class name (MUST be exactly): ExternalRoutingService_fetchRoutesForSpecificationTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.infrastructure.routing;
+
+import jakarta.ws.rs.client.Builder;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Invocation.Builder;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.eclipse.cargotracker.domain.model.cargo.Itinerary;
+import org.eclipse.cargotracker.domain.model.cargo.Leg;
+import org.eclipse.cargotracker.domain.model.cargo.RouteSpecification;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.eclipse.pathfinder.api.TransitEdge;
+import org.eclipse.pathfinder.api.TransitPath;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ExternalRoutingService_fetchRoutesForSpecificationTestGenerated {
+    @Mock
+    private Logger logger;
+    @Mock
+    private WebTarget graphTraversalResource;
+    @Mock
+    private LocationRepository locationRepository;
+    @Mock
+    private VoyageRepository voyageRepository;
+    private ExternalRoutingService externalRoutingService;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        externalRoutingService = new ExternalRoutingService();
+        ReflectionTestUtils.setField(externalRoutingService, "logger", logger);
+        ReflectionTestUtils.setField(externalRoutingService, "graphTraversalResource", graphTraversalResource);
+        ReflectionTestUtils.setField(externalRoutingService, "locationRepository", locationRepository);
+        ReflectionTestUtils.setField(externalRoutingService, "voyageRepository", voyageRepository);
+    }
+
+    @Test
+    public void testFetchRoutesForSpecification_withValidRouteSpecification() {
+        RouteSpecification routeSpecification = new RouteSpecification();
+        Location origin = new Location();
+        ReflectionTestUtils.setField(origin, "unLocode", new UnLocode("USNYC"));
+        Location destination = new Location();
+        ReflectionTestUtils.setField(destination, "unLocode", new UnLocode("DEHAM"));
+        ReflectionTestUtils.setField(routeSpecification, "origin", origin);
+        ReflectionTestUtils.setField(routeSpecification, "destination", destination);
+        ReflectionTestUtils.setField(routeSpecification, "arrivalDeadline", LocalDate.now());
+        TransitPath transitPath = new TransitPath();
+        transitPath.setTransitEdges(Arrays.asList(new TransitEdge(), new TransitEdge()));
+        List<TransitPath> transitPaths = Arrays.asList(transitPath);
+        WebTarget webTarget = mock(WebTarget.class);
+        when(graphTraversalResource.queryParam(anyString(), anyString())).thenReturn(webTarget);
+        when(webTarget.queryParam(anyString(), anyString())).thenReturn(webTarget);
+        when(webTarget.request(MediaType.APPLICATION_JSON_TYPE)).thenReturn(mock(Builder.class));
+        when(graphTraversalResource.request(MediaType.APPLICATION_JSON_TYPE).get(new GenericType<List<TransitPath>>() {})).thenReturn(transitPaths);
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        Itinerary itinerary = result.get(0);
+        assertNotNull(itinerary);
+        assertEquals(2, itinerary.getLegs().size());
+    }
+
+    @Test
+    public void testFetchRoutesForSpecification_withEmptyTransitPaths() {
+        RouteSpecification routeSpecification = new RouteSpecification();
+        Location origin = new Location();
+        ReflectionTestUtils.setField(origin, "unLocode", new UnLocode("USNYC"));
+        Location destination = new Location();
+        ReflectionTestUtils.setField(destination, "unLocode", new UnLocode("DEHAM"));
+        ReflectionTestUtils.setField(routeSpecification, "origin", origin);
+        ReflectionTestUtils.setField(routeSpecification, "destination", destination);
+        ReflectionTestUtils.setField(routeSpecification, "arrivalDeadline", LocalDate.now());
+        List<TransitPath> transitPaths = new ArrayList<>();
+        WebTarget webTarget = mock(WebTarget.class);
+        when(graphTraversalResource.queryParam(anyString(), anyString())).thenReturn(webTarget);
+        when(webTarget.queryParam(anyString(), anyString())).thenReturn(webTarget);
+        when(webTarget.request(MediaType.APPLICATION_JSON_TYPE)).thenReturn(mock(Builder.class));
+        when(graphTraversalResource.request(MediaType.APPLICATION_JSON_TYPE).get(new GenericType<List<TransitPath>>() {})).thenReturn(transitPaths);
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testFetchRoutesForSpecification_withInvalidItinerary() {
+        RouteSpecification routeSpecification = new RouteSpecification();
+        Location origin = new Location();
+        ReflectionTestUtils.setField(origin, "unLocode", new UnLocode("USNYC"));
+        Location destination = new Location();
+        ReflectionTestUtils.setField(destination, "unLocode", new UnLocode("DEHAM"));
+        ReflectionTestUtils.setField(routeSpecification, "origin", origin);
+        ReflectionTestUtils.setField(routeSpecification, "destination", destination);
+        ReflectionTestUtils.setField(routeSpecification, "arrivalDeadline", LocalDate.now());
+        TransitPath transitPath = new TransitPath();
+        transitPath.setTransitEdges(Arrays.asList(new TransitEdge(), new TransitEdge()));
+        List<TransitPath> transitPaths = Arrays.asList(transitPath);
+        WebTarget webTarget = mock(WebTarget.class);
+        when(graphTraversalResource.queryParam(anyString(), anyString())).thenReturn(webTarget);
+        when(webTarget.queryParam(anyString(), anyString())).thenReturn(webTarget);
+        when(webTarget.request(MediaType.APPLICATION_JSON_TYPE)).thenReturn(mock(Builder.class));
+        when(graphTraversalResource.request(MediaType.APPLICATION_JSON_TYPE).get(new GenericType<List<TransitPath>>() {})).thenReturn(transitPaths);
+        when(routeSpecification.isSatisfiedBy(any(Itinerary.class))).thenReturn(false);
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(logger, times(1)).log(Level.FINE, "Received itinerary that did not satisfy the route specification");
+    }
+
+    @Test
+    public void testFetchRoutesForSpecification_withNullRouteSpecification() {
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(null);
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testFetchRoutesForSpecification_withNullOrigin() {
+        RouteSpecification routeSpecification = new RouteSpecification();
+        ReflectionTestUtils.setField(routeSpecification, "destination", new Location());
+        ReflectionTestUtils.setField(routeSpecification, "arrivalDeadline", LocalDate.now());
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testFetchRoutesForSpecification_withNullDestination() {
+        RouteSpecification routeSpecification = new RouteSpecification();
+        ReflectionTestUtils.setField(routeSpecification, "origin", new Location());
+        ReflectionTestUtils.setField(routeSpecification, "arrivalDeadline", LocalDate.now());
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testFetchRoutesForSpecification_withNullUnLocodeOrigin() {
+        RouteSpecification routeSpecification = new RouteSpecification();
+        Location origin = new Location();
+        Location destination = new Location();
+        ReflectionTestUtils.setField(destination, "unLocode", new UnLocode("DEHAM"));
+        ReflectionTestUtils.setField(routeSpecification, "origin", origin);
+        ReflectionTestUtils.setField(routeSpecification, "destination", destination);
+        ReflectionTestUtils.setField(routeSpecification, "arrivalDeadline", LocalDate.now());
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testFetchRoutesForSpecification_withNullUnLocodeDestination() {
+        RouteSpecification routeSpecification = new RouteSpecification();
+        Location origin = new Location();
+        ReflectionTestUtils.setField(origin, "unLocode", new UnLocode("USNYC"));
+        Location destination = new Location();
+        ReflectionTestUtils.setField(routeSpecification, "origin", origin);
+        ReflectionTestUtils.setField(routeSpecification, "destination", destination);
+        ReflectionTestUtils.setField(routeSpecification, "arrivalDeadline", LocalDate.now());
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testFetchRoutesForSpecification_withDestinationUnLocode() {
+        RouteSpecification routeSpecification = new RouteSpecification();
+        Location origin = new Location();
+        ReflectionTestUtils.setField(origin, "unLocode", new UnLocode("USNYC"));
+        Location destination = new Location();
+        ReflectionTestUtils.setField(destination, "unLocode", new UnLocode("DEHAM"));
+        ReflectionTestUtils.setField(routeSpecification, "origin", origin);
+        ReflectionTestUtils.setField(routeSpecification, "destination", destination);
+        ReflectionTestUtils.setField(routeSpecification, "arrivalDeadline", LocalDate.now());
+        TransitPath transitPath = new TransitPath();
+        transitPath.setTransitEdges(Arrays.asList(new TransitEdge(), new TransitEdge()));
+        List<TransitPath> transitPaths = Arrays.asList(transitPath);
+        WebTarget webTarget = mock(WebTarget.class);
+        when(graphTraversalResource.queryParam(anyString(), anyString())).thenReturn(webTarget);
+        when(webTarget.queryParam(anyString(), anyString())).thenReturn(webTarget);
+        when(webTarget.request(MediaType.APPLICATION_JSON_TYPE)).thenReturn(mock(Builder.class));
+        when(graphTraversalResource.request(MediaType.APPLICATION_JSON_TYPE).get(new GenericType<List<TransitPath>>() {})).thenReturn(transitPaths);
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        Itinerary itinerary = result.get(0);
+        assertNotNull(itinerary);
+        assertEquals(2, itinerary.getLegs().size());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/infrastructure/routing/ExternalRoutingService_fetchRoutesForSpecificationTestGenerated.java:[3] cannot find symbol
+  symbol:   class Builder
+  location: package jakarta.ws.rs.client
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: ExternalRoutingService_fetchRoutesForSpecificationTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

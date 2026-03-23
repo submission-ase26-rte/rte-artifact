@@ -1,0 +1,178 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.ejb3;
+Class name (MUST be exactly): TradeSLSBBean_completeOrderTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.impl.ejb3;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Collection;
+
+import javax.persistence.EntityManager;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoJUnit5Extension;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import javax.ejb.EJBException;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoJUnit5Extension.class)
+public class TradeSLSBBean_completeOrderTestGenerated {
+
+    @Mock
+    private EntityManager entityManager;
+
+    private TradeSLSBBean tradeSLSBBean;
+
+    @BeforeEach
+    public void setUp() {
+        tradeSLSBBean = new TradeSLSBBean(entityManager);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.resetMocks();
+    }
+
+    @Test
+    public void testCompleteOrderBuy() throws Exception {
+        OrderDataBean order = createMockOrderDataBean(true);
+        AccountDataBean account = createMockAccountDataBean();
+        QuoteDataBean quote = createMockQuoteDataBean();
+        HoldingDataBean holding = createMockHoldingDataBean();
+
+        order.setAccount(account);
+        order.setQuote(quote);
+        order.setHolding(holding);
+
+        when(entityManager.find(OrderDataBean.class, order.getOrderID())).thenReturn(order);
+        when(entityManager.remove(holding)).thenReturn(null);
+
+        OrderDataBean completedOrder = tradeSLSBBean.completeOrder(order.getOrderID(), false);
+
+        assertEquals(completedOrder.getOrderStatus(), "closed");
+    }
+
+    @Test
+    public void testCompleteOrderSell() throws Exception {
+        OrderDataBean order = createMockOrderDataBean(false);
+        AccountDataBean account = createMockAccountDataBean();
+        QuoteDataBean quote = createMockQuoteDataBean();
+        HoldingDataBean holding = createMockHoldingDataBean();
+
+        order.setAccount(account);
+        order.setQuote(quote);
+        order.setHolding(holding);
+
+        when(entityManager.find(OrderDataBean.class, order.getOrderID())).thenReturn(order);
+        when(entityManager.remove(holding)).thenReturn(null);
+
+        OrderDataBean completedOrder = tradeSLSBBean.completeOrder(order.getOrderID(), false);
+
+        assertEquals(completedOrder.getOrderStatus(), "closed");
+    }
+
+    @Test
+    public void testCompleteOrderNullOrder() throws Exception {
+        when(entityManager.find(OrderDataBean.class, 1)).thenReturn(null);
+
+        assertThrows(EJBException.class, () -> {
+            tradeSLSBBean.completeOrder(1, false);
+        });
+    }
+
+    @Test
+    public void testCompleteOrderAlreadyCompleted() throws Exception {
+        OrderDataBean order = createMockOrderDataBean(true);
+        order.setOrderStatus("completed");
+        when(entityManager.find(OrderDataBean.class, order.getOrderID())).thenReturn(order);
+
+        assertThrows(EJBException.class, () -> {
+            tradeSLSBBean.completeOrder(order.getOrderID(), false);
+        });
+    }
+
+    private OrderDataBean createMockOrderDataBean(boolean isBuy) {
+        OrderDataBean order = new OrderDataBean();
+        order.setOrderID(1);
+        order.setBuy(isBuy);
+        order.setQuantity(10);
+        order.setPrice(BigDecimal.valueOf(10.0));
+        order.setOrderStatus("pending");
+        return order;
+    }
+
+    private AccountDataBean createMockAccountDataBean() {
+        AccountDataBean account = new AccountDataBean();
+        account.setUserID("testUser");
+        return account;
+    }
+
+    private QuoteDataBean createMockQuoteDataBean() {
+        QuoteDataBean quote = new QuoteDataBean("IBM", "IBM", 100, BigDecimal.valueOf(10.0), BigDecimal.valueOf(9.5), BigDecimal.valueOf(9.0), BigDecimal.valueOf(10.5), 0.5);
+        return quote;
+    }
+
+    private HoldingDataBean createMockHoldingDataBean() {
+        HoldingDataBean holding = new HoldingDataBean();
+        holding.setHoldingID(1);
+        return holding;
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[19] cannot find symbol
+  symbol:   class MockitoJUnit5Extension
+  location: package org.mockito.junit.jupiter
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[33] cannot find symbol
+  symbol: class ExtendWith
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[33] cannot find symbol
+  symbol: class MockitoJUnit5Extension
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[43] constructor TradeSLSBBean in class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean cannot be applied to given types;
+  required: no arguments
+  found:    javax.persistence.EntityManager
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[48] cannot find symbol
+  symbol:   method resetMocks()
+  location: class org.mockito.Mockito
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[63] 'void' type not allowed here
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[82] 'void' type not allowed here
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[112] cannot find symbol
+  symbol:   method setBuy(boolean)
+  location: variable order of type com.ibm.websphere.samples.daytrader.entities.OrderDataBean
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[121] cannot find symbol
+  symbol:   method setUserID(java.lang.String)
+  location: variable account of type com.ibm.websphere.samples.daytrader.entities.AccountDataBean
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: TradeSLSBBean_completeOrderTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

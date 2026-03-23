@@ -1,0 +1,244 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.ri.axes;
+Class name (MUST be exactly): PrecedingOrFollowingContext_nextNodeTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.jxpath.ri.axes;
+
+import java.util.Stack;
+import org.apache.commons.jxpath.ri.EvalContext;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class PrecedingOrFollowingContext_nextNodeTestGenerated {
+    private PrecedingOrFollowingContext context;
+    private EvalContext parentContext;
+    private NodeTest nodeTest;
+    private NodePointer nodePointer;
+    private NodeIterator nodeIterator;
+
+    @BeforeEach
+    void setUp() {
+        parentContext = Mockito.mock(EvalContext.class);
+        nodeTest = Mockito.mock(NodeTest.class);
+        nodePointer = Mockito.mock(NodePointer.class);
+        nodeIterator = Mockito.mock(NodeIterator.class);
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, false);
+    }
+
+    @Test
+    void testNextNode_WithNullNodeIterator() {
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.childIterator(null, false, nodePointer)).thenReturn(null);
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_WithNullNodePointer() {
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(null);
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_NoMatchingNode() {
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.childIterator(null, false, nodePointer)).thenReturn(nodeIterator);
+        Mockito.when(nodeIterator.setPosition(1)).thenReturn(true);
+        Mockito.when(nodeIterator.getNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.testNode(nodeTest)).thenReturn(false);
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_ReverseOrder() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.childIterator(null, true, nodePointer)).thenReturn(nodeIterator);
+        Mockito.when(nodeIterator.setPosition(1)).thenReturn(true);
+        Mockito.when(nodeIterator.getNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.testNode(nodeTest)).thenReturn(true);
+        assertTrue(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_IsLeaf() {
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.childIterator(null, false, nodePointer)).thenReturn(nodeIterator);
+        Mockito.when(nodeIterator.setPosition(1)).thenReturn(true);
+        Mockito.when(nodeIterator.getNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.testNode(nodeTest)).thenReturn(false);
+        Mockito.when(nodePointer.isLeaf()).thenReturn(true);
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_ReverseOrder_NoMatch() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.childIterator(null, true, nodePointer)).thenReturn(nodeIterator);
+        Mockito.when(nodeIterator.setPosition(1)).thenReturn(true);
+        Mockito.when(nodeIterator.getNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.testNode(nodeTest)).thenReturn(false);
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_ReverseOrder_Match() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.childIterator(null, true, nodePointer)).thenReturn(nodeIterator);
+        Mockito.when(nodeIterator.setPosition(1)).thenReturn(true);
+        Mockito.when(nodeIterator.getNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.testNode(nodeTest)).thenReturn(true);
+        assertTrue(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_ReverseOrder_Leaf() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.childIterator(null, true, nodePointer)).thenReturn(nodeIterator);
+        Mockito.when(nodeIterator.setPosition(1)).thenReturn(true);
+        Mockito.when(nodeIterator.getNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.testNode(nodeTest)).thenReturn(false);
+        Mockito.when(nodePointer.isLeaf()).thenReturn(true);
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_SetStarted() {
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(null);
+        assertFalse(context.nextNode());
+        assertTrue(context.setStarted);
+    }
+
+    @Test
+    void testNextNode_StackInitialization() {
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(null);
+        assertFalse(context.nextNode());
+        assertNotNull(context.stack);
+        assertTrue(context.stack.isEmpty());
+    }
+
+    @Test
+    void testNextNode_StackClear() {
+        context.stack = new Stack<>();
+        context.stack.push(Mockito.mock(NodeIterator.class));
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(null);
+        assertFalse(context.nextNode());
+        assertTrue(context.stack.isEmpty());
+    }
+
+    @Test
+    void testNextNode_ParentNull() {
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(null);
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_IsRoot() {
+        NodePointer rootPointer = Mockito.mock(NodePointer.class);
+        Mockito.when(rootPointer.isRoot()).thenReturn(true);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(rootPointer);
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_ReverseOrder_NoChildren() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.childIterator(null, true, nodePointer)).thenReturn(null);
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_ReverseOrder_NoMoreNodes() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.childIterator(null, true, nodePointer)).thenReturn(nodeIterator);
+        Mockito.when(nodeIterator.setPosition(1)).thenReturn(false);
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_ReverseOrder_LeafMatch() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.childIterator(null, true, nodePointer)).thenReturn(nodeIterator);
+        Mockito.when(nodeIterator.setPosition(1)).thenReturn(true);
+        Mockito.when(nodeIterator.getNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.testNode(nodeTest)).thenReturn(true);
+        Mockito.when(nodePointer.isLeaf()).thenReturn(true);
+        assertTrue(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_ReverseOrder_ParentChange() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        NodePointer grandParent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.getParent()).thenReturn(grandParent);
+        Mockito.when(parent.childIterator(null, true, nodePointer)).thenReturn(nodeIterator);
+        Mockito.when(nodeIterator.setPosition(1)).thenReturn(false);
+        Mockito.when(grandParent.childIterator(null, true, parent)).thenReturn(nodeIterator);
+        assertFalse(context.nextNode());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext_nextNodeTestGenerated.java:[130] setStarted has private access in org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext_nextNodeTestGenerated.java:[138] stack has private access in org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext_nextNodeTestGenerated.java:[139] stack has private access in org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext_nextNodeTestGenerated.java:[144] stack has private access in org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext_nextNodeTestGenerated.java:[145] stack has private access in org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext_nextNodeTestGenerated.java:[149] stack has private access in org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: PrecedingOrFollowingContext_nextNodeTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

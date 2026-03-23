@@ -1,0 +1,695 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+public class TradeScenarioServlet_performTaskTestGenerated {
+    @Mock
+    private ServletConfig servletConfig;
+    @Mock
+    private ServletContext servletContext;
+    @InjectMocks
+    private TradeScenarioServlet tradeScenarioServlet;
+    private MockMvc mockMvc;
+
+    @BeforeEach
+    public void setUp() throws ServletException {
+        when(servletConfig.getServletContext()).thenReturn(servletContext);
+        tradeScenarioServlet.init(servletConfig);
+        mockMvc = MockMvcBuilders.standaloneSetup(tradeScenarioServlet).build();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        reset(servletConfig, servletContext);
+    }
+
+    @Test
+    public void testPerformTaskWithNullAction() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        tradeScenarioServlet.performTask(request, response);
+        verify(servletContext).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithNullSession() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        when(servletContext.getRequestDispatcher(anyString())).thenReturn(null);
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            tradeScenarioServlet.performTask(request, response);
+            mockedLog.verify(() -> Log.error(anyString(), any(Exception.class)));
+        }
+        verify(servletContext).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithNullUserID() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        request.setSession(session);
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getUserID).thenReturn("newUser");
+            tradeScenarioServlet.performTask(request, response);
+        }
+        verify(servletContext, times(2)).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithActionN() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        request.setParameter("action", "n");
+        tradeScenarioServlet.performTask(request, response);
+        verify(servletContext, never()).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithActionQ() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "user1");
+        request.setSession(session);
+        request.setParameter("action", "q");
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::rndSymbols).thenReturn("symbol1");
+            tradeScenarioServlet.performTask(request, response);
+        }
+        verify(servletContext).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithActionA() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "user1");
+        request.setSession(session);
+        request.setParameter("action", "a");
+        tradeScenarioServlet.performTask(request, response);
+        verify(servletContext).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithActionU() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "user1");
+        request.setSession(session);
+        request.setParameter("action", "u");
+        tradeScenarioServlet.performTask(request, response);
+        verify(servletContext, times(2)).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithActionH() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "user1");
+        request.setSession(session);
+        request.setParameter("action", "h");
+        tradeScenarioServlet.performTask(request, response);
+        verify(servletContext).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithActionL() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        request.setSession(session);
+        request.setParameter("action", "l");
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getUserID).thenReturn("user1");
+            tradeScenarioServlet.performTask(request, response);
+        }
+        verify(servletContext).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithActionO() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "user1");
+        request.setSession(session);
+        request.setParameter("action", "o");
+        tradeScenarioServlet.performTask(request, response);
+        verify(servletContext).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithActionP() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "user1");
+        request.setSession(session);
+        request.setParameter("action", "p");
+        tradeScenarioServlet.performTask(request, response);
+        verify(servletContext).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithActionSWithHoldings() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "user1");
+        request.setSession(session);
+        request.setParameter("action", "s");
+        Collection<HoldingDataBean> holdings = new ArrayList<>();
+        holdings.add(new HoldingDataBean(1, 100.0, new BigDecimal("100.00"), new Date(), "symbol1"));
+        request.setAttribute("holdingDataBeans", holdings);
+        tradeScenarioServlet.performTask(request, response);
+        verify(servletContext, times(2)).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithActionSWithoutHoldings() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "user1");
+        request.setSession(session);
+        request.setParameter("action", "s");
+        Collection<HoldingDataBean> holdings = new ArrayList<>();
+        request.setAttribute("holdingDataBeans", holdings);
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::rndSymbol).thenReturn("symbol1");
+            mockedTradeConfig.when(TradeConfig::rndQuantity).thenReturn(100.0f);
+            tradeScenarioServlet.performTask(request, response);
+        }
+        verify(servletContext, times(3)).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithActionB() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "user1");
+        request.setSession(session);
+        request.setParameter("action", "b");
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::rndSymbol).thenReturn("symbol1");
+            mockedTradeConfig.when(TradeConfig::rndQuantity).thenReturn(100.0f);
+            tradeScenarioServlet.performTask(request, response);
+        }
+        verify(servletContext, times(2)).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithIOException() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "user1");
+        request.setSession(session);
+        request.setParameter("action", "n");
+        when(response.getOutputStream()).thenThrow(new IOException());
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            tradeScenarioServlet.performTask(request, response);
+            mockedLog.verify(() -> Log.error(anyString(), any(Exception.class)));
+        }
+    }
+
+    @Test
+    public void testPerformTaskWithNoActionParameter() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "user1");
+        request.setSession(session);
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(() -> TradeConfig.getScenarioAction(false)).thenReturn('a');
+            tradeScenarioServlet.performTask(request, response);
+        }
+        verify(servletContext).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithActionR() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "user1");
+        request.setSession(session);
+        request.setParameter("action", "r");
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::rndNewUserID).thenReturn("newUser");
+            mockedTradeConfig.when(TradeConfig::rndFullName).thenReturn("fullName");
+            mockedTradeConfig.when(TradeConfig::rndCreditCard).thenReturn("creditCard");
+            mockedTradeConfig.when(TradeConfig::rndBalance).thenReturn("balance");
+            mockedTradeConfig.when(() -> TradeConfig.rndEmail("newUser")).thenReturn("email");
+            mockedTradeConfig.when(TradeConfig::rndAddress).thenReturn("address");
+            tradeScenarioServlet.performTask(request, response);
+        }
+        verify(servletContext, times(2)).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithActionSellNoHoldings() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "user1");
+        request.setSession(session);
+        request.setParameter("action", "s");
+        Collection<HoldingDataBean> holdings = new ArrayList<>();
+        request.setAttribute("holdingDataBeans", holdings);
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class);
+             MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            mockedTradeConfig.when(TradeConfig::rndSymbol).thenReturn("symbol1");
+            mockedTradeConfig.when(TradeConfig::rndQuantity).thenReturn(100.0f);
+            tradeScenarioServlet.performTask(request, response);
+            mockedLog.verify(() -> Log.trace(anyString()));
+        }
+        verify(servletContext, times(3)).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithActionSellWithHoldings() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "user1");
+        request.setSession(session);
+        request.setParameter("action", "s");
+        Collection<HoldingDataBean> holdings = new ArrayList<>();
+        holdings.add(new HoldingDataBean(1, 100.0, new BigDecimal("100.00"), new Date(), "symbol1"));
+        request.setAttribute("holdingDataBeans", holdings);
+        tradeScenarioServlet.performTask(request, response);
+        verify(servletContext, times(2)).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithActionSellWithInvalidHoldings() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "user1");
+        request.setSession(session);
+        request.setParameter("action", "s");
+        Collection<HoldingDataBean> holdings = new ArrayList<>();
+        holdings.add(new HoldingDataBean(1, 100.0, new BigDecimal("100.00"), new Date(0), "symbol1"));
+        request.setAttribute("holdingDataBeans", holdings);
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class);
+             MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            mockedTradeConfig.when(TradeConfig::rndSymbol).thenReturn("symbol1");
+            mockedTradeConfig.when(TradeConfig::rndQuantity).thenReturn(100.0f);
+            tradeScenarioServlet.performTask(request, response);
+            mockedLog.verify(() -> Log.trace(anyString()));
+        }
+        verify(servletContext, times(3)).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithActionNotSpecified() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "user1");
+        request.setSession(session);
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(() -> TradeConfig.getScenarioAction(false)).thenReturn('b');
+            tradeScenarioServlet.performTask(request, response);
+        }
+        verify(servletContext, times(2)).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void testPerformTaskWithSessionAttributeError() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = new MockHttpSession();
+        request.setSession(session);
+        when(servletConfig.getServletContext()).thenThrow(new ServletException());
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            tradeScenarioServlet.performTask(request, response);
+            mockedLog.verify(() -> Log.error(anyString(), any(Exception.class)));
+        }
+        verify(servletContext, times(2)).getRequestDispatcher(anyString());
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 0.00% | Branch: 0.00%
+- Tests: 0/22 passed
+
+TEST STATUS:
+- PASSED (0): none
+- FAILED (0): none
+- ERRORS (22): testPerformTaskWithNullAction, testPerformTaskWithNullSession, testPerformTaskWithNullUserID, testPerformTaskWithActionN, testPerformTaskWithActionQ, testPerformTaskWithActionA, testPerformTaskWithActionU, testPerformTaskWithActionH, testPerformTaskWithActionL, testPerformTaskWithActionO, testPerformTaskWithActionP, testPerformTaskWithActionSWithHoldings, testPerformTaskWithActionSWithoutHoldings, testPerformTaskWithActionB, testPerformTaskWithIOException, testPerformTaskWithNoActionParameter, testPerformTaskWithActionR, testPerformTaskWithActionSellNoHoldings, testPerformTaskWithActionSellWithHoldings, testPerformTaskWithActionSellWithInvalidHoldings, testPerformTaskWithActionNotSpecified, testPerformTaskWithSessionAttributeError
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PREVIOUSLY GENERATED METHOD:
+public void performTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    String action = req.getParameter("action");
+    HttpSession session = req.getSession(false);
+
+    if (action == null) {
+        req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
+        return;
+    }
+
+    if (session == null) {
+        Log.error("TradeScenarioServlet:performTask - session is null", new Exception("session is null"));
+        return;
+    }
+
+    String userID = (String) session.getAttribute("uidBean");
+
+    if (userID == null) {
+        userID = TradeConfig.getUserID();
+        session.setAttribute("uidBean", userID);
+    }
+
+    switch (action) {
+        case "n":
+            break;
+        case "q":
+            String symbol = TradeConfig.rndSymbols();
+            req.setAttribute("symbol", symbol);
+            req.getRequestDispatcher("/quote.jsp").forward(req, resp);
+            break;
+        case "a":
+            req.getRequestDispatcher("/account.jsp").forward(req, resp);
+            break;
+        case "u":
+            req.getRequestDispatcher("/update_account.jsp").forward(req, resp);
+            req.getRequestDispatcher("/account.jsp").forward(req, resp);
+            break;
+        case "h":
+            req.getRequestDispatcher("/portfolio.jsp").forward(req, resp);
+            break;
+        case "l":
+            userID = TradeConfig.getUserID();
+            session.setAttribute("uidBean", userID);
+            req.getRequestDispatcher("/account.jsp").forward(req, resp);
+            break;
+        case "o":
+            req.getRequestDispatcher("/order.jsp").forward(req, resp);
+            break;
+        case "p":
+            req.getRequestDispatcher("/portfolio.jsp").forward(req, resp);
+            break;
+        case "s":
+            Collection<HoldingDataBean> holdings = (Collection<HoldingDataBean>) req.getAttribute("holdingDataBeans");
+            if (holdings != null && !holdings.isEmpty()) {
+                req.getRequestDispatcher("/sell.jsp").forward(req, resp);
+                req.getRequestDispatcher("/portfolio.jsp").forward(req, resp);
+            } else {
+                symbol = TradeConfig.rndSymbol();
+                float quantity = TradeConfig.rndQuantity();
+                req.setAttribute("symbol", symbol);
+                req.setAttribute("quantity", quantity);
+                req.getRequestDispatcher("/sell.jsp").forward(req, resp);
+                req.getRequestDispatcher("/portfolio.jsp").forward(req, resp);
+                req.getRequestDispatcher("/portfolio.jsp").forward(req, resp);
+            }
+            break;
+        case "b":
+            symbol = TradeConfig.rndSymbol();
+            float quantity = TradeConfig.rndQuantity();
+            req.setAttribute("symbol", symbol);
+            req.setAttribute("quantity", quantity);
+            req.getRequestDispatcher("/buy.jsp").forward(req, resp);
+            req.getRequestDispatcher("/portfolio.jsp").forward(req, resp);
+            break;
+        case "r":
+            String newUser = TradeConfig.rndNewUserID();
+            String fullName = TradeConfig.rndFullName();
+            String creditCard = TradeConfig.rndCreditCard();
+            String balance = TradeConfig.rndBalance();
+            String email = TradeConfig.rndEmail(newUser);
+            String address = TradeConfig.rndAddress();
+            session.setAttribute("uidBean", newUser);
+            req.setAttribute("newUser", newUser);
+            req.setAttribute("fullName", fullName);
+            req.setAttribute("creditCard", creditCard);
+            req.setAttribute("balance", balance);
+            req.setAttribute("email", email);
+            req.setAttribute("address", address);
+            req.getRequestDispatcher("/register.jsp").forward(req, resp);
+            req.getRequestDispatcher("/account.jsp").forward(req, resp);
+            break;
+        default:
+            char defaultAction = TradeConfig.getScenarioAction(false);
+            if (defaultAction == 'a') {
+                req.getRequestDispatcher("/account.jsp").forward(req, resp);
+            } else {
+                req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
+            }
+            break;
+    }
+}
+
+ADDITIONAL INSTRUCTIONS:
+- Compare the previous method with the one you are about to generate
+- Improve quality and correctness compared to the previous version
+- Maintain compatibility with all provided tests
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   HoldingDataBean -> com.ibm.websphere.samples.daytrader.entities.HoldingDataBean
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   IOException -> java.io.IOException
+//   PrintWriter -> java.io.PrintWriter
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   ServletConfig -> javax.servlet.ServletConfig
+//   ServletContext -> javax.servlet.ServletContext
+//   ServletException -> javax.servlet.ServletException
+//   WebServlet -> javax.servlet.annotation.WebServlet
+//   HttpServlet -> javax.servlet.http.HttpServlet
+//   HttpServletRequest -> javax.servlet.http.HttpServletRequest
+//   HttpServletResponse -> javax.servlet.http.HttpServletResponse
+//   HttpSession -> javax.servlet.http.HttpSession
+
+// === Class: TradeScenarioServlet ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private static final String tasPathPrefix;
+
+// === External Class: Log ===
+// Import paths:
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   Level -> java.util.logging.Level
+//   Logger -> java.util.logging.Logger
+// Fields (with actual visibility):
+    private static final Logger log;
+
+// Method Signatures (used by target method):
+static public void trace(String message);
+static public void error(String message);
+
+// === External Class: TradeConfig ===
+// Import paths:
+//   BigDecimal -> java.math.BigDecimal
+//   ArrayList -> java.util.ArrayList
+//   Random -> java.util.Random
+// Fields (with actual visibility):
+    private static String[] runTimeModeNames;
+    public static final int EJB3;
+    public static final int DIRECT;
+    public static final int SESSION_TO_DIRECT;
+    private static int runTimeMode;
+    private static String[] orderProcessingModeNames;
+    public static final int SYNCH;
+    public static final int ASYNCH;
+    public static final int ASYNCH_2PHASE;
+    private static int orderProcessingMode;
+    private static String[] accessModeNames;
+    public static final int STANDARD;
+    private static int accessMode;
+    private static String[] webInterfaceNames;
+    public static final int JSP;
+    public static final int JSP_Images;
+    public static final int JSP_Images_HTTP2;
+    private static int webInterface;
+    private static int MAX_USERS;
+    private static int MAX_QUOTES;
+    public static boolean JDBCDriverNeedsGlobalTransation;
+    public static String DATASOURCE;
+    public static int KEYBLOCKSIZE;
+    public static int QUOTES_PER_PAGE;
+    public static boolean RND_USER;
+    private static int MAX_HOLDINGS;
+    private static int count;
+    private static Object userID_count_semaphore;
+    private static int userID_count;
+    private static String hostName;
+    private static Random r0;
+    private static Random randomNumberGenerator;
+    public static final String newUserPrefix;
+    public static final int verifyPercent;
+    private static boolean updateQuotePrices;
+    private static int primIterations;
+    private static boolean longRun;
+    private static boolean publishQuotePriceChange;
+    private static int listQuotePriceChangeFrequency;
+    private static boolean displayOrderAlerts;
+    private static int marketSummaryInterval;
+    public static BigDecimal PENNY_STOCK_PRICE;
+    public static BigDecimal PENNY_STOCK_RECOVERY_MIRACLE_MULTIPLIER;
+    public static BigDecimal MAXIMUM_STOCK_PRICE;
+    public static BigDecimal MAXIMUM_STOCK_SPLIT_MULTIPLIER;
+    public static final int HOME_OP;
+    public static final int QUOTE_OP;
+    public static final int LOGIN_OP;
+    public static final int LOGOUT_OP;
+    public static final int REGISTER_OP;
+    public static final int ACCOUNT_OP;
+    public static final int PORTFOLIO_OP;
+    public static final int BUY_OP;
+    public static final int SELL_OP;
+    public static final int UPDATEACCOUNT_OP;
+    private static int[][] scenarioMixes;
+    private static char[] actions;
+    private static int sellDeficit;
+    public static final int WELCOME_PAGE;
+    public static final int REGISTER_PAGE;
+    public static final int PORTFOLIO_PAGE;
+    public static final int QUOTE_PAGE;
+    public static final int HOME_PAGE;
+    public static final int ACCOUNT_PAGE;
+    public static final int ORDER_PAGE;
+    public static final int CONFIG_PAGE;
+    public static final int STATS_PAGE;
+    public static final int MARKET_SUMMARY_PAGE;
+    public static String[][] webUI;
+    private static int scenarioCount;
+    private static final BigDecimal orderFee;
+    private static final BigDecimal cashFee;
+    private static final BigDecimal ONE;
+    private static ArrayList deck;
+    private static int card;
+
+// Method Signatures (used by target method):
+static public float rndQuantity();
+static public String rndBalance();
+static public String rndEmail(String userID);
+static public String rndFullName();
+static public String rndSymbol();
+static public synchronized String rndNewUserID();
+static public synchronized void incrementScenarioCount();
+static public synchronized void incrementSellDeficit();
+static public String rndSymbols();
+static public String rndAddress();
+static public String rndCreditCard();
+static public String getUserID();
+static public char getScenarioAction(boolean newUser);
+
+// === External Class: HoldingDataBean ===
+// Import paths:
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   Serializable -> java.io.Serializable
+//   BigDecimal -> java.math.BigDecimal
+//   Date -> java.util.Date
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private Integer holdingID;
+    private double quantity;
+    private BigDecimal purchasePrice;
+    private Date purchaseDate;
+    private String quoteID;
+    private AccountDataBean account;
+    private QuoteDataBean quote;
+
+// Constructors:
+public HoldingDataBean();
+public HoldingDataBean(Integer holdingID, double quantity, BigDecimal purchasePrice, Date purchaseDate, String quoteID);
+public HoldingDataBean(double quantity, BigDecimal purchasePrice, Date purchaseDate, AccountDataBean account, QuoteDataBean quote);
+
+// Method Signatures (used by target method):
+public Integer getHoldingID();
+public Date getPurchaseDate();
+
+
+TASK:
+Regenerate ONLY the method "performTask" OF CLASS "TradeScenarioServlet" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void performTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    // your implementation here
+}
+```
+
+
+- Package: com.ibm.websphere.samples.daytrader.web.servlet
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in TradeScenarioServlet
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

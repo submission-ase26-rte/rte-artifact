@@ -1,0 +1,138 @@
+```java
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import org.apache.commons.jxpath.ExpressionContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class MethodLookupUtils_lookupMethodTestGenerated {
+    private static final Class<?> TARGET_CLASS = ExpressionContext.class;
+    private static final String METHOD_NAME = "getVariables";
+    private static final Object[] VALID_PARAMETERS = new Object[]{new ExpressionContext() {
+        @Override
+        public int getPosition() {
+            return 0;
+        }
+    }, new HashMap<>()};
+
+    @BeforeEach
+    public void setUp() {
+        // Setup code if necessary
+    }
+
+    @AfterEach
+    public void tearDown() {
+        // Teardown code if necessary
+    }
+
+    @Test
+    public void testLookupMethodWithValidParameters() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, VALID_PARAMETERS);
+        assertNotNull(method);
+        assertEquals(METHOD_NAME, method.getName());
+    }
+
+    @Test
+    public void testLookupMethodWithAmbiguousMethods() {
+        assertThrows(JXPathException.class, () -> {
+            MethodLookupUtils.lookupMethod(TARGET_CLASS, "ambiguousMethod", new Object[]{new ExpressionContext() {
+                @Override
+                public int getPosition() {
+                    return 0;
+                }
+            }, new HashMap<>(), new HashMap<>()});
+        });
+    }
+
+    @Test
+    public void testLookupMethodWithExactMatch() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, "getVariables", VALID_PARAMETERS);
+        assertNotNull(method);
+        assertEquals("getVariables", method.getName());
+    }
+
+    @Test
+    public void testLookupMethodWithApproximateMatch() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, "getVariables", VALID_PARAMETERS);
+        assertNotNull(method);
+        assertEquals("getVariables", method.getName());
+    }
+
+    @Test
+    public void testLookupMethodWithNullParameters() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, null);
+        assertNull(method);
+    }
+
+    @Test
+    public void testLookupMethodWithEmptyParameters() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, new Object[]{});
+        assertNull(method);
+    }
+
+    @Test
+    public void testLookupMethodWithNullFirstParameter() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, new Object[]{null});
+        assertNull(method);
+    }
+
+    @Test
+    public void testLookupMethodWithInvalidFirstParameter() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, new Object[]{"invalid"});
+        assertNull(method);
+    }
+
+    @Test
+    public void testLookupMethodWithNoMatch() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, "nonExistentMethod", new Object[]{new ExpressionContext() {
+            @Override
+            public int getPosition() {
+                return 0;
+            }
+        }});
+        assertNull(method);
+    }
+
+    @Test
+    public void testLookupMethodWithAmbiguousMatch() {
+        assertThrows(JXPathException.class, () -> {
+            MethodLookupUtils.lookupMethod(TARGET_CLASS, "ambiguousMethod", new Object[]{new ExpressionContext() {
+                @Override
+                public int getPosition() {
+                    return 0;
+                }
+            }, new HashMap<>(), new HashMap<>()});
+        });
+    }
+
+    @Test
+    public void testLookupMethodWithNullParameterInMiddle() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, new Object[]{new ExpressionContext() {
+            @Override
+            public int getPosition() {
+                return 0;
+            }
+        }, null, new HashMap<>()});
+        assertNull(method);
+    }
+
+    @Test
+    public void testLookupMethodWithStaticMethod() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, "staticMethod", new Object[]{new ExpressionContext() {
+            @Override
+            public int getPosition() {
+                return 0;
+            }
+        }});
+        assertNull(method);
+    }
+}
+```

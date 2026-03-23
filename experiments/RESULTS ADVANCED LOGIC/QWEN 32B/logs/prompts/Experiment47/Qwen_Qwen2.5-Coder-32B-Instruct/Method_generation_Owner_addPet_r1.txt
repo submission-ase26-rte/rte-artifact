@@ -1,0 +1,244 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.springframework.samples.petclinic.owner;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Owner_addPetTestGenerated {
+    @Mock
+    private PetType mockPetType;
+    @Mock
+    private Set mockVisits;
+    private Owner owner;
+    private Pet pet;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        owner = new Owner();
+        pet = new Pet();
+        pet.setType(mockPetType);
+        pet.setBirthDate(LocalDate.now());
+        ReflectionTestUtils.setField(pet, "visits", mockVisits);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        owner = null;
+        pet = null;
+    }
+
+    @Test
+    public void testAddPet_NewPet() {
+        pet.setId(null);
+        owner.addPet(pet);
+        assertTrue(owner.getPets().contains(pet));
+    }
+
+    @Test
+    public void testAddPet_ExistingPet() {
+        pet.setId(1);
+        owner.addPet(pet);
+        assertFalse(owner.getPets().contains(pet));
+    }
+
+    @Test
+    public void testAddPet_NullPet() {
+        assertThrows(NullPointerException.class, () -> {
+            owner.addPet(null);
+        });
+    }
+
+    @Test
+    public void testAddPet_NewPetWithSpecificName() {
+        pet.setId(null);
+        pet.setName("Buddy");
+        owner.addPet(pet);
+        assertTrue(owner.getPets().contains(pet));
+        assertEquals("Buddy", owner.getPets().get(0).getName());
+    }
+
+    @Test
+    public void testAddPet_NewPetWithSpecificBirthDate() {
+        pet.setId(null);
+        LocalDate birthDate = LocalDate.of(2020, 5, 15);
+        pet.setBirthDate(birthDate);
+        owner.addPet(pet);
+        assertTrue(owner.getPets().contains(pet));
+        assertEquals(birthDate, owner.getPets().get(0).getBirthDate());
+    }
+
+    @Test
+    public void testAddPet_NewPetWithSpecificType() {
+        pet.setId(null);
+        pet.setType(mockPetType);
+        owner.addPet(pet);
+        assertTrue(owner.getPets().contains(pet));
+        assertEquals(mockPetType, owner.getPets().get(0).getType());
+    }
+
+    @Test
+    public void testAddPet_MultipleNewPets() {
+        pet.setId(null);
+        Pet pet2 = new Pet();
+        pet2.setType(mockPetType);
+        pet2.setBirthDate(LocalDate.now());
+        ReflectionTestUtils.setField(pet2, "visits", mockVisits);
+        pet2.setId(null);
+        owner.addPet(pet);
+        owner.addPet(pet2);
+        assertTrue(owner.getPets().contains(pet));
+        assertTrue(owner.getPets().contains(pet2));
+        assertEquals(2, owner.getPets().size());
+    }
+
+    @Test
+    public void testAddPet_NewPetWithNoVisits() {
+        pet.setId(null);
+        ReflectionTestUtils.setField(pet, "visits", new LinkedHashSet<>());
+        owner.addPet(pet);
+        assertTrue(owner.getPets().contains(pet));
+        assertTrue(owner.getPets().get(0).getVisits().isEmpty());
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 100.00%
+- Tests: 8/8 passed
+
+TEST STATUS:
+- PASSED (8): testAddPet_NewPet, testAddPet_ExistingPet, testAddPet_NullPet, testAddPet_NewPetWithSpecificName, testAddPet_NewPetWithSpecificBirthDate, testAddPet_NewPetWithSpecificType, testAddPet_MultipleNewPets, testAddPet_NewPetWithNoVisits
+- FAILED (0): none
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   ToStringCreator -> org.springframework.core.style.ToStringCreator
+//   Person -> org.springframework.samples.petclinic.model.Person
+//   Assert -> org.springframework.util.Assert
+//   CascadeType -> jakarta.persistence.CascadeType
+//   Column -> jakarta.persistence.Column
+//   Entity -> jakarta.persistence.Entity
+//   FetchType -> jakarta.persistence.FetchType
+//   JoinColumn -> jakarta.persistence.JoinColumn
+//   OneToMany -> jakarta.persistence.OneToMany
+//   OrderBy -> jakarta.persistence.OrderBy
+//   Table -> jakarta.persistence.Table
+//   Pattern -> jakarta.validation.constraints.Pattern
+//   NotBlank -> jakarta.validation.constraints.NotBlank
+//   Owner -> org.springframework.samples.petclinic.owner.Owner
+//   Pet -> org.springframework.samples.petclinic.owner.Pet
+
+// === Class: Owner ===
+// Fields (with actual visibility):
+    private String address;
+    private String city;
+    private String telephone;
+    private List pets;
+
+// Getter/Setter Methods (for test assertions):
+public String getAddress();
+public void setAddress(String address);
+public String getCity();
+public void setCity(String city);
+public String getTelephone();
+public void setTelephone(String telephone);
+public List<Pet> getPets();
+public Pet getPet(String name);
+public Pet getPet(Integer id);
+public Pet getPet(String name, boolean ignoreNew);
+
+// Internal Methods (full implementation for context):
+	public List<Pet> getPets() {
+		return this.pets;
+	}
+
+// === Superclass: Person (inherited members) ===
+// Inherited Fields:
+
+// Inherited Method Signatures:
+public String getFirstName();
+public void setFirstName(String firstName);
+public String getLastName();
+public void setLastName(String lastName);
+
+// === External Class: Pet ===
+// Full import path: org.springframework.samples.petclinic.owner.Pet
+// Import paths:
+//   LocalDate -> java.time.LocalDate
+//   Collection -> java.util.Collection
+//   LinkedHashSet -> java.util.LinkedHashSet
+//   Set -> java.util.Set
+//   DateTimeFormat -> org.springframework.format.annotation.DateTimeFormat
+// Fields (with actual visibility):
+    private LocalDate birthDate;
+    private PetType type;
+    private Set visits;
+
+
+// Public Getter Methods (for test assertions):
+public LocalDate getBirthDate();
+public PetType getType();
+public Collection<Visit> getVisits();
+
+
+TASK:
+Regenerate ONLY the method "addPet" OF CLASS "Owner" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void addPet(Pet pet) {
+    // your implementation here
+}
+```
+
+
+- Package: org.springframework.samples.petclinic.owner
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "addPet"
+– Allowed imports: exactly those already present in Owner
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

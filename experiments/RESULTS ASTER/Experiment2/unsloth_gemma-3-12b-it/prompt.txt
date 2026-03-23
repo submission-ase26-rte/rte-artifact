@@ -1,0 +1,561 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Filtered unit tests for method: parsePattern(final String pattern)
+ * Original class: PatternOptionBuilder
+ * Tests that actually call the target method
+ */
+package org.apache.commons.cli;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo2_unit_parsePattern_PatternOptionBuilder_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePatternWithOption_ZLdK0_3() {
+    String pattern = "a";
+    Options options = PatternOptionBuilder.parsePattern(pattern);
+    Option option = options.getOption("a");
+    assertEquals("a", option.getLongOpt());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePatternWithOptionAndArg_lzMo1_3() {
+    String pattern = "a:";
+    Options options = PatternOptionBuilder.parsePattern(pattern);
+    Option option = options.getOption("a");
+    assertEquals("a", option.getLongOpt());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePatternWithOptionAndArgAndRequired_LheD2_3() {
+    String pattern = "a:!";
+    Options options = PatternOptionBuilder.parsePattern(pattern);
+    Option option = options.getOption("a");
+    assertEquals("a", option.getLongOpt());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePatternWithOption_ZLdK0_1() {
+    String pattern = "a";
+    Options options = PatternOptionBuilder.parsePattern(pattern);
+    Option option = options.getOption("a");
+    assertEquals(1, options.getOptions().size());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePatternWithOption_ZLdK0_2() {
+    String pattern = "a";
+    Options options = PatternOptionBuilder.parsePattern(pattern);
+    Option option = options.getOption("a");
+    assertNotNull(option);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePatternWithOptionAndArg_lzMo1_1() {
+    String pattern = "a:";
+    Options options = PatternOptionBuilder.parsePattern(pattern);
+    Option option = options.getOption("a");
+    assertEquals(1, options.getOptions().size());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePatternWithOptionAndArg_lzMo1_2() {
+    String pattern = "a:";
+    Options options = PatternOptionBuilder.parsePattern(pattern);
+    Option option = options.getOption("a");
+    assertNotNull(option);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePatternWithOptionAndArg_lzMo1_4() {
+    String pattern = "a:";
+    Options options = PatternOptionBuilder.parsePattern(pattern);
+    Option option = options.getOption("a");
+    assertTrue(option.hasArg());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePatternWithOptionAndArgAndRequired_LheD2_1() {
+    String pattern = "a:!";
+    Options options = PatternOptionBuilder.parsePattern(pattern);
+    Option option = options.getOption("a");
+    assertEquals(1, options.getOptions().size());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePatternWithOptionAndArgAndRequired_LheD2_2() {
+    String pattern = "a:!";
+    Options options = PatternOptionBuilder.parsePattern(pattern);
+    Option option = options.getOption("a");
+    assertNotNull(option);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePatternWithOptionAndArgAndRequired_LheD2_4() {
+    String pattern = "a:!";
+    Options options = PatternOptionBuilder.parsePattern(pattern);
+    Option option = options.getOption("a");
+    assertTrue(option.hasArg());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePatternWithOptionAndArgAndRequired_LheD2_5() {
+    String pattern = "a:!";
+    Options options = PatternOptionBuilder.parsePattern(pattern);
+    Option option = options.getOption("a");
+    assertTrue(option.isRequired());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern1_MAmz0() {
+    Options options = PatternOptionBuilder.parsePattern("a");
+    assertEquals(1, options.getOptions().size());
+    assertEquals("a", options.getOption("a").getLongOpt());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern2_mQgP1() {
+    Options options = PatternOptionBuilder.parsePattern("a:b");
+    assertEquals(1, options.getOptions().size());
+    assertEquals("a", options.getOption("a").getLongOpt());
+    assertEquals(true, options.getOption("a").hasArg());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern3_xoSM2() {
+    Options options = PatternOptionBuilder.parsePattern("a:b!");
+    assertEquals(1, options.getOptions().size());
+    assertEquals("a", options.getOption("a").getLongOpt());
+    assertEquals(true, options.getOption("a").hasArg());
+    assertEquals(true, options.getOption("a").isRequired());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern4_wsOI3() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c");
+    assertEquals(1, options.getOptions().size());
+    assertEquals("a", options.getOption("a").getLongOpt());
+    assertEquals(true, options.getOption("a").hasArg());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern5_NZsh4() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c!");
+    assertEquals(1, options.getOptions().size());
+    assertEquals("a", options.getOption("a").getLongOpt());
+    assertEquals(true, options.getOption("a").hasArg());
+    assertEquals(true, options.getOption("a").isRequired());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern6_KtCg5() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c:d");
+    assertEquals(1, options.getOptions().size());
+    assertEquals("a", options.getOption("a").getLongOpt());
+    assertEquals(true, options.getOption("a").hasArg());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern7_JDGI6() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c:d!");
+    assertEquals(1, options.getOptions().size());
+    assertEquals("a", options.getOption("a").getLongOpt());
+    assertEquals(true, options.getOption("a").hasArg());
+    assertEquals(true, options.getOption("a").isRequired());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern1_MAmz0_2() {
+    Options options = PatternOptionBuilder.parsePattern("a");
+    assertEquals("a", options.getOption("a").getLongOpt());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern2_mQgP1_1_fid2() {
+    Options options = PatternOptionBuilder.parsePattern("a:b");
+    assertEquals(1, options.getOptions().size());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern2_mQgP1_2() {
+    Options options = PatternOptionBuilder.parsePattern("a:b");
+    assertEquals("a", options.getOption("a").getLongOpt());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern3_xoSM2_1() {
+    Options options = PatternOptionBuilder.parsePattern("a:b!");
+    assertEquals(1, options.getOptions().size());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern3_xoSM2_2() {
+    Options options = PatternOptionBuilder.parsePattern("a:b!");
+    assertEquals("a", options.getOption("a").getLongOpt());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern3_xoSM2_4() {
+    Options options = PatternOptionBuilder.parsePattern("a:b!");
+    assertEquals(true, options.getOption("a").isRequired());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern4_wsOI3_1() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c");
+    assertEquals(1, options.getOptions().size());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern4_wsOI3_2() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c");
+    assertEquals("a", options.getOption("a").getLongOpt());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern5_NZsh4_1() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c!");
+    assertEquals(1, options.getOptions().size());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern5_NZsh4_2() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c!");
+    assertEquals("a", options.getOption("a").getLongOpt());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern5_NZsh4_4() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c!");
+    assertEquals(true, options.getOption("a").isRequired());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern6_KtCg5_1() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c:d");
+    assertEquals(1, options.getOptions().size());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern6_KtCg5_2() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c:d");
+    assertEquals("a", options.getOption("a").getLongOpt());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern7_JDGI6_1() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c:d!");
+    assertEquals(1, options.getOptions().size());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern7_JDGI6_2() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c:d!");
+    assertEquals("a", options.getOption("a").getLongOpt());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern7_JDGI6_4() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c:d!");
+    assertEquals(true, options.getOption("a").isRequired());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern1_MAmz0_1() {
+    Options options = PatternOptionBuilder.parsePattern("a");
+    assertEquals(1, options.getOptions().size());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern2_mQgP1_1() {
+    Options options = PatternOptionBuilder.parsePattern("a:b");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern2_mQgP1_3() {
+    Options options = PatternOptionBuilder.parsePattern("a:b");
+    assertEquals(true, options.getOption("a").hasArg());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern3_xoSM2_3() {
+    Options options = PatternOptionBuilder.parsePattern("a:b!");
+    assertEquals(true, options.getOption("a").hasArg());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern4_wsOI3_3() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c");
+    assertEquals(true, options.getOption("a").hasArg());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern5_NZsh4_3() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c!");
+    assertEquals(true, options.getOption("a").hasArg());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern6_KtCg5_3() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c:d");
+    assertEquals(true, options.getOption("a").hasArg());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParsePattern7_JDGI6_3() {
+    Options options = PatternOptionBuilder.parsePattern("a:b:c:d!");
+    assertEquals(true, options.getOption("a").hasArg());
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 17/43 passed
+
+TEST STATUS:
+- PASSED (17): testParsePatternWithOption_ZLdK0_1, testParsePatternWithOption_ZLdK0_2, testParsePatternWithOptionAndArg_lzMo1_1, testParsePatternWithOptionAndArg_lzMo1_2, testParsePatternWithOptionAndArg_lzMo1_4, testParsePatternWithOptionAndArgAndRequired_LheD2_1, testParsePatternWithOptionAndArgAndRequired_LheD2_2, testParsePatternWithOptionAndArgAndRequired_LheD2_4, testParsePatternWithOptionAndArgAndRequired_LheD2_5, testParsePattern1_MAmz0_1, testParsePattern2_mQgP1_1, testParsePattern2_mQgP1_3, testParsePattern3_xoSM2_3, testParsePattern4_wsOI3_3, testParsePattern5_NZsh4_3, testParsePattern6_KtCg5_3, testParsePattern7_JDGI6_3
+- FAILED (26): testParsePatternWithOption_ZLdK0_3, testParsePatternWithOptionAndArg_lzMo1_3, testParsePatternWithOptionAndArgAndRequired_LheD2_3, testParsePattern1_MAmz0, testParsePattern2_mQgP1, testParsePattern3_xoSM2, testParsePattern4_wsOI3, testParsePattern5_NZsh4, testParsePattern6_KtCg5, testParsePattern7_JDGI6, testParsePattern1_MAmz0_2, testParsePattern2_mQgP1_1_fid2, testParsePattern2_mQgP1_2, testParsePattern3_xoSM2_1, testParsePattern3_xoSM2_2, testParsePattern3_xoSM2_4, testParsePattern4_wsOI3_1, testParsePattern4_wsOI3_2, testParsePattern5_NZsh4_1, testParsePattern5_NZsh4_2, testParsePattern5_NZsh4_4, testParsePattern6_KtCg5_1, testParsePattern6_KtCg5_2, testParsePattern7_JDGI6_1, testParsePattern7_JDGI6_2, testParsePattern7_JDGI6_4
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   File -> java.io.File
+//   FileInputStream -> java.io.FileInputStream
+//   URL -> java.net.URL
+//   Date -> java.util.Date
+//   Map -> java.util.Map
+//   PatternOptionBuilder -> org.apache.commons.cli.PatternOptionBuilder
+
+// === Class: PatternOptionBuilder ===
+// Fields (with actual visibility):
+    public static final Class STRING_VALUE;
+    public static final Class OBJECT_VALUE;
+    public static final Class NUMBER_VALUE;
+    public static final Class DATE_VALUE;
+    public static final Class CLASS_VALUE;
+    public static final Class EXISTING_FILE_VALUE;
+    public static final Class FILE_VALUE;
+    public static final Class FILES_VALUE;
+    public static final Class URL_VALUE;
+    private static final Converter UNSUPPORTED;
+
+// Getter/Setter Methods (for test assertions):
+public static Object getValueClass(final char ch);
+public static boolean isValueCode(final char ch);
+
+// Internal Methods (full implementation for context):
+    public static boolean isValueCode(final char ch) {
+        return ch == '@' || ch == ':' || ch == '%' || ch == '+' || ch == '#' || ch == '<' || ch == '>' || ch == '*' || ch == '/' || ch == '!';
+    }
+    static <T> T unsupported() {
+        return (T) UNSUPPORTED;
+    }
+    public static Class<?> getValueType(final char ch) {
+        switch (ch) {
+        case '@':
+            return PatternOptionBuilder.OBJECT_VALUE;
+        case ':':
+            return PatternOptionBuilder.STRING_VALUE;
+        case '%':
+            return PatternOptionBuilder.NUMBER_VALUE;
+        case '+':
+            return PatternOptionBuilder.CLASS_VALUE;
+        case '#':
+            return PatternOptionBuilder.DATE_VALUE;
+        case '<':
+            return PatternOptionBuilder.EXISTING_FILE_VALUE;
+        case '>':
+            return PatternOptionBuilder.FILE_VALUE;
+        case '*':
+            return PatternOptionBuilder.FILES_VALUE;
+        case '/':
+            return PatternOptionBuilder.URL_VALUE;
+        }
+
+        return null;
+    }
+
+// === External Class: Option ===
+// Full import path: org.apache.commons.cli.Option
+// Fields (with actual visibility):
+    private static final Class DEFAULT_TYPE;
+    private int argCount;
+    private String argName;
+    private Converter converter;
+    private final DeprecatedAttributes deprecated;
+    private String description;
+    private String longOption;
+    private final String option;
+    private boolean optionalArg;
+    private boolean required;
+    private Class type;
+    private char valueSeparator;
+    package-private static final Option[] EMPTY_ARRAY;
+    private static final long serialVersionUID;
+    public static final int UNINITIALIZED;
+    public static final int UNLIMITED_VALUES;
+    private List values;
+    private char valuesep;
+// Constructors:
+private Builder(String option);
+private Option(Builder builder);
+public Option(String option, boolean hasArg, String description);
+public Option(String option, String description);
+public Option(String option, String longOption, boolean hasArg, String description);
+// Method Signatures (used by target method):
+public static Builder builder();
+// Public Getter Methods (for test assertions):
+public Builder hasArg();
+public Builder hasArg(boolean hasArg);
+public Builder hasArgs();
+public String getArgName();
+public int getArgs();
+public Converter getConverter();
+public DeprecatedAttributes getDeprecated();
+public String getDescription();
+public int getId();
+public String getKey();
+
+// === External Class: Options ===
+// Full import path: org.apache.commons.cli.Options
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final Map shortOpts;
+    private final Map longOpts;
+    private final List requiredOpts;
+    private final Map optionGroups;
+// Method Signatures (used by target method):
+public Options addOption(final Option opt);
+// Public Getter Methods (for test assertions):
+public List<String> getMatchingOptions(String opt);
+public Option getOption(String opt);
+public OptionGroup getOptionGroup(Option opt);
+public Collection<Option> getOptions();
+public List getRequiredOptions();
+public boolean hasLongOption(String opt);
+public boolean hasOption(String opt);
+public boolean hasShortOption(String opt);
+public String toString();
+
+// === External Class: TypeHandler ===
+// Full import path: org.apache.commons.cli.TypeHandler
+// Fields (with actual visibility):
+    private static final TypeHandler DEFAULT;
+    private static final int HEX_RADIX;
+    private final Map converterMap;
+// Constructors:
+public TypeHandler();
+public TypeHandler(Map converterMap);
+// Method Signatures (used by target method):
+public static Map createDefaultMap();
+// Public Getter Methods (for test assertions):
+public static TypeHandler getDefault();
+public Converter<T> getConverter(Class clazz);
+
+// === External Class: Converter ===
+// Full import path: org.apache.commons.cli.Converter
+// Type: INTERFACE (cannot instantiate)
+// Fields (with actual visibility):
+    package-private Converter DEFAULT;
+    package-private Converter CLASS;
+    package-private Converter FILE;
+    package-private Converter PATH;
+    package-private Converter NUMBER;
+    package-private Converter OBJECT;
+    package-private Converter URL;
+    package-private Converter DATE;
+
+
+TASK:
+Regenerate ONLY the method "parsePattern" OF CLASS "PatternOptionBuilder" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public static Options parsePattern(final String pattern) {
+    // your implementation here
+}
+```
+
+- Package: org.apache.commons.cli
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "parsePattern"
+- Allowed imports: exactly those already present in PatternOptionBuilder
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

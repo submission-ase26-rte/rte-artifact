@@ -1,0 +1,224 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeDB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeJDBC;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.MDBStats;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeDirectDBUtils_buildDBTestGenerated {
+    @Mock
+    private DataSource datasource;
+    @Mock
+    private TradeServices ts;
+    @InjectMocks
+    private TradeDirectDBUtils tradeDirectDBUtils;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    public void tearDown() {
+    }
+
+    @Test
+    public void testBuildDBWithDDLFile() throws Exception {
+        String ddlContent = "CREATE TABLE test_table (id INT);";
+        InputStream ddlFile = new ByteArrayInputStream(ddlContent.getBytes());
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        Statement stmt = mock(Statement.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.createStatement()).thenReturn(stmt);
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+        verify(stmt, times(1)).executeUpdate("CREATE TABLE test_table (id INT);");
+        verify(conn, times(1)).commit();
+        verify(conn, times(1)).close();
+    }
+
+    @Test
+    public void testBuildDBWithDDLFileAndParseError() throws Exception {
+        InputStream ddlFile = mock(InputStream.class);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        when(ddlFile.read()).thenThrow(new IOException("Parse error"));
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            tradeDirectDBUtils.buildDB(out, ddlFile);
+            mockedLog.verify(() -> Log.error(anyString(), any(IOException.class)));
+        }
+        assertTrue(outputStream.toString().contains("Unable to parse DDL file"));
+    }
+
+    @Test
+    public void testBuildDBWithDDLFileAndRecreateError() throws Exception {
+        String ddlContent = "CREATE TABLE test_table (id INT);";
+        InputStream ddlFile = new ByteArrayInputStream(ddlContent.getBytes());
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        Statement stmt = mock(Statement.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.createStatement()).thenReturn(stmt);
+        when(stmt.executeUpdate(anyString())).thenThrow(new SQLException("Recreate error"));
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            tradeDirectDBUtils.buildDB(out, ddlFile);
+            mockedLog.verify(() -> Log.error(anyString(), any(SQLException.class)));
+        }
+        assertTrue(outputStream.toString().contains("Unable to drop and recreate DayTrader Db Tables"));
+    }
+
+    @Test
+    public void testBuildDBWithoutDDLFileAndCreateQuoteError() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true);
+        when(rs.getInt(anyString())).thenReturn(10);
+        when(ts.createQuote(anyString(), anyString(), any(BigDecimal.class))).thenThrow(new Exception("Create quote error"));
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(out, null));
+            mockedLog.verify(() -> Log.error(anyString(), any(Exception.class)));
+        }
+        assertTrue(outputStream.toString().contains("Populate Trade DB aborting after 10 create quote errors"));
+    }
+
+    @Test
+    public void testBuildDBWithoutDDLFileAndRegisterError() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true);
+        when(rs.getInt(anyString())).thenReturn(10);
+        when(ts.createQuote(anyString(), anyString(), any(BigDecimal.class))).thenReturn(null);
+        when(ts.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class))).thenThrow(new Exception("Register error"));
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(out, null));
+            mockedLog.verify(() -> Log.error(anyString(), any(Exception.class)));
+        }
+        assertTrue(outputStream.toString().contains("Populate Trade DB aborting after 10 user registration errors"));
+    }
+
+    @Test
+    public void testBuildDBWithoutDDLFileAndCreateQuoteException() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true);
+        when(rs.getInt(anyString())).thenReturn(10);
+        when(ts.createQuote(anyString(), anyString(), any(BigDecimal.class))).thenThrow(new Exception("Create quote error"));
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(out, null));
+            mockedLog.verify(() -> Log.error(anyString(), any(Exception.class)));
+        }
+        assertTrue(outputStream.toString().contains("Populate Trade DB aborting after 10 create quote errors"));
+    }
+
+    @Test
+    public void testBuildDBWithoutDDLFileAndRegisterException() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true);
+        when(rs.getInt(anyString())).thenReturn(10);
+        when(ts.createQuote(anyString(), anyString(), any(BigDecimal.class))).thenReturn(null);
+        when(ts.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class))).thenThrow(new Exception("Register error"));
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(out, null));
+            mockedLog.verify(() -> Log.error(anyString(), any(Exception.class)));
+        }
+        assertTrue(outputStream.toString().contains("Populate Trade DB aborting after 10 user registration errors"));
+    }
+
+    @Test
+    public void testBuildDBWithoutDDLFileAndFlush() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true);
+        when(rs.getInt(anyString())).thenReturn(10);
+        when(ts.createQuote(anyString(), anyString(), any(BigDecimal.class))).thenReturn(null);
+        when(ts.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class))).thenReturn(mock(AccountDataBean.class));
+        tradeDirectDBUtils.buildDB(out, null);
+        assertTrue(outputStream.toString().contains("has 0 holdings."));
+    }
+
+    @Test
+    public void testBuildDBWithoutDDLFileAndAlreadyRegistered() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true);
+        when(rs.getInt(anyString())).thenReturn(10);
+        when(ts.createQuote(anyString(), anyString(), any(BigDecimal.class))).thenReturn(null);
+        when(ts.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class))).thenReturn(null);
+        tradeDirectDBUtils.buildDB(out, null);
+        assertTrue(outputStream.toString().contains("already registered."));
+    }
+}
+```

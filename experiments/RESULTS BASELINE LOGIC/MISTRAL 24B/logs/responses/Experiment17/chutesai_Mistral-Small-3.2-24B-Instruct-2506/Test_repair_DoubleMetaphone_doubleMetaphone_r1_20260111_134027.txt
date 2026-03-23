@@ -1,0 +1,111 @@
+Here's the fixed test class with all compilation errors resolved:
+
+```java
+package org.apache.commons.codec.language;
+
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.StringEncoder;
+import org.apache.commons.codec.binary.StringUtils;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class DoubleMetaphone_doubleMetaphoneTestGenerated {
+
+    @Test
+    void testDoubleMetaphone_NullInput() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertNull(doubleMetaphone.doubleMetaphone(null, false));
+    }
+
+    @Test
+    void testDoubleMetaphone_EmptyString() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("", doubleMetaphone.doubleMetaphone("", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_PrimaryEncoding() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("AL", doubleMetaphone.doubleMetaphone("Alan", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_AlternateEncoding() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("AL", doubleMetaphone.doubleMetaphone("Alan", true));
+    }
+
+    @Test
+    void testDoubleMetaphone_SlavoGermanicName() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("KL", doubleMetaphone.doubleMetaphone("Knopp", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_SilentStart() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("KN", doubleMetaphone.doubleMetaphone("Knight", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_WithCedilla() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("SSN", doubleMetaphone.doubleMetaphone("Caçador", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_WithTildeN() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("NT", doubleMetaphone.doubleMetaphone("Niño", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_DoubleLetters() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("PPL", doubleMetaphone.doubleMetaphone("Apple", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_MixedCases() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("SMN", doubleMetaphone.doubleMetaphone("Smith", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_LongName() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("L", doubleMetaphone.doubleMetaphone("A" + String.join("", Collections.nCopies(100, "a")), false));
+    }
+
+    @Test
+    void testDoubleMetaphone_UnicodeCharacters() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("P", doubleMetaphone.doubleMetaphone("Pérez", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_DifferentEncodings() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertNotEquals(doubleMetaphone.doubleMetaphone("Smith", false), doubleMetaphone.doubleMetaphone("Smith", true));
+    }
+
+    @Test
+    void testDoubleMetaphone_EqualEncodings() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals(doubleMetaphone.doubleMetaphone("Smith", false), doubleMetaphone.doubleMetaphone("Smyth", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_MaxLength() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        doubleMetaphone.setMaxCodeLen(2);
+        assertEquals("AL", doubleMetaphone.doubleMetaphone("Alexander", false));
+    }
+}
+```

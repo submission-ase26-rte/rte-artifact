@@ -1,0 +1,47 @@
+```java
+public static String crypt(final byte[] original, String salt) {
+    if (salt != null && salt.length() > 2) {
+        throw new IllegalArgumentException("Invalid salt value: " + salt);
+    }
+
+    if (salt == null) {
+        salt = generateSalt();
+    }
+
+    byte[] saltBytes = salt.getBytes(StandardCharsets.US_ASCII);
+    byte[] key = new byte[8];
+    System.arraycopy(original, 0, key, 0, Math.min(original.length, 8));
+
+    int[] schedule = new int[16];
+    int desResult;
+
+    // First encryption
+    desSetKey(key);
+    desResult = body(schedule, 0, 0);
+    intToFourBytes(desResult, key, 0);
+
+    // Second encryption
+    desSetKey(key);
+    desResult = body(schedule, SKB[1][0], SKB[1][1]);
+    intToFourBytes(desResult, key, 4);
+
+    // Third encryption
+    desSetKey(key);
+    desResult = body(schedule, SKB[2][0], SKB[2][1]);
+    intToFourBytes(desResult, key, 0);
+
+    // Create result string
+    char[] result = new char[13];
+    if (salt != null) {
+        result[0] = salt.charAt(0);
+        result[1] = salt.charAt(1);
+    }
+
+    for (int i = 0; i < 11; i++) {
+        int idx = (key[i / 2] + (i % 2 == 0 ? SHIFT2[0] : SHIFT2[1])) % SALT_CHARS.length;
+        result[i + 2] = SALT_CHARS[idx];
+    }
+
+    return new String(result);
+}
+```

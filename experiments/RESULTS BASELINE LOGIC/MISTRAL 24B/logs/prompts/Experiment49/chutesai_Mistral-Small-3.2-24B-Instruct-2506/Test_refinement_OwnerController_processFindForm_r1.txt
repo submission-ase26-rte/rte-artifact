@@ -1,0 +1,137 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.springframework.samples.petclinic.owner;
+Class name (MUST be exactly): OwnerController_processFindFormTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testProcessFindForm_NullOwner_HandlesGracefully --
+ERROR: java.lang.IllegalArgumentException: Can not set final org.springframework.samples.petclinic.owner.OwnerRepository field org.springframework.samples.petclinic.owner.OwnerController.owners to org.springframework.data.domain.PageImpl
+
+TEST CODE TO FIX:
+package org.springframework.samples.petclinic.owner;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.MapBindingResult;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class OwnerController_processFindFormTestGenerated {
+    @Mock
+    private Model model;
+    @Mock
+    private BindingResult bindingResult;
+    @InjectMocks
+    private OwnerController ownerController;
+    private Owner owner;
+    private Page<Owner> ownersPage;
+    @BeforeEach
+    void setUp() {
+        owner = new Owner();
+        ownersPage = new PageImpl<>(new ArrayList<>(), PageRequest.of(0, 10), 0);
+        ReflectionTestUtils.setField(ownerController, "owners", ownersPage);
+    }
+
+
+    @Test
+        void testProcessFindForm_NullOwner_HandlesGracefully() {
+            when(bindingResult.hasErrors()).thenReturn(true);
+    
+            String viewName = ownerController.processFindForm(1, null, bindingResult, model);
+    
+            assertEquals("owners/ownersList", viewName);
+        }
+
+}
+
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() {
+        owner = new Owner();
+        ownersPage = new PageImpl<>(new ArrayList<>(), PageRequest.of(0, 10), 0);
+        ReflectionTestUtils.setField(ownerController, "owners", ownersPage);
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+	@GetMapping("/owners")
+	public String processFindForm(@RequestParam(defaultValue = "1") int page, Owner owner, BindingResult result,
+			Model model) {
+		// allow parameterless GET request for /owners to return all records
+		if (owner.getLastName() == null) { // NOT COVERED BY TESTS
+			owner.setLastName(""); // NOT COVERED BY TESTS // empty string signifies broadest possible search
+		}
+
+		// find owners by last name
+		Page<Owner> ownersResults = findPaginatedForOwnersLastName(page, owner.getLastName()); // NOT COVERED BY TESTS
+		if (ownersResults.isEmpty()) { // NOT COVERED BY TESTS
+			// no owners found
+			result.rejectValue("lastName", "notFound", "not found"); // NOT COVERED BY TESTS
+			return "owners/findOwners"; // NOT COVERED BY TESTS
+		}
+
+		if (ownersResults.getTotalElements() == 1) { // NOT COVERED BY TESTS
+			// 1 owner found
+			owner = ownersResults.iterator().next(); // NOT COVERED BY TESTS
+			return "redirect:/owners/" + owner.getId(); // NOT COVERED BY TESTS
+		}
+
+		// multiple owners found
+		return addPaginationModel(page, model, ownersResults); // NOT COVERED BY TESTS
+	}
+
+
+COVERAGE ISSUES:
+Current line coverage: 0.00%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers only if ensuring unique names.
+- DO NOT mock the target class
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

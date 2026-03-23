@@ -1,0 +1,329 @@
+ROLE:
+You are an expert Java developer. Task: improve coverage.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): PatternOptionBuilder_parsePatternTestGenerated
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+Test class structure (reference):
+package org.apache.commons.cli;
+
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class PatternOptionBuilder_parsePatternTestGenerated {
+
+}
+
+Valid test signatures:
+    @Test
+    public void testParsePattern_emptyPattern() {}
+}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   File -> java.io.File
+//   FileInputStream -> java.io.FileInputStream
+//   URL -> java.net.URL
+//   Date -> java.util.Date
+//   Map -> java.util.Map
+//   PatternOptionBuilder -> org.apache.commons.cli.PatternOptionBuilder
+//   Option -> org.apache.commons.cli.Option
+//   Options -> org.apache.commons.cli.Options
+//   TypeHandler -> org.apache.commons.cli.TypeHandler
+//   Converter -> org.apache.commons.cli.Converter
+
+// === Class: PatternOptionBuilder ===
+// Fields (with actual visibility):
+    public static final Class STRING_VALUE;
+    public static final Class OBJECT_VALUE;
+    public static final Class NUMBER_VALUE;
+    public static final Class DATE_VALUE;
+    public static final Class CLASS_VALUE;
+    public static final Class EXISTING_FILE_VALUE;
+    public static final Class FILE_VALUE;
+    public static final Class FILES_VALUE;
+    public static final Class URL_VALUE;
+    private static final Converter UNSUPPORTED;
+
+// Getter/Setter Methods (for test assertions):
+public static Object getValueClass(final char ch);
+public static boolean isValueCode(final char ch);
+
+// Internal Methods (full implementation for context):
+    public static boolean isValueCode(final char ch) {
+        return ch == '@' || ch == ':' || ch == '%' || ch == '+' || ch == '#' || ch == '<' || ch == '>' || ch == '*' || ch == '/' || ch == '!';
+    }
+    public static Class<?> getValueType(final char ch) {
+        switch (ch) {
+        case '@':
+            return PatternOptionBuilder.OBJECT_VALUE;
+        case ':':
+            return PatternOptionBuilder.STRING_VALUE;
+        case '%':
+            return PatternOptionBuilder.NUMBER_VALUE;
+        case '+':
+            return PatternOptionBuilder.CLASS_VALUE;
+        case '#':
+            return PatternOptionBuilder.DATE_VALUE;
+        case '<':
+            return PatternOptionBuilder.EXISTING_FILE_VALUE;
+        case '>':
+            return PatternOptionBuilder.FILE_VALUE;
+        case '*':
+            return PatternOptionBuilder.FILES_VALUE;
+        case '/':
+            return PatternOptionBuilder.URL_VALUE;
+        }
+
+        return null;
+    }
+    static <T> T unsupported() {
+        return (T) UNSUPPORTED;
+    }
+
+// === External Class: Option ===
+// Full import path: org.apache.commons.cli.Option
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   Objects -> java.util.Objects
+// Fields (with actual visibility):
+    private static final Class DEFAULT_TYPE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private int argCount;
+    private String argName;
+    private Converter converter;
+    private final DeprecatedAttributes deprecated;
+    private String description;
+    private String longOption;
+    private final String option;
+    private boolean optionalArg;
+    private boolean required;
+    private Class type;
+    private char valueSeparator;
+    package-private static final Option[] EMPTY_ARRAY;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int UNINITIALIZED;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int UNLIMITED_VALUES;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private List values;
+    private char valuesep;
+
+// Constructors:
+private Builder(String option);
+private Option(Builder builder);
+public Option(String option, boolean hasArg, String description);
+public Option(String option, String description);
+public Option(String option, String longOption, boolean hasArg, String description);
+
+// Method Signatures (used by target method):
+static public Builder builder();
+
+// Public Getter Methods (for test assertions):
+public Builder hasArg();
+public Builder hasArg(boolean hasArg);
+public Builder hasArgs();
+public String getArgName();
+public int getArgs();
+public Converter getConverter();
+public DeprecatedAttributes getDeprecated();
+public String getDescription();
+public int getId();
+public String getKey();
+public String getLongOpt();
+public String getOpt();
+public Object getType();
+public String getValue();
+public String getValue(int index);
+
+// === External Class: Options ===
+// Full import path: org.apache.commons.cli.Options
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   Collection -> java.util.Collection
+//   Collections -> java.util.Collections
+//   HashSet -> java.util.HashSet
+// Fields (with actual visibility):
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private final Map shortOpts;
+    private final Map longOpts;
+    private final List requiredOpts;
+    private final Map optionGroups;
+
+// Method Signatures (used by target method):
+public Options addOption(final Option opt);
+
+// Public Getter Methods (for test assertions):
+public List<String> getMatchingOptions(String opt);
+public Option getOption(String opt);
+public OptionGroup getOptionGroup(Option opt);
+public Collection<Option> getOptions();
+public List getRequiredOptions();
+public boolean hasLongOption(String opt);
+public boolean hasOption(String opt);
+public boolean hasShortOption(String opt);
+public String toString();
+
+// === External Class: TypeHandler ===
+// Full import path: org.apache.commons.cli.TypeHandler
+// Import paths:
+//   File -> java.io.File
+//   FileInputStream -> java.io.FileInputStream
+//   BigDecimal -> java.math.BigDecimal
+//   BigInteger -> java.math.BigInteger
+//   URL -> java.net.URL
+// Fields (with actual visibility):
+    private static final TypeHandler DEFAULT;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int HEX_RADIX;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private final Map converterMap;
+
+// Constructors:
+public TypeHandler();
+public TypeHandler(Map converterMap);
+
+// Method Signatures (used by target method):
+static public Map createDefaultMap();
+
+// Public Getter Methods (for test assertions):
+public static TypeHandler getDefault();
+public Converter<T> getConverter(Class clazz);
+
+// === External Class: Converter ===
+// Full import path: org.apache.commons.cli.Converter
+// Type: INTERFACE (cannot instantiate - use Mockito.mock(Converter.class) instead)
+// Import paths:
+//   File -> java.io.File
+//   MalformedURLException -> java.net.MalformedURLException
+//   URL -> java.net.URL
+//   InvalidPathException -> java.nio.file.InvalidPathException
+//   Path -> java.nio.file.Path
+// Fields (with actual visibility):
+    package-private Converter DEFAULT;
+    package-private Converter CLASS;
+    package-private Converter FILE;
+    package-private Converter PATH;
+    package-private Converter NUMBER;
+    package-private Converter OBJECT;
+    package-private Converter URL;
+    package-private Converter DATE;
+
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+    /**
+     * Returns the {@link Options} instance represented by {@code pattern}.
+     *
+     * @param pattern the pattern string
+     * @return The {@link Options} instance
+     */
+    public static Options parsePattern(final String pattern) {
+        char opt = Char.SP;
+        boolean required = false;
+        Class<?> type = null;
+        Converter<?, ?> converter = Converter.DEFAULT;
+
+        final Options options = new Options();
+
+        for (int i = 0; i < pattern.length(); i++) { // NOT COVERED BY TESTS
+            final char ch = pattern.charAt(i); // NOT COVERED BY TESTS
+
+            // a value code comes after an option and specifies
+            // details about it
+            if (!isValueCode(ch)) { // NOT COVERED BY TESTS
+                if (opt != Char.SP) { // NOT COVERED BY TESTS
+                    // @formatter:off
+                    final Option option = Option.builder(String.valueOf(opt)) // NOT COVERED BY TESTS
+                            .hasArg(type != null) // NOT COVERED BY TESTS
+                            .required(required) // NOT COVERED BY TESTS
+                            .type(type) // NOT COVERED BY TESTS
+                            .converter(converter) // NOT COVERED BY TESTS
+                            .build(); // NOT COVERED BY TESTS
+                    // @formatter:on
+                    // we have a previous one to deal with
+                    options.addOption(option); // NOT COVERED BY TESTS
+                    required = false; // NOT COVERED BY TESTS
+                    type = null; // NOT COVERED BY TESTS
+                    converter = Converter.DEFAULT; // NOT COVERED BY TESTS
+                }
+
+                opt = ch; // NOT COVERED BY TESTS
+            } else if (ch == '!') {
+                required = true; // NOT COVERED BY TESTS
+            } else {
+                type = getValueType(ch); // NOT COVERED BY TESTS
+                final Map<Class<?>, Converter<?, ? extends Throwable>> map = TypeHandler.createDefaultMap(); // NOT COVERED BY TESTS
+                // Backward compatibility (probably).
+                map.put(FILES_VALUE, unsupported()); // NOT COVERED BY TESTS
+                converter = new TypeHandler(map).getConverter(getValueType(ch)); // NOT COVERED BY TESTS
+            }
+        }
+
+        if (opt != Char.SP) { // NOT COVERED BY TESTS
+            final Option option = Option.builder(String.valueOf(opt)).hasArg(type != null).required(required).type(type).build(); // NOT COVERED BY TESTS
+
+            // we have a final one to deal with
+            options.addOption(option); // NOT COVERED BY TESTS
+        }
+
+        return options;
+    }
+
+
+COVERAGE ANALYSIS:
+ STATUS: All tests are currently PASSING and there are NO compilation errors.
+  ISSUE: The test suite does not meet the minimum coverage threshold.
+
+COVERAGE METRICS:
+- Current line coverage: 26.67%
+- Target line coverage: 100%
+
+YOUR TASK:
+You MUST add NEW test cases to improve coverage from 26.67% to 100%.
+
+The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. 
+Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+IMPORTANT: Maintain all existing passing tests - do NOT modify or remove them. Only ADD new test cases.
+
+
+
+INSTRUCTIONS:
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

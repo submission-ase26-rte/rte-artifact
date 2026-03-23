@@ -1,0 +1,43 @@
+```java
+public <I extends ArchiveInputStream<? extends ArchiveEntry>> I createArchiveInputStream(final String archiverName, final InputStream in, final String actualEncoding) throws ArchiveException {
+    if (archiverName == null) {
+        throw new IllegalArgumentException("Archiver name must not be null");
+    }
+    if (in == null) {
+        throw new IllegalArgumentException("Input stream must not be null");
+    }
+    String key = toKey(archiverName);
+    ArchiveStreamProvider provider = getArchiveInputStreamProviders().get(key);
+    if (provider != null) {
+        return (I) provider.createArchiveInputStream(key, in, actualEncoding == null ? entryEncoding : actualEncoding);
+    }
+    if (ArchiveStreamFactory.ZIP.equals(key)) {
+        return (I) new ZipArchiveInputStream(in, actualEncoding == null ? entryEncoding : actualEncoding);
+    }
+    if (ArchiveStreamFactory.TAR.equals(key)) {
+        return (I) new TarArchiveInputStream(in, actualEncoding == null ? entryEncoding : actualEncoding);
+    }
+    if (ArchiveStreamFactory.JAR.equals(key)) {
+        return (I) new JarArchiveInputStream(in, actualEncoding == null ? entryEncoding : actualEncoding);
+    }
+    if (ArchiveStreamFactory.AR.equals(key)) {
+        return (I) new ArArchiveInputStream(in);
+    }
+    if (ArchiveStreamFactory.CPIO.equals(key)) {
+        return (I) new CpioArchiveInputStream(in);
+    }
+    if (ArchiveStreamFactory.ARJ.equals(key)) {
+        return (I) new ArjArchiveInputStream(in);
+    }
+    if (ArchiveStreamFactory.DUMP.equals(key)) {
+        return (I) new DumpArchiveInputStream(in);
+    }
+    if (ArchiveStreamFactory.SEVEN_Z.equals(key)) {
+        throw new StreamingNotSupportedException("7z is not supported as a streaming archive");
+    }
+    if (ArchiveStreamFactory.APK.equals(key)) {
+        return (I) new JarArchiveInputStream(in, actualEncoding == null ? entryEncoding : actualEncoding);
+    }
+    throw new ArchiveException("No ArchiveStreamProvider found for archiver name: " + archiverName);
+}
+```

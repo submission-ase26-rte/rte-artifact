@@ -1,0 +1,91 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.compress.archivers.cpio;
+Class name (MUST be exactly): CpioArchiveEntry_setInodeTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.compress.archivers.cpio;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.LinkOption;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class CpioArchiveEntry_setInodeTestGenerated {
+
+    private CpioArchiveEntry cpioArchiveEntry;
+
+    @BeforeEach
+    void setUp() {
+        cpioArchiveEntry = new CpioArchiveEntry(short.valueOf((byte) 0));
+    }
+
+    @AfterEach
+    void tearDown() {
+        cpioArchiveEntry = null;
+    }
+
+    @Test
+    void testSetInode_validInput() {
+        long inode = 1234567890L;
+        cpioArchiveEntry.setInode(inode);
+        assertEquals(inode, cpioArchiveEntry.getInode());
+    }
+
+    @Test
+    void testSetInode_zeroValue() {
+        long inode = 0L;
+        cpioArchiveEntry.setInode(inode);
+        assertEquals(inode, cpioArchiveEntry.getInode());
+    }
+
+    @Test
+    void testSetInode_negativeValue() {
+        long inode = -1234567890L;
+        cpioArchiveEntry.setInode(inode);
+        assertEquals(inode, cpioArchiveEntry.getInode());
+    }
+
+    @Test
+    void testSetInode_maxLongValue() {
+        long inode = Long.MAX_VALUE;
+        cpioArchiveEntry.setInode(inode);
+        assertEquals(inode, cpioArchiveEntry.getInode());
+    }
+
+    @Test
+    void testSetInode_minLongValue() {
+        long inode = Long.MIN_VALUE;
+        cpioArchiveEntry.setInode(inode);
+        assertEquals(inode, cpioArchiveEntry.getInode());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/cpio/CpioArchiveEntry_setInodeTestGenerated.java:[23] class expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/cpio/CpioArchiveEntry_setInodeTestGenerated.java:[23] ')' expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/cpio/CpioArchiveEntry_setInodeTestGenerated.java:[23] not a statement
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/cpio/CpioArchiveEntry_setInodeTestGenerated.java:[23] ';' expected
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: CpioArchiveEntry_setInodeTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

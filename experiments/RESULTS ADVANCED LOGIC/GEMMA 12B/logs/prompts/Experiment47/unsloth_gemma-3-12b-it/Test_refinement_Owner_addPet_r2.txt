@@ -1,0 +1,264 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests.
+
+TEST CLASS INFO:
+Package: package org.springframework.samples.petclinic.owner;
+Class name (MUST be exactly): Owner_addPetTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: addPet_newPet_addsToPetList --
+ERROR: org.mockito.exceptions.misusing.MissingMethodInvocationException:
+when() requires an argument which has to be 'a method call on a mock'.
+For example:
+when(mock.getArticles()).thenReturn(articles);
+Also, this error might show up because:
+1. you stub either of: final/private/native/equals()/hashCode() methods.
+Those methods *cannot* be stubbed/verified.
+Mocking methods declared on non-public parent classes is not supported.
+2. inside when() you don't call method on mock but on some other object.
+--------------------------------------------------
+TEST: addPet_newPet_doesNotAddIfAlreadyExists --
+ERROR: org.opentest4j.AssertionFailedError: expected: <1> but was: <2>
+--------------------------------------------------
+TEST: addPet_existingPet_doesNotAddToPetList --
+ERROR: org.mockito.exceptions.misusing.MissingMethodInvocationException:
+when() requires an argument which has to be 'a method call on a mock'.
+For example:
+when(mock.getArticles()).thenReturn(articles);
+Also, this error might show up because:
+1. you stub either of: final/private/native/equals()/hashCode() methods.
+Those methods *cannot* be stubbed/verified.
+Mocking methods declared on non-public parent classes is not supported.
+2. inside when() you don't call method on mock but on some other object.
+--------------------------------------------------
+TEST: addPet_newPet_addsPetWithNewName --
+ERROR: org.mockito.exceptions.misusing.MissingMethodInvocationException:
+when() requires an argument which has to be 'a method call on a mock'.
+For example:
+when(mock.getArticles()).thenReturn(articles);
+Also, this error might show up because:
+1. you stub either of: final/private/native/equals()/hashCode() methods.
+Those methods *cannot* be stubbed/verified.
+Mocking methods declared on non-public parent classes is not supported.
+2. inside when() you don't call method on mock but on some other object.
+--------------------------------------------------
+TEST: addPet_nullPet_doesNothing --
+ERROR: java.lang.NullPointerException: Cannot invoke "org.springframework.samples.petclinic.owner.Pet.isNew()" because "pet" is null
+
+TEST CODE TO FIX:
+package org.springframework.samples.petclinic.owner;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.springframework.core.style.ToStringCreator;
+import org.springframework.samples.petclinic.model.Person;
+import org.springframework.samples.petclinic.owner.Owner;
+import org.springframework.samples.petclinic.owner.Pet;
+import org.springframework.samples.petclinic.owner.PetType;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Owner_addPetTestGenerated {
+    private Owner owner;
+    private Pet pet;
+    @BeforeEach
+    void setUp() {
+        owner = new Owner();
+        pet = new Pet();
+    }
+
+    @AfterEach
+    void tearDown() {
+        owner = null;
+        pet = null;
+    }
+
+
+    @Test
+        void addPet_newPet_doesNotAddIfAlreadyExists() {
+            Pet mockPet = new Pet();
+            mockPet.setName("Buddy");
+            owner.addPet(mockPet);
+            owner.addPet(mockPet);
+            assertEquals(1, owner.getPets().size());
+        }
+
+    @Test
+        void addPet_newPet_addsToPetList() {
+            Pet mockPet = new Pet();
+            when(mockPet.isNew()).thenReturn(true);
+            owner.addPet(mockPet);
+            assertEquals(1, owner.getPets().size());
+            assertEquals(mockPet, owner.getPets().get(0));
+        }
+
+    @Test
+        void addPet_existingPet_doesNotAddToPetList() {
+            Pet mockPet = new Pet();
+            when(mockPet.isNew()).thenReturn(false);
+            owner.addPet(mockPet);
+            assertEquals(0, owner.getPets().size());
+        }
+
+    @Test
+        void addPet_nullPet_doesNothing() {
+            owner.addPet(null);
+            assertEquals(0, owner.getPets().size());
+        }
+
+    @Test
+        void addPet_newPet_addsPetWithNewName() {
+            Pet mockPet1 = new Pet();
+            mockPet1.setName("Buddy");
+            Pet mockPet2 = new Pet();
+            mockPet2.setName("Rocky");
+            when(mockPet1.isNew()).thenReturn(true);
+            when(mockPet2.isNew()).thenReturn(true);
+            owner.addPet(mockPet1);
+            owner.addPet(mockPet2);
+            assertEquals(2, owner.getPets().size());
+            assertEquals("Buddy", owner.getPets().get(0).getName());
+            assertEquals("Rocky", owner.getPets().get(1).getName());
+        }
+
+}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   ToStringCreator -> org.springframework.core.style.ToStringCreator
+//   Person -> org.springframework.samples.petclinic.model.Person
+//   Assert -> org.springframework.util.Assert
+//   CascadeType -> jakarta.persistence.CascadeType
+//   Column -> jakarta.persistence.Column
+//   Entity -> jakarta.persistence.Entity
+//   FetchType -> jakarta.persistence.FetchType
+//   JoinColumn -> jakarta.persistence.JoinColumn
+//   OneToMany -> jakarta.persistence.OneToMany
+//   OrderBy -> jakarta.persistence.OrderBy
+//   Table -> jakarta.persistence.Table
+//   Pattern -> jakarta.validation.constraints.Pattern
+//   NotBlank -> jakarta.validation.constraints.NotBlank
+//   Owner -> org.springframework.samples.petclinic.owner.Owner
+//   Pet -> org.springframework.samples.petclinic.owner.Pet
+
+// === Class: Owner ===
+// Fields (with actual visibility):
+    private String address;
+    private String city;
+    private String telephone;
+    private List pets;
+
+// Getter/Setter Methods (for test assertions):
+public String getAddress();
+public void setAddress(String address);
+public String getCity();
+public void setCity(String city);
+public String getTelephone();
+public void setTelephone(String telephone);
+public List<Pet> getPets();
+public Pet getPet(String name);
+public Pet getPet(Integer id);
+public Pet getPet(String name, boolean ignoreNew);
+
+// Internal Methods (full implementation for context):
+	public List<Pet> getPets() {
+		return this.pets;
+	}
+
+// === Superclass: Person (inherited members) ===
+// Inherited Fields:
+
+// Inherited Method Signatures:
+public String getFirstName();
+public void setFirstName(String firstName);
+public String getLastName();
+public void setLastName(String lastName);
+
+// === External Class: Pet ===
+// Full import path: org.springframework.samples.petclinic.owner.Pet
+// Import paths:
+//   LocalDate -> java.time.LocalDate
+//   Collection -> java.util.Collection
+//   LinkedHashSet -> java.util.LinkedHashSet
+//   Set -> java.util.Set
+//   DateTimeFormat -> org.springframework.format.annotation.DateTimeFormat
+// Fields (with actual visibility):
+    private LocalDate birthDate;
+    private PetType type;
+    private Set visits;
+
+
+// Public Getter Methods (for test assertions):
+public LocalDate getBirthDate();
+public PetType getType();
+public Collection<Visit> getVisits();
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() {
+        owner = new Owner();
+        pet = new Pet();
+    }
+
+    @AfterEach
+    void tearDown() {
+        owner = null;
+        pet = null;
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+The following is the complete original method that needs to be tested. NOTE: The current test suite achieves 100% line coverage on this method:
+
+
+	public void addPet(Pet pet) {
+		if (pet.isNew()) {
+			getPets().add(pet);
+		}
+	}
+
+
+COVERAGE: 100% line coverage achieved.
+Focus on fixing failed tests, not adding new coverage tests.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

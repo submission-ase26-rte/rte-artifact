@@ -1,0 +1,382 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Extracted tests for method: lookupMethod(Class targetClass, final String name, final Object[] parameters)
+ * Original class: MethodLookupUtils
+ * Source: ASTER GPT-4
+ */
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.jxpath.JXPathException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo42_lookupMethod_MethodLookupUtils_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethodWithNullParameters_ULSM0() {
+    Method result = MethodLookupUtils.lookupMethod(String.class, "substring", null);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethodWithEmptyParameters_HLxV1() {
+    Object[] parameters = {};
+    Method result = MethodLookupUtils.lookupMethod(String.class, "substring", parameters);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethodWithNullFirstParameter_vmYE2() {
+    Object[] parameters = {null};
+    Method result = MethodLookupUtils.lookupMethod(String.class, "substring", parameters);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethodWithNoMatchType_yJNq3() {
+    Object[] parameters = {new Object()};
+    Method result = MethodLookupUtils.lookupMethod(String.class, "substring", parameters);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethodWithConversion_ahEk4() {
+    Object[] parameters = {"test", 1};
+    Method result = MethodLookupUtils.lookupMethod(Object.class, "substring", parameters);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethodWithExactMatch_JopO5() {
+    Object[] parameters = {"test", 1, 2};
+    Method result = MethodLookupUtils.lookupMethod(String.class, "substring", parameters);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethodWithNullInParameters_MsOG6() {
+    Object[] parameters = {"test", null};
+    Method result = MethodLookupUtils.lookupMethod(String.class, "substring", parameters);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethodWithNoExactMatch_SdJU7() {
+    Object[] parameters = {"test", 1, 2};
+    Method result = MethodLookupUtils.lookupMethod(String.class, "contains", parameters);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethodWithAmbiguousMatch_gaGE8() {
+    Object[] parameters = {new StringBuilder(), "test"};
+    try {
+    Method result = MethodLookupUtils.lookupMethod(Appendable.class, "append", parameters);
+    fail("Expected an JXPathException to be thrown");
+    } catch (JXPathException e) {
+    assertEquals("Ambiguous method call: append", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethodWithNoMethodsFound_ZOtY9() {
+    Object[] parameters = {5};
+    Method result = MethodLookupUtils.lookupMethod(Integer.class, "nonExistentMethod", parameters);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethodWithStaticMethod_DAfX10() {
+    Object[] parameters = {5};
+    Method result = MethodLookupUtils.lookupMethod(Math.class, "abs", parameters);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethodWithInstanceMethod_tOQG11() {
+    Object[] parameters = {"test"};
+    Method result = MethodLookupUtils.lookupMethod(String.class, "length", parameters);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethodWithInheritance_XnVE12() {
+    Object[] parameters = {"test"};
+    Method result = MethodLookupUtils.lookupMethod(Object.class, "toString", parameters);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethod_NullParameters_fpHQ0() {
+    Method result = MethodLookupUtils.lookupMethod(String.class, "substring", null);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethod_EmptyParameters_jFkB1() {
+    Object[] parameters = {};
+    Method result = MethodLookupUtils.lookupMethod(String.class, "substring", parameters);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethod_FirstParameterNull_XrXl2() {
+    Object[] parameters = {null};
+    Method result = MethodLookupUtils.lookupMethod(String.class, "substring", parameters);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethod_NoMatchType_JqQK3() {
+    Object[] parameters = {new Object()};
+    Method result = MethodLookupUtils.lookupMethod(String.class, "substring", parameters);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethod_ExactMatch_kISD4() throws NoSuchMethodException {
+    Object[] parameters = {new String("example"), 0, 3};
+    Method expected = String.class.getMethod("substring", int.class, int.class);
+    Method result = MethodLookupUtils.lookupMethod(String.class, "substring", parameters);
+    assertEquals(expected, result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethod_ExactMatchSingleParameter_ROoP5() throws NoSuchMethodException {
+    Object[] parameters = {new String("example"), 0};
+    Method expected = String.class.getMethod("substring", int.class);
+    Method result = MethodLookupUtils.lookupMethod(String.class, "substring", parameters);
+    assertEquals(expected, result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethod_NullInParameters_jzul6() {
+    Object[] parameters = {new String("example"), null};
+    Method result = MethodLookupUtils.lookupMethod(String.class, "substring", parameters);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethod_AmbiguousCall_XCLY7() {
+    Object[] parameters = {new String("example"), 0, 3.0};
+    try {
+    MethodLookupUtils.lookupMethod(String.class, "substring", parameters);
+    fail("Expected JXPathException");
+    } catch (JXPathException e) {
+    assertEquals("Ambiguous method call: substring", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethod_NoSuchMethod_kqGn8() {
+    Object[] parameters = {new String("example"), "test"};
+    Method result = MethodLookupUtils.lookupMethod(String.class, "substring", parameters);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethod_StaticMethodExclusion_PaZt9() {
+    Object[] parameters = {Math.class, 0.0};
+    Method result = MethodLookupUtils.lookupMethod(Math.class, "abs", parameters);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethod_DifferentClass_KJLE11() {
+    Object[] parameters = {new Integer(123), 0, 3};
+    Method result = MethodLookupUtils.lookupMethod(String.class, "substring", parameters);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethod_MatchWithSuperType_vLoX12() throws NoSuchMethodException {
+    Object[] parameters = {new Object(), "test"};
+    Method expected = Object.class.getMethod("toString");
+    Method result = MethodLookupUtils.lookupMethod(Object.class, "toString", parameters);
+    assertEquals(expected, result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethod_InvalidMethodName_QelU13() {
+    Object[] parameters = {new String("example"), 0};
+    Method result = MethodLookupUtils.lookupMethod(String.class, "nonExistentMethod", parameters);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethod_ValidMethodWithCorrectTypes_MjUM15() throws NoSuchMethodException {
+    Object[] parameters = {new String("example"), 0, 7};
+    Method expected = String.class.getMethod("substring", int.class, int.class);
+    Method result = MethodLookupUtils.lookupMethod(String.class, "substring", parameters);
+    assertEquals(expected, result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testLookupMethod_WithInheritance_ZmUH16() throws NoSuchMethodException {
+    Object[] parameters = {new Throwable("error"), "error"};
+    Method expected = Throwable.class.getMethod("getMessage");
+    Method result = MethodLookupUtils.lookupMethod(Throwable.class, "getMessage", parameters);
+    assertEquals(expected, result);
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 20/28 passed
+
+TEST STATUS:
+- PASSED (20): testLookupMethodWithNullParameters_ULSM0, testLookupMethodWithEmptyParameters_HLxV1, testLookupMethodWithNullFirstParameter_vmYE2, testLookupMethodWithNoMatchType_yJNq3, testLookupMethodWithConversion_ahEk4, testLookupMethodWithExactMatch_JopO5, testLookupMethodWithNoExactMatch_SdJU7, testLookupMethodWithNoMethodsFound_ZOtY9, testLookupMethodWithStaticMethod_DAfX10, testLookupMethodWithInstanceMethod_tOQG11, testLookupMethodWithInheritance_XnVE12, testLookupMethod_NullParameters_fpHQ0, testLookupMethod_EmptyParameters_jFkB1, testLookupMethod_FirstParameterNull_XrXl2, testLookupMethod_NoMatchType_JqQK3, testLookupMethod_ExactMatch_kISD4, testLookupMethod_ExactMatchSingleParameter_ROoP5, testLookupMethod_StaticMethodExclusion_PaZt9, testLookupMethod_InvalidMethodName_QelU13, testLookupMethod_ValidMethodWithCorrectTypes_MjUM15
+- FAILED (8): testLookupMethodWithNullInParameters_MsOG6, testLookupMethodWithAmbiguousMatch_gaGE8, testLookupMethod_NullInParameters_jzul6, testLookupMethod_AmbiguousCall_XCLY7, testLookupMethod_NoSuchMethod_kqGn8, testLookupMethod_DifferentClass_KJLE11, testLookupMethod_MatchWithSuperType_vLoX12, testLookupMethod_WithInheritance_ZmUH16
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Constructor -> java.lang.reflect.Constructor
+//   Method -> java.lang.reflect.Method
+//   Modifier -> java.lang.reflect.Modifier
+//   Arrays -> java.util.Arrays
+//   ExpressionContext -> org.apache.commons.jxpath.ExpressionContext
+//   JXPathException -> org.apache.commons.jxpath.JXPathException
+//   MethodLookupUtils -> org.apache.commons.jxpath.util.MethodLookupUtils
+
+// === Class: MethodLookupUtils ===
+// Fields (with actual visibility):
+    private static final int NO_MATCH;
+    private static final int APPROXIMATE_MATCH;
+    private static final int EXACT_MATCH;
+
+// Internal Methods (full implementation for context):
+    private static int matchType(final Class expected, final Object object) {
+        if (object == null) {
+            return APPROXIMATE_MATCH;
+        }
+
+        final Class actual = object.getClass();
+
+        if (expected.equals(actual)) {
+            return EXACT_MATCH;
+        }
+        if (expected.isAssignableFrom(actual)) {
+            return EXACT_MATCH;
+        }
+
+        if (TypeUtils.canConvert(object, expected)) {
+            return APPROXIMATE_MATCH;
+        }
+
+        return NO_MATCH;
+    }
+    private static int matchParameterTypes(
+        final Class[] types,
+        final Object[] parameters) {
+        int pi = 0;
+        if (types.length >= 1
+            && ExpressionContext.class.isAssignableFrom(types[0])) {
+            pi++;
+        }
+        final int length = parameters == null ? 0 : parameters.length;
+        if (types.length != length + pi) {
+            return NO_MATCH;
+        }
+        int totalMatch = EXACT_MATCH;
+        for (int i = 0; i < length; i++) {
+            final int match = matchType(types[i + pi], parameters[i]);
+            if (match == NO_MATCH) {
+                return NO_MATCH;
+            }
+            if (match < totalMatch) {
+                totalMatch = match;
+            }
+        }
+        return totalMatch;
+    }
+
+// === External Class: TypeUtils ===
+// Full import path: org.apache.commons.jxpath.util.TypeUtils
+// Fields (with actual visibility):
+    private static TypeConverter typeConverter;
+    private static final HashMap PRIMITIVE_TYPE_MAP;
+    private static final long serialVersionUID;
+// Method Signatures (used by target method):
+static public Object convert(final Object object, final Class toType);
+// Public Getter Methods (for test assertions):
+public static TypeConverter getTypeConverter();
+public static boolean canConvert(Object object, Class toType);
+
+
+TASK:
+Regenerate ONLY the method "lookupMethod" OF CLASS "MethodLookupUtils" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public static Method lookupMethod( Class targetClass, final String name, final Object[] parameters) {
+    // your implementation here
+}
+```
+
+- Package: org.apache.commons.jxpath.util
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "lookupMethod"
+- Allowed imports: exactly those already present in MethodLookupUtils
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

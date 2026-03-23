@@ -1,0 +1,78 @@
+{
+  "method_id": 18,
+  "tested_method": "encode",
+  "tested_class": "Caverphone2",
+  "project": "Codec",
+  "timestamp": "2026-02-03T13:12:31.189439",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\GPT-4 - ASTER\\Codec\\Run-1\\src\\test\\java\\org\\apache\\commons\\codec\\language\\Metodo18_encode_Caverphone2_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 4,
+    "tests_total": 6,
+    "tests_failed": 2,
+    "line_coverage": 98.4126984126984,
+    "branch_coverage": 50.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testEncodeWithEdgeCaseInput_GyBY1 --\nERROR: org.opentest4j.AssertionFailedError: expected: <KKK1111111> but was: <KSA1111111>\n--------------------------------------------------\nTEST: testEncodeWithRegularInput_gAjG0 --\nERROR: org.opentest4j.AssertionFailedError: expected: <WLN1111111> but was: <WLNKTN1111>",
+    "test_info": {
+      "valid_tests": [
+        "testEncodeWithValidString_gotu0",
+        "testEncodeWithInvalidType_iMxN1_stSe0",
+        "testEncodeWithRegularInput_gAjG0_fid1",
+        "testEncodeWithEdgeCaseInput_GyBY1_fid1"
+      ],
+      "invalid_tests": [
+        "testEncodeWithRegularInput_gAjG0",
+        "testEncodeWithEdgeCaseInput_GyBY1"
+      ],
+      "failed_assert_tests": [
+        "testEncodeWithRegularInput_gAjG0",
+        "testEncodeWithEdgeCaseInput_GyBY1"
+      ],
+      "runtime_error_tests": []
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 6,
+    "assertion_complexity": 0.2639,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.2,
+    "pct_no_assertion": 0.1667,
+    "naturalness_method_name": 0.5919,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 1.0,
+    "overall_naturalness_score": 0.8771
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.0765569071475165,
+    "string_similarity": 0.058894520878590394,
+    "token_similarity": 0.12941176470588237,
+    "ast_similarity": 0.496,
+    "embedding_similarity": 0.7827553749084473,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.012345679012345678,
+      "similar_blocks": 1,
+      "total_blocks": 162
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.4225190890236294,
+    "passes_threshold": false
+  },
+  "original_method": "    public String encode(final String source) {\n        String txt = source;\n        if (SoundexUtils.isEmpty(txt)) {\n            return TEN_1;\n        }\n\n        // 1. Convert to lowercase\n        txt = txt.toLowerCase(java.util.Locale.ENGLISH);\n\n        // 2. Remove anything not A-Z\n        txt = txt.replaceAll(\"[^a-z]\", \"\");\n\n        // 2.5. Remove final e\n        txt = txt.replaceAll(\"e$\", \"\"); // 2.0 only\n\n        // 3. Handle various start options\n        txt = txt.replaceAll(\"^cough\", \"cou2f\");\n        txt = txt.replaceAll(\"^rough\", \"rou2f\");\n        txt = txt.replaceAll(\"^tough\", \"tou2f\");\n        txt = txt.replaceAll(\"^enough\", \"enou2f\"); // 2.0 only\n        txt = txt.replaceAll(\"^trough\", \"trou2f\"); // 2.0 only\n                                                   // note the spec says ^enough here again, c+p error I assume\n        txt = txt.replaceAll(\"^gn\", \"2n\");\n\n        // End\n        txt = txt.replaceAll(\"mb$\", \"m2\");\n\n        // 4. Handle replacements\n        txt = txt.replace(\"cq\", \"2q\");\n        txt = txt.replace(\"ci\", \"si\");\n        txt = txt.replace(\"ce\", \"se\");\n        txt = txt.replace(\"cy\", \"sy\");\n        txt = txt.replace(\"tch\", \"2ch\");\n        txt = txt.replace(\"c\", \"k\");\n        txt = txt.replace(\"q\", \"k\");\n        txt = txt.replace(\"x\", \"k\");\n        txt = txt.replace(\"v\", \"f\");\n        txt = txt.replace(\"dg\", \"2g\");\n        txt = txt.replace(\"tio\", \"sio\");\n        txt = txt.replace(\"tia\", \"sia\");\n        txt = txt.replace(\"d\", \"t\");\n        txt = txt.replace(\"ph\", \"fh\");\n        txt = txt.replace(\"b\", \"p\");\n        txt = txt.replace(\"sh\", \"s2\");\n        txt = txt.replace(\"z\", \"s\");\n        txt = txt.replaceAll(\"^[aeiou]\", \"A\");\n        txt = txt.replaceAll(\"[aeiou]\", \"3\");\n        txt = txt.replace(\"j\", \"y\"); // 2.0 only\n        txt = txt.replaceAll(\"^y3\", \"Y3\"); // 2.0 only\n        txt = txt.replaceAll(\"^y\", \"A\"); // 2.0 only\n        txt = txt.replace(\"y\", \"3\"); // 2.0 only\n        txt = txt.replace(\"3gh3\", \"3kh3\");\n        txt = txt.replace(\"gh\", \"22\");\n        txt = txt.replace(\"g\", \"k\");\n        txt = txt.replaceAll(\"s+\", \"S\");\n        txt = txt.replaceAll(\"t+\", \"T\");\n        txt = txt.replaceAll(\"p+\", \"P\");\n        txt = txt.replaceAll(\"k+\", \"K\");\n        txt = txt.replaceAll(\"f+\", \"F\");\n        txt = txt.replaceAll(\"m+\", \"M\");\n        txt = txt.replaceAll(\"n+\", \"N\");\n        txt = txt.replace(\"w3\", \"W3\");\n        txt = txt.replace(\"wh3\", \"Wh3\");\n        txt = txt.replaceAll(\"w$\", \"3\"); // 2.0 only\n        txt = txt.replace(\"w\", \"2\");\n        txt = txt.replaceAll(\"^h\", \"A\");\n        txt = txt.replace(\"h\", \"2\");\n        txt = txt.replace(\"r3\", \"R3\");\n        txt = txt.replaceAll(\"r$\", \"3\"); // 2.0 only\n        txt = txt.replace(\"r\", \"2\");\n        txt = txt.replace(\"l3\", \"L3\");\n        txt = txt.replaceAll(\"l$\", \"3\"); // 2.0 only\n        txt = txt.replace(\"l\", \"2\");\n\n        // 5. Handle removals\n        txt = txt.replace(\"2\", \"\");\n        txt = txt.replaceAll(\"3$\", \"A\"); // 2.0 only\n        txt = txt.replace(\"3\", \"\");\n\n        // 6. put ten 1s on the end\n        txt += TEN_1;\n\n        // 7. take the first ten characters as the code\n        return txt.substring(0, TEN_1.length());\n    }",
+  "regenerated_method": "public String encode(final String source) {\n    if (source == null) {\n        throw new IllegalArgumentException(\"Source cannot be null\");\n    }\n    String result = source.toUpperCase();\n    if (result.length() == 0) {\n        return TEN_1;\n    }\n    result = result.replaceAll(\"[AEIOU]\", \"\");\n    result = result.replaceAll(\"W\", \"V\");\n    result = result.replaceAll(\"K\", \"C\");\n    result = result.replaceAll(\"Q\", \"G\");\n    result = result.replaceAll(\"X\", \"S\");\n    result = result.replaceAll(\"SCH\", \"S\");\n    result = result.replaceAll(\"PH\", \"F\");\n    result = result.replaceAll(\"H\", \"\");\n    result = result.replaceAll(\"DG\", \"G\");\n    result = result.replaceAll(\"TIO\", \"C\");\n    result = result.replaceAll(\"TIA\", \"C\");\n    result = result.replaceAll(\"D\", \"T\");\n    result = result.replaceAll(\"T\", \"T\");\n    result = result.replaceAll(\"PG\", \"G\");\n    result = result.replaceAll(\"B\", \"P\");\n    result = result.replaceAll(\"V\", \"F\");\n    result = result.replaceAll(\"M\", \"N\");\n    result = result.replaceAll(\"KN\", \"N\");\n    result = result.replaceAll(\"K\", \"C\");\n    result = result.replaceAll(\"S\", \"S\");\n    result = result.replaceAll(\"G\", \"K\");\n    result = result.replaceAll(\"P\", \"P\");\n    result = result.replaceAll(\"T\", \"T\");\n    result = result.replaceAll(\"F\", \"F\");\n    result = result.replaceAll(\"N\", \"N\");\n    result = result.replaceAll(\"C\", \"K\");\n    result = result.replaceAll(\"[^A-Z]\", \"\");\n    result = result + \"11111111\";\n    return result.substring(0, 10);\n}",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6590228032229065,
+  "original_metrics": {
+    "loc": 85,
+    "sloc": 66,
+    "complexity": 2
+  }
+}

@@ -1,0 +1,41 @@
+```java
+public static Option create(final String opt) throws IllegalArgumentException {
+    if (opt == null) {
+        throw new IllegalArgumentException("Opt cannot be null");
+    }
+    if (opt.isEmpty()) {
+        throw new IllegalArgumentException("Opt cannot be empty");
+    }
+    if (opt.length() > 1) {
+        throw new IllegalArgumentException("Opt can only be a single character");
+    }
+
+    reset();
+
+    Option option = new Option(opt, false);
+    if (longOption != null) {
+        option.setLongOpt(longOption);
+    }
+    if (type != null) {
+        option.setType(type);
+        option.setConverter(TypeHandler.getDefault());
+    }
+    if (argName != null) {
+        option.setArgName(argName);
+    }
+    if (required) {
+        option.setRequired(true);
+    }
+    if (optionalArg) {
+        option.setOptionalArg(true);
+    }
+    if (argCount != -1) {
+        option.setArgs(argCount);
+    }
+    if (description != null) {
+        option.setDescription(description);
+    }
+    option.setValueSeparator(valueSeparator);
+    return option;
+}
+```

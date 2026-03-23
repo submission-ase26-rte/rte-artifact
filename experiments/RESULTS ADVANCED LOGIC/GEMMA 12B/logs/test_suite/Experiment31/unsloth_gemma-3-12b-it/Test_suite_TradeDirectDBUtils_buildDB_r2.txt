@@ -1,0 +1,138 @@
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeDB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.MDBStats;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class TradeDirectDBUtils_buildDBTestGenerated {
+    private TradeDirectDBUtils tradeDirectDBUtils;
+    private DataSource dataSource;
+    private TradeServices tradeServices;
+    private PrintWriter printWriter;
+
+    @BeforeEach
+    void setUp() {
+        dataSource = Mockito.mock(DataSource.class);
+        tradeServices = Mockito.mock(TradeServices.class);
+        printWriter = new PrintWriter(System.out);
+        tradeDirectDBUtils = new TradeDirectDBUtils();
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.reset(dataSource, tradeServices);
+    }
+
+    @Test
+    void testBuildDBErrorDuringQuoteCreation() throws Exception {
+        InputStream ddlFile = Mockito.mock(InputStream.class);
+        when(ddlFile.read()).thenReturn(-1);
+        doThrow(new Exception("Simulated quote creation error")).when(tradeServices).createQuote(anyString(), anyString(), any());
+        tradeDirectDBUtils.buildDB(printWriter, ddlFile);
+    }
+
+    @Test
+    void testBuildDBErrorDuringUserRegistration() throws Exception {
+        InputStream ddlFile = Mockito.mock(InputStream.class);
+        when(ddlFile.read()).thenReturn(-1);
+        doThrow(new Exception("Simulated user registration error")).when(tradeServices).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
+        tradeDirectDBUtils.buildDB(printWriter, ddlFile);
+    }
+
+    @Test
+    void testBuildDBErrorDuringOrderPlacement() throws Exception {
+        InputStream ddlFile = Mockito.mock(InputStream.class);
+        when(ddlFile.read()).thenReturn(-1);
+        doThrow(new Exception("Simulated order placement error")).when(tradeServices).buy(anyString(), anyString(), anyDouble(), anyInt());
+        tradeDirectDBUtils.buildDB(printWriter, ddlFile);
+    }
+
+    @Test
+    void testBuildDBWithDDLFile_errorDuringQuoteCreation() throws Exception {
+        InputStream ddlFile = Mockito.mock(InputStream.class);
+        when(ddlFile.read()).thenReturn(-1);
+        doThrow(new Exception("Simulated quote creation error")).when(tradeServices).createQuote(anyString(), anyString(), any());
+        tradeDirectDBUtils.buildDB(printWriter, ddlFile);
+    }
+
+    @Test
+    void testBuildDBWithDDLFile_errorDuringUserRegistration() throws Exception {
+        InputStream ddlFile = Mockito.mock(InputStream.class);
+        when(ddlFile.read()).thenReturn(-1);
+        doThrow(new Exception("Simulated user registration error")).when(tradeServices).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
+        tradeDirectDBUtils.buildDB(printWriter, ddlFile);
+    }
+
+    @Test
+    void testBuildDBWithDDLFile_errorDuringOrderPlacement() throws Exception {
+        InputStream ddlFile = Mockito.mock(InputStream.class);
+        when(ddlFile.read()).thenReturn(-1);
+        doThrow(new Exception("Simulated order placement error")).when(tradeServices).buy(anyString(), anyString(), anyDouble(), anyInt());
+        tradeDirectDBUtils.buildDB(printWriter, ddlFile);
+    }
+
+    @Test
+        void testBuildDBWithDDLFile() throws Exception {
+            InputStream ddlFile = Mockito.mock(InputStream.class);
+            when(ddlFile.read()).thenReturn(-1);
+            tradeDirectDBUtils.buildDB(printWriter, ddlFile);
+            verify(tradeServices).createQuote(anyString(), anyString(), any());
+            verify(tradeServices).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
+            verify(tradeServices).buy(anyString(), anyString(), anyDouble(), anyInt());
+        }
+
+    @Test
+        void testBuildDBWithoutDDLFile() throws Exception {
+            tradeDirectDBUtils.buildDB(printWriter, null);
+            verify(tradeServices).createQuote(anyString(), anyString(), any());
+            verify(tradeServices).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
+            verify(tradeServices).buy(anyString(), anyString(), anyDouble(), anyInt());
+        }
+
+    @Test
+        void testBuildDBErrorDuringDDLFileParsing() throws Exception {
+            InputStream ddlFile = Mockito.mock(InputStream.class);
+            when(ddlFile.read()).thenThrow(new Exception("Simulated DDL parsing error"));
+            assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(printWriter, ddlFile));
+        }
+
+    @Test
+        void testBuildDBWithoutDDLFile_multipleUsers() throws Exception {
+          // Mock TradeServices
+          when(tradeServices.createQuote(anyString(), anyString(), any())).thenReturn(null);
+          when(tradeServices.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(null);
+          when(tradeServices.buy(anyString(), anyString(), anyDouble(), anyInt())).thenReturn(null);
+          // Set the number of users
+          TradeConfig.setMAX_USERS(5);
+          // Call the method
+          tradeDirectDBUtils.buildDB(printWriter, null);
+          // Verify interactions
+          verify(tradeServices, times(5)).createQuote(anyString(), anyString(), any());
+          verify(tradeServices, times(5)).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
+          verify(tradeServices, times(5)).buy(anyString(), anyString(), anyDouble(), anyInt());
+        }
+
+    @Test
+    void testBuildDB_CoversNotCoveredLines() throws Exception {
+        InputStream ddlFile = Mockito.mock(InputStream.class);
+        when(ddlFile.read()).thenReturn(-1);
+        PrintWriter out = new PrintWriter(System.out);
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+    }
+
+}

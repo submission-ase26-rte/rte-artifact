@@ -1,0 +1,301 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Extracted tests for method: registerHandlingEvent(LocalDateTime completionTime, TrackingId trackingId, VoyageNumber voyageNumber, UnLocode unLocode, HandlingEvent.Type type)
+ * Original class: DefaultHandlingEventService
+ * Source: ASTER GPT-4
+ */
+package org.eclipse.cargotracker.application.internal;
+
+import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo11_registerHandlingEvent_DefaultHandlingEventService_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testRegisterHandlingEventWithNullVoyageNumberOnLoadEvent_Kmjy2() {
+    DefaultHandlingEventService service = new DefaultHandlingEventService();
+    LocalDateTime completionTime = LocalDateTime.now().plusDays(1);
+    TrackingId trackingId = new TrackingId("ABC123");
+    VoyageNumber voyageNumber = null;
+    UnLocode unLocode = new UnLocode("USNYC");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    assertThrows(IllegalArgumentException.class, () -> {
+    service.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type);
+    });
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testRegisterHandlingEventWithPastCompletionTime_Mqtj4() {
+    DefaultHandlingEventService service = new DefaultHandlingEventService();
+    LocalDateTime completionTime = LocalDateTime.now().minusDays(1);
+    TrackingId trackingId = new TrackingId("ABC123");
+    VoyageNumber voyageNumber = new VoyageNumber("V12345");
+    UnLocode unLocode = new UnLocode("USNYC");
+    HandlingEvent.Type type = HandlingEvent.Type.RECEIVE;
+    assertThrows(IllegalArgumentException.class, () -> {
+    service.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type);
+    });
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testRegisterHandlingEventWithInvalidUnLocode_BACm9() {
+    DefaultHandlingEventService service = new DefaultHandlingEventService();
+    LocalDateTime completionTime = LocalDateTime.now().plusDays(1);
+    TrackingId trackingId = new TrackingId("ABC123");
+    VoyageNumber voyageNumber = new VoyageNumber("V12345");
+    UnLocode unLocode = new UnLocode("INVALID");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    assertThrows(IllegalArgumentException.class, () -> {
+    service.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type);
+    });
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testRegisterHandlingEventWithValidData_fBzK0_Plkx0() {
+    try {
+    DefaultHandlingEventService service = new DefaultHandlingEventService();
+    LocalDateTime completionTime = LocalDateTime.now().plusDays(1);
+    TrackingId trackingId = new TrackingId("ABC123");
+    VoyageNumber voyageNumber = new VoyageNumber("V12345");
+    UnLocode unLocode = new UnLocode("USNYC");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    service.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type);
+    assertTrue(true); // Assuming the method does not throw an exception
+    } catch (CannotCreateHandlingEventException e) {
+    fail("Exception should not be thrown");
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testRegisterHandlingEventWithFutureCompletionTime_YFch3_CoMC0() {
+    DefaultHandlingEventService service = new DefaultHandlingEventService();
+    LocalDateTime completionTime = LocalDateTime.now().plusDays(5);
+    TrackingId trackingId = new TrackingId("ABC123");
+    VoyageNumber voyageNumber = new VoyageNumber("V12345");
+    UnLocode unLocode = new UnLocode("USNYC");
+    HandlingEvent.Type type = HandlingEvent.Type.UNLOAD;
+    try {
+    service.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type);
+    assertTrue(true); // Assuming the method does not throw an exception
+    } catch (CannotCreateHandlingEventException e) {
+    fail("Exception should not have been thrown");
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testRegisterHandlingEventWithReceiveTypeAndNoVoyage_XeUa7_VYjD0() {
+    DefaultHandlingEventService service = new DefaultHandlingEventService();
+    LocalDateTime completionTime = LocalDateTime.now().plusDays(1);
+    TrackingId trackingId = new TrackingId("ABC123");
+    VoyageNumber voyageNumber = null;
+    UnLocode unLocode = new UnLocode("USNYC");
+    HandlingEvent.Type type = HandlingEvent.Type.RECEIVE;
+    try {
+    service.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type);
+    assertTrue(true); // Assuming the method does not throw an exception
+    } catch (CannotCreateHandlingEventException e) {
+    fail("Exception should not be thrown");
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testRegisterHandlingEventWithCustomsTypeAndNoVoyage_DDRB8_mxqT0() {
+    try {
+    DefaultHandlingEventService service = new DefaultHandlingEventService();
+    LocalDateTime completionTime = LocalDateTime.now().plusDays(1);
+    TrackingId trackingId = new TrackingId("ABC123");
+    VoyageNumber voyageNumber = null;
+    UnLocode unLocode = new UnLocode("USNYC");
+    HandlingEvent.Type type = HandlingEvent.Type.CUSTOMS;
+    service.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type);
+    assertTrue(true); // Assuming the method does not throw an exception
+    } catch (CannotCreateHandlingEventException e) {
+    fail("Exception should not have been thrown");
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testRegisterHandlingEventWithNullTrackingId_NIct1() {
+    DefaultHandlingEventService service = new DefaultHandlingEventService();
+    LocalDateTime completionTime = LocalDateTime.now().plusDays(1);
+    TrackingId trackingId = null;
+    VoyageNumber voyageNumber = new VoyageNumber("V12345");
+    UnLocode unLocode = new UnLocode("USNYC");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    assertThrows(NullPointerException.class, () -> {
+    service.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type);
+    });
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testRegisterHandlingEventWithNullType_Aslv5() {
+    DefaultHandlingEventService service = new DefaultHandlingEventService();
+    LocalDateTime completionTime = LocalDateTime.now().plusDays(1);
+    TrackingId trackingId = new TrackingId("ABC123");
+    VoyageNumber voyageNumber = new VoyageNumber("V12345");
+    UnLocode unLocode = new UnLocode("USNYC");
+    HandlingEvent.Type type = null;
+    assertThrows(NullPointerException.class, () -> {
+    service.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type);
+    });
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testRegisterHandlingEventWithNullUnLocode_RtXw6() {
+    DefaultHandlingEventService service = new DefaultHandlingEventService();
+    LocalDateTime completionTime = LocalDateTime.now().plusDays(1);
+    TrackingId trackingId = new TrackingId("ABC123");
+    VoyageNumber voyageNumber = new VoyageNumber("V12345");
+    UnLocode unLocode = null;
+    HandlingEvent.Type type = HandlingEvent.Type.CLAIM;
+    assertThrows(NullPointerException.class, () -> {
+    service.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type);
+    });
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 3/10 passed
+
+TEST STATUS:
+- PASSED (3): testRegisterHandlingEventWithNullTrackingId_NIct1, testRegisterHandlingEventWithNullType_Aslv5, testRegisterHandlingEventWithNullUnLocode_RtXw6
+- FAILED (2): testRegisterHandlingEventWithNullVoyageNumberOnLoadEvent_Kmjy2, testRegisterHandlingEventWithPastCompletionTime_Mqtj4
+- ERRORS (5): testRegisterHandlingEventWithInvalidUnLocode_BACm9, testRegisterHandlingEventWithValidData_fBzK0_Plkx0, testRegisterHandlingEventWithFutureCompletionTime_YFch3_CoMC0, testRegisterHandlingEventWithReceiveTypeAndNoVoyage_XeUa7_VYjD0, testRegisterHandlingEventWithCustomsTypeAndNoVoyage_DDRB8_mxqT0
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Stateless -> jakarta.ejb.Stateless
+//   Inject -> jakarta.inject.Inject
+//   LocalDateTime -> java.time.LocalDateTime
+//   Logger -> java.util.logging.Logger
+//   ApplicationEvents -> org.eclipse.cargotracker.application.ApplicationEvents
+//   HandlingEventService -> org.eclipse.cargotracker.application.HandlingEventService
+//   TrackingId -> org.eclipse.cargotracker.domain.model.cargo.TrackingId
+//   CannotCreateHandlingEventException -> org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+//   HandlingEventFactory -> org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory
+//   HandlingEventRepository -> org.eclipse.cargotracker.domain.model.handling.HandlingEventRepository
+//   UnLocode -> org.eclipse.cargotracker.domain.model.location.UnLocode
+//   VoyageNumber -> org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+//   DefaultHandlingEventService -> org.eclipse.cargotracker.application.internal.DefaultHandlingEventService
+
+// === Class: DefaultHandlingEventService ===
+// Fields (with actual visibility):
+    private ApplicationEvents applicationEvents;
+    private HandlingEventRepository handlingEventRepository;
+    private HandlingEventFactory handlingEventFactory;
+    private Logger logger;
+
+// === External Class: HandlingEventFactory ===
+// Full import path: org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private CargoRepository cargoRepository;
+    private VoyageRepository voyageRepository;
+    private LocationRepository locationRepository;
+// Method Signatures (used by target method):
+public HandlingEvent createHandlingEvent(LocalDateTime registrationTime, LocalDateTime completionTime, TrackingId trackingId, VoyageNumber voyageNumber, UnLocode unlocode, HandlingEvent type);
+
+// === External Class: HandlingEventRepository ===
+// Full import path: org.eclipse.cargotracker.domain.model.handling.HandlingEventRepository
+// Type: INTERFACE (cannot instantiate)
+// Method Signatures (used by target method):
+void store(HandlingEvent event);
+
+// === External Class: ApplicationEvents ===
+// Full import path: org.eclipse.cargotracker.application.ApplicationEvents
+// Type: INTERFACE (cannot instantiate)
+// Method Signatures (used by target method):
+void cargoWasHandled(HandlingEvent event);
+
+// === External Class: HandlingEvent ===
+// Full import path: org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private Long id;
+    private Type type;
+    private Voyage voyage;
+    private Location location;
+    private LocalDateTime completionTime;
+    private LocalDateTime registrationTime;
+    private Cargo cargo;
+    private String summary;
+    private final boolean voyageRequired;
+// Constructors:
+public HandlingEvent();
+public HandlingEvent(Cargo cargo, LocalDateTime completionTime, LocalDateTime registrationTime, Type type, Location location, Voyage voyage);
+public HandlingEvent(Cargo cargo, LocalDateTime completionTime, LocalDateTime registrationTime, Type type, Location location);
+private Type(boolean voyageRequired);
+// Public Getter Methods (for test assertions):
+public Type getType();
+public Voyage getVoyage();
+public LocalDateTime getCompletionTime();
+public LocalDateTime getRegistrationTime();
+public Location getLocation();
+public Cargo getCargo();
+public String getSummary();
+public String toString();
+
+
+TASK:
+Regenerate ONLY the method "registerHandlingEvent" OF CLASS "DefaultHandlingEventService" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void registerHandlingEvent( LocalDateTime completionTime, TrackingId trackingId, VoyageNumber voyageNumber, UnLocode unLocode, HandlingEvent.Type type) throws CannotCreateHandlingEventException {
+    // your implementation here
+}
+```
+
+- Package: org.eclipse.cargotracker.application.internal
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "registerHandlingEvent"
+- Allowed imports: exactly those already present in DefaultHandlingEventService
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

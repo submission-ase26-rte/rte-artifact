@@ -1,0 +1,126 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+
+import org.junit.jupiter.api.*;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@DisplayName("TradeDirect login Test")
+public class TradeDirect_loginTestGenerated {
+    private TradeDirect tradeDirect;
+    private DataSource dataSource;
+    private UserTransaction userTransaction;
+    private ManagedExecutorService managedExecutorService;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        dataSource = mock(DataSource.class);
+        userTransaction = mock(UserTransaction.class);
+        managedExecutorService = mock(ManagedExecutorService.class);
+        tradeDirect = new TradeDirect();
+        ReflectionTestUtils.setField(tradeDirect, "datasource", dataSource);
+        ReflectionTestUtils.setField(tradeDirect, "txn", userTransaction);
+        ReflectionTestUtils.setField(tradeDirect, "mes", managedExecutorService);
+    }
+
+    @AfterEach
+    void tearDown() {
+        tradeDirect = null;
+    }
+
+    @Test
+    @DisplayName("Test successful login")
+    void testSuccessfulLogin() throws Exception {
+        String userID = "testUser";
+        String password = "testPassword";
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        when(dataSource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true).thenReturn(false);
+        when(rs.getString("passwd")).thenReturn(password);
+        when(rs.getInt("accountID")).thenReturn(1);
+        when(rs.getInt("loginCount")).thenReturn(0);
+        when(rs.getInt("logoutCount")).thenReturn(0);
+        when(rs.getTimestamp("lastLogin")).thenReturn(new Timestamp(System.currentTimeMillis()));
+        when(rs.getTimestamp("creationDate")).thenReturn(new Timestamp(System.currentTimeMillis()));
+        when(rs.getBigDecimal("balance")).thenReturn(BigDecimal.ZERO);
+        when(rs.getBigDecimal("openBalance")).thenReturn(BigDecimal.ZERO);
+        when(rs.getString("profile_userID")).thenReturn(userID);
+        AccountDataBean accountData = tradeDirect.login(userID, password);
+        assertNotNull(accountData);
+        verify(conn, times(1)).commit();
+    }
+
+    @Test
+    @DisplayName("Test login with incorrect password")
+    void testLoginWithIncorrectPassword() {
+        String userID = "testUser";
+        String password = "wrongPassword";
+        try (MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class)) {
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.login(userID, password);
+            });
+            assertTrue(exception.getMessage().contains("Incorrect password"));
+            mockedLog.verify(() -> Log.error(anyString()), times(1));
+        }
+    }
+
+    @Test
+    @DisplayName("Test login with SQL exception")
+    void testLoginWithSQLException() throws SQLException {
+        String userID = "testUser";
+        String password = "testPassword";
+        Connection conn = mock(Connection.class);
+        when(dataSource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenThrow(new SQLException("SQL Error"));
+        try (MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class)) {
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.login(userID, password);
+            });
+            assertTrue(exception.getMessage().contains("SQL Error"));
+            mockedLog.verify(() -> Log.error(anyString()), times(1));
+        }
+    }
+
+    @Test
+    @DisplayName("Test login with non-existent user")
+    void testLoginWithNonExistentUser() {
+        String userID = "nonExistentUser";
+        String password = "testPassword";
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        when(dataSource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(false);
+        try (MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class)) {
+            Exception exception = assertThrows(javax.ejb.FinderException.class, () -> {
+                tradeDirect.login(userID, password);
+            });
+            assertTrue(exception.getMessage().contains("Cannot find account for" + userID));
+            mockedLog.verify(() -> Log.error(anyString()), times(1));
+        }
+    }
+}
+```

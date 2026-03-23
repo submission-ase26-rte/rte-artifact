@@ -1,0 +1,115 @@
+```java
+package org.apache.commons.jxpath.util;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.lang.reflect.Method;
+
+import org.apache.commons.jxpath.ExpressionContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.util.MethodLookupUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class MethodLookupUtils_lookupMethodTestGenerated {
+
+    private static Method method;
+    private static Class<?> targetClass;
+
+    @BeforeEach
+    public void setup() {
+        // Dummy class for testing
+        class Dummy {
+            public void dummyMethod(ExpressionContext context, String param) {}
+            public void dummyMethod(ExpressionContext context, Integer param) {}
+        }
+        targetClass = Dummy.class;
+    }
+
+    @Test
+    public void testLookupMethod_exactMatch() throws Exception {
+        method = targetClass.getMethod("dummyMethod", ExpressionContext.class, String.class);
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{new ExpressionContext() {
+            @Override
+            public int getPosition() {
+                return 0;
+            }
+        }, "test"});
+        assertEquals(method, result);
+    }
+
+    @Test
+    public void testLookupMethod_noMatch() {
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{new ExpressionContext() {
+            @Override
+            public int getPosition() {
+                return 0;
+            }
+        }, 123});
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethod_nullParameters() {
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", null);
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethod_emptyParameters() {
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{});
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethod_nullFirstParameter() {
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{null, "test"});
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethod_ambiguousMethodCall() {
+        class Dummy2 {
+            public void dummyMethod(ExpressionContext context, String param) {}
+            public void dummyMethod(ExpressionContext context, Integer param) {}
+        }
+        Class<?> dummyClass = Dummy2.class;
+        assertThrows(JXPathException.class, () -> {
+            MethodLookupUtils.lookupMethod(dummyClass, "dummyMethod", new Object[]{new ExpressionContext() {
+                @Override
+                public int getPosition() {
+                    return 0;
+                }
+            }, "test"});
+        });
+    }
+
+    @Test
+    public void testLookupMethod_differentParameterTypes() {
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{new ExpressionContext() {
+            @Override
+            public int getPosition() {
+                return 0;
+            }
+        }, "test", 123});
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethod_withTypeConversion() {
+        class Dummy3 {
+            public void dummyMethod(ExpressionContext context, String param) {}
+        }
+        Class<?> dummyClass = Dummy3.class;
+        Method result = MethodLookupUtils.lookupMethod(dummyClass, "dummyMethod", new Object[]{new ExpressionContext() {
+            @Override
+            public int getPosition() {
+                return 0;
+            }
+        }, 123});
+        assertNull(result);
+    }
+}
+```

@@ -1,0 +1,137 @@
+package com.ibm.websphere.samples.daytrader.impl.ejb3;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.RuntimeMode;
+import com.ibm.websphere.samples.daytrader.interfaces.Trace;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeEJB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.FinancialUtils;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import javax.ejb.EJBException;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeSLSBBean_completeOrderTestGenerated {
+    @Mock
+    private EntityManager entityManager;
+    @InjectMocks
+    private TradeSLSBBean tradeSLSBBean;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testCompleteOrder_OrderNotFound() throws Exception {
+        // Arrange
+        Integer orderID = 1;
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(null);
+        // Act & Assert
+        Exception exception = assertThrows(EJBException.class, () -> {
+            tradeSLSBBean.completeOrder(orderID, false);
+        });
+        assertEquals("Error: attempt to complete Order that is null\nnull", exception.getMessage());
+    }
+
+    @Test
+    public void testCompleteOrder_OrderAlreadyCompleted() {
+        OrderDataBean order = new OrderDataBean();
+        order.setOrderStatus("completed");
+        when(entityManager.find(OrderDataBean.class, 1)).thenReturn(order);
+        try {
+            tradeSLSBBean.completeOrder(1, false);
+        } catch (Exception e) {
+            fail("Exception should not be thrown for completed order");
+        }
+        verify(entityManager, never()).merge(any(OrderDataBean.class));
+    }
+
+    @Test
+    public void testCompleteOrder_OrderCancelled() {
+        OrderDataBean order = new OrderDataBean();
+        order.setOrderStatus("cancelled");
+        when(entityManager.find(OrderDataBean.class, 1)).thenReturn(order);
+        try {
+            tradeSLSBBean.completeOrder(1, false);
+        } catch (Exception e) {
+            fail("Exception should not be thrown for cancelled order");
+        }
+        verify(entityManager, never()).merge(any(OrderDataBean.class));
+    }
+
+    @Test
+    public void testCompleteOrder_OrderOpen() {
+        OrderDataBean order = new OrderDataBean();
+        order.setOrderStatus("open");
+        order.setOrderType("buy");
+        order.setQuantity(10);
+        order.setPrice(new BigDecimal("100.00"));
+        order.setOrderFee(TradeConfig.getOrderFee("buy"));
+        order.setCompletionDate(new Timestamp(System.currentTimeMillis()));
+        AccountDataBean account = new AccountDataBean();
+        account.setBalance(new BigDecimal("1000.00"));
+        order.setAccount(account);
+        QuoteDataBean quote = new QuoteDataBean("SUNW", "Sun Microsystems", 100000, new BigDecimal("100.00"), new BigDecimal("100.00"), new BigDecimal("100.00"), new BigDecimal("100.00"), 0.0);
+        when(entityManager.find(OrderDataBean.class, 1)).thenReturn(order);
+        when(entityManager.find(QuoteDataBean.class, "SUNW")).thenReturn(quote);
+        when(entityManager.find(AccountDataBean.class, account.getAccountID())).thenReturn(account);
+        try {
+            tradeSLSBBean.completeOrder(1, false);
+        } catch (Exception e) {
+            fail("Exception should not be thrown for open buy order");
+        }
+        verify(entityManager).merge(order);
+        verify(entityManager).merge(account);
+    }
+
+    @Test
+    public void testCompleteOrder_OrderOpenSell() {
+        OrderDataBean order = new OrderDataBean();
+        order.setOrderStatus("open");
+        order.setOrderType("sell");
+        order.setQuantity(10);
+        order.setPrice(new BigDecimal("100.00"));
+        order.setOrderFee(TradeConfig.getOrderFee("sell"));
+        order.setCompletionDate(new Timestamp(System.currentTimeMillis()));
+        AccountDataBean account = new AccountDataBean();
+        account.setBalance(new BigDecimal("1000.00"));
+        order.setAccount(account);
+        QuoteDataBean quote = new QuoteDataBean("SUNW", "Sun Microsystems", 100000, new BigDecimal("100.00"), new BigDecimal("100.00"), new BigDecimal("100.00"), new BigDecimal("100.00"), 0.0);
+        HoldingDataBean holding = new HoldingDataBean();
+        holding.setQuantity(10);
+        holding.setPurchasePrice(new BigDecimal("100.00"));
+        holding.setQuote(quote);
+        when(entityManager.find(OrderDataBean.class, 1)).thenReturn(order);
+        when(entityManager.find(QuoteDataBean.class, "SUNW")).thenReturn(quote);
+        when(entityManager.find(AccountDataBean.class, account.getAccountID())).thenReturn(account);
+        when(entityManager.find(HoldingDataBean.class, holding.getHoldingID())).thenReturn(holding);
+        try {
+            tradeSLSBBean.completeOrder(1, false);
+        } catch (Exception e) {
+            fail("Exception should not be thrown for open sell order");
+        }
+        verify(entityManager).merge(order);
+        verify(entityManager).merge(account);
+        verify(entityManager).merge(holding);
+    }
+
+}

@@ -1,0 +1,270 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.direct;
+Class name (MUST be exactly): TradeDirect_sellTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.beans.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.beans.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.beans.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.beans.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.beans.AccountProfileDataBean;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import javax.jms.JMSException;
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeDirect_sellTestGenerated {
+
+    @Mock
+    private DataSource datasource;
+
+    @Mock
+    private UserTransaction txn;
+
+    @Mock
+    private Connection conn;
+
+    @Mock
+    private PreparedStatement ps;
+
+    @Mock
+    private ResultSet rs;
+
+    @Mock
+    private AccountDataBean accountData;
+
+    @Mock
+    private HoldingDataBean holdingData;
+
+    @Mock
+    private QuoteDataBean quoteData;
+
+    @Mock
+    private OrderDataBean orderData;
+
+    @InjectMocks
+    private TradeDirect tradeDirect;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(tradeDirect, "inSession", false);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(ps);
+        when(ps.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true);
+        when(rs.getDouble(anyString())).thenReturn(1.0);
+        when(rs.getBigDecimal(anyString())).thenReturn(BigDecimal.ONE);
+        when(rs.getInt(anyString())).thenReturn(1);
+        when(rs.getString(anyString())).thenReturn("test");
+        when(rs.getObject(anyString())).thenReturn(BigDecimal.ONE);
+        when(accountData.getAccountID()).thenReturn(1);
+        when(holdingData.getQuoteID()).thenReturn("test");
+        when(holdingData.getQuantity()).thenReturn(1.0);
+        when(quoteData.getPrice()).thenReturn(BigDecimal.ONE);
+        when(quoteData.getOrderFee()).thenReturn(BigDecimal.ONE);
+        when(tradeDirect.createOrder(any(), any(), any(), anyString(), anyDouble())).thenReturn(orderData);
+        when(tradeDirect.getOrderData(conn, 1)).thenReturn(orderData);
+    }
+
+    @Test
+    public void testSell_SynchronousMode() throws Exception {
+        ReflectionTestUtils.setField(tradeDirect, "inGlobalTxn", false);
+        OrderDataBean result = tradeDirect.sell("testUser", 1, TradeConfig.SYNCH);
+        assertNotNull(result);
+        verify(tradeDirect).completeOrder(conn, 1);
+    }
+
+    @Test
+    public void testSell_AsynchronousMode() throws Exception {
+        ReflectionTestUtils.setField(tradeDirect, "inGlobalTxn", false);
+        OrderDataBean result = tradeDirect.sell("testUser", 1, TradeConfig.ASYNCH);
+        assertNotNull(result);
+        verify(tradeDirect).completeOrderAsync(1, true);
+    }
+
+    @Test
+    public void testSell_Asynchronous2PhaseMode() throws Exception {
+        ReflectionTestUtils.setField(tradeDirect, "inGlobalTxn", false);
+        when(txn.begin()).thenReturn(null);
+        when(txn.commit()).thenReturn(null);
+        OrderDataBean result = tradeDirect.sell("testUser", 1, TradeConfig.ASYNCH_2PHASE);
+        assertNotNull(result);
+        verify(tradeDirect).queueOrder(1, true);
+        verify(txn).begin();
+        verify(txn).commit();
+    }
+
+    @Test
+    public void testSell_AccountNotFound() throws Exception {
+        when(tradeDirect.getAccountData(conn, "testUser")).thenReturn(null);
+        OrderDataBean result = tradeDirect.sell("testUser", 1, TradeConfig.SYNCH);
+        assertNotNull(result);
+        assertEquals("cancelled", result.getOrderStatus());
+    }
+
+    @Test
+    public void testSell_HoldingNotFound() throws Exception {
+        when(tradeDirect.getHoldingData(conn, 1)).thenReturn(null);
+        OrderDataBean result = tradeDirect.sell("testUser", 1, TradeConfig.SYNCH);
+        assertNotNull(result);
+        assertEquals("cancelled", result.getOrderStatus());
+    }
+
+    @Test
+    public void testSell_QuoteNotFound() throws Exception {
+        when(tradeDirect.getQuoteData(conn, "test")).thenReturn(null);
+        OrderDataBean result = tradeDirect.sell("testUser", 1, TradeConfig.SYNCH);
+        assertNotNull(result);
+        assertEquals("cancelled", result.getOrderStatus());
+    }
+
+    @Test
+    public void testSell_ExceptionDuringCompleteOrder() throws Exception {
+        ReflectionTestUtils.setField(tradeDirect, "inGlobalTxn", false);
+        doThrow(new SQLException()).when(tradeDirect).completeOrder(conn, 1);
+        OrderDataBean result = tradeDirect.sell("testUser", 1, TradeConfig.SYNCH);
+        assertNotNull(result);
+        assertEquals("cancelled", result.getOrderStatus());
+    }
+
+    @Test
+    public void testSell_ExceptionDuringQueueOrder() throws Exception {
+        ReflectionTestUtils.setField(tradeDirect, "inGlobalTxn", false);
+        doThrow(new JMSException("test")).when(tradeDirect).queueOrder(1, true);
+        OrderDataBean result = tradeDirect.sell("testUser", 1, TradeConfig.ASYNCH_2PHASE);
+        assertNotNull(result);
+        assertEquals("cancelled", result.getOrderStatus());
+    }
+
+    @Test
+    public void testSell_ExceptionDuringTransaction() throws Exception {
+        ReflectionTestUtils.setField(tradeDirect, "inGlobalTxn", false);
+        when(txn.begin()).thenReturn(null);
+        doThrow(new SQLException()).when(tradeDirect).createOrder(any(), any(), any(), anyString(), anyDouble());
+        OrderDataBean result = tradeDirect.sell("testUser", 1, TradeConfig.ASYNCH_2PHASE);
+        assertNotNull(result);
+        assertEquals("cancelled", result.getOrderStatus());
+        verify(txn).rollback();
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[4] cannot find symbol
+  symbol:   class OrderDataBean
+  location: package com.ibm.websphere.samples.daytrader.beans
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[5] cannot find symbol
+  symbol:   class QuoteDataBean
+  location: package com.ibm.websphere.samples.daytrader.beans
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[6] cannot find symbol
+  symbol:   class AccountDataBean
+  location: package com.ibm.websphere.samples.daytrader.beans
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[7] cannot find symbol
+  symbol:   class HoldingDataBean
+  location: package com.ibm.websphere.samples.daytrader.beans
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[8] cannot find symbol
+  symbol:   class AccountProfileDataBean
+  location: package com.ibm.websphere.samples.daytrader.beans
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[51] cannot find symbol
+  symbol:   class AccountDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_sellTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[54] cannot find symbol
+  symbol:   class HoldingDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_sellTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[57] cannot find symbol
+  symbol:   class QuoteDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_sellTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[60] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_sellTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[84] getOrderData(java.sql.Connection,int) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[90] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_sellTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[92] no suitable method found for completeOrder(java.sql.Connection,int)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.completeOrder(java.lang.Integer,boolean) is not applicable
+  (argument mismatch; java.sql.Connection cannot be converted to java.lang.Integer)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.completeOrder(java.sql.Connection,java.lang.Integer) is not applicable
+  (completeOrder(java.sql.Connection,java.lang.Integer) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[98] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_sellTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[106] 'void' type not allowed here
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[107] 'void' type not allowed here
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[108] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_sellTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[117] no suitable method found for getAccountData(java.sql.Connection,java.lang.String)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.getAccountData(java.sql.Connection,java.lang.String) is not applicable
+  (getAccountData(java.sql.Connection,java.lang.String) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.getAccountData(int,java.sql.Connection) is not applicable
+  (argument mismatch; java.sql.Connection cannot be converted to int)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[118] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_sellTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[125] method getHoldingData in class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect cannot be applied to given types;
+  required: java.sql.Connection,int
+  found:    java.sql.Connection,int
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[126] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_sellTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[133] getQuoteData(java.sql.Connection,java.lang.String) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[134] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_sellTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[142] no suitable method found for completeOrder(java.sql.Connection,int)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.completeOrder(java.lang.Integer,boolean) is not applicable
+  (argument mismatch; java.sql.Connection cannot be converted to java.lang.Integer)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.completeOrder(java.sql.Connection,java.lang.Integer) is not applicable
+  (completeOrder(java.sql.Connection,java.lang.Integer) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[143] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_sellTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[152] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_sellTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[160] 'void' type not allowed here
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[162] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_sellTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: TradeDirect_sellTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

@@ -1,0 +1,58 @@
+package org.springframework.samples.petclinic.owner;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.core.style.ToStringCreator;
+import org.springframework.samples.petclinic.model.Person;
+import org.springframework.samples.petclinic.owner.Owner;
+import org.springframework.samples.petclinic.owner.Pet;
+import org.springframework.samples.petclinic.owner.PetType;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Owner_addPetTestGenerated {
+
+    private Owner owner;
+    private Pet pet;
+
+    @BeforeEach
+    void setUp() {
+        owner = new Owner();
+        pet = new Pet();
+    }
+
+    @AfterEach
+    void tearDown() {
+        owner = null;
+        pet = null;
+    }
+
+    @Test
+    void addPet_newPet_addsToPetList() {
+        when(pet.isNew()).thenReturn(true);
+        owner.addPet(pet);
+        assertEquals(1, owner.getPets().size());
+        assertEquals(pet, owner.getPets().get(0));
+    }
+
+    @Test
+    void addPet_existingPet_doesNotAddToPetList() {
+        when(pet.isNew()).thenReturn(false);
+        owner.addPet(pet);
+        assertEquals(0, owner.getPets().size());
+    }
+
+    @Test
+    void addPet_nullPet_doesNothing() {
+        owner.addPet(null);
+        assertEquals(0, owner.getPets().size());
+    }
+}

@@ -1,0 +1,79 @@
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+
+import java.util.Properties;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class DefaultParser_parseTestGenerated {
+
+    private DefaultParser parser;
+    private Options options;
+    private Properties properties;
+
+    @BeforeEach
+    public void setUp() {
+        parser = new DefaultParser();
+        options = new Options();
+        properties = new Properties();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        parser = null;
+        options = null;
+        properties = null;
+    }
+
+    @Test
+    public void testParse_WithRequiredOptions_MissingArguments() {
+        options.addRequiredOption("a", "alpha", false, "alpha option");
+        Executable executable = () -> parser.parse(options, new String[]{}, properties, false);
+        assertThrows(ParseException.class, executable);
+    }
+
+    @Test
+    public void testParse_StopAtNonOption_False_UnrecognizedArgument() {
+        Executable executable = () -> parser.parse(options, new String[]{"-a"}, properties, false);
+        assertThrows(ParseException.class, executable);
+    }
+
+    @Test
+    public void testParse_WithOptionGroup_NoSelection() {
+        OptionGroup group = new OptionGroup();
+        group.addOption(new Option("a", "alpha", false, "alpha option"));
+        group.addOption(new Option("b", "beta", false, "beta option"));
+        options.addOptionGroup(group);
+        Executable executable = () -> parser.parse(options, new String[]{}, properties, false);
+        assertThrows(ParseException.class, executable);
+    }
+
+    @Test
+    public void testParse_WithOptionGroup_TwoSelections() {
+        OptionGroup group = new OptionGroup();
+        group.addOption(new Option("a", "alpha", false, "alpha option"));
+        group.addOption(new Option("b", "beta", false, "beta option"));
+        options.addOptionGroup(group);
+        Executable executable = () -> parser.parse(options, new String[]{"-a", "-b"}, properties, false);
+        assertThrows(ParseException.class, executable);
+    }
+
+    @Test
+    public void testParse_WithRequiredOptionAndMissingArgument() {
+        options.addOption(Option.builder("r").longOpt("requiredOption").hasArg().required().build());
+        Executable executable = () -> parser.parse(options, new String[]{"--requiredOption"}, properties, false);
+        assertThrows(ParseException.class, executable);
+    }
+
+    @Test
+    public void testParse_WithNullOptions() {
+        Executable executable = () -> parser.parse(null, new String[]{}, properties, false);
+        assertThrows(ParseException.class, executable);
+    }
+}

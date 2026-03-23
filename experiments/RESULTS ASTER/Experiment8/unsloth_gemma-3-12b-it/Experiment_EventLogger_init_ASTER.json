@@ -1,0 +1,71 @@
+{
+  "method_id": 8,
+  "tested_method": "init",
+  "tested_class": "EventLogger",
+  "project": "Cargotracker",
+  "timestamp": "2026-01-27T18:28:27.733788",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\Cargotracker\\Run-1\\src\\test\\java\\org\\eclipse\\cargotracker\\interfaces\\handling\\mobile\\Metodo8_unit_init_EventLogger_Test.java",
+  "test_results": {
+    "success": false,
+    "tests_passed": 0,
+    "tests_total": 1,
+    "tests_failed": 1,
+    "line_coverage": 100.0,
+    "branch_coverage": 0.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testInitCargoRepositoryNull_wyFw15_PpOL0 --\nERROR: java.lang.NullPointerException: Cannot invoke \"org.eclipse.cargotracker.domain.model.cargo.CargoRepository.findAll()\" because \"this.cargoRepository\" is null",
+    "test_info": {
+      "valid_tests": [],
+      "invalid_tests": [
+        "testInitCargoRepositoryNull_wyFw15_PpOL0"
+      ],
+      "failed_assert_tests": [],
+      "runtime_error_tests": [
+        "testInitCargoRepositoryNull_wyFw15_PpOL0"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 1,
+    "assertion_complexity": 0.25,
+    "pct_null_assertions": 1.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.0,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.5622,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.0,
+    "overall_naturalness_score": 0.5656
+  },
+  "metrics": {
+    "crystalbleu_similarity": 8.431263078688628e-06,
+    "string_similarity": 0.08106219426974144,
+    "token_similarity": 0.09433962264150944,
+    "ast_similarity": 0.02857142857142857,
+    "embedding_similarity": 0.3798648416996002,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.0,
+      "similar_blocks": 0,
+      "total_blocks": 54
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.15987601407099583,
+    "passes_threshold": false
+  },
+  "original_method": "  public void init() {\n    List<Cargo> cargos = cargoRepository.findAll();\n\n    trackingIds = new ArrayList<>(cargos.size());\n\n    // List only routed cargo that is not claimed yet.\n    cargos\n        .stream()\n        .filter(\n            cargo ->\n                !cargo.getItinerary().getLegs().isEmpty()\n                    && !(cargo\n                        .getDelivery()\n                        .getTransportStatus()\n                        .sameValueAs(TransportStatus.CLAIMED)))\n        .map(cargo -> cargo.getTrackingId().getIdString())\n        .forEachOrdered(trackingId -> trackingIds.add(new SelectItem(trackingId, trackingId)));\n\n    List<Location> locations = locationRepository.findAll();\n\n    this.locations = new ArrayList<>(locations.size());\n\n    locations.forEach(\n        location -> {\n          String locationCode = location.getUnLocode().getIdString();\n          this.locations.add(\n              new SelectItem(locationCode, location.getName() + \" (\" + locationCode + \")\"));\n        });\n\n    List<Voyage> voyages = voyageRepository.findAll();\n\n    this.voyages = new ArrayList<>(voyages.size());\n\n    voyages.forEach(\n        voyage ->\n            this.voyages.add(\n                new SelectItem(\n                    voyage.getVoyageNumber().getIdString(),\n                    voyage.getVoyageNumber().getIdString())));\n  }",
+  "regenerated_method": "@Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)\n    public void init() {\n        this.trackingId = null;\n    }",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6754319153082863,
+  "original_metrics": {
+    "loc": 40,
+    "sloc": 31,
+    "complexity": 2
+  }
+}

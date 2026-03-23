@@ -1,0 +1,156 @@
+```java
+public String metaphone(final String txt) {
+    if (txt == null || txt.isEmpty()) {
+        return "";
+    }
+
+    final StringBuilder metaphone = new StringBuilder();
+    final StringBuilder result = new StringBuilder();
+    int size = txt.length();
+    int index = 0;
+
+    while (index < size) {
+        char c = txt.charAt(index);
+        switch (c) {
+            case 'A':
+            case 'E':
+            case 'I':
+            case 'O':
+            case 'U':
+            case 'Y':
+                break;
+
+            case 'B':
+                if (isLastChar(size, index) || !isVowel(result, result.length() - 1)) {
+                    metaphone.append("B");
+                    result.append("B");
+                }
+                break;
+
+            case 'C':
+                if (isNextChar(result, result.length() - 1, 'I') || isNextChar(result, result.length() - 1, 'E') || isNextChar(result, result.length() - 1, 'Y')) {
+                    metaphone.append("S");
+                    result.append("S");
+                } else {
+                    metaphone.append("K");
+                    result.append("K");
+                }
+                break;
+
+            case 'D':
+                if (isNextChar(result, result.length() - 1, 'G') || isNextChar(result, result.length() - 1, 'I') || isNextChar(result, result.length() - 1, 'Y')) {
+                    metaphone.append("J");
+                    result.append("J");
+                } else if (isPreviousChar(result, result.length() - 1, 'D') || isPreviousChar(result, result.length() - 1, 'T')) {
+                    metaphone.append("D");
+                    result.append("D");
+                }
+                break;
+
+            case 'F':
+            case 'J':
+            case 'L':
+            case 'M':
+            case 'N':
+            case 'R':
+                metaphone.append(c);
+                result.append(c);
+                break;
+
+            case 'G':
+                if (isNextChar(result, result.length() - 1, 'I') || isNextChar(result, result.length() - 1, 'E') || isNextChar(result, result.length() - 1, 'Y')) {
+                    metaphone.append("J");
+                    result.append("J");
+                } else {
+                    metaphone.append("K");
+                    result.append("K");
+                }
+                break;
+
+            case 'H':
+                if (isVowel(result, result.length() - 1)) {
+                    metaphone.append("H");
+                    result.append("H");
+                }
+                break;
+
+            case 'K':
+                if (isPreviousChar(result, result.length() - 1, 'C')) {
+                    break;
+                } else {
+                    metaphone.append("K");
+                    result.append("K");
+                }
+                break;
+
+            case 'P':
+                if (isNextChar(result, result.length() - 1, 'H')) {
+                    metaphone.append("F");
+                    result.append("F");
+                } else {
+                    metaphone.append("P");
+                    result.append("P");
+                }
+                break;
+
+            case 'Q':
+                metaphone.append("K");
+                result.append("K");
+                break;
+
+            case 'S':
+                if (isNextChar(result, result.length() - 1, 'I') || isNextChar(result, result.length() - 1, 'E') || isNextChar(result, result.length() - 1, 'Y')) {
+                    metaphone.append("S");
+                    result.append("S");
+                } else {
+                    metaphone.append("X");
+                    result.append("X");
+                }
+                break;
+
+            case 'T':
+                if (isNextChar(result, result.length() - 1, 'I') || isNextChar(result, result.length() - 1, 'E') || isNextChar(result, result.length() - 1, 'Y')) {
+                    metaphone.append("T");
+                    result.append("T");
+                } else {
+                    metaphone.append("0");
+                    result.append("0");
+                }
+                break;
+
+            case 'V':
+                metaphone.append("F");
+                result.append("F");
+                break;
+
+            case 'W':
+                if (isVowel(result, result.length() - 1)) {
+                    metaphone.append("W");
+                    result.append("W");
+                }
+                break;
+
+            case 'X':
+                metaphone.append("KS");
+                result.append("KS");
+                break;
+
+            case 'Z':
+                metaphone.append("S");
+                result.append("S");
+                break;
+
+            default:
+                break;
+        }
+        index++;
+    }
+
+    String mf = metaphone.toString().toUpperCase();
+    int len = mf.length();
+    if (len > maxCodeLen) {
+        mf = mf.substring(0, maxCodeLen);
+    }
+    return mf;
+}
+```

@@ -1,0 +1,49 @@
+```java
+public void buildDB(java.io.PrintWriter out, InputStream ddlFile) throws Exception {
+    if (ddlFile != null) {
+        Object[] sqlBuffer = parseDDLToBuffer(ddlFile);
+        if (!recreateDBTables(sqlBuffer, out)) {
+            throw new Exception("Unable to drop and recreate DayTrader Db Tables");
+        }
+    }
+
+    Connection conn = datasource.getConnection();
+    PreparedStatement stmt = conn.prepareStatement("select count(*) as count from quoteejb");
+    ResultSet rs = stmt.executeQuery();
+    rs.next();
+    int quoteCount = rs.getInt("count");
+    rs.close();
+    stmt.close();
+
+    stmt = conn.prepareStatement("select count(*) as count from accountejb");
+    rs = stmt.executeQuery();
+    rs.next();
+    int userCount = rs.getInt("count");
+    rs.close();
+    stmt.close();
+
+    conn.close();
+
+    if (quoteCount == 0) {
+        int maxQuotes = TradeConfig.getMAX_QUOTES();
+        for (int i = 0; i < maxQuotes; i++) {
+            if (i % 10 == 0) {
+                out.println(".....s:" + i);
+            }
+            ts.createQuote(TradeConfig.rndSymbol(), TradeConfig.rndFullName(), BigDecimal.valueOf(TradeConfig.rndPrice()));
+        }
+    }
+
+    if (userCount == 0) {
+        int maxUsers = TradeConfig.getMAX_USERS();
+        for (int i = 0; i < maxUsers; i++) {
+            AccountDataBean account = ts.register("uid:" + i, "xxx" + i, TradeConfig.rndFullName(), TradeConfig.rndAddress(), TradeConfig.rndEmail("uid:" + i), TradeConfig.rndCreditCard(), BigDecimal.valueOf(100000.0));
+            if (account == null) {
+                out.println("UID uid:" + i + " already registered.");
+            } else {
+                out.println("Account# " + account.getAccountID() + " has 0 holdings.");
+            }
+        }
+    }
+}
+```

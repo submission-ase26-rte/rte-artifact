@@ -1,0 +1,208 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.interfaces.handling.mobile;
+Class name (MUST be exactly): EventLogger_submitTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.interfaces.handling.mobile;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.model.SelectItem;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.domain.model.cargo.CargoRepository;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class EventLogger_submitTestGenerated {
+
+    @Mock
+    private CargoRepository cargoRepository;
+
+    @Mock
+    private LocationRepository locationRepository;
+
+    @Mock
+    private VoyageRepository voyageRepository;
+
+    @Mock
+    private ApplicationEvents applicationEvents;
+
+    @Mock
+    private FacesContext context;
+
+    @InjectMocks
+    private EventLogger eventLogger;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void submit_WithVoyageRequiredEvent_ShouldCreateAttemptWithVoyage() {
+        // Arrange
+        eventLogger.setTrackingId("TST001");
+        eventLogger.setLocation("USNYC");
+        eventLogger.setVoyageNumber("VA001");
+        eventLogger.setEventType(new HandlingEvent.Type(true) {});
+        eventLogger.setCompletionTime(LocalDateTime.now());
+
+        // Act
+        eventLogger.submit();
+
+        // Assert
+        verify(applicationEvents).receivedHandlingEventRegistrationAttempt(
+            argThat(attempt ->
+                attempt.getVoyageNumber() != null &&
+                attempt.getVoyageNumber().toString().equals("VA001")
+            )
+        );
+    }
+
+    @Test
+    void submit_WithNonVoyageRequiredEvent_ShouldCreateAttemptWithoutVoyage() {
+        // Arrange
+        eventLogger.setTrackingId("TST001");
+        eventLogger.setLocation("USNYC");
+        eventLogger.setVoyageNumber("VA001");
+        eventLogger.setEventEventType(new HandlingEvent.Type(false) {});
+        eventLogger.setCompletionTime(LocalDateTime.now());
+
+        // Act
+        eventLogger.submit();
+
+        // Assert
+        verify(applicationEvents).receivedHandlingEventRegistrationAttempt(
+            argThat(attempt ->
+                attempt.getVoyageNumber() == null
+            )
+        );
+    }
+
+    @Test
+    void submit_WithNullTrackingId_ShouldThrowException() {
+        // Arrange
+        eventLogger.setTrackingId(null);
+        eventLogger.setLocation("USNYC");
+        eventLogger.setEventType(new HandlingEvent.Type(false) {});
+        eventLogger.setCompletionTime(LocalDateTime.now());
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> eventLogger.submit());
+    }
+
+    @Test
+    void submit_WithNullLocation_ShouldThrowException() {
+        // Arrange
+        eventLogger.setTrackingId("TST001");
+        eventLogger.setLocation(null);
+        eventLogger.setEventType(new HandlingEvent.Type(false) {});
+        eventLogger.setCompletionTime(LocalDateTime.now());
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> eventLogger.submit());
+    }
+
+    @Test
+    void submit_WithNullEventType_ShouldThrowException() {
+        // Arrange
+        eventLogger.setTrackingId("TST001");
+        eventLogger.setLocation("USNYC");
+        eventLogger.setEventType(null);
+        eventLogger.setCompletionTime(LocalDateTime.now());
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> eventLogger.submit());
+    }
+
+    @Test
+    void submit_WithNullCompletionTime_ShouldUseCurrentTime() {
+        // Arrange
+        eventLogger.setTrackingId("TST001");
+        eventLogger.setLocation("USNYC");
+        eventLogger.setEventType(new HandlingEvent.Type(false) {});
+        eventLogger.setCompletionTime(null);
+
+        // Act
+        eventLogger.submit();
+
+        // Assert
+        verify(applicationEvents).receivedHandlingEventRegistrationAttempt(
+            argThat(attempt ->
+                attempt.getCompletionTime() != null
+            )
+        );
+    }
+
+    @Test
+    void submit_WithValidInputs_ShouldAddFacesMessage() {
+        // Arrange
+        eventLogger.setTrackingId("TST001");
+        eventLogger.setLocation("USNYC");
+        eventLogger.setEventType(new HandlingEvent.Type(false) {});
+        eventLogger.setCompletionTime(LocalDateTime.now());
+
+        // Act
+        eventLogger.submit();
+
+        // Assert
+        verify(context).addMessage(eq(null), argThat(message ->
+            message.getSummary().equals("Event submitted")
+        ));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[55] enum types may not be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[55] cannot inherit from final org.eclipse.cargotracker.domain.model.handling.HandlingEvent.Type
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[55] enum types are not extensible
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[76] enum types may not be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[76] cannot inherit from final org.eclipse.cargotracker.domain.model.handling.HandlingEvent.Type
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[76] enum types are not extensible
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[76] cannot find symbol
+  symbol:   method setEventEventType(<anonymous org.eclipse.cargotracker.domain.model.handling.HandlingEvent.Type>)
+  location: variable eventLogger of type org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[95] enum types may not be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[95] cannot inherit from final org.eclipse.cargotracker.domain.model.handling.HandlingEvent.Type
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[95] enum types are not extensible
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[107] enum types may not be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[107] cannot inherit from final org.eclipse.cargotracker.domain.model.handling.HandlingEvent.Type
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[107] enum types are not extensible
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[131] enum types may not be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[131] cannot inherit from final org.eclipse.cargotracker.domain.model.handling.HandlingEvent.Type
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[131] enum types are not extensible
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[150] enum types may not be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[150] cannot inherit from final org.eclipse.cargotracker.domain.model.handling.HandlingEvent.Type
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[150] enum types are not extensible
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: EventLogger_submitTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

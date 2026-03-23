@@ -1,0 +1,134 @@
+```java
+public Object convert(final Object object, final Class toType) {
+    if (object == null) {
+        if (toType.isArray()) {
+            return Array.newInstance(toType.getComponentType(), 0);
+        } else if (Collection.class.isAssignableFrom(toType)) {
+            return Collections.emptyList();
+        } else if (toType == Void.class || toType == void.class) {
+            return null;
+        } else {
+            return convertNullToPrimitive(toType);
+        }
+    }
+
+    if (toType.isArray()) {
+        Class componentType = toType.getComponentType();
+        if (componentType.isPrimitive()) {
+            return convertToPrimitiveArray(object, componentType);
+        } else {
+            return convertToObjectArray(object, toType);
+        }
+    } else if (Collection.class.isAssignableFrom(toType)) {
+        return convertToCollection(object, toType);
+    } else if (toType == String.class) {
+        return object.toString();
+    }
+
+    if (object instanceof Boolean && Number.class.isAssignableFrom(toType)) {
+        return ((Boolean) object) ? 1 : 0;
+    }
+
+    if (object instanceof Number && Boolean.class.isAssignableFrom(toType)) {
+        return ((Number) object).intValue() != 0;
+    }
+
+    if (object instanceof String && TypeUtils.canConvert(object, toType)) {
+        return convertStringToPrimitive(object, toType);
+    }
+
+    if (toType.isInstance(object)) {
+        return object;
+    }
+
+    if (Converter.class.isAssignableFrom(toType)) {
+        return ConvertUtils.convert(object, toType);
+    }
+
+    throw new JXPathTypeConversionException("Cannot convert " + object + " to " + toType.getName());
+}
+
+private Object convertToPrimitiveArray(Object object, Class componentType) {
+    if (object instanceof Collection) {
+        return convertCollectionToPrimitiveArray((Collection<?>) object, componentType);
+    }
+    if (object instanceof Object[]) {
+        return convertArrayToPrimitiveArray((Object[]) object, componentType);
+    }
+    throw new JXPathTypeConversionException("Cannot convert " + object + " to " + componentType.getName());
+}
+
+private Object convertToObjectArray(Object object, Class toType) {
+    if (object instanceof Collection) {
+        return ((Collection<?>) object).toArray((Object[]) Array.newInstance(toType.getComponentType(), ((Collection<?>) object).size()));
+    }
+    if (object instanceof Object[]) {
+        return ((Object[]) object).clone();
+    }
+    throw new JXPathTypeConversionException("Cannot convert " + object + " to " + toType.getName());
+}
+
+private Object convertToCollection(Object object, Class toType) {
+    if (object instanceof Collection) {
+        return unmodifiableCollection((Collection<?>) object);
+    }
+    if (object instanceof Object[]) {
+        Collection result = allocateCollection(toType);
+        for (Object item : (Object[]) object) {
+            result.add(item);
+        }
+        return unmodifiableCollection(result);
+    }
+    throw new JXPathTypeConversionException("Cannot convert " + object + " to " + toType.getName());
+}
+
+private Object convertCollectionToPrimitiveArray(Collection<?> collection, Class componentType) {
+    Object array = Array.newInstance(componentType, collection.size());
+    int index = 0;
+    for (Object item : collection) {
+        if (componentType == int.class) {
+            Array.setInt(array, index, (Integer) item);
+        } else if (componentType == long.class) {
+            Array.setLong(array, index, (Long) item);
+        } else if (componentType == float.class) {
+            Array.setFloat(array, index, (Float) item);
+        } else if (componentType == double.class) {
+            Array.setDouble(array, index, (Double) item);
+        } else if (componentType == boolean.class) {
+            Array.setBoolean(array, index, (Boolean) item);
+        } else if (componentType == char.class) {
+            Array.setChar(array, index, (Character) item);
+        } else if (componentType == byte.class) {
+            Array.setByte(array, index, (Byte) item);
+        } else if (componentType == short.class) {
+            Array.setShort(array, index, (Short) item);
+        }
+        index++;
+    }
+    return array;
+}
+
+private Object convertArrayToPrimitiveArray(Object[] array, Class componentType) {
+    Object resultArray = Array.newInstance(componentType, array.length);
+    for (int i = 0; i < array.length; i++) {
+        if (componentType == int.class) {
+            Array.setInt(resultArray, i, (Integer) array[i]);
+        } else if (componentType == long.class) {
+            Array.setLong(resultArray, i, (Long) array[i]);
+        } else if (componentType == float.class) {
+            Array.setFloat(resultArray, i, (Float) array[i]);
+        } else if (componentType == double.class) {
+            Array.setDouble(resultArray, i, (Double) array[i]);
+        } else if (componentType == boolean.class) {
+            Array.setBoolean(resultArray, i, (Boolean) array[i]);
+        } else if (componentType == char.class) {
+            Array.setChar(resultArray, i, (Character) array[i]);
+        } else if (componentType == byte.class) {
+            Array.setByte(resultArray, i, (Byte) array[i]);
+        } else if (componentType == short.class) {
+            Array.setShort(resultArray, i, (Short) array[i]);
+        }
+    }
+    return resultArray;
+}
+```

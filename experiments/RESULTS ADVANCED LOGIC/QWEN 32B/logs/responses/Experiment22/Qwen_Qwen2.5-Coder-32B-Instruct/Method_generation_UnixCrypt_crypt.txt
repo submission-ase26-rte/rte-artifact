@@ -1,0 +1,45 @@
+```java
+public static String crypt(final byte[] original, String salt) {
+    if (salt == null) {
+        salt = "aa";
+    } else if (!CRYPT_SALT_PATTERN.matcher(salt).matches()) {
+        throw new IllegalArgumentException("Invalid salt value: " + salt);
+    }
+    salt = salt.substring(0, 2);
+
+    final byte[] keyBytes = new byte[8];
+    System.arraycopy(original, 0, keyBytes, 0, Math.min(original.length, 8));
+
+    final int[] keySchedule = desSetKey(keyBytes);
+
+    int eSwap0 = 0;
+    int eSwap1 = 0;
+    for (int i = 0; i < original.length; i += 8) {
+        final int[] block = new int[2];
+        intToFourBytes(original[i + 0] & 0xff, (byte[]) block, 0);
+        intToFourBytes(original[i + 1] & 0xff, (byte[]) block, 1);
+        intToFourBytes(original[i + 2] & 0xff, (byte[]) block, 2);
+        intToFourBytes(original[i + 3] & 0xff, (byte[]) block, 3);
+        intToFourBytes(original[i + 4] & 0xff, (byte[]) block, 4);
+        intToFourBytes(original[i + 5] & 0xff, (byte[]) block, 5);
+        intToFourBytes(original[i + 6] & 0xff, (byte[]) block, 6);
+        intToFourBytes(original[i + 7] & 0xff, (byte[]) block, 7);
+
+        final int[] encryptedBlock = body(keySchedule, eSwap0, eSwap1);
+        eSwap0 = encryptedBlock[0];
+        eSwap1 = encryptedBlock[1];
+    }
+
+    final StringBuilder result = new StringBuilder(salt);
+    result.append(COVTOSALT[(eSwap0 >>> 16) & 0x3f]);
+    result.append(COVTOSALT[(eSwap0 >>> 22) & 0x3f]);
+    result.append(COVTOSALT[(eSwap0 >>> 28) & 0x3f]);
+    result.append(COVTOSALT[(eSwap1 >>> 0) & 0x3f]);
+    result.append(COVTOSALT[(eSwap1 >>> 6) & 0x3f]);
+    result.append(COVTOSALT[(eSwap1 >>> 12) & 0x3f]);
+    result.append(COVTOSALT[(eSwap1 >>> 18) & 0x3f]);
+    result.append(COVTOSALT[(eSwap1 >>> 24) & 0x3f]);
+
+    return result.toString();
+}
+```

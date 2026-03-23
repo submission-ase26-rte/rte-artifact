@@ -1,0 +1,126 @@
+```java
+package org.apache.commons.compress.archivers;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoJUnit5Extension;
+import org.junit.jupiter.api.Assertions;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Collections;
+import java.util.SortedMap;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArArchiveOutputStream;
+import org.apache.commons.compress.archivers.JarArchiveOutputStream;
+import org.apache.commons.compress.archivers.TarArchiveOutputStream;
+import org.apache.commons.compress.archivers.CpioArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoJUnit5Extension.class)
+public class ArchiveStreamFactory_createArchiveOutputStreamTestGenerated {
+
+    private OutputStream mockOutputStream;
+    private ArchiveStreamFactory archiveStreamFactory;
+
+    @BeforeEach
+    public void setUp() {
+        mockOutputStream = Mockito.mock(OutputStream.class);
+        archiveStreamFactory = new ArchiveStreamFactory();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(mockOutputStream);
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_ar() throws ArchiveException, IOException {
+        SortedMap<String, ArchiveStreamProvider> providers = Mockito.mock(SortedMap.class);
+        Mockito.when(archiveStreamFactory.getArchiveOutputStreamProviders()).thenReturn(providers);
+        ArchiveStreamProvider arProvider = Mockito.mock(ArchiveStreamProvider.class);
+        Mockito.when(providers.get(ArchiveStreamFactory.toKey("AR"))).thenReturn(arProvider);
+        Mockito.when(arProvider.createArchiveOutputStream("AR", mockOutputStream, null)).thenReturn(new ArArchiveOutputStream(mockOutputStream));
+        ArchiveStreamFactory.DEFAULT.createArchiveOutputStream("AR", mockOutputStream, null);
+        Mockito.verify(arProvider).createArchiveOutputStream("AR", mockOutputStream, null);
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_zip() throws ArchiveException, IOException {
+        SortedMap<String, ArchiveStreamProvider> providers = Mockito.mock(SortedMap.class);
+        Mockito.when(archiveStreamFactory.getArchiveOutputStreamProviders()).thenReturn(providers);
+        ArchiveStreamProvider zipProvider = Mockito.mock(ArchiveStreamProvider.class);
+        Mockito.when(providers.get(ArchiveStreamFactory.toKey("ZIP"))).thenReturn(zipProvider);
+        Mockito.when(zipProvider.createArchiveOutputStream("ZIP", mockOutputStream, "UTF-8")).thenReturn(new ZipArchiveOutputStream(mockOutputStream));
+        ArchiveStreamFactory.DEFAULT.createArchiveOutputStream("ZIP", mockOutputStream, "UTF-8");
+        Mockito.verify(zipProvider).createArchiveOutputStream("ZIP", mockOutputStream, "UTF-8");
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_tar() throws ArchiveException, IOException {
+        SortedMap<String, ArchiveStreamProvider> providers = Mockito.mock(SortedMap.class);
+        Mockito.when(archiveStreamFactory.getArchiveOutputStreamProviders()).thenReturn(providers);
+        ArchiveStreamProvider tarProvider = Mockito.mock(ArchiveStreamProvider.class);
+        Mockito.when(providers.get(ArchiveStreamFactory.toKey("TAR"))).thenReturn(tarProvider);
+        Mockito.when(tarProvider.createArchiveOutputStream("TAR", mockOutputStream, "UTF-8")).thenReturn(new TarArchiveOutputStream(mockOutputStream, "UTF-8"));
+        ArchiveStreamFactory.DEFAULT.createArchiveOutputStream("TAR", mockOutputStream, "UTF-8");
+        Mockito.verify(tarProvider).createArchiveOutputStream("TAR", mockOutputStream, "UTF-8");
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_jar() throws ArchiveException, IOException {
+        SortedMap<String, ArchiveStreamProvider> providers = Mockito.mock(SortedMap.class);
+        Mockito.when(archiveStreamFactory.getArchiveOutputStreamProviders()).thenReturn(providers);
+        ArchiveStreamProvider jarProvider = Mockito.mock(ArchiveStreamProvider.class);
+        Mockito.when(providers.get(ArchiveStreamFactory.toKey("JAR"))).thenReturn(jarProvider);
+        Mockito.when(jarProvider.createArchiveOutputStream("JAR", mockOutputStream, "UTF-8")).thenReturn(new JarArchiveOutputStream(mockOutputStream, "UTF-8"));
+        ArchiveStreamFactory.DEFAULT.createArchiveOutputStream("JAR", mockOutputStream, "UTF-8");
+        Mockito.verify(jarProvider).createArchiveOutputStream("JAR", mockOutputStream, "UTF-8");
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_cpio() throws ArchiveException, IOException {
+        SortedMap<String, ArchiveStreamProvider> providers = Mockito.mock(SortedMap.class);
+        Mockito.when(archiveStreamFactory.getArchiveOutputStreamProviders()).thenReturn(providers);
+        ArchiveStreamProvider cpioProvider = Mockito.mock(ArchiveStreamProvider.class);
+        Mockito.when(providers.get(ArchiveStreamFactory.toKey("CPIO"))).thenReturn(cpioProvider);
+        Mockito.when(cpioProvider.createArchiveOutputStream("CPIO", mockOutputStream, "UTF-8")).thenReturn(new CpioArchiveOutputStream(mockOutputStream, "UTF-8"));
+        ArchiveStreamFactory.DEFAULT.createArchiveOutputStream("CPIO", mockOutputStream, "UTF-8");
+        Mockito.verify(cpioProvider).createArchiveOutputStream("CPIO", mockOutputStream, "UTF-8");
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_sevenZ() throws ArchiveException {
+        Mockito.when(archiveStreamFactory.getArchiveOutputStreamProviders()).thenReturn(Collections.emptyMap());
+        ArchiveException exception = Assertions.assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.DEFAULT.createArchiveOutputStream("SEVEN_Z", mockOutputStream, "UTF-8"));
+        Assertions.assertEquals("Archiver: SEVEN_Z not found.", exception.getMessage());
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_unknownArchiver() throws ArchiveException {
+        SortedMap<String, ArchiveStreamProvider> providers = Mockito.mock(SortedMap.class);
+        Mockito.when(archiveStreamFactory.getArchiveOutputStreamProviders()).thenReturn(providers);
+        Mockito.when(providers.get(ArchiveStreamFactory.toKey("UNKNOWN"))).thenReturn(null);
+        ArchiveException exception = Assertions.assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.DEFAULT.createArchiveOutputStream("UNKNOWN", mockOutputStream, "UTF-8"));
+        Assertions.assertEquals("Archiver: UNKNOWN not found.", exception.getMessage());
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_nullArchiverName() {
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> ArchiveStreamFactory.DEFAULT.createArchiveOutputStream(null, mockOutputStream, "UTF-8"));
+        Assertions.assertEquals("Archiver name must not be null.", exception.getMessage());
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_nullOutputStream() {
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> ArchiveStreamFactory.DEFAULT.createArchiveOutputStream("AR", null, "UTF-8"));
+        Assertions.assertEquals("OutputStream must not be null.", exception.getMessage());
+    }
+}
+```

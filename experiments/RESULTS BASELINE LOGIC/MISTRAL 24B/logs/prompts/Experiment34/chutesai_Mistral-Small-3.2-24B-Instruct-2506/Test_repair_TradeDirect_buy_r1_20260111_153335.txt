@@ -1,0 +1,379 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.direct;
+Class name (MUST be exactly): TradeDirect_buyTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Collection;
+import java.util.concurrent.Future;
+
+import javax.annotation.Resource;
+import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.jms.JMSException;
+import javax.jms.Queue;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.Topic;
+import javax.jms.TopicConnectionFactory;
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import com.ibm.websphere.samples.daytrader.beans.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.beans.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.beans.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.beans.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class TradeDirect_buyTestGenerated {
+
+    @Mock
+    private QueueConnectionFactory queueConnectionFactory;
+
+    @Mock
+    private TopicConnectionFactory topicConnectionFactory;
+
+    @Mock
+    private Topic tradeStreamerTopic;
+
+    @Mock
+    private Queue tradeBrokerQueue;
+
+    @Mock
+    private DataSource datasource;
+
+    @Mock
+    private UserTransaction txn;
+
+    @Mock
+    private ManagedExecutorService mes;
+
+    @Mock
+    private Connection connection;
+
+    @Mock
+    private PreparedStatement preparedStatement;
+
+    @Mock
+    private ResultSet resultSet;
+
+    @Mock
+    private AccountDataBean accountData;
+
+    @Mock
+    private QuoteDataBean quoteData;
+
+    @Mock
+    private HoldingDataBean holdingData;
+
+    @Mock
+    private OrderDataBean orderData;
+
+    @Mock
+    private Future<Void> future;
+
+    @InjectMocks
+    private TradeDirect tradeDirect;
+
+    @BeforeEach
+    void setUp() {
+        ReflectionTestUtils.setField(tradeDirect, "queueConnectionFactory", queueConnectionFactory);
+        ReflectionTestUtils.setField(tradeDirect, "topicConnectionFactory", topicConnectionFactory);
+        ReflectionTestUtils.setField(tradeDirect, "tradeStreamerTopic", tradeStreamerTopic);
+        ReflectionTestUtils.setField(tradeDirect, "tradeBrokerQueue", tradeBrokerQueue);
+        ReflectionTestUtils.setField(tradeDirect, "datasource", datasource);
+        ReflectionTestUtils.setField(tradeDirect, "txn", txn);
+        ReflectionTestUtils.setField(tradeDirect, "mes", mes);
+        ReflectionTestUtils.setField(tradeDirect, "inSession", false);
+        ReflectionTestUtils.setField(tradeDirect, "inGlobalTxn", false);
+    }
+
+    @AfterEach
+    void tearDown() {
+        verifyNoMoreInteractions(queueConnectionFactory, topicConnectionFactory, tradeStreamerTopic,
+            tradeBrokerQueue, datasource, txn, mes, connection, preparedStatement, resultSet,
+            accountData, quoteData, holdingData, orderData, future);
+    }
+
+    @Test
+    void testBuy_SynchronousOrderProcessing() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            String userID = "testUser";
+            String symbol = "TEST";
+            double quantity = 100;
+            int orderProcessingMode = TradeConfig.SYNCH;
+
+            when(datasource.getConnection()).thenReturn(connection);
+            when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
+            when(preparedStatement.executeQuery()).thenReturn(resultSet);
+            when(resultSet.next()).thenReturn(true);
+            when(accountData.getAccountID()).thenReturn(1);
+            when(quoteData.getPrice()).thenReturn(new BigDecimal("100.00"));
+            when(orderData.getOrderID()).thenReturn(1);
+            when(orderData.getOrderFee()).thenReturn(new BigDecimal("1.00"));
+            when(orderData.getOrderID()).thenReturn(1);
+
+            mockStatic(Log.class);
+            mockedLog.when(() -> Log.trace(anyString())).thenAnswer(invocation -> null);
+            mockedLog.when(() -> Log.error(anyString(), any(Exception.class))).thenAnswer(invocation -> null);
+
+            OrderDataBean result = tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+
+            assertNotNull(result);
+            verify(tradeDirect).completeOrder(anyInt());
+        }
+    }
+
+    @Test
+    void testBuy_AsynchronousOrderProcessing() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            String userID = "testUser";
+            String symbol = "TEST";
+            double quantity = 100;
+            int orderProcessingMode = TradeConfig.ASYNCH;
+
+            when(datasource.getConnection()).thenReturn(connection);
+            when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
+            when(preparedStatement.executeQuery()).thenReturn(resultSet);
+            when(resultSet.next()).thenReturn(true);
+            when(accountData.getAccountID()).thenReturn(1);
+            when(quoteData.getPrice()).thenReturn(new BigDecimal("100.00"));
+            when(orderData.getOrderID()).thenReturn(1);
+            when(orderData.getOrderFee()).thenReturn(new BigDecimal("1.00"));
+            when(orderData.getOrderID()).thenReturn(1);
+            when(tradeDirect.completeOrderAsync(anyInt(), anyBoolean())).thenReturn(future);
+
+            mockStatic(Log.class);
+            mockedLog.when(() -> Log.trace(anyString())).thenAnswer(invocation -> null);
+            mockedLog.when(() -> Log.error(anyString(), any(Exception.class))).thenAnswer(invocation -> null);
+
+            OrderDataBean result = tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+
+            assertNotNull(result);
+            verify(tradeDirect).completeOrderAsync(anyInt(), anyBoolean());
+        }
+    }
+
+    @Test
+    void testBuy_TwoPhaseOrderProcessing() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            String userID = "testUser";
+            String symbol = "TEST";
+            double quantity = 100;
+            int orderProcessingMode = TradeConfig.ASYNCH_2PHASE;
+
+            when(datasource.getConnection()).thenReturn(connection);
+            when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
+            when(preparedStatement.executeQuery()).thenReturn(resultSet);
+            when(resultSet.next()).thenReturn(true);
+            when(accountData.getAccountID()).thenReturn(1);
+            when(quoteData.getPrice()).thenReturn(new BigDecimal("100.00"));
+            when(orderData.getOrderID()).thenReturn(1);
+            when(orderData.getOrderFee()).thenReturn(new BigDecimal("1.00"));
+            when(orderData.getOrderID()).thenReturn(1);
+
+            mockStatic(Log.class);
+            mockedLog.when(() -> Log.trace(anyString())).thenAnswer(invocation -> null);
+            mockedLog.when(() -> Log.error(anyString(), any(Exception.class))).thenAnswer(invocation -> null);
+
+            OrderDataBean result = tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+
+            assertNotNull(result);
+            verify(tradeDirect).queueOrder(anyInt(), anyBoolean());
+        }
+    }
+
+    @Test
+    void testBuy_WithExceptionInOrderProcessing() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            String userID = "testUser";
+            String symbol = "TEST";
+            double quantity = 100;
+            int orderProcessingMode = TradeConfig.ASYNCH;
+
+            when(datasource.getConnection()).thenReturn(connection);
+            when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
+            when(preparedStatement.executeQuery()).thenReturn(resultSet);
+            when(resultSet.next()).thenReturn(true);
+            when(accountData.getAccountID()).thenReturn(1);
+            when(quoteData.getPrice()).thenReturn(new BigDecimal("100.00"));
+            when(orderData.getOrderID()).thenReturn(1);
+            when(orderData.getOrderFee()).thenReturn(new BigDecimal("1.00"));
+            when(orderData.getOrderID()).thenReturn(1);
+            when(tradeDirect.completeOrderAsync(anyInt(), anyBoolean())).thenThrow(new JMSException("Test Exception"));
+
+            mockStatic(Log.class);
+            mockedLog.when(() -> Log.trace(anyString())).thenAnswer(invocation -> null);
+            mockedLog.when(() -> Log.error(anyString(), any(Exception.class))).thenAnswer(invocation -> null);
+
+            assertThrows(Exception.class, () -> {
+                tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+            });
+
+            verify(tradeDirect).cancelOrder(anyInt(), anyBoolean());
+        }
+    }
+
+    @Test
+    void testBuy_WithDatabaseException() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            String userID = "testUser";
+            String symbol = "TEST";
+            double quantity = 100;
+            int orderProcessingMode = TradeConfig.SYNCH;
+
+            when(datasource.getConnection()).thenReturn(connection);
+            when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
+            when(preparedStatement.executeQuery()).thenThrow(new RuntimeException("Database Error"));
+
+            mockStatic(Log.class);
+            mockedLog.when(() -> Log.trace(anyString())).thenAnswer(invocation -> null);
+            mockedLog.when(() -> Log.error(anyString(), any(Exception.class))).thenAnswer(invocation -> null);
+
+            assertThrows(Exception.class, () -> {
+                tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+            });
+        }
+    }
+
+    @Test
+    void testBuy_WithNullUserId() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            String userID = null;
+            String symbol = "TEST";
+            double quantity = 100;
+            int orderProcessingMode = TradeConfig.SYNCH;
+
+            mockStatic(Log.class);
+            mockedLog.when(() -> Log.trace(anyString())).thenAnswer(invocation -> null);
+            mockedLog.when(() -> Log.error(anyString(), any(Exception.class))).thenAnswer(invocation -> null);
+
+            assertThrows(Exception.class, () -> {
+                tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+            });
+        }
+    }
+
+    @Test
+    void testBuy_WithNullSymbol() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            String userID = "testUser";
+            String symbol = null;
+            double quantity = 100;
+            int orderProcessingMode = TradeConfig.SYNCH;
+
+            mockStatic(Log.class);
+            mockedLog.when(() -> Log.trace(anyString())).thenAnswer(invocation -> null);
+            mockedLog.when(() -> Log.error(anyString(), any(Exception.class))).thenAnswer(invocation -> null);
+
+            assertThrows(Exception.class, () -> {
+                tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+            });
+        }
+    }
+
+    @Test
+    void testBuy_WithInvalidQuantity() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            String userID = "testUser";
+            String symbol = "TEST";
+            double quantity = -100;
+            int orderProcessingMode = TradeConfig.SYNCH;
+
+            mockStatic(Log.class);
+            mockedLog.when(() -> Log.trace(anyString())).thenAnswer(invocation -> null);
+            mockedLog.when(() -> Log.error(anyString(), any(Exception.class))).thenAnswer(invocation -> null);
+
+            assertThrows(Exception.class, () -> {
+                tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+            });
+        }
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[34] cannot find symbol
+  symbol:   class AccountDataBean
+  location: package com.ibm.websphere.samples.daytrader.beans
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[35] cannot find symbol
+  symbol:   class HoldingDataBean
+  location: package com.ibm.websphere.samples.daytrader.beans
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[37] cannot find symbol
+  symbol:   class OrderDataBean
+  location: package com.ibm.websphere.samples.daytrader.beans
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[38] cannot find symbol
+  symbol:   class QuoteDataBean
+  location: package com.ibm.websphere.samples.daytrader.beans
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[78] cannot find symbol
+  symbol:   class AccountDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[81] cannot find symbol
+  symbol:   class QuoteDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[84] cannot find symbol
+  symbol:   class HoldingDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[87] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[137] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[140] no suitable method found for completeOrder(int)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.completeOrder(java.lang.Integer,boolean) is not applicable
+  (actual and formal argument lists differ in length)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.completeOrder(java.sql.Connection,java.lang.Integer) is not applicable
+  (actual and formal argument lists differ in length)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[161] no suitable method found for thenReturn(java.util.concurrent.Future<java.lang.Void>)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.util.concurrent.Future<com.ibm.websphere.samples.daytrader.entities.OrderDataBean>) is not applicable
+  (argument mismatch; java.util.concurrent.Future<java.lang.Void> cannot be converted to java.util.concurrent.Future<com.ibm.websphere.samples.daytrader.entities.OrderDataBean>)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.util.concurrent.Future<com.ibm.websphere.samples.daytrader.entities.OrderDataBean>,java.util.concurrent.Future<com.ibm.websphere.samples.daytrader.entities.OrderDataBean>...) is not applicable
+  (argument mismatch; java.util.concurrent.Future<java.lang.Void> cannot be converted to java.util.concurrent.Future<com.ibm.websphere.samples.daytrader.entities.OrderDataBean>)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[167] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[196] cannot find symbol
+  symbol:   class OrderDataBean
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- For static method calls, ensure mockStatic is properly closed (use try-with-resources)
+- Keep the SAME class name: TradeDirect_buyTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

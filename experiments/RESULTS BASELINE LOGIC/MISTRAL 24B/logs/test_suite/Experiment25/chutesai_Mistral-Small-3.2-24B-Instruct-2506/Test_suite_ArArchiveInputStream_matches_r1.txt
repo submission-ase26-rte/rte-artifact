@@ -1,0 +1,69 @@
+package org.apache.commons.compress.archivers.ar;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArArchiveInputStream_matchesTestGenerated {
+
+    @Test
+    public void testMatches_NegativeLength_ThrowsIllegalArgumentException() {
+        byte[] validSignature = new byte[]{0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0a};
+        assertThrows(IllegalArgumentException.class, () -> {
+            ArArchiveInputStream.matches(validSignature, -1);
+        });
+    }
+
+    @Test
+    public void testMatches_ZeroLength_ThrowsIllegalArgumentException() {
+        byte[] validSignature = new byte[]{0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0a};
+        assertThrows(IllegalArgumentException.class, () -> {
+            ArArchiveInputStream.matches(validSignature, 0);
+        });
+    }
+
+    @Test
+    public void testMatches_ValidSignature_ReturnsTrue() {
+        byte[] validSignature = new byte[]{0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0a};
+        assertTrue(ArArchiveInputStream.matches(validSignature, 8));
+    }
+
+    @Test
+    public void testMatches_ValidSignatureWithExtraBytes_ReturnsTrue() {
+        byte[] signatureWithExtraBytes = new byte[]{0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0a, 0x00, 0x00};
+        assertTrue(ArArchiveInputStream.matches(signatureWithExtraBytes, 8));
+    }
+
+    @Test
+    public void testMatches_InvalidSignature_ReturnsFalse() {
+        byte[] invalidSignature = new byte[]{0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0d};
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, 8));
+    }
+
+    @Test
+    public void testMatches_ShortSignature_ReturnsFalse() {
+        byte[] shortSignature = new byte[]{0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e};
+        assertFalse(ArArchiveInputStream.matches(shortSignature, 7));
+    }
+
+    @Test
+    public void testMatches_NullSignature_ThrowsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> {
+            ArArchiveInputStream.matches(null, 8);
+        });
+    }
+
+    @Test
+    public void testMatches_PartiallyValidSignature_ReturnsFalse() {
+        byte[] partiallyValidSignature = new byte[]{0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0b};
+        assertFalse(ArArchiveInputStream.matches(partiallyValidSignature, 8));
+    }
+
+    @Test
+    public void testMatches_WrongByteOrder_ReturnsFalse() {
+        byte[] wrongOrderSignature = new byte[]{0x3c, 0x21, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(wrongOrderSignature, 8));
+    }
+
+}

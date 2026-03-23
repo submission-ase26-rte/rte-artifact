@@ -1,0 +1,145 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.interfaces.handling.file;
+Class name (MUST be exactly): EventItemWriter_writeItemsTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.interfaces.handling.file;
+
+import jakarta.batch.api.chunk.AbstractItemWriter;
+import jakarta.batch.runtime.context.JobContext;
+import jakarta.inject.Inject;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.application.util.DateConverter;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class EventItemWriter_writeItemsTestGenerated {
+
+    @Mock
+    private JobContext jobContext;
+
+    @Mock
+    private ApplicationEvents applicationEvents;
+
+    @InjectMocks
+    private EventItemWriter eventItemWriter;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(eventItemWriter, "jobContext", jobContext);
+        ReflectionTestUtils.setField(eventItemWriter, "applicationEvents", applicationEvents);
+    }
+
+    @Test
+    public void testWriteItems_successful() throws Exception {
+        HandlingEventRegistrationAttempt attempt = new HandlingEventRegistrationAttempt(
+                LocalDateTime.now(), LocalDateTime.now(), new TrackingId("trackingId"), new VoyageNumber("voyageNumber"),
+                new HandlingEvent("type"), new UnLocode("unLocode"));
+        List<Object> items = new ArrayList<>();
+        items.add(attempt);
+
+        when(jobContext.getProperties().getProperty(EventItemWriter.ARCHIVE_DIRECTORY)).thenReturn("/path/to/archive");
+
+        eventItemWriter.writeItems(items);
+
+        verify(applicationEvents, times(1)).receivedHandlingEventRegistrationAttempt(attempt);
+        verify(jobContext.getProperties(), times(1)).getProperty(EventItemWriter.ARCHIVE_DIRECTORY);
+    }
+
+    @Test
+    public void testWriteItems_nullItems() {
+        assertThrows(Exception.class, () -> {
+            eventItemWriter.writeItems(null);
+        });
+    }
+
+    @Test
+    public void testWriteItems_emptyItems() throws Exception {
+        List<Object> items = new ArrayList<>();
+        when(jobContext.getProperties().getProperty(EventItemWriter.ARCHIVE_DIRECTORY)).thenReturn("/path/to/archive");
+
+        eventItemWriter.writeItems(items);
+
+        verify(jobContext.getProperties(), times(1)).getProperty(EventItemWriter.ARCHIVE_DIRECTORY);
+    }
+
+    @Test
+    public void testWriteItems_exceptionDuringWrite() throws Exception {
+        HandlingEventRegistrationAttempt attempt = new HandlingEventRegistrationAttempt(
+                LocalDateTime.now(), LocalDateTime.now(), new TrackingId("trackingId"), new VoyageNumber("voyageNumber"),
+                new HandlingEvent("type"), new UnLocode("unLocode"));
+        List<Object> items = new ArrayList<>();
+        items.add(attempt);
+
+        when(jobContext.getProperties().getProperty(EventItemWriter.ARCHIVE_DIRECTORY)).thenReturn("/path/to/archive");
+        doThrow(new RuntimeException("File write error")).when(jobContext.getProperties()).getProperty(EventItemWriter.ARCHIVE_DIRECTORY);
+
+        assertThrows(Exception.class, () -> {
+            eventItemWriter.writeItems(items);
+        });
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[55] no suitable constructor found for HandlingEvent(java.lang.String)
+  constructor org.eclipse.cargotracker.domain.model.handling.HandlingEvent.HandlingEvent() is not applicable
+  (actual and formal argument lists differ in length)
+  constructor org.eclipse.cargotracker.domain.model.handling.HandlingEvent.HandlingEvent(org.eclipse.cargotracker.domain.model.cargo.Cargo,java.time.LocalDateTime,java.time.LocalDateTime,org.eclipse.cargotracker.domain.model.handling.HandlingEvent.Type,org.eclipse.cargotracker.domain.model.location.Location,org.eclipse.cargotracker.domain.model.voyage.Voyage) is not applicable
+  (actual and formal argument lists differ in length)
+  constructor org.eclipse.cargotracker.domain.model.handling.HandlingEvent.HandlingEvent(org.eclipse.cargotracker.domain.model.cargo.Cargo,java.time.LocalDateTime,java.time.LocalDateTime,org.eclipse.cargotracker.domain.model.handling.HandlingEvent.Type,org.eclipse.cargotracker.domain.model.location.Location) is not applicable
+  (actual and formal argument lists differ in length)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[59] ARCHIVE_DIRECTORY has private access in org.eclipse.cargotracker.interfaces.handling.file.EventItemWriter
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[64] ARCHIVE_DIRECTORY has private access in org.eclipse.cargotracker.interfaces.handling.file.EventItemWriter
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[77] ARCHIVE_DIRECTORY has private access in org.eclipse.cargotracker.interfaces.handling.file.EventItemWriter
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[81] ARCHIVE_DIRECTORY has private access in org.eclipse.cargotracker.interfaces.handling.file.EventItemWriter
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[88] no suitable constructor found for HandlingEvent(java.lang.String)
+  constructor org.eclipse.cargotracker.domain.model.handling.HandlingEvent.HandlingEvent() is not applicable
+  (actual and formal argument lists differ in length)
+  constructor org.eclipse.cargotracker.domain.model.handling.HandlingEvent.HandlingEvent(org.eclipse.cargotracker.domain.model.cargo.Cargo,java.time.LocalDateTime,java.time.LocalDateTime,org.eclipse.cargotracker.domain.model.handling.HandlingEvent.Type,org.eclipse.cargotracker.domain.model.location.Location,org.eclipse.cargotracker.domain.model.voyage.Voyage) is not applicable
+  (actual and formal argument lists differ in length)
+  constructor org.eclipse.cargotracker.domain.model.handling.HandlingEvent.HandlingEvent(org.eclipse.cargotracker.domain.model.cargo.Cargo,java.time.LocalDateTime,java.time.LocalDateTime,org.eclipse.cargotracker.domain.model.handling.HandlingEvent.Type,org.eclipse.cargotracker.domain.model.location.Location) is not applicable
+  (actual and formal argument lists differ in length)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[92] ARCHIVE_DIRECTORY has private access in org.eclipse.cargotracker.interfaces.handling.file.EventItemWriter
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[93] ARCHIVE_DIRECTORY has private access in org.eclipse.cargotracker.interfaces.handling.file.EventItemWriter
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: EventItemWriter_writeItemsTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

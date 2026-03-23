@@ -1,0 +1,41 @@
+```java
+package org.apache.commons.codec.language;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Nysiis_nysiisTestGenerated {
+    private Nysiis nysiis;
+    private Nysiis strictNysiis;
+
+    @BeforeEach
+    void setUp() {
+        nysiis = new Nysiis();
+        strictNysiis = new Nysiis(true);
+    }
+
+    @Test
+    void testNysiisStrictMode() {
+        assertEquals("M", strictNysiis.nysiis("M"));
+        assertEquals("M", strictNysiis.nysiis("MA"));
+        assertEquals("M", strictNysiis.nysiis("MAIN"));
+        assertEquals("MAN", strictNysiis.nysiis("MAN"));
+        assertEquals("MAN", strictNysiis.nysiis("MANN"));
+        assertEquals("MAN", strictNysiis.nysiis("MANNY"));
+    }
+
+    @Test
+    void testNysiisComplexCase() {
+        assertEquals("M", nysiis.nysiis("M"));
+        assertEquals("M", nysiis.nysiis("MA"));
+        assertEquals("M", nysiis.nysiis("MAIN"));
+        assertEquals("MAN", nysiis.nysiis("MAN"));
+        assertEquals("MAN", nysiis.nysiis("MANN"));
+        assertEquals("MAN", nysiis.nysiis("MANNY"));
+    }
+}
+```

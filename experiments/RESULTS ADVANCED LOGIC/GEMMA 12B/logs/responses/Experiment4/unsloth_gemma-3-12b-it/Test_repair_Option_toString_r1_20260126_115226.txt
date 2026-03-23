@@ -1,0 +1,62 @@
+```java
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Option_toStringTestGenerated {
+
+    @Test
+    public void testToString_basic() {
+        Option option = new Option("a", false, "Description");
+        assertEquals("[ Option a :: Description :: null ]", option.toString());
+    }
+
+    @Test
+    public void testToString_withLongOption() {
+        Option option = new Option("a", "long-a", false, "Description");
+        assertEquals("[ Option a long-a :: Description :: null ]", option.toString());
+    }
+
+    @Test
+    public void testToString_withDeprecated() {
+        Option option = new Option("a", false, "Description");
+        option.setDeprecated(new DeprecatedAttributes("deprecated", "reason", false));
+        assertEquals("[ Option a :: Description :: null ]", option.toString());
+    }
+
+    @Test
+    public void testToString_withArgs() {
+        Option option = new Option("a", true, "Description");
+        option.hasArgs();
+        assertEquals("[ Option a [ARG... ] :: Description :: null ]", option.toString());
+    }
+
+    @Test
+    public void testToString_withArg() {
+        Option option = new Option("a", false, "Description");
+        option.hasArg();
+        assertEquals("[ Option a [ARG] :: Description :: null ]", option.toString());
+    }
+
+    @Test
+    public void testToString_withType() {
+        Option option = new Option("a", false, "Description");
+        option.setType(String.class);
+        assertEquals("[ Option a :: Description :: class java.lang.String ]", option.toString());
+    }
+
+    @Test
+    public void testToString_allFields() {
+        Option option = new Option("a", "long-a", false, "Description");
+        option.setType(Integer.class);
+        option.hasArg();
+        option.setDeprecated(new DeprecatedAttributes("deprecated", "reason", false));
+        assertEquals("[ Option a long-a [ARG] :: Description :: class java.lang.Integer ]", option.toString());
+    }
+}
+```

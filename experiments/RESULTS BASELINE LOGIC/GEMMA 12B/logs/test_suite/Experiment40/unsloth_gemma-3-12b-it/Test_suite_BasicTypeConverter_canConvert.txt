@@ -1,0 +1,136 @@
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class BasicTypeConverter_canConvertTestGenerated {
+
+    private BasicTypeConverter converter;
+
+    @BeforeEach
+    void setUp() {
+        converter = new BasicTypeConverter();
+    }
+
+    @Test
+    void testCanConvert_nullObject() {
+        assertTrue(converter.canConvert(null, Integer.class));
+    }
+
+    @Test
+    void testCanConvert_primitiveWrapper() {
+        assertTrue(converter.canConvert(10, Integer.class));
+    }
+
+    @Test
+    void testCanConvert_stringToBoolean() {
+        assertTrue(converter.canConvert("true", Boolean.class));
+    }
+
+    @Test
+    void testCanConvert_numberToBoolean() {
+        assertTrue(converter.canConvert(1, Boolean.class));
+    }
+
+    @Test
+    void testCanConvert_stringToNumeric() {
+        assertTrue(converter.canConvert("123", Integer.class));
+        assertTrue(converter.canConvert("3.14", Double.class));
+    }
+
+    @Test
+    void testCanConvert_numberToString() {
+        assertTrue(converter.canConvert(10, String.class));
+    }
+
+    @Test
+    void testCanConvert_arrayToCollection() {
+        Integer[] intArray = {1, 2, 3};
+        assertTrue(converter.canConvert(intArray, Collection.class));
+    }
+
+    @Test
+    void testCanConvert_arrayToPrimitiveArray() {
+        Integer[] intArray = {1, 2, 3};
+        assertTrue(converter.canConvert(intArray, int[].class));
+    }
+
+    @Test
+    void testCanConvert_collectionToArray() {
+        List<Integer> intList = new ArrayList<>();
+        intList.add(1);
+        intList.add(2);
+        intList.add(3);
+        assertTrue(converter.canConvert(intList, int[].class));
+    }
+
+    @Test
+    void testCanConvert_collectionToCollection() {
+        List<Integer> intList = new ArrayList<>();
+        intList.add(1);
+        intList.add(2);
+        intList.add(3);
+        assertTrue(converter.canConvert(intList, Collection.class));
+    }
+
+    @Test
+    void testCanConvert_emptyCollectionToPrimitiveArray() {
+        Collection<Integer> emptyList = Collections.emptyList();
+        assertFalse(converter.canConvert(emptyList, int[].class));
+    }
+
+    @Test
+    void testCanConvert_emptyCollectionToCollection() {
+        Collection<Integer> emptyList = Collections.emptyList();
+        assertTrue(converter.canConvert(emptyList, Collection.class));
+    }
+
+    @Test
+    void testCanConvert_NodeSet() {
+        NodeSet nodeSet = Mockito.mock(NodeSet.class);
+        when(nodeSet.getValues()).thenReturn(new ArrayList<>());
+        assertTrue(converter.canConvert(nodeSet, Collection.class));
+    }
+
+    @Test
+    void testCanConvert_Pointer() {
+        Pointer pointer = Mockito.mock(Pointer.class);
+        when(pointer.getValue()).thenReturn("test");
+        assertTrue(converter.canConvert(pointer, String.class));
+    }
+
+    @Test
+    void testCanConvert_unsupportedType() {
+        assertFalse(converter.canConvert(new Object(), String.class));
+    }
+
+    @Test
+    void testCanConvert_arrayWithDifferentTypes() {
+        Object[] mixedArray = {1, "hello", 2.5};
+        assertFalse(converter.canConvert(mixedArray, Integer[].class));
+    }
+}

@@ -1,0 +1,60 @@
+```java
+public CommandLine parse(final Options options, final String[] arguments, final Properties properties, final boolean stopAtNonOption) throws ParseException {
+    this.options = options;
+    this.cmd = new CommandLine.Builder().build();
+    this.requiredOptions = new ArrayList(options.getRequiredOptions());
+
+    if (properties != null) {
+        processProperties(properties);
+    }
+
+    if (arguments == null) {
+        arguments = new String[0];
+    }
+
+    String[] flat = flatten(options, arguments, stopAtNonOption);
+    ListIterator iter = Arrays.asList(flat).listIterator();
+
+    while (iter.hasNext()) {
+        String arg = (String) iter.next();
+
+        if (arg.startsWith("--")) {
+            String opt = arg.substring(2, arg.length());
+
+            if (opt.length() == 0) {
+                throw new ParseException("Missing long option name");
+            }
+
+            processOption(opt, iter);
+        } else if (arg.startsWith("-")) {
+            if (arg.length() == 1) {
+                if (stopAtNonOption) {
+                    cmd.addArg(arg);
+                    while (iter.hasNext()) {
+                        cmd.addArg((String) iter.next());
+                    }
+                } else {
+                    throw new ParseException("Missing option name");
+                }
+            } else {
+                for (int i = 1; i < arg.length(); i++) {
+                    processOption(String.valueOf(arg.charAt(i)), iter);
+                }
+            }
+        } else {
+            if (stopAtNonOption) {
+                cmd.addArg(arg);
+                while (iter.hasNext()) {
+                    cmd.addArg((String) iter.next());
+                }
+            } else {
+                throw new ParseException("Unexpected argument: " + arg);
+            }
+        }
+    }
+
+    checkRequiredOptions();
+
+    return cmd;
+}
+```

@@ -1,0 +1,90 @@
+```java
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.Test;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+public class PatternOptionBuilder_parsePatternTestGenerated {
+
+    @Test
+    void testParsePattern_simpleOption() {
+        Options options = PatternOptionBuilder.parsePattern("a");
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("a", option.getOption());
+        assertFalse(option.isRequired());
+        assertNull(option.getType());
+    }
+
+    @Test
+    void testParsePattern_optionWithRequired() {
+        Options options = PatternOptionBuilder.parsePattern("!a");
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("a", option.getOption());
+        assertTrue(option.isRequired());
+        assertNull(option.getType());
+    }
+
+    @Test
+    void testParsePattern_optionWithType() {
+        Options options = PatternOptionBuilder.parsePattern("a$");
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("a", option.getOption());
+        assertFalse(option.isRequired());
+        assertEquals(PatternOptionBuilder.STRING_VALUE, option.getType());
+    }
+
+    @Test
+    void testParsePattern_multipleOptions() {
+        Options options = PatternOptionBuilder.parsePattern("a!b$c");
+        assertEquals(3, options.getOptions().size());
+        Option optionA = options.getOptions().get(0);
+        assertEquals("a", optionA.getOption());
+        assertTrue(optionA.isRequired());
+        assertNull(optionA.getType());
+
+        Option optionB = options.getOptions().get(1);
+        assertEquals("b", optionB.getOption());
+        assertFalse(optionB.isRequired());
+        assertEquals(PatternOptionBuilder.STRING_VALUE, optionB.getType());
+
+        Option optionC = options.getOptions().get(2);
+        assertEquals("c", optionC.getOption());
+        assertFalse(optionC.isRequired());
+        assertNull(optionC.getType());
+    }
+
+    @Test
+    void testParsePattern_optionWithConverter() {
+        Options options = PatternOptionBuilder.parsePattern("a%");
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("a", option.getOption());
+        assertFalse(option.isRequired());
+        assertEquals(PatternOptionBuilder.STRING_VALUE, option.getType());
+    }
+
+    @Test
+    void testParsePattern_emptyPattern() {
+        Options options = PatternOptionBuilder.parsePattern("");
+        assertEquals(0, options.getOptions().size());
+    }
+
+    @Test
+    void testParsePattern_patternWithOnlyRequired() {
+        Options options = PatternOptionBuilder.parsePattern("!");
+        assertEquals(0, options.getOptions().size());
+    }
+
+    @Test
+    void testParsePattern_patternWithOnlyType() {
+        Options options = PatternOptionBuilder.parsePattern("$");
+        assertEquals(0, options.getOptions().size());
+    }
+}
+```

@@ -1,0 +1,15 @@
+```java
+public static boolean matches(final byte[] signature, final int length) {
+    if (signature == null) {
+        throw new NullPointerException();
+    }
+    if (length < 0) {
+        throw new IllegalArgumentException("Length must be non-negative");
+    }
+    if (length != 8) {
+        return false;
+    }
+    return signature[0] == 0x21 && signature[1] == 0x3c && signature[2] == 0x61 && signature[3] == 0x72
+            && signature[4] == 0x63 && signature[5] == 0x68 && signature[6] == 0x3e && signature[7] == 0x0a;
+}
+```

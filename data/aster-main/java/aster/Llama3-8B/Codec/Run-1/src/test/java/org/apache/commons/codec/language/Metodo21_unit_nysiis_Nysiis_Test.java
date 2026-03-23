@@ -1,0 +1,410 @@
+/**
+ * Filtered unit tests for method: nysiis(String str)
+ * Original class: Nysiis
+ * Tests that actually call the target method
+ */
+package org.apache.commons.codec.language;
+
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.codec.EncoderException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo21_unit_nysiis_Nysiis_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis_EV_NoAw11_fid2() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("EV");
+    assertEquals("AF", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis_Q_NttM13_fid2() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Q");
+    assertEquals("G", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis_Z_cFkW14() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Z");
+    assertEquals("S", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis_M_LUPf15() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("M");
+    assertEquals("N", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis_KN_wDtn16_fid2() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("KN");
+    assertEquals("NN", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis_EV_NoAw11() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("EV");
+    assertEquals("EV", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis_Vowel_tMXQ12() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("A");
+    assertEquals("A", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis_Q_NttM13() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Q");
+    assertEquals("Q", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis_KN_wDtn16() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("KN");
+    assertEquals("N", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis1_HIMS0() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Thomas");
+    assertEquals("T0550", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis2_OWEs1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Katherine");
+    assertEquals("K3650", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis3_BxOF2() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Schmidt");
+    assertEquals("S2350", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis4_bSBP3() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Phelps");
+    assertEquals("P1200", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis5_iBZA4() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Eve");
+    assertEquals("E000", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis6_VNRf5() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Helen");
+    assertEquals("H450", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis7_mzQS6() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Walter");
+    assertEquals("W436", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis1_FlRL0() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Thomas");
+    assertEquals("T540", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis2_JDCV1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Smith");
+    assertEquals("S530", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis3_tKPW2() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("John");
+    assertEquals("J500", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis4_FwRM3() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Katherine");
+    assertEquals("K362", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis5_cZqF4() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("William");
+    assertEquals("W430", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis6_AaHx5() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Elizabeth");
+    assertEquals("E421", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis7_EeSe6() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("James");
+    assertEquals("J520", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis8_MyIq7() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Mary");
+    assertEquals("M600", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis9_ddxA8() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Robert");
+    assertEquals("R163", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis10_IBjT9() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Richard");
+    assertEquals("R263", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis11_sZTO10() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Michael");
+    assertEquals("M240", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis12_aLOQ11() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Charles");
+    assertEquals("C542", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis13_rnCS12() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Christopher");
+    assertEquals("C362", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis14_wBYT13() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Alexander");
+    assertEquals("A436", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis1_HIMS0_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Thomas");
+    assertEquals("TAN", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis2_OWEs1_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Katherine");
+    assertEquals("CATARA", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis3_BxOF2_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Schmidt");
+    assertEquals("SNAD", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis4_bSBP3_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Phelps");
+    assertEquals("FALP", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis5_iBZA4_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Eve");
+    assertEquals("EV", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis6_VNRf5_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Helen");
+    assertEquals("HALAN", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis7_mzQS6_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Walter");
+    assertEquals("WALTAR", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis2_JDCV1_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Smith");
+    assertEquals("SNAT", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis3_tKPW2_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("John");
+    assertEquals("JAN", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis5_cZqF4_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("William");
+    assertEquals("WALAN", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis6_AaHx5_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Elizabeth");
+    assertEquals("ELASAB", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis7_EeSe6_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("James");
+    assertEquals("JAN", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis8_MyIq7_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Mary");
+    assertEquals("MARY", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis9_ddxA8_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Robert");
+    assertEquals("RABAD", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis10_IBjT9_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Richard");
+    assertEquals("RACAD", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis11_sZTO10_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Michael");
+    assertEquals("MACAL", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis12_aLOQ11_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Charles");
+    assertEquals("CARL", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis13_rnCS12_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Christopher");
+    assertEquals("CRASTA", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNysiis14_wBYT13_fid1() {
+    Nysiis nysiis = new Nysiis();
+    String result = nysiis.nysiis("Alexander");
+    assertEquals("ALAXAN", result);
+    }
+}

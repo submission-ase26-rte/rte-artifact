@@ -1,0 +1,16 @@
+```java
+public String processFindForm(@RequestParam(defaultValue = "1") int page, Owner owner, BindingResult result, Model model) {
+    String lastName = owner.getLastName();
+    Page<Owner> ownersResults = findPaginatedForOwnersLastName(page, lastName);
+    if (lastName == null || lastName.isEmpty()) {
+        if (ownersResults.getTotalElements() == 0) {
+            result.rejectValue("lastName", "notFound", "notFound");
+            return "owners/findOwners";
+        }
+    } else if (ownersResults.getTotalElements() == 1) {
+        Owner foundOwner = ownersResults.getContent().get(0);
+        return "redirect:/owners/" + foundOwner.getId();
+    }
+    return addPaginationModel(page, model, ownersResults);
+}
+```

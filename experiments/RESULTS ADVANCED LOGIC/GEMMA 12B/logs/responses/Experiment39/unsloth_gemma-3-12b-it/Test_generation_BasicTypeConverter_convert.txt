@@ -1,0 +1,152 @@
+```java
+package org.apache.commons.jxpath.util;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.util.TypeUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+class BasicTypeConverter_convertTestGenerated {
+
+    private BasicTypeConverter basicTypeConverter;
+
+    @BeforeEach
+    void setUp() {
+        basicTypeConverter = new BasicTypeConverter();
+    }
+
+    @Test
+    void testConvertNullToBoolean() {
+        Object result = basicTypeConverter.convert(null, Boolean.class);
+        assertNull(result);
+    }
+
+    @Test
+    void testConvertNullToNumber() {
+        Object result = basicTypeConverter.convert(null, Integer.class);
+        assertEquals(0, result);
+    }
+
+    @Test
+    void testConvertNullToPrimitiveBoolean() {
+        Object result = basicTypeConverter.convert(null, boolean.class);
+        assertFalse(result instanceof Boolean);
+        assertFalse((Boolean) result);
+    }
+
+    @Test
+    void testConvertArrayToCollection() {
+        Integer[] intArray = {1, 2, 3};
+        Collection<Integer> collection = basicTypeConverter.convert(intArray, Collection.class);
+        assertEquals(3, collection.size());
+        assertTrue(collection.contains(1));
+        assertTrue(collection.contains(2));
+        assertTrue(collection.contains(3));
+    }
+
+    @Test
+    void testConvertArrayToTypeArray() {
+        Integer[] intArray = {1, 2, 3};
+        Integer[] resultArray = basicTypeConverter.convert(intArray, Integer[].class);
+        assertEquals(3, resultArray.length);
+        assertEquals(1, resultArray[0]);
+        assertEquals(2, resultArray[1]);
+        assertEquals(3, resultArray[2]);
+    }
+
+    @Test
+    void testConvertCollectionToTypeArray() {
+        List<Integer> intList = new ArrayList<>();
+        intList.add(1);
+        intList.add(2);
+        intList.add(3);
+        Integer[] resultArray = basicTypeConverter.convert(intList, Integer[].class);
+        assertEquals(3, resultArray.length);
+        assertEquals(1, resultArray[0]);
+        assertEquals(2, resultArray[1]);
+        assertEquals(3, resultArray[2]);
+    }
+
+    @Test
+    void testConvertCollectionToCollection() {
+        List<Integer> intList = new ArrayList<>();
+        intList.add(1);
+        intList.add(2);
+        intList.add(3);
+        Collection<Integer> collection = basicTypeConverter.convert(intList, Collection.class);
+        assertEquals(3, collection.size());
+        assertTrue(collection.contains(1));
+        assertTrue(collection.contains(2));
+        assertTrue(collection.contains(3));
+    }
+
+    @Test
+    void testConvertNodeSetToType() {
+        NodeSet nodeSet = mock(NodeSet.class);
+        when(nodeSet.getValues()).thenReturn(List.of(1, 2, 3));
+        Object result = basicTypeConverter.convert(nodeSet, Integer.class);
+        assertEquals(1, result);
+    }
+
+    @Test
+    void testConvertPointerToType() {
+        Pointer pointer = mock(Pointer.class);
+        when(pointer.getValue()).thenReturn(4);
+        Object result = basicTypeConverter.convert(pointer, Integer.class);
+        assertEquals(4, result);
+    }
+
+    @Test
+    void testConvertToString() {
+        Object object = new Object();
+        Object result = basicTypeConverter.convert(object, String.class);
+        assertEquals(object.toString(), result);
+    }
+
+    @Test
+    void testConvertBooleanToNumber() {
+        Object result = basicTypeConverter.convert(true, Number.class);
+        assertEquals(1, ((Number) result).doubleValue(), 0.0001);
+    }
+
+    @Test
+    void testConvertNumberToBoolean() {
+        Object result = basicTypeConverter.convert(1.5, Boolean.class);
+        assertTrue((Boolean) result);
+    }
+
+    @Test
+    void testConvertStringToPrimitive() {
+        Object result = basicTypeConverter.convert("true", Boolean.class);
+        assertTrue((Boolean) result);
+        result = basicTypeConverter.convert("5", Integer.class);
+        assertEquals(5, result);
+    }
+
+    @Test
+    void testConvertException() {
+        assertThrows(JXPathTypeConversionException.class, () -> {
+            basicTypeConverter.convert(1, String.class);
+        });
+    }
+}
+```

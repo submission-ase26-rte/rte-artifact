@@ -1,0 +1,44 @@
+```java
+public static String crypt(final byte[] original, String salt) {
+    if (salt == null) {
+        salt = generateSalt();
+    } else if (!CRYPT_SALT_PATTERN.matcher(salt).matches()) {
+        throw new IllegalArgumentException("Invalid salt value: " + salt);
+    }
+
+    byte[] saltBytes = salt.getBytes(StandardCharsets.UTF_8);
+    byte[] input = new byte[original.length + saltBytes.length];
+    System.arraycopy(original, 0, input, 0, original.length);
+    System.arraycopy(saltBytes, 0, input, original.length, saltBytes.length);
+
+    byte[] encrypted = desCrypt(input);
+
+    StringBuilder result = new StringBuilder(salt);
+    for (byte b : encrypted) {
+        result.append(COV2CHAR[b & 0x3f]);
+    }
+
+    return result.toString();
+}
+
+private static byte[] desCrypt(final byte[] input) {
+    byte[] desKey = new byte[8];
+    System.arraycopy(input, 0, desKey, 0, 8);
+    int[] schedule = desSetKey(desKey);
+    int[] result = body(schedule, 0, 0);
+    byte[] output = new byte[8];
+    intToFourBytes(result[0], output, 0);
+    intToFourBytes(result[1], output, 4);
+    return output;
+}
+
+private static String generateSalt() {
+    byte[] saltBytes = new byte[2];
+    secureRandom.nextBytes(saltBytes);
+    StringBuilder salt = new StringBuilder();
+    for (byte b : saltBytes) {
+        salt.append(SALT_CHARS[(b & 0x3f)]);
+    }
+    return salt.toString();
+}
+```

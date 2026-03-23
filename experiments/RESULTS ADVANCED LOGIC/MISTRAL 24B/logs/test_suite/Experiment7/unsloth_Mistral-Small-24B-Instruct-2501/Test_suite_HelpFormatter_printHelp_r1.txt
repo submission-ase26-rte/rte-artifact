@@ -1,0 +1,104 @@
+package org.apache.commons.cli;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class HelpFormatter_printHelpTestGenerated {
+    private PrintWriter printWriterMock;
+    private HelpFormatter helpFormatter;
+    private StringWriter stringWriter;
+
+    @BeforeEach
+    public void setUp() {
+        stringWriter = new StringWriter();
+        printWriterMock = new PrintWriter(stringWriter);
+        helpFormatter = new HelpFormatter();
+    }
+
+    @Test
+    public void testPrintHelpWithNullCmdLineSyntax() {
+        String cmdLineSyntax = null;
+        String header = "Header";
+        String footer = "Footer";
+        Options options = new Options();
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            helpFormatter.printHelp(printWriterMock, 80, cmdLineSyntax, header, options, 2, 2, footer, true);
+        });
+        assertTrue(exception.getMessage().contains("cmdLineSyntax not provided"));
+    }
+
+    @Test
+    public void testPrintHelpWithEmptyCmdLineSyntax() {
+        String cmdLineSyntax = "";
+        String header = "Header";
+        String footer = "Footer";
+        Options options = new Options();
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            helpFormatter.printHelp(printWriterMock, 80, cmdLineSyntax, header, options, 2, 2, footer, true);
+        });
+        assertTrue(exception.getMessage().contains("cmdLineSyntax not provided"));
+    }
+
+    @Test
+    public void testPrintHelpWithValidInput() {
+        String cmdLineSyntax = "java -jar your-app.jar";
+        String header = "Header";
+        String footer = "Footer";
+        Options options = new Options();
+        options.addOption("a", "alpha", true, "alpha option");
+        helpFormatter.printHelp(printWriterMock, 80, cmdLineSyntax, header, options, 2, 2, footer, true);
+        String output = stringWriter.toString();
+        assertTrue(output.contains(header));
+        assertTrue(output.contains(footer));
+        assertTrue(output.contains("java -jar your-app.jar"));
+        assertTrue(output.contains("-a, --alpha <arg>"));
+    }
+
+    @Test
+    public void testPrintHelpWithAutoUsageFalse() {
+        String cmdLineSyntax = "java -jar your-app.jar";
+        String header = "Header";
+        String footer = "Footer";
+        Options options = new Options();
+        options.addOption("b", "beta", true, "beta option");
+        helpFormatter.printHelp(printWriterMock, 80, cmdLineSyntax, header, options, 2, 2, footer, false);
+        String output = stringWriter.toString();
+        assertTrue(output.contains(header));
+        assertTrue(output.contains(footer));
+        assertTrue(output.contains("java -jar your-app.jar"));
+        assertTrue(output.contains("-b, --beta <arg>"));
+        assertFalse(output.contains("Usage:"));
+    }
+
+    @Test
+    public void testPrintHelpWithNullHeader() {
+        String cmdLineSyntax = "java -jar your-app.jar";
+        String header = null;
+        String footer = "Footer";
+        Options options = new Options();
+        helpFormatter.printHelp(printWriterMock, 80, cmdLineSyntax, header, options, 2, 2, footer, true);
+        String output = stringWriter.toString();
+        assertFalse(output.contains("Header"));
+    }
+
+    @Test
+    public void testPrintHelpWithNullFooter() {
+        String cmdLineSyntax = "java -jar your-app.jar";
+        String header = "Header";
+        String footer = null;
+        Options options = new Options();
+        helpFormatter.printHelp(printWriterMock, 80, cmdLineSyntax, header, options, 2, 2, footer, true);
+        String output = stringWriter.toString();
+        assertFalse(output.contains("Footer"));
+    }
+
+}

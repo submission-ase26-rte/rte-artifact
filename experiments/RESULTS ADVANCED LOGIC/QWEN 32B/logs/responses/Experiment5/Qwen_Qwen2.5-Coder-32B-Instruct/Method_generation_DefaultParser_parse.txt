@@ -1,0 +1,19 @@
+```java
+public CommandLine parse(final Options options, final String[] arguments, final Properties properties, final boolean stopAtNonOption) throws ParseException {
+    this.options = options;
+    this.stopAtNonOption = stopAtNonOption;
+    this.cmd = new CommandLine();
+    this.expectedOpts = new ArrayList<>(options.getRequiredOptions());
+
+    if (arguments != null) {
+        for (final String arg : arguments) {
+            handleToken(arg);
+        }
+    }
+
+    handleProperties(properties);
+    checkRequiredOptions();
+
+    return cmd;
+}
+```

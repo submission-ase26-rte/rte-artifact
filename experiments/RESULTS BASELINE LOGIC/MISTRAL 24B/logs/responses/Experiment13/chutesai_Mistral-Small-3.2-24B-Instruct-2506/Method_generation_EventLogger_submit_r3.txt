@@ -1,0 +1,31 @@
+```java
+public void submit() {
+    if (trackingId == null) {
+        throw new IllegalArgumentException("TrackingId cannot be null");
+    }
+    if (location == null) {
+        throw new IllegalArgumentException("Location cannot be null");
+    }
+    if (eventType == null) {
+        throw new IllegalArgumentException("Event type cannot be null");
+    }
+    if (eventType.requiresVoyage() && voyageNumber == null) {
+        throw new IllegalArgumentException("Voyage number cannot be null for voyage-required events");
+    }
+
+    HandlingEventRegistrationAttempt attempt = new HandlingEventRegistrationAttempt(
+        new TrackingId(trackingId),
+        new UnLocode(location),
+        eventType,
+        eventType.requiresVoyage() ? new VoyageNumber(voyageNumber) : null,
+        completionTime != null ? completionTime : LocalDateTime.now()
+    );
+
+    applicationEvents.receivedHandlingEventRegistrationAttempt(attempt);
+
+    FacesContext currentContext = FacesContext.getCurrentInstance();
+    if (currentContext != null) {
+        currentContext.addMessage(null, new FacesMessage("Event submitted"));
+    }
+}
+```

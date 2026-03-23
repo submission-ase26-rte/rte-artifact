@@ -1,0 +1,122 @@
+```java
+package org.springframework.samples.petclinic.owner;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.util.Collections;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+
+@ExtendWith(MockitoExtension.class)
+class OwnerController_processFindFormTestGenerated {
+
+    @Mock
+    private OwnerRepository ownerRepository;
+
+    @InjectMocks
+    private OwnerController ownerController;
+
+    private MockMvc mockMvc;
+
+    @Mock
+    private Model model;
+
+    @Mock
+    private BindingResult bindingResult;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(ownerController).build();
+    }
+
+    @Test
+    void testProcessFindForm_NoLastName_ReturnsAllOwners() throws Exception {
+        Page<Owner> ownersResults = new PageImpl<>(List.of(new Owner(), new Owner()));
+        when(ownerRepository.findByLastName(any(String.class), any(org.springframework.data.domain.Pageable.class))).thenReturn(ownersResults);
+
+        mockMvc.perform(get("/owners"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/ownersList"))
+                .andExpect(model().attributeExists("owners"));
+    }
+
+    @Test
+    void testProcessFindForm_NoLastName_EmptyResults_RejectsValue() throws Exception {
+        Page<Owner> ownersResults = new PageImpl<>(Collections.emptyList());
+        when(ownerRepository.findByLastName(any(String.class), any(org.springframework.data.domain.Pageable.class))).thenReturn(ownersResults);
+
+        mockMvc.perform(get("/owners"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/findOwners"))
+                .andExpect(model().attributeHasFieldErrorCode("owner", "lastName", "notFound"));
+    }
+
+    @Test
+    void testProcessFindForm_ExactLastName_OneOwner_RedirectsToOwner() throws Exception {
+        Owner owner = new Owner();
+        owner.setId(1);
+        Page<Owner> ownersResults = new PageImpl<>(List.of(owner));
+        when(ownerRepository.findByLastName(any(String.class), any(org.springframework.data.domain.Pageable.class))).thenReturn(ownersResults);
+
+        mockMvc.perform(get("/owners").param("lastName", "Doe"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/owners/1"));
+    }
+
+    @Test
+    void testProcessFindForm_ExactLastName_MultipleOwners_ReturnsOwnersList() throws Exception {
+        Page<Owner> ownersResults = new PageImpl<>(List.of(new Owner(), new Owner()));
+        when(ownerRepository.findByLastName(any(String.class), any(org.springframework.data.domain.Pageable.class))).thenReturn(ownersResults);
+
+        mockMvc.perform(get("/owners").param("lastName", "Doe"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/ownersList"))
+                .andExpect(model().attributeExists("owners"));
+    }
+
+    @Test
+    void testProcessFindForm_PageParameter_DefaultValue() throws Exception {
+        Page<Owner> ownersResults = new PageImpl<>(List.of(new Owner(), new Owner()));
+        when(ownerRepository.findByLastName(any(String.class), any(org.springframework.data.domain.Pageable.class))).thenReturn(ownersResults);
+
+        mockMvc.perform(get("/owners"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/ownersList"))
+                .andExpect(model().attributeExists("owners"));
+
+        verify(ownerRepository).findByLastName(eq(""), any(org.springframework.data.domain.Pageable.class));
+    }
+
+    @Test
+    void testProcessFindForm_PageParameter_CustomValue() throws Exception {
+        Page<Owner> ownersResults = new PageImpl<>(List.of(new Owner(), new Owner()));
+        when(ownerRepository.findByLastName(any(String.class), any(org.springframework.data.domain.Pageable.class))).thenReturn(ownersResults);
+
+        mockMvc.perform(get("/owners").param("page", "2"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/ownersList"))
+                .andExpect(model().attributeExists("owners"));
+
+        verify(ownerRepository).findByLastName(eq(""), any(org.springframework.data.domain.Pageable.class));
+    }
+}
+```

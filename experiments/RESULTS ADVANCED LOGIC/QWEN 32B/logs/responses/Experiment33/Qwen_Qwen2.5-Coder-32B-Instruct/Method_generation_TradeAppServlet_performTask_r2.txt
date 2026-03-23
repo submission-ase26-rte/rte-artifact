@@ -1,0 +1,95 @@
+```java
+public void performTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    String action = req.getParameter("action");
+    HttpSession session = req.getSession();
+    String userID = (String) session.getAttribute("uidBean");
+
+    if (action == null || action.isEmpty()) {
+        tsAction.doWelcome(servletContext, req, resp, "");
+    } else if ("login".equals(action)) {
+        String uid = req.getParameter("uid");
+        String passwd = req.getParameter("passwd");
+        tsAction.doLogin(servletContext, req, resp, uid, passwd);
+    } else if ("register".equals(action)) {
+        String userId = req.getParameter("user id");
+        String passwd = req.getParameter("passwd");
+        String confirmPasswd = req.getParameter("confirm passwd");
+        String fullName = req.getParameter("Full Name");
+        String creditCard = req.getParameter("Credit Card Number");
+        String money = req.getParameter("money");
+        String email = req.getParameter("email");
+        String address = req.getParameter("snail mail");
+        tsAction.doRegister(servletContext, req, resp, userId, passwd, confirmPasswd, fullName, creditCard, money, email, address);
+    } else if ("quotes".equals(action)) {
+        String symbols = req.getParameter("symbols");
+        if (userID == null) {
+            tsAction.doWelcome(servletContext, req, resp, "User Not Logged in");
+        } else {
+            PushBuilder pushBuilder = req.newPushBuilder();
+            if (TradeConfig.getWebInterface() == TradeConfig.JSP_Images_HTTP2) {
+                pushHeaderImages(pushBuilder);
+            }
+            tsAction.doQuotes(servletContext, req, resp, userID, symbols);
+        }
+    } else if ("buy".equals(action)) {
+        if (userID == null) {
+            tsAction.doWelcome(servletContext, req, resp, "User Not Logged in");
+        } else {
+            String symbol = req.getParameter("symbol");
+            String quantity = req.getParameter("quantity");
+            tsAction.doBuy(servletContext, req, resp, userID, symbol, quantity);
+        }
+    } else if ("sell".equals(action)) {
+        if (userID == null) {
+            tsAction.doWelcome(servletContext, req, resp, "User Not Logged in");
+        } else {
+            Integer holdingID = Integer.parseInt(req.getParameter("holdingID"));
+            tsAction.doSell(servletContext, req, resp, userID, holdingID);
+        }
+    } else if ("portfolio".equals(action)) {
+        if (userID == null) {
+            tsAction.doWelcome(servletContext, req, resp, "User Not Logged in");
+        } else {
+            tsAction.doPortfolio(servletContext, req, resp, userID, "Portfolio as of " + new java.util.Date());
+        }
+    } else if ("logout".equals(action)) {
+        if (userID == null) {
+            tsAction.doWelcome(servletContext, req, resp, "User Not Logged in");
+        } else {
+            tsAction.doLogout(servletContext, req, resp, userID);
+        }
+    } else if ("home".equals(action)) {
+        if (userID == null) {
+            tsAction.doWelcome(servletContext, req, resp, "User Not Logged in");
+        } else {
+            tsAction.doHome(servletContext, req, resp, userID, "Ready to Trade");
+        }
+    } else if ("account".equals(action)) {
+        if (userID == null) {
+            tsAction.doWelcome(servletContext, req, resp, "User Not Logged in");
+        } else {
+            tsAction.doAccount(servletContext, req, resp, userID, "");
+        }
+    } else if ("update_profile".equals(action)) {
+        if (userID == null) {
+            tsAction.doWelcome(servletContext, req, resp, "User Not Logged in");
+        } else {
+            String password = req.getParameter("password");
+            String cpassword = req.getParameter("cpassword");
+            String fullname = req.getParameter("fullname");
+            String address = req.getParameter("address");
+            String creditcard = req.getParameter("creditcard");
+            String email = req.getParameter("email");
+            tsAction.doAccountUpdate(servletContext, req, resp, userID, password, cpassword, fullname, address, creditcard, email);
+        }
+    } else if ("mksummary".equals(action)) {
+        if (userID == null) {
+            tsAction.doWelcome(servletContext, req, resp, "User Not Logged in");
+        } else {
+            tsAction.doMarketSummary(servletContext, req, resp, userID);
+        }
+    } else {
+        tsAction.doWelcome(servletContext, req, resp, "TradeAppServlet: Invalid Action" + action);
+    }
+}
+```

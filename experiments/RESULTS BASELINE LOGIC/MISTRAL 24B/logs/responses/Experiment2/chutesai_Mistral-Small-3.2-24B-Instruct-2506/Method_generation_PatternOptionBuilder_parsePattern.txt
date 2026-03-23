@@ -1,0 +1,44 @@
+```java
+public static Options parsePattern(final String pattern) {
+    if (pattern == null) {
+        throw new NullPointerException();
+    }
+
+    Options options = new Options();
+    if (pattern.isEmpty()) {
+        return options;
+    }
+
+    for (int i = 0; i < pattern.length(); i++) {
+        char c = pattern.charAt(i);
+        if (Character.isLetter(c)) {
+            Option.Builder builder = Option.builder();
+            builder.withLongOpt(null);
+            builder.withArgName(null);
+            builder.withDescription(null);
+            builder.withValueSeparator('=');
+            builder.withOptionalArg(false);
+            builder.withRequired(false);
+            builder.withType(null);
+
+            int j = i + 1;
+            if (j < pattern.length()) {
+                char next = pattern.charAt(j);
+                if (isValueCode(next)) {
+                    Class<?> type = getValueType(next);
+                    builder.withType(type);
+                    i = j;
+                } else if (next == '!') {
+                    builder.withRequired(true);
+                    i = j;
+                }
+            }
+
+            Option option = builder.create(c);
+            options.addOption(option);
+        }
+    }
+
+    return options;
+}
+```

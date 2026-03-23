@@ -1,0 +1,456 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Filtered unit tests for method: contextInitialized(ServletContextEvent event)
+ * Original class: TradeWebContextListener
+ * Tests that actually call the target method
+ */
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+import javax.servlet.ServletContextEvent;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.springframework.mock.web.MockServletContext;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo35_unit_contextInitialized_TradeWebContextListener_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_RuntimeModeEnv_OzAr1() {
+    System.setProperty("RUNTIME_MODE", "1");
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    listener.contextInitialized(event);
+    assertEquals(1, TradeConfig.getRunTimeMode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_RuntimeModeProperty_rYBP2() {
+    Properties prop = new Properties();
+    prop.setProperty("runtimeMode", "2");
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    event.getServletContext().setAttribute("daytrader.properties", prop);
+    listener.contextInitialized(event);
+    assertEquals(2, TradeConfig.getRunTimeMode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_OrderProcessingModeEnv_kEJY4() {
+    System.setProperty("ORDER_PROCESSING_MODE", "1");
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    listener.contextInitialized(event);
+    assertEquals(1, TradeConfig.getOrderProcessingMode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_OrderProcessingModeProperty_gndY5() {
+    Properties prop = new Properties();
+    prop.setProperty("orderProcessingMode", "2");
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    event.getServletContext().setAttribute("daytrader.properties", prop);
+    listener.contextInitialized(event);
+    assertEquals(2, TradeConfig.getOrderProcessingMode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_MAX_USERSEnv_wpaN7() {
+    System.setProperty("MAX_USERS", "10");
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    listener.contextInitialized(event);
+    assertEquals(10, TradeConfig.getMAX_USERS());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_MAX_USERSProperty_SGVL8() {
+    Properties prop = new Properties();
+    prop.setProperty("maxUsers", "20");
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    event.getServletContext().setAttribute("daytrader.properties", prop);
+    listener.contextInitialized(event);
+    assertEquals(20, TradeConfig.getMAX_USERS());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_MAX_QUOTESEnv_nkfC10() {
+    System.setProperty("MAX_QUOTES", "10");
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    listener.contextInitialized(event);
+    assertEquals(10, TradeConfig.getMAX_QUOTES());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_MAX_QUOTESProperty_aeVz11() {
+    Properties prop = new Properties();
+    prop.setProperty("maxQuotes", "20");
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    event.getServletContext().setAttribute("daytrader.properties", prop);
+    listener.contextInitialized(event);
+    assertEquals(20, TradeConfig.getMAX_QUOTES());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_OrderProcessingMode_etDI3_TrMD0() {
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    listener.contextInitialized(event);
+    assertEquals(TradeConfig.getOrderProcessingModeNames()[TradeConfig.getOrderProcessingMode()], "Normal");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_PublishQuotePriceChange_EMTu12_wGnN0() {
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    listener.contextInitialized(event);
+    assertEquals(Boolean.parseBoolean(System.getProperty("PUBLISH_QUOTE_PRICE_CHANGE")), TradeConfig.getPublishQuotePriceChange());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_RuntimeModeProperty_rYBP0() {
+    Properties prop = new Properties();
+    prop.setProperty("runtimeMode", "0");
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    event.getServletContext().setAttribute("daytrader.properties", prop);
+    listener.contextInitialized(event);
+    assertEquals(0, TradeConfig.getRunTimeMode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_OrderProcessingModeProperty_gndY5_fid1() {
+    Properties prop = new Properties();
+    prop.setProperty("orderProcessingMode", "0");
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    event.getServletContext().setAttribute("daytrader.properties", prop);
+    listener.contextInitialized(event);
+    assertEquals(0, TradeConfig.getOrderProcessingMode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_MAX_USERSEnv_wpaN7_fid1() {
+    System.setProperty("MAX_USERS", "15000");
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    listener.contextInitialized(event);
+    assertEquals(15000, TradeConfig.getMAX_USERS());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_MAX_USERSProperty_SGVL8_fid1() {
+    Properties prop = new Properties();
+    prop.setProperty("maxUsers", "15000");
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    event.getServletContext().setAttribute("daytrader.properties", prop);
+    listener.contextInitialized(event);
+    assertEquals(15000, TradeConfig.getMAX_USERS());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_MAX_QUOTESEnv_nkfC10000() {
+    System.setProperty("MAX_QUOTES", "10000");
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    listener.contextInitialized(event);
+    assertEquals(10000, TradeConfig.getMAX_QUOTES());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_MAX_QUOTESProperty_aeVz11_fid1() {
+    Properties prop = new Properties();
+    prop.setProperty("maxQuotes", "10000");
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    event.getServletContext().setAttribute("daytrader.properties", prop);
+    listener.contextInitialized(event);
+    assertEquals(10000, TradeConfig.getMAX_QUOTES());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_OrderProcessingMode_etDI3_TrMD0_fid1() {
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    listener.contextInitialized(event);
+    assertEquals(TradeConfig.getOrderProcessingModeNames()[TradeConfig.getOrderProcessingMode()], "Sync");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitialized_PublishQuotePriceChange_EMTu12_wGnN0_fid1() {
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(new MockServletContext());
+    listener.contextInitialized(event);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitializedRuntimeMode_eVsl1() {
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(null);
+    System.setProperty("RUNTIME_MODE", "1");
+    listener.contextInitialized(event);
+    System.out.print("Running in " + TradeConfig.getRunTimeModeNames()[TradeConfig.getRunTimeMode()] + " Mode");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitializedOrderProcessingMode_Uqoc2() {
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(null);
+    System.setProperty("ORDER_PROCESSING_MODE", "1");
+    listener.contextInitialized(event);
+    System.out.print("Running in " + TradeConfig.getOrderProcessingModeNames()[TradeConfig.getOrderProcessingMode()] + " Order Processing Mode");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitializedMaxUsers_zNQD3() {
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(null);
+    System.setProperty("MAX_USERS", "1");
+    listener.contextInitialized(event);
+    System.out.print("MAX_USERS = " + TradeConfig.getMAX_USERS() + " users");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitializedMaxQuotes_QpcA4() {
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(null);
+    System.setProperty("MAX_QUOTES", "1");
+    listener.contextInitialized(event);
+    System.out.print("MAX_QUOTES = " + TradeConfig.getMAX_QUOTES() + " quotes");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitializedWebInterface_yfuQ7() {
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(null);
+    System.setProperty("WEB_INTERFACE", "1");
+    listener.contextInitialized(event);
+    System.out.println("WebInterface: " + TradeConfig.getWebInterface());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testContextInitializedDisplayOrderAlerts_KmJI6_NBQz0() {
+    TradeWebContextListener listener = new TradeWebContextListener();
+    ServletContextEvent event = new ServletContextEvent(null);
+    System.setProperty("DISPLAY_ORDER_ALERTS", "true");
+    listener.contextInitialized(event);
+    System.out.println("DisplayOrderAlerts: " + TradeConfig.getDisplayOrderAlerts());
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 8/24 passed
+
+TEST STATUS:
+- PASSED (8): testContextInitialized_RuntimeModeProperty_rYBP0, testContextInitialized_OrderProcessingModeProperty_gndY5_fid1, testContextInitialized_MAX_USERSEnv_wpaN7_fid1, testContextInitialized_MAX_USERSProperty_SGVL8_fid1, testContextInitialized_MAX_QUOTESEnv_nkfC10000, testContextInitialized_MAX_QUOTESProperty_aeVz11_fid1, testContextInitialized_OrderProcessingMode_etDI3_TrMD0_fid1, testContextInitialized_PublishQuotePriceChange_EMTu12_wGnN0_fid1
+- FAILED (10): testContextInitialized_RuntimeModeEnv_OzAr1, testContextInitialized_RuntimeModeProperty_rYBP2, testContextInitialized_OrderProcessingModeEnv_kEJY4, testContextInitialized_OrderProcessingModeProperty_gndY5, testContextInitialized_MAX_USERSEnv_wpaN7, testContextInitialized_MAX_USERSProperty_SGVL8, testContextInitialized_MAX_QUOTESEnv_nkfC10, testContextInitialized_MAX_QUOTESProperty_aeVz11, testContextInitialized_OrderProcessingMode_etDI3_TrMD0, testContextInitialized_PublishQuotePriceChange_EMTu12_wGnN0
+- ERRORS (6): testContextInitializedRuntimeMode_eVsl1, testContextInitializedOrderProcessingMode_Uqoc2, testContextInitializedMaxUsers_zNQD3, testContextInitializedMaxQuotes_QpcA4, testContextInitializedWebInterface_yfuQ7, testContextInitializedDisplayOrderAlerts_KmJI6_NBQz0
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   InputStream -> java.io.InputStream
+//   Properties -> java.util.Properties
+//   FacesConfig -> javax.faces.annotation.FacesConfig
+//   ServletContextEvent -> javax.servlet.ServletContextEvent
+//   ServletContextListener -> javax.servlet.ServletContextListener
+//   WebListener -> javax.servlet.annotation.WebListener
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   TradeWebContextListener -> com.ibm.websphere.samples.daytrader.web.servlet.TradeWebContextListener
+
+// === Class: TradeWebContextListener ===
+// === External Class: Log ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.Log
+// Fields (with actual visibility):
+    private static final Logger log;
+// Method Signatures (used by target method):
+public static void trace(String message);
+
+// === External Class: TradeConfig ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.TradeConfig
+// Fields (with actual visibility):
+    private static String[] runTimeModeNames;
+    public static final int EJB3;
+    public static final int DIRECT;
+    public static final int SESSION_TO_DIRECT;
+    private static int runTimeMode;
+    private static String[] orderProcessingModeNames;
+    public static final int SYNCH;
+    public static final int ASYNCH;
+    public static final int ASYNCH_2PHASE;
+    private static int orderProcessingMode;
+    private static String[] accessModeNames;
+    public static final int STANDARD;
+    private static int accessMode;
+    private static String[] webInterfaceNames;
+    public static final int JSP;
+    public static final int JSP_Images;
+    public static final int JSP_Images_HTTP2;
+    private static int webInterface;
+    private static int MAX_USERS;
+    private static int MAX_QUOTES;
+    public static boolean JDBCDriverNeedsGlobalTransation;
+    public static String DATASOURCE;
+    public static int KEYBLOCKSIZE;
+    public static int QUOTES_PER_PAGE;
+    public static boolean RND_USER;
+    private static int MAX_HOLDINGS;
+    private static int count;
+    private static Object userID_count_semaphore;
+    private static int userID_count;
+    private static String hostName;
+    private static Random r0;
+    private static Random randomNumberGenerator;
+    public static final String newUserPrefix;
+    public static final int verifyPercent;
+    private static boolean updateQuotePrices;
+    private static int primIterations;
+    private static boolean longRun;
+    private static boolean publishQuotePriceChange;
+    private static int listQuotePriceChangeFrequency;
+    private static boolean displayOrderAlerts;
+    private static int marketSummaryInterval;
+    public static BigDecimal PENNY_STOCK_PRICE;
+    public static BigDecimal PENNY_STOCK_RECOVERY_MIRACLE_MULTIPLIER;
+    public static BigDecimal MAXIMUM_STOCK_PRICE;
+    public static BigDecimal MAXIMUM_STOCK_SPLIT_MULTIPLIER;
+    public static final int HOME_OP;
+    public static final int QUOTE_OP;
+    public static final int LOGIN_OP;
+    public static final int LOGOUT_OP;
+    public static final int REGISTER_OP;
+    public static final int ACCOUNT_OP;
+    public static final int PORTFOLIO_OP;
+    public static final int BUY_OP;
+    public static final int SELL_OP;
+    public static final int UPDATEACCOUNT_OP;
+    private static int[][] scenarioMixes;
+    private static char[] actions;
+    private static int sellDeficit;
+    public static final int WELCOME_PAGE;
+    public static final int REGISTER_PAGE;
+    public static final int PORTFOLIO_PAGE;
+    public static final int QUOTE_PAGE;
+    public static final int HOME_PAGE;
+    public static final int ACCOUNT_PAGE;
+    public static final int ORDER_PAGE;
+    public static final int CONFIG_PAGE;
+    public static final int STATS_PAGE;
+    public static final int MARKET_SUMMARY_PAGE;
+    public static String[][] webUI;
+    private static int scenarioCount;
+    private static final BigDecimal orderFee;
+    private static final BigDecimal cashFee;
+    private static final BigDecimal ONE;
+    private static ArrayList deck;
+    private static int card;
+// Method Signatures (used by target method):
+public static int getMAX_QUOTES();
+public static void setLongRun(boolean longRun);
+public static void setOrderProcessingMode(int value);
+public static int getMAX_USERS();
+public static int getRunTimeMode();
+public static void setRunTimeMode(int value);
+public static String getOrderProcessingModeNames();
+public static void setMAX_QUOTES(int mAX_QUOTES);
+public static void setListQuotePriceChangeFrequency(int value);
+public static int getOrderProcessingMode();
+public static void setMarketSummaryInterval(int seconds);
+public static void setDisplayOrderAlerts(boolean value);
+public static java getRunTimeModeNames();
+public static void setMAX_USERS(int mAX_USERS);
+public static void setPublishQuotePriceChange(boolean publishQuotePriceChange);
+public static void setPrimIterations(int iter);
+public static void setWebInterface(int value);
+// Public Getter Methods (for test assertions):
+public static String getPage(int pageNumber);
+public static char getScenarioAction(boolean newUser);
+public static String getUserID();
+public static BigDecimal getOrderFee(String orderType);
+public static BigDecimal getRandomPriceChangeFactor();
+public static String getWebInterfaceNames();
+public static int getScenarioMixes();
+public static int getMAX_HOLDINGS();
+public static int getScenarioCount();
+public static boolean getJDBCDriverNeedsGlobalTransation();
+
+
+TASK:
+Regenerate ONLY the method "contextInitialized" OF CLASS "TradeWebContextListener" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void contextInitialized(ServletContextEvent event) {
+    // your implementation here
+}
+```
+
+- Package: com.ibm.websphere.samples.daytrader.web.servlet
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "contextInitialized"
+- Allowed imports: exactly those already present in TradeWebContextListener
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

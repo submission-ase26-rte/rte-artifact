@@ -1,0 +1,45 @@
+```java
+import java.io.InputStream;
+import java.io.IOException;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.utils.IOUtils;
+import java.util.Arrays;
+
+public static String detect(final InputStream in) throws ArchiveException {
+    if (in == null) {
+        throw new IllegalArgumentException("Input stream cannot be null");
+    }
+    byte[] signature = new byte[8];
+    int read = in.read(signature);
+    if (read < 0) {
+        return null;
+    }
+    if (read == 4 && Arrays.equals(signature, new byte[] {(byte)0x50, (byte)0x4b, (byte)0x03, (byte)0x04})) {
+        return "ZIP";
+    }
+    if (read == 4 && Arrays.equals(signature, new byte[] {(byte)0x50, (byte)0x4b, (byte)0x03, (byte)0x04})) {
+        return "JAR";
+    }
+    if (read == 4 && Arrays.equals(signature, new byte[] {(byte)0x07, (byte)0x07, (byte)0x00, (byte)0x00})) {
+        return "AR";
+    }
+    if (read == 8 && Arrays.equals(signature, new byte[] {(byte)0x07, (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07})) {
+        return "CPIO";
+    }
+    if (read == 3 && Arrays.equals(signature, new byte[] {(byte)0x4f, (byte)0x4b, (byte)0x0a})) {
+        return "ARJ";
+    }
+    if (read == 3 && Arrays.equals(signature, new byte[] {(byte)0x52, (byte)0x7A, (byte)0x00})) {
+        return "SEVEN_Z";
+    }
+    if (read == 4 && Arrays.equals(signature, new byte[] {(byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00})) {
+        return "DUMP";
+    }
+    if (read == 4 && Arrays.equals(signature, new byte[] {(byte)0x1f, (byte)0x9d, (byte)0x93, (byte)0x0a})) {
+        return "TAR";
+    }
+    return null;
+}
+```

@@ -1,0 +1,208 @@
+ROLE:
+You are an expert Java developer. The current test suite achieves 100% code coverage 
+and all tests pass, but the tests are TOO GENERIC.
+
+CURRENT SITUATION:
+- Line Coverage: 100%
+- Tests: 8/8 passed (all passing)
+- Similarity Score: 0.3820 (threshold: 0.7)
+
+The low similarity score indicates that a DIFFERENT implementation could also pass 
+all these tests. Your task is to ADD MORE SPECIFIC tests that capture the unique 
+behavior of the original method.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.compress.archivers.ar;
+Class name (MUST be exactly): ArArchiveInputStream_matchesTestGenerated
+
+
+EXISTING TEST SUITE (100% COVERAGE, ALL PASSING):
+The following is the COMPLETE current test suite. It achieves 100% coverage and all tests pass.
+It is provided fully implemented so you can see EXACTLY what logic is already covered.
+
+CRITICAL INSTRUCTIONS:
+1. READ these tests carefully to understand the current coverage.
+2. DO NOT modify, reimplement, or remove any of these tests.
+3. Your task is to ADD NEW TESTS that cover specific logic/paths/values NOT already covered by these tests.
+4. Avoid adding tests that are redundant with the ones below.
+
+package org.apache.commons.compress.archivers.ar;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArArchiveInputStream_matchesTestGenerated {
+
+    @Test
+        public void testMatchesValidSignature() {
+            byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+            assertTrue(ArArchiveInputStream.matches(validSignature, validSignature.length));
+        }
+
+    @Test
+        public void testMatchesInvalidSignature() {
+            byte[] invalidSignature = "!<arch>\r".getBytes(StandardCharsets.US_ASCII);
+            assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+        }
+
+    @Test
+        public void testMatchesTooShortSignature() {
+            byte[] tooShortSignature = "!<arch>".getBytes(StandardCharsets.US_ASCII);
+            assertFalse(ArArchiveInputStream.matches(tooShortSignature, tooShortSignature.length));
+        }
+
+    @Test
+        public void testMatchesNullSignature() {
+            assertFalse(ArArchiveInputStream.matches(null, 0));
+        }
+
+    @Test
+        public void testMatchesLengthZero() {
+            byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+            assertFalse(ArArchiveInputStream.matches(validSignature, 0));
+        }
+
+    @Test
+        public void testMatchesLengthLessThanEight() {
+            byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+            assertFalse(ArArchiveInputStream.matches(validSignature, 7));
+        }
+
+    @Test
+        public void testMatchesLengthGreaterThanEight() {
+            byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+            byte[] longerSignature = Arrays.copyOf(validSignature, validSignature.length + 1);
+            assertTrue(ArArchiveInputStream.matches(longerSignature, validSignature.length));
+        }
+
+    @Test
+        public void testMatchesWithInputStreamMock() {
+            InputStream mockInputStream = mock(InputStream.class);
+            ArArchiveInputStream arArchiveInputStream = new ArArchiveInputStream(mockInputStream);
+            byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+            assertTrue(ArArchiveInputStream.matches(validSignature, validSignature.length));
+        }
+
+}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   EOFException -> java.io.EOFException
+//   IOException -> java.io.IOException
+//   InputStream -> java.io.InputStream
+//   StandardCharsets -> java.nio.charset.StandardCharsets
+//   Arrays -> java.util.Arrays
+//   Pattern -> java.util.regex.Pattern
+//   ArchiveInputStream -> org.apache.commons.compress.archivers.ArchiveInputStream
+//   ArchiveUtils -> org.apache.commons.compress.utils.ArchiveUtils
+//   IOUtils -> org.apache.commons.compress.utils.IOUtils
+//   ParsingUtils -> org.apache.commons.compress.utils.ParsingUtils
+//   ArArchiveInputStream -> org.apache.commons.compress.archivers.ar.ArArchiveInputStream
+
+// === Class: ArArchiveInputStream ===
+// Fields (with actual visibility):
+    private static final int NAME_OFFSET;
+    private static final int NAME_LEN;
+    private static final int LAST_MODIFIED_OFFSET;
+    private static final int LAST_MODIFIED_LEN;
+    private static final int USER_ID_OFFSET;
+    private static final int USER_ID_LEN;
+    private static final int GROUP_ID_OFFSET;
+    private static final int GROUP_ID_LEN;
+    private static final int FILE_MODE_OFFSET;
+    private static final int FILE_MODE_LEN;
+    private static final int LENGTH_OFFSET;
+    private static final int LENGTH_LEN;
+    package-private static final String BSD_LONGNAME_PREFIX;
+    private static final int BSD_LONGNAME_PREFIX_LEN;
+    private static final Pattern BSD_LONGNAME_PATTERN;
+    private static final String GNU_STRING_TABLE_NAME;
+    private static final Pattern GNU_LONGNAME_PATTERN;
+    private long offset;
+    private boolean closed;
+    private ArArchiveEntry currentEntry;
+    private byte[] namebuffer;
+    private long entryOffset;
+    private final byte[] metaData;
+
+// Constructors:
+public ArArchiveInputStream(InputStream inputStream);
+
+// Getter/Setter Methods (for test assertions):
+private static boolean isBSDLongName(final String name);
+private static boolean isGNUStringTable(final String name);
+private String getBSDLongName(final String bsdLongName) throws IOException;
+private String getExtendedName(final int offset) throws IOException;
+public ArArchiveEntry getNextArEntry() throws IOException;
+public ArArchiveEntry getNextEntry() throws IOException;
+private boolean isGNULongName(final String name);
+
+// === Superclass: ArchiveInputStream (inherited members) ===
+// Inherited Fields:
+
+// Inherited Method Signatures:
+public boolean canReadEntryData(final ArchiveEntry archiveEntry);
+protected void count(final int read);
+protected void count(final int read);
+public long getBytesRead();
+public Charset getCharset();
+public int getCount();
+abstract public E getNextEntry();
+synchronized public void mark(final int readlimit);
+public boolean markSupported();
+protected void pushedBackBytes(final long pushedBack);
+public int read();
+synchronized public void reset();
+
+
+ORIGINAL METHOD TO TEST:
+The following is the complete original method that needs to be tested. NOTE: The current test suite achieves 100% line coverage on this method:
+
+
+    /**
+     * Checks if the signature matches ASCII "!&lt;arch&gt;" followed by a single LF control character
+     *
+     * @param signature the bytes to check
+     * @param length    the number of bytes to check
+     * @return true, if this stream is an Ar archive stream, false otherwise
+     */
+    public static boolean matches(final byte[] signature, final int length) {
+        // 3c21 7261 6863 0a3e
+
+        return length >= 8 && signature[0] == 0x21 && signature[1] == 0x3c && signature[2] == 0x61 && signature[3] == 0x72 && signature[4] == 0x63
+                && signature[5] == 0x68 && signature[6] == 0x3e && signature[7] == 0x0a;
+    }
+
+
+INSTRUCTIONS:
+- KEEP ALL existing tests - they are working correctly
+- ADD new tests with unique names (e.g., testMethodName_specificBehavior)
+- Focus on SPECIFIC RETURN VALUES - test exact values, not just types
+- Focus on BOUNDARY CONDITIONS - edge cases unique to this implementation
+- Focus on SPECIFIC EXCEPTION MESSAGES if applicable
+- Focus on INTERNAL LOGIC PATHS specific to this implementation
+- The goal: new tests should FAIL if someone wrote a different implementation
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

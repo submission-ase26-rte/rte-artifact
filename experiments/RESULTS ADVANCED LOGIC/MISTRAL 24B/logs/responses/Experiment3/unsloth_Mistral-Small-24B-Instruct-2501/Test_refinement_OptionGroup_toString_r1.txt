@@ -1,0 +1,147 @@
+```java
+package org.apache.commons.cli;
+
+import java.io.Serializable;
+import java.util.*;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class OptionGroup_toStringTestGenerated {
+    private OptionGroup optionGroup;
+    private Option option1;
+    private Option option2;
+
+    @BeforeEach
+    public void setUp() {
+        option1 = new Option("a", "Option A");
+        option2 = new Option("b", "Option B");
+        optionGroup = new OptionGroup();
+        optionGroup.getOptions().add(option1);
+        optionGroup.getOptions().add(option2);
+    }
+
+    @Test
+    public void testToStringWithBothShortAndLongOptions() {
+        Option longOption = new Option("longOpt", "Long Option");
+        optionGroup.getOptions().add(longOption);
+        String result = optionGroup.toString();
+        assertTrue(result.contains("-a"));
+        assertTrue(result.contains("Option A"));
+        assertTrue(result.contains("-b"));
+        assertTrue(result.contains("Option B"));
+        assertTrue(result.contains("--longOpt"));
+        assertTrue(result.contains("Long Option"));
+    }
+
+    @Test
+    public void testToStringWithOnlyShortOptions() {
+        Option option3 = new Option("c", "Option C");
+        optionGroup.getOptions().add(option3);
+        String result = optionGroup.toString();
+        assertTrue(result.contains("-a"));
+        assertTrue(result.contains("Option A"));
+        assertTrue(result.contains("-b"));
+        assertTrue(result.contains("Option B"));
+        assertTrue(result.contains("-c"));
+        assertTrue(result.contains("Option C"));
+    }
+
+    @Test
+    public void testToStringWithOnlyLongOptions() {
+        Option longOption = new Option("longOpt", "Long Option");
+        optionGroup.getOptions().add(longOption);
+        String result = optionGroup.toString();
+        assertTrue(result.contains("--longOpt"));
+        assertTrue(result.contains("Long Option"));
+    }
+
+    @Test
+    public void testToStringWithEmptyOptions() {
+        OptionGroup emptyOptionGroup = new OptionGroup();
+        String result = emptyOptionGroup.toString();
+        assertEquals("[]", result);
+    }
+
+    @Test
+    public void testToStringWithNullOptions() {
+        Option nullOption = new Option(null, "Option A");
+        optionGroup.getOptions().add(nullOption);
+        String result = optionGroup.toString();
+        assertTrue(result.contains("[]"));
+    }
+
+    @Test
+    public void testToStringWithMixedOptions() {
+        Option mixedOption = new Option("m", "Mixed Option");
+        Option longMixedOption = new Option("longMixedOpt", "Long Mixed Option");
+        optionGroup.getOptions().add(mixedOption);
+        optionGroup.getOptions().add(longMixedOption);
+        String result = optionGroup.toString();
+        assertTrue(result.contains("-a"));
+        assertTrue(result.contains("Option A"));
+        assertTrue(result.contains("-b"));
+        assertTrue(result.contains("Option B"));
+        assertTrue(result.contains("-m"));
+        assertTrue(result.contains("Mixed Option"));
+        assertTrue(result.contains("--longMixedOpt"));
+        assertTrue(result.contains("Long Mixed Option"));
+    }
+
+    @Test
+    public void testToStringWithNoDescription() {
+        Option optionNoDescription = new Option("d", "");
+        optionGroup.getOptions().add(optionNoDescription);
+        String result = optionGroup.toString();
+        assertTrue(result.contains("-a"));
+        assertTrue(result.contains("Option A"));
+        assertTrue(result.contains("-b"));
+        assertTrue(result.contains("Option B"));
+        assertTrue(result.contains("-d"));
+        assertFalse(result.contains(""));
+    }
+
+    @Test
+    public void testToStringWithNoOptions() {
+        OptionGroup noOptionsGroup = new OptionGroup();
+        String result = noOptionsGroup.toString();
+        assertEquals("[]", result);
+    }
+
+    @Test
+    public void testToStringWithMultipleOptions() {
+        Option option3 = new Option("c", "Option C");
+        Option option4 = new Option("d", "Option D");
+        optionGroup.getOptions().add(option3);
+        optionGroup.getOptions().add(option4);
+        String result = optionGroup.toString();
+        assertTrue(result.contains("-a"));
+        assertTrue(result.contains("Option A"));
+        assertTrue(result.contains("-b"));
+        assertTrue(result.contains("Option B"));
+        assertTrue(result.contains("-c"));
+        assertTrue(result.contains("Option C"));
+        assertTrue(result.contains("-d"));
+        assertTrue(result.contains("Option D"));
+    }
+
+    @Test
+    public void testToStringWithNullDescription() {
+        Option optionNullDescription = new Option("e", null);
+        optionGroup.getOptions().add(optionNullDescription);
+        String result = optionGroup.toString();
+        assertTrue(result.contains("-a"));
+        assertTrue(result.contains("Option A"));
+        assertTrue(result.contains("-b"));
+        assertTrue(result.contains("Option B"));
+        assertTrue(result.contains("-e"));
+        assertFalse(result.contains("null"));
+    }
+}
+```

@@ -1,0 +1,315 @@
+/**
+ * Filtered unit tests for method: createHandlingEvent(LocalDateTime registrationTime, LocalDateTime completionTime, TrackingId trackingId, VoyageNumber voyageNumber, UnLocode unlocode, HandlingEvent.Type type)
+ * Original class: HandlingEventFactory
+ * Tests that actually call the target method
+ */
+package org.eclipse.cargotracker.domain.model.handling;
+
+import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo12_unit_createHandlingEvent_HandlingEventFactory_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithValidInputs_cACH0_1() throws CannotCreateHandlingEventException {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now();
+    TrackingId trackingId = new TrackingId("123");
+    VoyageNumber voyageNumber = new VoyageNumber("456");
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    HandlingEvent event = factory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+    assertEquals(trackingId, event.getCargo().getTrackingId());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithValidInputs_cACH0_2() throws CannotCreateHandlingEventException {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now();
+    TrackingId trackingId = new TrackingId("123");
+    VoyageNumber voyageNumber = new VoyageNumber("456");
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    HandlingEvent event = factory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+    assertEquals(completionTime, event.getCompletionTime());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithValidInputs_cACH0_3() throws CannotCreateHandlingEventException {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now();
+    TrackingId trackingId = new TrackingId("123");
+    VoyageNumber voyageNumber = new VoyageNumber("456");
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    HandlingEvent event = factory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+    assertEquals(registrationTime, event.getRegistrationTime());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithValidInputs_cACH0_4() throws CannotCreateHandlingEventException {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now();
+    TrackingId trackingId = new TrackingId("123");
+    VoyageNumber voyageNumber = new VoyageNumber("456");
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    HandlingEvent event = factory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+    assertEquals(type, event.getType());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithValidInputs_cACH0_5() throws CannotCreateHandlingEventException {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now();
+    TrackingId trackingId = new TrackingId("123");
+    VoyageNumber voyageNumber = new VoyageNumber("456");
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    HandlingEvent event = factory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+    assertEquals(unlocode, event.getLocation().getUnLocode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithValidInputs_cACH0_6() throws CannotCreateHandlingEventException {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now();
+    TrackingId trackingId = new TrackingId("123");
+    VoyageNumber voyageNumber = new VoyageNumber("456");
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    HandlingEvent event = factory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+    assertEquals(voyageNumber, event.getVoyage().getVoyageNumber());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithNullTrackingId_wJfk1() throws CannotCreateHandlingEventException {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now();
+    VoyageNumber voyageNumber = new VoyageNumber("456");
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    try {
+    factory.createHandlingEvent(registrationTime, completionTime, null, voyageNumber, unlocode, type);
+    fail("Expected CannotCreateHandlingEventException");
+    } catch (CannotCreateHandlingEventException e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithNullVoyageNumber_VAVa2() throws CannotCreateHandlingEventException {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now();
+    TrackingId trackingId = new TrackingId("123");
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    try {
+    factory.createHandlingEvent(registrationTime, completionTime, trackingId, null, unlocode, type);
+    fail("Expected CannotCreateHandlingEventException");
+    } catch (CannotCreateHandlingEventException e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithNullUnLocode_Lzea3() throws CannotCreateHandlingEventException {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now();
+    TrackingId trackingId = new TrackingId("123");
+    VoyageNumber voyageNumber = new VoyageNumber("456");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    try {
+    factory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, null, type);
+    fail("Expected CannotCreateHandlingEventException");
+    } catch (CannotCreateHandlingEventException e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithNullType_OpFw4() throws CannotCreateHandlingEventException {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now();
+    TrackingId trackingId = new TrackingId("123");
+    VoyageNumber voyageNumber = new VoyageNumber("456");
+    UnLocode unlocode = new UnLocode("789");
+    try {
+    factory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, null);
+    fail("Expected CannotCreateHandlingEventException");
+    } catch (CannotCreateHandlingEventException e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithVoyageNull_VTYh5_1() throws CannotCreateHandlingEventException {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now();
+    TrackingId trackingId = new TrackingId("123");
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    HandlingEvent event = factory.createHandlingEvent(registrationTime, completionTime, trackingId, null, unlocode, type);
+    assertEquals(trackingId, event.getCargo().getTrackingId());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithVoyageNull_VTYh5_2() throws CannotCreateHandlingEventException {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now();
+    TrackingId trackingId = new TrackingId("123");
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    HandlingEvent event = factory.createHandlingEvent(registrationTime, completionTime, trackingId, null, unlocode, type);
+    assertEquals(completionTime, event.getCompletionTime());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithVoyageNull_VTYh5_3() throws CannotCreateHandlingEventException {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now();
+    TrackingId trackingId = new TrackingId("123");
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    HandlingEvent event = factory.createHandlingEvent(registrationTime, completionTime, trackingId, null, unlocode, type);
+    assertEquals(registrationTime, event.getRegistrationTime());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithVoyageNull_VTYh5_4() throws CannotCreateHandlingEventException {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now();
+    TrackingId trackingId = new TrackingId("123");
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    HandlingEvent event = factory.createHandlingEvent(registrationTime, completionTime, trackingId, null, unlocode, type);
+    assertEquals(type, event.getType());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithVoyageNull_VTYh5_5() throws CannotCreateHandlingEventException {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now();
+    TrackingId trackingId = new TrackingId("123");
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    HandlingEvent event = factory.createHandlingEvent(registrationTime, completionTime, trackingId, null, unlocode, type);
+    assertEquals(unlocode, event.getLocation().getUnLocode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithVoyageNull_VTYh5_6() throws CannotCreateHandlingEventException {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now();
+    TrackingId trackingId = new TrackingId("123");
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    HandlingEvent event = factory.createHandlingEvent(registrationTime, completionTime, trackingId, null, unlocode, type);
+    assertNull(event.getVoyage());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithNullTrackingId_ylUw2() {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+    TrackingId trackingId = null;
+    VoyageNumber voyageNumber = new VoyageNumber("456");
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    try {
+    factory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+    fail("Expected CannotCreateHandlingEventException");
+    } catch (CannotCreateHandlingEventException e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithNullVoyageNumber_OGVq3() {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+    TrackingId trackingId = new TrackingId("123");
+    VoyageNumber voyageNumber = null;
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    try {
+    factory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+    fail("Expected CannotCreateHandlingEventException");
+    } catch (CannotCreateHandlingEventException e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithNullUnLocode_hTbU4() {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+    TrackingId trackingId = new TrackingId("123");
+    VoyageNumber voyageNumber = new VoyageNumber("456");
+    UnLocode unlocode = null;
+    HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+    try {
+    factory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+    fail("Expected CannotCreateHandlingEventException");
+    } catch (CannotCreateHandlingEventException e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateHandlingEventWithInvalidType_jEeY5() {
+    HandlingEventFactory factory = new HandlingEventFactory();
+    LocalDateTime registrationTime = LocalDateTime.now();
+    LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+    TrackingId trackingId = new TrackingId("123");
+    VoyageNumber voyageNumber = new VoyageNumber("456");
+    UnLocode unlocode = new UnLocode("789");
+    HandlingEvent.Type type = HandlingEvent.Type.values()[HandlingEvent.Type.values().length - 1];
+    try {
+    factory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+    fail("Expected CannotCreateHandlingEventException");
+    } catch (CannotCreateHandlingEventException e) {
+    }
+    }
+}

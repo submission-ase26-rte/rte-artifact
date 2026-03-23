@@ -1,0 +1,282 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Extracted tests for method: addPet(Pet pet)
+ * Original class: Owner
+ * Source: ASTER GPT-4
+ */
+package org.springframework.samples.petclinic.owner;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+import static org.mockito.Mockito.*;
+
+public class Metodo47_addPet_Owner_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPet_ExistingPetIgnoreCaseSensitive_VUin0_1() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("Buddy");
+    owner.addPet(pet);
+    Pet result = owner.getPet("buddy", false);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPet_ExistingPetIgnoreCaseSensitive_VUin0_2() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("Buddy");
+    owner.addPet(pet);
+    Pet result = owner.getPet("buddy", false);
+    assertEquals("Buddy", result.getName());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPet_ExistingPetCaseSensitive_vYLK1_1() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("Buddy");
+    owner.addPet(pet);
+    Pet result = owner.getPet("Buddy", false);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPet_ExistingPetCaseSensitive_vYLK1_2() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("Buddy");
+    owner.addPet(pet);
+    Pet result = owner.getPet("Buddy", false);
+    assertEquals("Buddy", result.getName());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPet_NonExistingPet_njLN2() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("Buddy");
+    owner.addPet(pet);
+    Pet result = owner.getPet("Max", false);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPet_PetNameWithDifferentCase_rXtf5_1() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("Buddy");
+    owner.addPet(pet);
+    Pet result = owner.getPet("BUDDY", false);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPet_PetNameWithDifferentCase_rXtf5_2() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("Buddy");
+    owner.addPet(pet);
+    Pet result = owner.getPet("BUDDY", false);
+    assertEquals("Buddy", result.getName());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetWithValidIdReturnsPet_ndaA0_YMjQ0_1() {
+    Owner owner = new Owner();
+    Pet pet1 = new Pet();
+    pet1.setId(1);
+    owner.addPet(pet1);
+    Pet result = owner.getPet(1);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetWithValidIdReturnsPet_ndaA0_YMjQ0_2() {
+    Owner owner = new Owner();
+    Pet pet1 = new Pet();
+    pet1.setId(1);
+    owner.addPet(pet1);
+    Pet result = owner.getPet(1);
+    assertEquals(pet1, result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetWithInvalidIdReturnsNull_aWTx1_Nrpl0() {
+    Owner owner = new Owner();
+    Pet pet1 = new Pet();
+    pet1.setId(1);
+    owner.addPet(pet1);
+    Pet result = owner.getPet(2);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPet_ExistingPetIgnoreCaseSensitive_VUin0() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("Buddy");
+    owner.addPet(pet);
+    Pet result = owner.getPet("buddy", false);
+    assertNotNull(result);
+    assertEquals("Buddy", result.getName());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPet_ExistingPetCaseSensitive_vYLK1() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("Buddy");
+    owner.addPet(pet);
+    Pet result = owner.getPet("Buddy", false);
+    assertNotNull(result);
+    assertEquals("Buddy", result.getName());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPet_PetNameWithDifferentCase_rXtf5() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("Buddy");
+    owner.addPet(pet);
+    Pet result = owner.getPet("BUDDY", false);
+    assertNotNull(result);
+    assertEquals("Buddy", result.getName());
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 11/13 passed
+
+TEST STATUS:
+- PASSED (11): testGetPet_ExistingPetIgnoreCaseSensitive_VUin0_1, testGetPet_ExistingPetIgnoreCaseSensitive_VUin0_2, testGetPet_ExistingPetCaseSensitive_vYLK1_1, testGetPet_ExistingPetCaseSensitive_vYLK1_2, testGetPet_NonExistingPet_njLN2, testGetPet_PetNameWithDifferentCase_rXtf5_1, testGetPet_PetNameWithDifferentCase_rXtf5_2, testGetPetWithInvalidIdReturnsNull_aWTx1_Nrpl0, testGetPet_ExistingPetIgnoreCaseSensitive_VUin0, testGetPet_ExistingPetCaseSensitive_vYLK1, testGetPet_PetNameWithDifferentCase_rXtf5
+- FAILED (2): testGetPetWithValidIdReturnsPet_ndaA0_YMjQ0_1, testGetPetWithValidIdReturnsPet_ndaA0_YMjQ0_2
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   ToStringCreator -> org.springframework.core.style.ToStringCreator
+//   Person -> org.springframework.samples.petclinic.model.Person
+//   Assert -> org.springframework.util.Assert
+//   CascadeType -> jakarta.persistence.CascadeType
+//   Column -> jakarta.persistence.Column
+//   Entity -> jakarta.persistence.Entity
+//   FetchType -> jakarta.persistence.FetchType
+//   JoinColumn -> jakarta.persistence.JoinColumn
+//   OneToMany -> jakarta.persistence.OneToMany
+//   OrderBy -> jakarta.persistence.OrderBy
+//   Table -> jakarta.persistence.Table
+//   Pattern -> jakarta.validation.constraints.Pattern
+//   NotBlank -> jakarta.validation.constraints.NotBlank
+//   Owner -> org.springframework.samples.petclinic.owner.Owner
+
+// === Class: Owner ===
+// Fields (with actual visibility):
+    private String address;
+    private String city;
+    private String telephone;
+    private List pets;
+
+// Getter/Setter Methods (for test assertions):
+public String getAddress();
+public void setAddress(String address);
+public String getCity();
+public void setCity(String city);
+public String getTelephone();
+public void setTelephone(String telephone);
+public List<Pet> getPets();
+public Pet getPet(String name);
+public Pet getPet(Integer id);
+public Pet getPet(String name, boolean ignoreNew);
+
+// Internal Methods (full implementation for context):
+	public List<Pet> getPets() {
+		return this.pets;
+	}
+
+// === Superclass: Person (inherited members) ===
+// Inherited Fields:
+
+// Inherited Method Signatures:
+public String getFirstName();
+public void setFirstName(String firstName);
+public String getLastName();
+public void setLastName(String lastName);
+
+// === External Class: Pet ===
+// Full import path: org.springframework.samples.petclinic.owner.Pet
+// Fields (with actual visibility):
+    private LocalDate birthDate;
+    private PetType type;
+    private Set visits;
+// Public Getter Methods (for test assertions):
+public LocalDate getBirthDate();
+public PetType getType();
+public Collection<Visit> getVisits();
+
+
+TASK:
+Regenerate ONLY the method "addPet" OF CLASS "Owner" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void addPet(Pet pet) {
+    // your implementation here
+}
+```
+
+- Package: org.springframework.samples.petclinic.owner
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "addPet"
+- Allowed imports: exactly those already present in Owner
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

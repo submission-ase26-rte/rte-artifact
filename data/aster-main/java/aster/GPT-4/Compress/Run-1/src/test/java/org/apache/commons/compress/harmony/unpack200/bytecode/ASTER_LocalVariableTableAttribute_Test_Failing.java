@@ -1,0 +1,2 @@
+public class ASTER_LocalVariableTableAttribute_Test_Failing {
+}

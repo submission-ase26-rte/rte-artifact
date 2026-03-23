@@ -1,0 +1,159 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language;
+Class name (MUST be exactly): DoubleMetaphone_doubleMetaphoneTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.codec.language;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class DoubleMetaphone_doubleMetaphoneTestGenerated {
+
+    @Test
+    void testDoubleMetaphone_EmptyString() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("", doubleMetaphone.doubleMetaphone("", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_PrimaryEncoding() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("AL", doubleMetaphone.doubleMetaphone("Alan", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_AlternateEncoding() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("AL", doubleMetaphone.doubleMetaphone("Alan", true));
+    }
+
+    @Test
+    void testDoubleMetaphone_SlavoGermanicName() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("KL", doubleMetaphone.doubleMetaphone("Knopp", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_SilentStart() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("KN", doubleMetaphone.doubleMetaphone("Knight", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_WithCedilla() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("SSN", doubleMetaphone.doubleMetaphone("Caçador", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_WithTildeN() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("NN", doubleMetaphone.doubleMetaphone("Niño", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_DoubleLetters() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("APL", doubleMetaphone.doubleMetaphone("Apple", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_MixedCases() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("SMN", doubleMetaphone.doubleMetaphone("Smith", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_LongName() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("L", doubleMetaphone.doubleMetaphone("A" + "a".repeat(100), false));
+    }
+
+    @Test
+    void testDoubleMetaphone_UnicodeCharacters() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("PRS", doubleMetaphone.doubleMetaphone("Pérez", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_DoubleB() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("PP", doubleMetaphone.doubleMetaphone("Bob", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_DoubleF() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("FF", doubleMetaphone.doubleMetaphone("Jeff", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_DoubleK() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("KK", doubleMetaphone.doubleMetaphone("Kick", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_DoubleN() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("NN", doubleMetaphone.doubleMetaphone("Ann", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_DoubleV() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("FF", doubleMetaphone.doubleMetaphone("Vivian", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_DoubleQ() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("KK", doubleMetaphone.doubleMetaphone("Quit", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_HandleH() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("HT", doubleMetaphone.doubleMetaphone("Thomas", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_HandleJ() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("JN", doubleMetaphone.doubleMetaphone("Johnson", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_HandleW() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("WL", doubleMetaphone.doubleMetaphone("Walter", false));
+    }
+
+    @Test
+    void testDoubleMetaphone_HandleX() {
+        DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+        assertEquals("AKS", doubleMetaphone.doubleMetaphone("Tax", false));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/DoubleMetaphone_doubleMetaphoneTestGenerated.java:[66] cannot find symbol
+  symbol:   method repeat(int)
+  location: class java.lang.String
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: DoubleMetaphone_doubleMetaphoneTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

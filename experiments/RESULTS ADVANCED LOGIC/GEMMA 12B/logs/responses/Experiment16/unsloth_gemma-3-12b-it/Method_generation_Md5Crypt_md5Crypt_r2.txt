@@ -1,0 +1,21 @@
+```java
+    public static String md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) {
+        if (keyBytes == null) {
+            throw new IllegalArgumentException("Key bytes cannot be null");
+        }
+
+        if (!salt.startsWith(prefix)) {
+            throw new IllegalArgumentException("Invalid salt value: " + salt);
+        }
+
+        String saltWithoutPrefix = salt.substring(prefix.length());
+        if (saltWithoutPrefix.length() != 8) {
+            throw new IllegalArgumentException("Invalid salt value: " + salt);
+        }
+
+        MessageDigest md5 = DigestUtils.getMd5Digest();
+        md5.update(keyBytes);
+        md5.update(salt.getBytes(StandardCharsets.UTF_8));
+        return prefix + saltWithoutPrefix + B64.b64from24bit((byte) (md5.digest()[0] & 0xFF), (byte) (md5.digest()[1] & 0xFF), (byte) (md5.digest()[2] & 0xFF));
+    }
+```

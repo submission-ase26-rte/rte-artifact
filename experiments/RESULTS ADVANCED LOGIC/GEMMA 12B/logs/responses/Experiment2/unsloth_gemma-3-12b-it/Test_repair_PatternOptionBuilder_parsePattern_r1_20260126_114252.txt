@@ -1,0 +1,126 @@
+```java
+package org.apache.commons.cli;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PatternOptionBuilder_parsePatternTestGenerated {
+
+    @Test
+    public void testParsePattern_emptyPattern() {
+        Options options = PatternOptionBuilder.parsePattern("");
+        assertNotNull(options);
+        assertTrue(options.getOptions().isEmpty());
+    }
+
+    @Test
+    public void testParsePattern_singleOption() {
+        Options options = PatternOptionBuilder.parsePattern("a");
+        assertNotNull(options);
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("a", option.getOpt());
+        assertFalse(option.isRequired());
+        assertNull(option.getType());
+    }
+
+    @Test
+    public void testParsePattern_singleOptionWithArg() {
+        Options options = PatternOptionBuilder.parsePattern("a:");
+        assertNotNull(options);
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("a", option.getOpt());
+        assertTrue(option.hasArg());
+        assertNull(option.getType());
+    }
+
+    @Test
+    public void testParsePattern_singleOptionWithRequiredFlag() {
+        Options options = PatternOptionBuilder.parsePattern("a!");
+        assertNotNull(options);
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("a", option.getOpt());
+        assertFalse(option.isRequired());
+        assertNull(option.getType());
+    }
+
+    @Test
+    public void testParsePattern_singleOptionWithArgAndRequiredFlag() {
+        Options options = PatternOptionBuilder.parsePattern("a!:");
+        assertNotNull(options);
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("a", option.getOpt());
+        assertTrue(option.isRequired());
+        assertTrue(option.hasArg());
+        assertNull(option.getType());
+    }
+
+    @Test
+    public void testParsePattern_multipleOptions() {
+        Options options = PatternOptionBuilder.parsePattern("a:b!");
+        assertNotNull(options);
+        assertEquals(2, options.getOptions().size());
+        Option option1 = options.getOptions().get(0);
+        assertEquals("a", option1.getOpt());
+        assertTrue(option1.hasArg());
+        assertNull(option1.getType());
+
+        Option option2 = options.getOptions().get(1);
+        assertEquals("b", option2.getOpt());
+        assertFalse(option2.isRequired());
+        assertNull(option2.getType());
+    }
+
+    @Test
+    public void testParsePattern_optionWithDateType() {
+        Options options = PatternOptionBuilder.parsePattern("#a");
+        assertNotNull(options);
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("a", option.getOpt());
+        assertFalse(option.isRequired());
+        assertEquals(PatternOptionBuilder.DATE_VALUE, option.getType());
+    }
+
+    @Test
+    public void testParsePattern_optionWithNumberType() {
+        Options options = PatternOptionBuilder.parsePattern("%a");
+        assertNotNull(options);
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("a", option.getOpt());
+        assertFalse(option.isRequired());
+        assertEquals(PatternOptionBuilder.NUMBER_VALUE, option.getType());
+    }
+
+    @Test
+    public void testParsePattern_optionWithObjectType() {
+        Options options = PatternOptionBuilder.parsePattern("@a");
+        assertNotNull(options);
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("a", option.getOpt());
+        assertFalse(option.isRequired());
+        assertEquals(PatternOptionBuilder.OBJECT_VALUE, option.getType());
+    }
+
+    @Test
+    public void testParsePattern_optionWithClassType() {
+        Options options = PatternOptionBuilder.parsePattern("+a");
+        assertNotNull(options);
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("a", option.getOpt());
+        assertFalse(option.isRequired());
+        assertEquals(PatternOptionBuilder.CLASS_VALUE, option.getType());
+    }
+}
+```

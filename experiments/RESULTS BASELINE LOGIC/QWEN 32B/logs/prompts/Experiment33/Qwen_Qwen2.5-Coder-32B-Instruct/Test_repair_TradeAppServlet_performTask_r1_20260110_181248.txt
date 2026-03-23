@@ -1,0 +1,342 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.web.servlet;
+Class name (MUST be exactly): TradeAppServlet_performTaskTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import com.ibm.websphere.samples.daytrader.interfaces.Trace;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+public class TradeAppServlet_performTaskTestGenerated {
+
+    @Mock
+    private TradeServletAction tsAction;
+
+    @Mock
+    private ServletConfig servletConfig;
+
+    @Mock
+    private ServletContext servletContext;
+
+    @Mock
+    private HttpSession httpSession;
+
+    @InjectMocks
+    private TradeAppServlet tradeAppServlet;
+
+    @BeforeEach
+    public void setUp() throws ServletException {
+        when(servletConfig.getServletContext()).thenReturn(servletContext);
+        tradeAppServlet.init(servletConfig);
+        ReflectionTestUtils.setField(tradeAppServlet, "tsAction", tsAction);
+    }
+
+    @Test
+    public void testPerformTaskNoAction() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        tradeAppServlet.performTask(request, response);
+
+        verify(tsAction).doWelcome(eq(servletContext), eq(request), eq(response), eq(""));
+    }
+
+    @Test
+    public void testPerformTaskLogin() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("action", "login");
+        request.addParameter("uid", "user1");
+        request.addParameter("passwd", "pass1");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        tradeAppServlet.performTask(request, response);
+
+        verify(tsAction).doLogin(eq(servletContext), eq(request), eq(response), eq("user1"), eq("pass1"));
+    }
+
+    @Test
+    public void testPerformTaskRegister() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("action", "register");
+        request.addParameter("user id", "user1");
+        request.addParameter("passwd", "pass1");
+        request.addParameter("confirm passwd", "pass1");
+        request.addParameter("Full Name", "John Doe");
+        request.addParameter("Credit Card Number", "1234567890");
+        request.addParameter("money", "1000");
+        request.addParameter("email", "john.doe@example.com");
+        request.addParameter("snail mail", "123 Elm St");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        tradeAppServlet.performTask(request, response);
+
+        verify(tsAction).doRegister(eq(servletContext), eq(request), eq(response), eq("user1"), eq("pass1"), eq("pass1"), eq("John Doe"), eq("1234567890"), eq("1000"), eq("john.doe@example.com"), eq("123 Elm St"));
+    }
+
+    @Test
+    public void testPerformTaskQuotes() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("action", "quotes");
+        request.addParameter("symbols", "IBM,MSFT");
+        request.setSession(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("user1");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        tradeAppServlet.performTask(request, response);
+
+        verify(tsAction).doQuotes(eq(servletContext), eq(request), eq(response), eq("user1"), eq("IBM,MSFT"));
+    }
+
+    @Test
+    public void testPerformTaskBuy() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("action", "buy");
+        request.addParameter("symbol", "IBM");
+        request.addParameter("quantity", "10");
+        request.setSession(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("user1");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        tradeAppServlet.performTask(request, response);
+
+        verify(tsAction).doBuy(eq(servletContext), eq(request), eq(response), eq("user1"), eq("IBM"), eq("10"));
+    }
+
+    @Test
+    public void testPerformTaskSell() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("action", "sell");
+        request.addParameter("holdingID", "123");
+        request.setSession(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("user1");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        tradeAppServlet.performTask(request, response);
+
+        verify(tsAction).doSell(eq(servletContext), eq(request), eq(response), eq("user1"), eq(123));
+    }
+
+    @Test
+    public void testPerformTaskPortfolio() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("action", "portfolio");
+        request.setSession(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("user1");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        tradeAppServlet.performTask(request, response);
+
+        verify(tsAction).doPortfolio(eq(servletContext), eq(request), eq(response), eq("user1"), eq("Portfolio as of " + new java.util.Date()));
+    }
+
+    @Test
+    public void testPerformTaskLogout() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("action", "logout");
+        request.setSession(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("user1");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        tradeAppServlet.performTask(request, response);
+
+        verify(tsAction).doLogout(eq(servletContext), eq(request), eq(response), eq("user1"));
+    }
+
+    @Test
+    public void testPerformTaskHome() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("action", "home");
+        request.setSession(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("user1");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        tradeAppServlet.performTask(request, response);
+
+        verify(tsAction).doHome(eq(servletContext), eq(request), eq(response), eq("user1"), eq("Ready to Trade"));
+    }
+
+    @Test
+    public void testPerformTaskAccount() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("action", "account");
+        request.setSession(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("user1");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        tradeAppServlet.performTask(request, response);
+
+        verify(tsAction).doAccount(eq(servletContext), eq(request), eq(response), eq("user1"), eq(""));
+    }
+
+    @Test
+    public void testPerformTaskUpdateProfile() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("action", "update_profile");
+        request.addParameter("password", "newpass");
+        request.addParameter("cpassword", "newpass");
+        request.addParameter("fullname", "John Doe");
+        request.addParameter("address", "123 Elm St");
+        request.addParameter("creditcard", "1234567890");
+        request.addParameter("email", "john.doe@example.com");
+        request.setSession(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("user1");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        tradeAppServlet.performTask(request, response);
+
+        verify(tsAction).doAccountUpdate(eq(servletContext), eq(request), eq(response), eq("user1"), eq("newpass"), eq("newpass"), eq("John Doe"), eq("123 Elm St"), eq("1234567890"), eq("john.doe@example.com"));
+    }
+
+    @Test
+    public void testPerformTaskMarketSummary() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("action", "mksummary");
+        request.setSession(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("user1");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        tradeAppServlet.performTask(request, response);
+
+        verify(tsAction).doMarketSummary(eq(servletContext), eq(request), eq(response), eq("user1"));
+    }
+
+    @Test
+    public void testPerformTaskInvalidAction() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("action", "invalid");
+        request.setSession(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("user1");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        tradeAppServlet.performTask(request, response);
+
+        verify(tsAction).doWelcome(eq(servletContext), eq(request), eq(response), eq("TradeAppServlet: Invalid Actioninvalid"));
+    }
+
+    @Test
+    public void testPerformTaskUserNotLoggedIn() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("action", "portfolio");
+        request.setSession(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn(null);
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        tradeAppServlet.performTask(request, response);
+
+        verify(tsAction).doWelcome(eq(servletContext), eq(request), eq(response), eq("User Not Logged in"));
+    }
+
+    @Test
+    public void testPerformTaskHttp2Push() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("action", "quotes");
+        request.addParameter("symbols", "IBM,MSFT");
+        request.setSession(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("user1");
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getWebInterface).thenReturn(TradeConfig.JSP_Images_HTTP2);
+            MockHttpServletResponse response = new MockHttpServletResponse();
+
+            tradeAppServlet.performTask(request, response);
+
+            verify(tsAction).doQuotes(eq(servletContext), eq(request), eq(response), eq("user1"), eq("IBM,MSFT"));
+            verify(request, times(1)).newPushBuilder();
+        }
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeAppServlet_performTaskTestGenerated.java:[58] cannot find symbol
+  symbol:   class IOException
+  location: class com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet_performTaskTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeAppServlet_performTaskTestGenerated.java:[68] cannot find symbol
+  symbol:   class IOException
+  location: class com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet_performTaskTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeAppServlet_performTaskTestGenerated.java:[81] cannot find symbol
+  symbol:   class IOException
+  location: class com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet_performTaskTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeAppServlet_performTaskTestGenerated.java:[100] cannot find symbol
+  symbol:   class IOException
+  location: class com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet_performTaskTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeAppServlet_performTaskTestGenerated.java:[114] cannot find symbol
+  symbol:   class IOException
+  location: class com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet_performTaskTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeAppServlet_performTaskTestGenerated.java:[129] cannot find symbol
+  symbol:   class IOException
+  location: class com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet_performTaskTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeAppServlet_performTaskTestGenerated.java:[143] cannot find symbol
+  symbol:   class IOException
+  location: class com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet_performTaskTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeAppServlet_performTaskTestGenerated.java:[156] cannot find symbol
+  symbol:   class IOException
+  location: class com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet_performTaskTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeAppServlet_performTaskTestGenerated.java:[169] cannot find symbol
+  symbol:   class IOException
+  location: class com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet_performTaskTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeAppServlet_performTaskTestGenerated.java:[182] cannot find symbol
+  symbol:   class IOException
+  location: class com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet_performTaskTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeAppServlet_performTaskTestGenerated.java:[195] cannot find symbol
+  symbol:   class IOException
+  location: class com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet_performTaskTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeAppServlet_performTaskTestGenerated.java:[214] cannot find symbol
+  symbol:   class IOException
+  location: class com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet_performTaskTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeAppServlet_performTaskTestGenerated.java:[227] cannot find symbol
+  symbol:   class IOException
+  location: class com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet_performTaskTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeAppServlet_performTaskTestGenerated.java:[240] cannot find symbol
+  symbol:   class IOException
+  location: class com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet_performTaskTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeAppServlet_performTaskTestGenerated.java:[253] cannot find symbol
+  symbol:   class IOException
+  location: class com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet_performTaskTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- DO NOT mock javax.servlet classes directly (ServletOutputStream, etc.) - use MockHttpServletRequest/Response from spring-test instead
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- For static method calls, ensure mockStatic is properly closed (use try-with-resources)
+- Keep the SAME class name: TradeAppServlet_performTaskTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

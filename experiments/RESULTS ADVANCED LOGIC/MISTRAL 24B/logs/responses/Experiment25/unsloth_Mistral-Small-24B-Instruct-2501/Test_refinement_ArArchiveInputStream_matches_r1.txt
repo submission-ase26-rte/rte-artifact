@@ -1,0 +1,34 @@
+```java
+package org.apache.commons.compress.archivers.ar;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArArchiveInputStream_matchesTestGenerated {
+    private byte[] signature;
+
+    @BeforeEach
+    public void setUp() {
+        signature = new byte[8];
+    }
+
+    @Test
+    public void testMatchesNullSignature() {
+        try {
+            ArArchiveInputStream.matches(null, 8);
+            fail("Expected NullPointerException");
+        } catch (NullPointerException e) {
+            assertEquals("signature is marked non-null but got null", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testMatchesSignatureLengthNegative() {
+        assertThrows(IllegalArgumentException.class, () -> ArArchiveInputStream.matches(signature, -1));
+    }
+}
+```

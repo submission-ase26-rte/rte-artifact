@@ -1,0 +1,101 @@
+```java
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public CommandLine parse(final Options options, final String[] arguments, final Properties properties, final boolean stopAtNonOption) throws ParseException {
+        cmd = new CommandLine();
+        cmd.setDeprecatedHandler(deprecatedHandler);
+        this.options = options;
+        this.stopAtNonOption = stopAtNonOption;
+        this.currentToken = null;
+        this.currentOption = null;
+        this.skipParsing = false;
+        this.expectedOpts = new ArrayList();
+
+        handleProperties(properties);
+
+        if (arguments == null || arguments.length == 0) {
+            if (options.getRequiredOptions().size() > 0) {
+                throw new ParseException("Missing required options: " + options.getRequiredOptions());
+            }
+            return cmd;
+        }
+
+
+        for (String argument : arguments) {
+            if (skipParsing) {
+                break;
+            }
+
+            handleToken(argument);
+        }
+
+        checkRequiredOptions();
+        checkRequiredArgs();
+        return cmd;
+    }
+
+    private void handleProperties(final Properties properties) {
+        if (properties != null) {
+            Enumeration<String> propertyNames = properties.propertyNames();
+            while (propertyNames.hasMoreElements()) {
+                String propertyName = propertyNames.nextElement();
+                String propertyValue = properties.getProperty(propertyName);
+                if (propertyName.length() == 1) {
+                    Option option = options.getOption(propertyName);
+                    if (option != null) {
+                        option.setValue(propertyValue);
+                    }
+                } else {
+                    Option option = options.getOption(propertyName);
+                    if (option != null) {
+                        option.setValue(propertyValue);
+                    }
+                }
+            }
+        }
+    }
+
+    private void handleToken(final String token) {
+        if (skipParsing) {
+            return;
+        }
+
+        if (isOption(token)) {
+            currentOption = options.getOption(token);
+            if (currentOption == null) {
+                throw new ParseException("Unrecognised option: " + token);
+            }
+            if (!currentOption.hasValue()) {
+                if (currentOption.getValues().length == 0) {
+                    currentOption.setValue(null);
+                }
+            }
+            cmd.addOption(currentOption);
+            expectedOpts.clear();
+        } else if (isArgument(token)) {
+            cmd.addArg(token);
+        } else if (stopAtNonOption) {
+            cmd.addArg(token);
+        } else {
+            throw new ParseException("Unexpected token: " + token);
+        }
+    }
+
+    private void checkRequiredOptions() {
+        List requiredOptions = options.getRequiredOptions();
+        if (requiredOptions != null) {
+            for (Option option : requiredOptions) {
+                if (!cmd.hasOption(option.getShortOptionText() == null ? option.getLongOptionText() : option.getShortOptionText())) {
+                    throw new ParseException("Missing required option: " + option.getLongOptionText());
+                }
+            }
+        }
+    }
+
+    private void checkRequiredArgs() {
+        for (Option option : options.getOptions()) {
+            if (option.getRequiredArgs() > 0 && !cmd.hasOption(option.getShortOptionText() == null ? option.getLongOptionText() : option.getShortOptionText())) {
+                throw new ParseException("Missing required arguments for option: " + option.getLongOptionText());
+            }
+        }
+    }
+```

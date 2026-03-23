@@ -1,0 +1,71 @@
+```java
+package org.eclipse.cargotracker.domain.model.voyage;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
+class Voyage_equalsTestGenerated {
+
+    @Mock
+    private VoyageNumber voyageNumber;
+
+    @Mock
+    private Schedule schedule;
+
+    @Mock
+    private Location departureLocation;
+
+    @Test
+    void equals_ShouldReturnTrueWhenSameInstance() {
+        Voyage voyage = new Voyage(voyageNumber, schedule);
+        assertTrue(voyage.equals(voyage));
+    }
+
+    @Test
+    void equals_ShouldReturnFalseWhenObjectIsNull() {
+        Voyage voyage = new Voyage(voyageNumber, schedule);
+        assertFalse(voyage.equals(null));
+    }
+
+    @Test
+    void equals_ShouldReturnFalseWhenObjectIsNotVoyage() {
+        Voyage voyage = new Voyage(voyageNumber, schedule);
+        assertFalse(voyage.equals("Not a Voyage"));
+    }
+
+    @Test
+    void equals_ShouldReturnTrueWhenObjectsAreEqual() {
+        Voyage voyage1 = new Voyage(voyageNumber, schedule);
+        Voyage voyage2 = new Voyage(voyageNumber, schedule);
+        when(voyage1.sameIdentityAs(voyage2)).thenReturn(true);
+        assertTrue(voyage1.equals(voyage2));
+    }
+
+    @Test
+    void equals_ShouldReturnFalseWhenObjectsAreNotEqual() {
+        Voyage voyage1 = new Voyage(voyageNumber, schedule);
+        Voyage voyage2 = new Voyage(voyageNumber, schedule);
+        when(voyage1.sameIdentityAs(voyage2)).thenReturn(false);
+        assertFalse(voyage1.equals(voyage2));
+    }
+
+    @Test
+    void equals_ShouldReturnFalseWhenVoyageNumberIsDifferent() {
+        Voyage voyage1 = new Voyage(voyageNumber, schedule);
+        Voyage voyage2 = new Voyage(mock(VoyageNumber.class), schedule);
+        when(voyage1.sameIdentityAs(voyage2)).thenReturn(false);
+        assertFalse(voyage1.equals(voyage2));
+    }
+
+    @Test
+    void equals_ShouldReturnFalseWhenScheduleIsDifferent() {
+        Voyage voyage1 = new Voyage(voyageNumber, schedule);
+        Voyage voyage2 = new Voyage(voyageNumber, mock(Schedule.class));
+        when(voyage1.sameIdentityAs(voyage2)).thenReturn(false);
+        assertFalse(voyage1.equals(voyage2));
+    }
+}
+```

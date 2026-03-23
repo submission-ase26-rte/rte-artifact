@@ -1,0 +1,191 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.ri.model.dom;
+Class name (MUST be exactly): DOMNodePointer_asPathTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.jxpath.ri.model.dom;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.ri.Compiler;
+import org.apache.commons.jxpath.ri.NamespaceResolver;
+import org.apache.commons.jxpath.ri.QName;
+import org.apache.commons.jxpath.ri.compiler.NodeNameTest;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.compiler.NodeTypeTest;
+import org.apache.commons.jxpath.ri.compiler.ProcessingInstructionTest;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.apache.commons.jxpath.ri.model.beans.NullPointer;
+import org.apache.commons.jxpath.util.TypeUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Comment;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.ProcessingInstruction;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class DOMNodePointer_asPathTestGenerated {
+
+    @Mock
+    private Node node;
+
+    @Mock
+    private NodePointer parent;
+
+    @Mock
+    private Locale locale;
+
+    @Mock
+    private NamespaceResolver namespaceResolver;
+
+    private DOMNodePointer domNodePointer;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        domNodePointer = new DOMNodePointer(node, locale);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        domNodePointer = null;
+    }
+
+    @Test
+    public void testAsPathWithId() {
+        domNodePointer.id = "testId";
+        when(domNodePointer.escape("testId")).thenReturn("testId");
+        assertEquals("id('testId')", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithElementNodeAndNoParent() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(DOMNodePointer.getLocalName(node)).thenReturn("element");
+        when(domNodePointer.getNamespaceURI()).thenReturn(null);
+        when(domNodePointer.getRelativePositionByQName()).thenReturn(1);
+        assertEquals("/element[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithElementNodeAndParentNotDOMNodePointer() {
+        domNodePointer.parent = parent;
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(DOMNodePointer.getLocalName(node)).thenReturn("element");
+        when(domNodePointer.getNamespaceURI()).thenReturn(null);
+        when(domNodePointer.getRelativePositionByQName()).thenReturn(1);
+        when(parent.asPath()).thenReturn("/parent");
+        assertEquals("/parent/element[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithElementNodeAndParentDOMNodePointer() {
+        domNodePointer.parent = parent;
+        when(parent instanceof DOMNodePointer).thenReturn(true);
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(DOMNodePointer.getLocalName(node)).thenReturn("element");
+        when(domNodePointer.getNamespaceURI()).thenReturn(null);
+        when(domNodePointer.getRelativePositionByQName()).thenReturn(1);
+        when(parent.asPath()).thenReturn("/parent");
+        assertEquals("/parent/element[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithElementNodeAndNamespace() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(DOMNodePointer.getLocalName(node)).thenReturn("element");
+        when(domNodePointer.getNamespaceURI()).thenReturn("http://example.com");
+        when(domNodePointer.getNamespaceResolver().getPrefix("http://example.com")).thenReturn("ns");
+        when(domNodePointer.getRelativePositionByQName()).thenReturn(1);
+        assertEquals("/ns:element[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithElementNodeAndNoPrefix() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(DOMNodePointer.getLocalName(node)).thenReturn("element");
+        when(domNodePointer.getNamespaceURI()).thenReturn("http://example.com");
+        when(domNodePointer.getNamespaceResolver().getPrefix("http://example.com")).thenReturn(null);
+        when(domNodePointer.getRelativePositionOfElement()).thenReturn(1);
+        assertEquals("/node()[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithTextNode() {
+        when(node.getNodeType()).thenReturn(Node.TEXT_NODE);
+        when(domNodePointer.getRelativePositionOfTextNode()).thenReturn(1);
+        assertEquals("/text()[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithProcessingInstructionNode() {
+        when(node.getNodeType()).thenReturn(Node.PROCESSING_INSTRUCTION_NODE);
+        ProcessingInstruction pi = mock(ProcessingInstruction.class);
+        when((ProcessingInstruction) node).thenReturn(pi);
+        when(pi.getTarget()).thenReturn("target");
+        when(domNodePointer.getRelativePositionOfPI()).thenReturn(1);
+        assertEquals("/processing-instruction('target')[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithDocumentNode() {
+        when(node.getNodeType()).thenReturn(Node.DOCUMENT_NODE);
+        assertEquals("", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithUnknownNodeType() {
+        when(node.getNodeType()).thenReturn(Node.ATTRIBUTE_NODE);
+        assertEquals("", domNodePointer.asPath());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[69] id has private access in org.apache.commons.jxpath.ri.model.dom.DOMNodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[70] escape(java.lang.String) has protected access in org.apache.commons.jxpath.ri.model.NodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[79] getRelativePositionByQName() has private access in org.apache.commons.jxpath.ri.model.dom.DOMNodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[85] parent has protected access in org.apache.commons.jxpath.ri.model.NodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[89] getRelativePositionByQName() has private access in org.apache.commons.jxpath.ri.model.dom.DOMNodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[96] parent has protected access in org.apache.commons.jxpath.ri.model.NodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[101] getRelativePositionByQName() has private access in org.apache.commons.jxpath.ri.model.dom.DOMNodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[112] getRelativePositionByQName() has private access in org.apache.commons.jxpath.ri.model.dom.DOMNodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[122] getRelativePositionOfElement() has private access in org.apache.commons.jxpath.ri.model.dom.DOMNodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[129] getRelativePositionOfTextNode() has private access in org.apache.commons.jxpath.ri.model.dom.DOMNodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[139] getRelativePositionOfPI() has private access in org.apache.commons.jxpath.ri.model.dom.DOMNodePointer
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: DOMNodePointer_asPathTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

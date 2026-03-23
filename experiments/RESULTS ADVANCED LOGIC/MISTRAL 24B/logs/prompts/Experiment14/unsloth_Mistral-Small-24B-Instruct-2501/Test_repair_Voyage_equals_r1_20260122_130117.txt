@@ -1,0 +1,91 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.domain.model.voyage;
+Class name (MUST be exactly): Voyage_equalsTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.domain.model.voyage;
+
+import jakarta.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.lang3.Validate;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Voyage_equalsTestGenerated {
+
+    private Voyage voyage1;
+    private Voyage voyage2;
+    private Voyage voyage3;
+
+    @BeforeEach
+    void setUp() {
+        voyage1 = new Voyage(new VoyageNumber("V123"), new Schedule(LocalDateTime.now(), LocalDateTime.now().plusDays(1)));
+        voyage2 = new Voyage(new VoyageNumber("V123"), new Schedule(LocalDateTime.now(), LocalDateTime.now().plusDays(1)));
+        voyage3 = new Voyage(new VoyageNumber("V456"), new Schedule(LocalDateTime.now(), LocalDateTime.now().plusDays(2)));
+    }
+
+    @Test
+    void testEquals_WhenSameObject() {
+        assertTrue(voyage1.equals(voyage1));
+    }
+
+    @Test
+    void testEquals_WhenNull() {
+        assertFalse(voyage1.equals(null));
+    }
+
+    @Test
+    void testEquals_WhenDifferentClass() {
+        assertFalse(voyage1.equals("Not a Voyage"));
+    }
+
+    @Test
+    void testEquals_WhenSameVoyageNumber() {
+        assertTrue(voyage1.equals(voyage2));
+    }
+
+    @Test
+    void testEquals_WhenDifferentVoyageNumber() {
+        assertFalse(voyage1.equals(voyage3));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/domain/model/voyage/Voyage_equalsTestGenerated.java:[25] no suitable constructor found for Schedule(java.time.LocalDateTime,java.time.LocalDateTime)
+  constructor org.eclipse.cargotracker.domain.model.voyage.Schedule.Schedule() is not applicable
+  (actual and formal argument lists differ in length)
+  constructor org.eclipse.cargotracker.domain.model.voyage.Schedule.Schedule(java.util.List<org.eclipse.cargotracker.domain.model.voyage.CarrierMovement>) is not applicable
+  (actual and formal argument lists differ in length)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/domain/model/voyage/Voyage_equalsTestGenerated.java:[26] no suitable constructor found for Schedule(java.time.LocalDateTime,java.time.LocalDateTime)
+  constructor org.eclipse.cargotracker.domain.model.voyage.Schedule.Schedule() is not applicable
+  (actual and formal argument lists differ in length)
+  constructor org.eclipse.cargotracker.domain.model.voyage.Schedule.Schedule(java.util.List<org.eclipse.cargotracker.domain.model.voyage.CarrierMovement>) is not applicable
+  (actual and formal argument lists differ in length)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/domain/model/voyage/Voyage_equalsTestGenerated.java:[27] no suitable constructor found for Schedule(java.time.LocalDateTime,java.time.LocalDateTime)
+  constructor org.eclipse.cargotracker.domain.model.voyage.Schedule.Schedule() is not applicable
+  (actual and formal argument lists differ in length)
+  constructor org.eclipse.cargotracker.domain.model.voyage.Schedule.Schedule(java.util.List<org.eclipse.cargotracker.domain.model.voyage.CarrierMovement>) is not applicable
+  (actual and formal argument lists differ in length)
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: Voyage_equalsTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

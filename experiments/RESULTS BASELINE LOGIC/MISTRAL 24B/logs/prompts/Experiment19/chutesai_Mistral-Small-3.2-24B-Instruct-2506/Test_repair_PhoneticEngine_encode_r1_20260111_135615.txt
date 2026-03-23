@@ -1,0 +1,193 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language.bm;
+Class name (MUST be exactly): PhoneticEngine_encodeTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.codec.language.bm;
+
+import org.apache.commons.codec.language.bm.Rule.Phoneme;
+import org.apache.commons.codec.language.bm.Rule.RuleType;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class PhoneticEngine_encodeTestGenerated {
+
+    @Mock
+    private PhonemeBuilder mockPhonemeBuilder;
+
+    @Mock
+    private Phoneme mockPhoneme;
+
+    @Mock
+    private RulesApplication mockRulesApplication;
+
+    @Mock
+    private Map<String, List<Rule>> mockRulesMap;
+
+    @Mock
+    private List<Rule> mockRulesList;
+
+    private PhoneticEngine phoneticEngine;
+    private Languages.LanguageSet languageSet;
+
+    @BeforeEach
+    void setUp() {
+        languageSet = new Languages.LanguageSet();
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, false);
+    }
+
+    @AfterEach
+    void tearDown() {
+        reset(mockPhonemeBuilder, mockPhoneme, mockRulesApplication, mockRulesMap, mockRulesList);
+    }
+
+    @Test
+    void testEncodeWithDPrefix() {
+        String input = "d'angelo";
+        String expected = "(*)-(dangelo)";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithGenericPrefix() {
+        String input = "van houten";
+        String expected = "(houten)-(van houten)";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithSephardicName() {
+        PhoneticEngine sephardicEngine = new PhoneticEngine(NameType.SEPHARDIC, RuleType.RULES, false);
+        String input = "o'brien";
+        String expected = "brien";
+        String result = sephardicEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithAshkenaziName() {
+        PhoneticEngine ashkenaziEngine = new PhoneticEngine(NameType.ASHKENAZI, RuleType.RULES, false);
+        String input = "van der waals";
+        String expected = "waals";
+        String result = ashkenaziEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithSingleWord() {
+        String input = "test";
+        String expected = "test";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithMultiWord() {
+        String input = "john doe";
+        String expected = "joe-doe";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithConcat() {
+        PhoneticEngine concatEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, true);
+        String input = "john doe";
+        String expected = "johndoe";
+        String result = concatEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithEmptyInput() {
+        String input = "";
+        String expected = "";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithNullInput() {
+        assertThrows(NullPointerException.class, () -> phoneticEngine.encode(null, languageSet));
+    }
+
+    @Test
+    void testEncodeWithNullLanguageSet() {
+        String input = "test";
+        assertThrows(NullPointerException.class, () -> phoneticEngine.encode(input, null));
+    }
+
+    @Test
+    void testEncodeWithSpecialCharacters() {
+        String input = "john-doe";
+        String expected = "joe-doe";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithUnreachableNameType() {
+        PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, false) {
+            @Override
+            public String encode(String input, Languages.LanguageSet languageSet) {
+                // Force the default case
+                this.nameType = null;
+                return super.encode(input, languageSet);
+            }
+        };
+        String input = "test";
+        assertThrows(IllegalStateException.class, () -> engine.encode(input, languageSet));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[4] cannot find symbol
+  symbol:   class RuleType
+  location: class org.apache.commons.codec.language.bm.Rule
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[29] cannot find symbol
+  symbol:   class PhonemeBuilder
+  location: class org.apache.commons.codec.language.bm.PhoneticEngine_encodeTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[35] cannot find symbol
+  symbol:   class RulesApplication
+  location: class org.apache.commons.codec.language.bm.PhoneticEngine_encodeTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[48] org.apache.commons.codec.language.bm.Languages.LanguageSet is abstract; cannot be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[149] nameType has private access in org.apache.commons.codec.language.bm.PhoneticEngine
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: PhoneticEngine_encodeTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

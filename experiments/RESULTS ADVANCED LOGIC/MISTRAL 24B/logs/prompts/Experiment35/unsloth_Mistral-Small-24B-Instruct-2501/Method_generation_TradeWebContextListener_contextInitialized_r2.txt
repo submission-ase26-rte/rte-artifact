@@ -1,0 +1,330 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import com.ibm.websphere.samples.daytrader.web.servlet.TradeWebContextListener;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.util.Properties;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeWebContextListener_contextInitializedTestGenerated {
+    @Mock
+    private ServletContextEvent event;
+    @Mock
+    private ServletContext servletContext;
+    @Mock
+    private InputStream inputStream;
+    @Mock
+    private Properties properties;
+    private TradeWebContextListener listener;
+
+    @BeforeEach
+    public void setUp() {
+        listener = new TradeWebContextListener();
+        MockitoAnnotations.openMocks(this);
+        when(event.getServletContext()).thenReturn(servletContext);
+        when(servletContext.getResourceAsStream("/properties/daytrader.properties")).thenReturn(inputStream);
+    }
+
+    @Test
+    public void testContextInitializedWithNoPropertiesFileAndNoEnvironmentVariables() {
+        when(inputStream).thenReturn(null);
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getRunTimeModeNames).thenReturn(new String[]{"Mode1"});
+            mockedTradeConfig.when(TradeConfig::getOrderProcessingModeNames).thenReturn(new String[]{"OrderMode1"});
+            listener.contextInitialized(event);
+            mockedTradeConfig.verify(() -> TradeConfig.setRunTimeMode(1), times(0));
+            mockedTradeConfig.verify(() -> TradeConfig.setOrderProcessingMode(1), times(0));
+        }
+    }
+
+    @Test
+    public void testContextInitializedWithValidProperties() throws Exception {
+        when(properties.getProperty("runtimeMode")).thenReturn("1");
+        when(properties.getProperty("orderProcessingMode")).thenReturn("2");
+        when(properties.getProperty("maxUsers")).thenReturn("100");
+        when(properties.getProperty("maxQuotes")).thenReturn("500");
+        when(properties.getProperty("publishQuotePriceChange")).thenReturn("true");
+        when(properties.getProperty("displayOrderAlerts")).thenReturn("false");
+        when(properties.getProperty("webInterface")).thenReturn("3");
+        when(properties.getProperty("listQuotePriceChangeFrequency")).thenReturn("60");
+        when(properties.getProperty("primIterations")).thenReturn("10");
+        when(properties.getProperty("marketSummaryInterval")).thenReturn("300");
+        when(properties.getProperty("longRun")).thenReturn("true");
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedLog.when(() -> Log.trace(anyString())).thenReturn(null);
+            when(inputStream).thenReturn(null);
+            mockedTradeConfig.when(TradeConfig::getRunTimeModeNames).thenReturn(new String[]{"Mode1"});
+            mockedTradeConfig.when(TradeConfig::getOrderProcessingModeNames).thenReturn(new String[]{"OrderMode1"});
+            listener.contextInitialized(event);
+            mockedTradeConfig.verify(() -> TradeConfig.setRunTimeMode(1), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setOrderProcessingMode(2), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setMAX_USERS(100), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setMAX_QUOTES(500), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setPublishQuotePriceChange(true), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setDisplayOrderAlerts(false), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setWebInterface(3), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setListQuotePriceChangeFrequency(60), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setPrimIterations(10), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setMarketSummaryInterval(300), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setLongRun(true), times(1));
+        }
+    }
+
+    @Test
+    public void testContextInitializedWithMissingPropertiesFile() {
+        when(inputStream).thenThrow(new Exception("File not found"));
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            mockedLog.when(() -> Log.trace(anyString())).thenReturn(null);
+            listener.contextInitialized(event);
+            verify(servletContext, times(1)).getResourceAsStream("/properties/daytrader.properties");
+            verify(servletContext, times(1)).getResourceAsStream("/properties/daytrader.properties");
+        }
+    }
+
+    @Test
+    public void testContextInitializedWithEnvironmentVariables() {
+        when(System.getenv("RUNTIME_MODE")).thenReturn("1");
+        when(System.getenv("ORDER_PROCESSING_MODE")).thenReturn("2");
+        when(System.getenv("MAX_USERS")).thenReturn("100");
+        when(System.getenv("MAX_QUOTES")).thenReturn("500");
+        when(System.getenv("PUBLISH_QUOTES")).thenReturn("true");
+        when(System.getenv("DISPLAY_ORDER_ALERTS")).thenReturn("false");
+        when(System.getenv("WEB_INTERFACE")).thenReturn("3");
+        when(System.getenv("LIST_QUOTE_PRICE_CHANGE_FREQUENCY")).thenReturn("60");
+        when(properties.getProperty("primIterations")).thenReturn("10");
+        when(properties.getProperty("marketSummaryInterval")).thenReturn("300");
+        when(properties.getProperty("longRun")).thenReturn("true");
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedLog.when(() -> Log.trace(anyString())).thenReturn(null);
+            when(inputStream).thenReturn(null);
+            mockedTradeConfig.when(TradeConfig::getRunTimeModeNames).thenReturn(new String[]{"Mode1"});
+            mockedTradeConfig.when(TradeConfig::getOrderProcessingModeNames).thenReturn(new String[]{"OrderMode1"});
+            listener.contextInitialized(event);
+            mockedTradeConfig.verify(() -> TradeConfig.setRunTimeMode(1), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setOrderProcessingMode(2), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setMAX_USERS(100), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setMAX_QUOTES(500), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setPublishQuotePriceChange(true), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setDisplayOrderAlerts(false), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setWebInterface(3), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setListQuotePriceChangeFrequency(60), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setPrimIterations(10), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setMarketSummaryInterval(300), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setLongRun(true), times(1));
+        }
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 0.00% | Branch: 0.00%
+- Tests: 0/4 passed
+
+TEST STATUS:
+- PASSED (0): none
+- FAILED (0): none
+- ERRORS (4): testContextInitializedWithNoPropertiesFileAndNoEnvironmentVariables, testContextInitializedWithValidProperties, testContextInitializedWithMissingPropertiesFile, testContextInitializedWithEnvironmentVariables
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   InputStream -> java.io.InputStream
+//   Properties -> java.util.Properties
+//   FacesConfig -> javax.faces.annotation.FacesConfig
+//   ServletContextEvent -> javax.servlet.ServletContextEvent
+//   ServletContextListener -> javax.servlet.ServletContextListener
+//   WebListener -> javax.servlet.annotation.WebListener
+//   TradeWebContextListener -> com.ibm.websphere.samples.daytrader.web.servlet.TradeWebContextListener
+
+// === Class: TradeWebContextListener ===
+// === External Class: Log ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.Log
+// Import paths:
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   Level -> java.util.logging.Level
+//   Logger -> java.util.logging.Logger
+// Fields (with actual visibility):
+    private static final Logger log;
+
+// Method Signatures (used by target method):
+public static void trace(String message);
+
+// === External Class: TradeConfig ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.TradeConfig
+// Import paths:
+//   BigDecimal -> java.math.BigDecimal
+//   ArrayList -> java.util.ArrayList
+//   Random -> java.util.Random
+// Fields (with actual visibility):
+    private static String[] runTimeModeNames;
+    public static final int EJB3;
+    public static final int DIRECT;
+    public static final int SESSION_TO_DIRECT;
+    private static int runTimeMode;
+    private static String[] orderProcessingModeNames;
+    public static final int SYNCH;
+    public static final int ASYNCH;
+    public static final int ASYNCH_2PHASE;
+    private static int orderProcessingMode;
+    private static String[] accessModeNames;
+    public static final int STANDARD;
+    private static int accessMode;
+    private static String[] webInterfaceNames;
+    public static final int JSP;
+    public static final int JSP_Images;
+    public static final int JSP_Images_HTTP2;
+    private static int webInterface;
+    private static int MAX_USERS;
+    private static int MAX_QUOTES;
+    public static boolean JDBCDriverNeedsGlobalTransation;
+    public static String DATASOURCE;
+    public static int KEYBLOCKSIZE;
+    public static int QUOTES_PER_PAGE;
+    public static boolean RND_USER;
+    private static int MAX_HOLDINGS;
+    private static int count;
+    private static Object userID_count_semaphore;
+    private static int userID_count;
+    private static String hostName;
+    private static Random r0;
+    private static Random randomNumberGenerator;
+    public static final String newUserPrefix;
+    public static final int verifyPercent;
+    private static boolean updateQuotePrices;
+    private static int primIterations;
+    private static boolean longRun;
+    private static boolean publishQuotePriceChange;
+    private static int listQuotePriceChangeFrequency;
+    private static boolean displayOrderAlerts;
+    private static int marketSummaryInterval;
+    public static BigDecimal PENNY_STOCK_PRICE;
+    public static BigDecimal PENNY_STOCK_RECOVERY_MIRACLE_MULTIPLIER;
+    public static BigDecimal MAXIMUM_STOCK_PRICE;
+    public static BigDecimal MAXIMUM_STOCK_SPLIT_MULTIPLIER;
+    public static final int HOME_OP;
+    public static final int QUOTE_OP;
+    public static final int LOGIN_OP;
+    public static final int LOGOUT_OP;
+    public static final int REGISTER_OP;
+    public static final int ACCOUNT_OP;
+    public static final int PORTFOLIO_OP;
+    public static final int BUY_OP;
+    public static final int SELL_OP;
+    public static final int UPDATEACCOUNT_OP;
+    private static int[][] scenarioMixes;
+    private static char[] actions;
+    private static int sellDeficit;
+    public static final int WELCOME_PAGE;
+    public static final int REGISTER_PAGE;
+    public static final int PORTFOLIO_PAGE;
+    public static final int QUOTE_PAGE;
+    public static final int HOME_PAGE;
+    public static final int ACCOUNT_PAGE;
+    public static final int ORDER_PAGE;
+    public static final int CONFIG_PAGE;
+    public static final int STATS_PAGE;
+    public static final int MARKET_SUMMARY_PAGE;
+    public static String[][] webUI;
+    private static int scenarioCount;
+    private static final BigDecimal orderFee;
+    private static final BigDecimal cashFee;
+    private static final BigDecimal ONE;
+    private static ArrayList deck;
+    private static int card;
+
+// Method Signatures (used by target method):
+public static void setPublishQuotePriceChange(boolean publishQuotePriceChange);
+public static int getRunTimeMode();
+public static java getRunTimeModeNames();
+public static void setOrderProcessingMode(int value);
+public static void setDisplayOrderAlerts(boolean value);
+public static int getMAX_QUOTES();
+public static int getOrderProcessingMode();
+public static void setWebInterface(int value);
+public static int getMAX_USERS();
+public static void setRunTimeMode(int value);
+public static void setMAX_USERS(int mAX_USERS);
+public static String getOrderProcessingModeNames();
+public static void setListQuotePriceChangeFrequency(int value);
+public static void setPrimIterations(int iter);
+public static void setMarketSummaryInterval(int seconds);
+public static void setLongRun(boolean longRun);
+public static void setMAX_QUOTES(int mAX_QUOTES);
+
+// Public Getter Methods (for test assertions):
+public static String getPage(int pageNumber);
+public static char getScenarioAction(boolean newUser);
+public static String getUserID();
+public static BigDecimal getOrderFee(String orderType);
+public static BigDecimal getRandomPriceChangeFactor();
+public static String getWebInterfaceNames();
+public static int getScenarioMixes();
+public static int getMAX_HOLDINGS();
+public static int getScenarioCount();
+public static boolean getJDBCDriverNeedsGlobalTransation();
+public static boolean getUpdateQuotePrices();
+public static int getPrimIterations();
+public static boolean getLongRun();
+public static boolean getPublishQuotePriceChange();
+public static int getMarketSummaryInterval();
+
+
+TASK:
+Regenerate ONLY the method "contextInitialized" OF CLASS "TradeWebContextListener" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void contextInitialized(ServletContextEvent event) {
+    // your implementation here
+}
+```
+
+
+- Package: com.ibm.websphere.samples.daytrader.web.servlet
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "contextInitialized"
+– Allowed imports: exactly those already present in TradeWebContextListener
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

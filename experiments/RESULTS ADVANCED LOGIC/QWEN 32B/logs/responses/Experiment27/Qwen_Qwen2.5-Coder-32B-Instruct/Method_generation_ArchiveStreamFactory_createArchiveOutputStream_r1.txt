@@ -1,0 +1,38 @@
+```java
+public <O extends ArchiveOutputStream<? extends ArchiveEntry>> O createArchiveOutputStream(final String archiverName, final OutputStream out, final String actualEncoding) throws ArchiveException {
+    if (archiverName == null) {
+        throw new IllegalArgumentException("Archiver name must not be null");
+    }
+    if (out == null) {
+        throw new IllegalArgumentException("Stream must not be null");
+    }
+    String key = toKey(archiverName);
+    SortedMap<String, ArchiveStreamProvider> providers = getArchiveOutputStreamProviders();
+    ArchiveStreamProvider provider = providers.get(key);
+    if (provider != null) {
+        return provider.createArchiveOutputStream(key, out, actualEncoding);
+    }
+    switch (key) {
+        case AR:
+            return (O) new ArArchiveOutputStream(out);
+        case ZIP:
+            ZipArchiveOutputStream zipOut = new ZipArchiveOutputStream(out);
+            if (actualEncoding != null) {
+                zipOut.setEncoding(actualEncoding);
+            }
+            return (O) zipOut;
+        case TAR:
+            return (O) new TarArchiveOutputStream(out);
+        case JAR:
+            JarArchiveOutputStream jarOut = new JarArchiveOutputStream(out);
+            if (actualEncoding != null) {
+                jarOut.setEncoding(actualEncoding);
+            }
+            return (O) jarOut;
+        case CPIO:
+            return (O) new CpioArchiveOutputStream(out);
+        default:
+            throw new ArchiveException("Archiver not found for name: " + archiverName);
+    }
+}
+```

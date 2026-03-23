@@ -1,0 +1,167 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.compress.archivers;
+Class name (MUST be exactly): ArchiveStreamFactory_createArchiveOutputStreamTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import org.apache.commons.compress.archivers.ar.ArArchiveOutputStream;
+import org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream;
+import org.apache.commons.compress.archivers.jar.JarArchiveOutputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.utils.Sets;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArchiveStreamFactory_createArchiveOutputStreamTestGenerated {
+    private ArchiveStreamFactory factory;
+    private OutputStream outputStream;
+    @Mock
+    private ArchiveStreamProvider mockProvider;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        factory = new ArchiveStreamFactory();
+        outputStream = new ByteArrayOutputStream();
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamWithUnknownArchiver() {
+        Exception exception = assertThrows(ArchiveException.class, () -> factory.createArchiveOutputStream("UNKNOWN", outputStream, "UTF-8"));
+        assertEquals("Archiver: UNKNOWN not found.", exception.getMessage());
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamWithCustomProvider() throws ArchiveException {
+        SortedMap<String, ArchiveStreamProvider> providers = new TreeMap<>();
+        providers.put(ArchiveStreamFactory.ZIP, mockProvider);
+        factory.getArchiveOutputStreamProviders().putAll(providers);
+        when(mockProvider.createArchiveOutputStream("ZIP", outputStream, "UTF-8")).thenReturn(mock(ArchiveOutputStream.class));
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream("ZIP", outputStream, "UTF-8");
+        assertNotNull(result);
+        verify(mockProvider).createArchiveOutputStream("ZIP", outputStream, "UTF-8");
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamWithSevenZ() {
+        Exception exception = assertThrows(StreamingNotSupportedException.class, () -> factory.createArchiveOutputStream(ArchiveStreamFactory.SEVEN_Z, outputStream, "UTF-8"));
+        assertEquals(ArchiveStreamFactory.SEVEN_Z, exception.getMessage());
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamWithNullArchiverName() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> factory.createArchiveOutputStream(null, outputStream, "UTF-8"));
+        assertEquals("Archiver name must not be null.", exception.getMessage());
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamWithNullOutputStream() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> factory.createArchiveOutputStream(ArchiveStreamFactory.ZIP, null, "UTF-8"));
+        assertEquals("OutputStream must not be null.", exception.getMessage());
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamWithAr() throws ArchiveException {
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.AR, outputStream, "UTF-8");
+        assertNotNull(result);
+        assertTrue(result instanceof ArArchiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamWithZipAndEncoding() throws ArchiveException {
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.ZIP, outputStream, "UTF-8");
+        assertNotNull(result);
+        assertTrue(result instanceof ZipArchiveOutputStream);
+        assertEquals("UTF-8", ((ZipArchiveOutputStream) result).getEncoding());
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamWithZipWithoutEncoding() throws ArchiveException {
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.ZIP, outputStream, null);
+        assertNotNull(result);
+        assertTrue(result instanceof ZipArchiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamWithTarAndEncoding() throws ArchiveException {
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.TAR, outputStream, "UTF-8");
+        assertNotNull(result);
+        assertTrue(result instanceof TarArchiveOutputStream);
+        assertEquals("UTF-8", ((TarArchiveOutputStream) result).getEncoding());
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamWithTarWithoutEncoding() throws ArchiveException {
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.TAR, outputStream, null);
+        assertNotNull(result);
+        assertTrue(result instanceof TarArchiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamWithJarAndEncoding() throws ArchiveException {
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.JAR, outputStream, "UTF-8");
+        assertNotNull(result);
+        assertTrue(result instanceof JarArchiveOutputStream);
+        assertEquals("UTF-8", ((JarArchiveOutputStream) result).getEncoding());
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamWithJarWithoutEncoding() throws ArchiveException {
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.JAR, outputStream, null);
+        assertNotNull(result);
+        assertTrue(result instanceof JarArchiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamWithCpioAndEncoding() throws ArchiveException {
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.CPIO, outputStream, "UTF-8");
+        assertNotNull(result);
+        assertTrue(result instanceof CpioArchiveOutputStream);
+        assertEquals("UTF-8", ((CpioArchiveOutputStream) result).getEncoding());
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamWithCpioWithoutEncoding() throws ArchiveException {
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.CPIO, outputStream, null);
+        assertNotNull(result);
+        assertTrue(result instanceof CpioArchiveOutputStream);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveOutputStreamTestGenerated.java:[100] cannot find symbol
+  symbol:   method getEncoding()
+  location: class org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveOutputStreamTestGenerated.java:[130] cannot find symbol
+  symbol:   method getEncoding()
+  location: class org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: ArchiveStreamFactory_createArchiveOutputStreamTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

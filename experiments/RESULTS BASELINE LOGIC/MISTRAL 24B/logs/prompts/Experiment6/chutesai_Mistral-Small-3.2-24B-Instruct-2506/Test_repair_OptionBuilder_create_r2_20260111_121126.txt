@@ -1,0 +1,164 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): OptionBuilder_createTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class OptionBuilder_createTestGenerated {
+
+    @Test
+    void createWithValidParameters() {
+        Option option = new Option("o");
+        option.setRequired(false);
+        option.setLongOpt("longOpt");
+        option.setDescription("description");
+        option.setArgName("argName");
+        option.setArgs(1);
+        option.setType(String.class);
+        option.setOptionalArg(false);
+        option.setValueSeparator('=');
+
+        Option result = option;
+
+        assertNotNull(result);
+        assertEquals("o", result.getOpt());
+        assertEquals("longOpt", result.getLongOpt());
+        assertFalse(result.isRequired());
+        assertFalse(result.hasOptionalArg());
+        assertEquals(1, result.getArgs());
+        assertEquals(String.class, result.getType());
+        assertEquals('=', result.getValueSeparator());
+        assertEquals("argName", result.getArgName());
+        assertEquals("description", result.getDescription());
+    }
+
+    @Test
+    void createWithRequiredOption() {
+        Option option = new Option("r");
+        option.setRequired(true);
+        option.setLongOpt("longOpt");
+        option.setDescription("description");
+
+        Option result = option;
+
+        assertNotNull(result);
+        assertTrue(result.isRequired());
+    }
+
+    @Test
+    void createWithOptionalArg() {
+        Option option = new Option("o");
+        option.setRequired(false);
+        option.setOptionalArg(true);
+        option.setLongOpt("longOpt");
+        option.setDescription("description");
+
+        Option result = option;
+
+        assertNotNull(result);
+        assertTrue(result.hasOptionalArg());
+    }
+
+    @Test
+    void createWithUnlimitedArgs() {
+        Option option = new Option("a");
+        option.setArgs(Option.UNLIMITED_VALUES);
+        option.setLongOpt("longOpt");
+        option.setDescription("description");
+
+        Option result = option;
+
+        assertNotNull(result);
+        assertEquals(Option.UNLIMITED_VALUES, result.getArgs());
+    }
+
+    @Test
+    void createWithNoArgCount() {
+        Option option = new Option("n");
+        option.setLongOpt("longOpt");
+        option.setDescription("description");
+
+        Option result = option;
+
+        assertNotNull(result);
+        assertEquals(0, result.getArgs());
+    }
+
+    @Test
+    void createWithNullOpt() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Option((String)null);
+        });
+    }
+
+    @Test
+    void createWithEmptyOpt() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Option("");
+        });
+    }
+
+    @Test
+    void createWithMultiCharOpt() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Option("ab");
+        });
+    }
+
+    @Test
+    void createWithSpecialCharOpt() {
+        Option option = new Option("?");
+        option.setLongOpt("longOpt");
+        option.setDescription("description");
+
+        Option result = option;
+
+        assertNotNull(result);
+        assertEquals("?", result.getOpt());
+    }
+
+    @Test
+    void createWithResetBetweenCalls() {
+        Option first = new Option("a");
+        first.setLongOpt("first");
+
+        Option second = new Option("b");
+        second.setLongOpt("second");
+
+        assertEquals("second", second.getLongOpt());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[12] incompatible types: java.lang.String cannot be converted to org.apache.commons.cli.Option.Builder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[38] incompatible types: java.lang.String cannot be converted to org.apache.commons.cli.Option.Builder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[51] incompatible types: java.lang.String cannot be converted to org.apache.commons.cli.Option.Builder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[65] incompatible types: java.lang.String cannot be converted to org.apache.commons.cli.Option.Builder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[78] incompatible types: java.lang.String cannot be converted to org.apache.commons.cli.Option.Builder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[91] incompatible types: java.lang.String cannot be converted to org.apache.commons.cli.Option.Builder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[98] incompatible types: java.lang.String cannot be converted to org.apache.commons.cli.Option.Builder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[105] incompatible types: java.lang.String cannot be converted to org.apache.commons.cli.Option.Builder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[111] incompatible types: java.lang.String cannot be converted to org.apache.commons.cli.Option.Builder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[123] incompatible types: java.lang.String cannot be converted to org.apache.commons.cli.Option.Builder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[126] incompatible types: java.lang.String cannot be converted to org.apache.commons.cli.Option.Builder
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: OptionBuilder_createTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

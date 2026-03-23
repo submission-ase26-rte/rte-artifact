@@ -1,0 +1,102 @@
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import org.apache.commons.jxpath.ExpressionContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.util.MethodLookupUtils;
+import org.apache.commons.jxpath.util.TypeUtils;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class MethodLookupUtils_lookupMethodTestGenerated {
+
+    @Test
+    void testLookupMethod_nullParameters() {
+        assertNull(MethodLookupUtils.lookupMethod(Object.class, "methodName", null));
+        assertNull(MethodLookupUtils.lookupMethod(Object.class, "methodName", new Object[] {}));
+    }
+
+    @Test
+    void testLookupMethod_nullFirstParameter() {
+        assertNull(MethodLookupUtils.lookupMethod(Object.class, "methodName", new Object[] {null}));
+    }
+
+    @Test
+    void testLookupMethod_noMatchingMethod() {
+        assertNull(MethodLookupUtils.lookupMethod(Object.class, "nonExistentMethod", new Object[] {Integer.valueOf(1)}));
+    }
+
+    @Test
+    void testLookupMethod_approximateMatch() throws JXPathException {
+        Object mockObject = mock(Object.class);
+        Method method = MethodLookupUtils.lookupMethod(Object.class, "toString", new Object[]{Integer.valueOf(1)});
+        assertEquals("toString", method.getName());
+    }
+
+    @Test
+    void testLookupMethod_staticMethod() {
+        assertNull(MethodLookupUtils.lookupMethod(Object.class, "equals", new Object[]{}));
+    }
+
+    @Test
+    void testLookupMethod_typeConversion() throws JXPathException {
+        Object mockObject = mock(Object.class);
+        Method method = MethodLookupUtils.lookupMethod(Object.class, "toString", new Object[]{String.class});
+        assertEquals("toString", method.getName());
+    }
+
+    @Test
+        void testLookupMethod_ambiguousMethodCall() {
+            assertThrows(JXPathException.class, () -> {
+                MethodLookupUtils.lookupMethod(Object.class, "equals", new Object[]{Object.class, Integer.class});
+            });
+        }
+
+    @Test
+        void testLookupMethod_exactMatch() throws JXPathException {
+            Object mockObject = mock(Object.class);
+            Method method = MethodLookupUtils.lookupMethod(Object.class, "toString", new Object[]{});
+            assertEquals("toString", method.getName());
+        }
+
+    @Test
+        void testLookupMethod_expressionContext() throws JXPathException {
+            ExpressionContext expressionContext = mock(ExpressionContext.class);
+            Method method = MethodLookupUtils.lookupMethod(Object.class, "evaluate", new Object[]{expressionContext});
+            assertNotNull(method);
+        }
+
+    @Test
+        void testLookupMethod_nullParameterValue() throws JXPathException {
+            Object mockObject = mock(Object.class);
+            Method method = MethodLookupUtils.lookupMethod(Object.class, "toString", new Object[]{null});
+            assertEquals("toString", method.getName());
+        }
+
+    @Test
+    void testLookupMethod_ambiguousMethodCallWithNull() {
+        assertThrows(JXPathException.class, () -> {
+            MethodLookupUtils.lookupMethod(Object.class, "equals", new Object[]{null, Integer.class});
+        });
+    }
+
+    @Test
+    void testLookupMethod_nullTargetClass() {
+        assertNull(MethodLookupUtils.lookupMethod(null, "toString", new Object[]{}));
+    }
+
+    @Test
+    void testLookupMethod_nullName() {
+        assertNull(MethodLookupUtils.lookupMethod(Object.class, null, new Object[]{}));
+    }
+
+    @Test
+    void testLookupMethod_nullParametersArray() {
+        assertNull(MethodLookupUtils.lookupMethod(Object.class, "toString", null));
+    }
+
+}

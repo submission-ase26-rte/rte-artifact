@@ -1,0 +1,119 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.interfaces.handling.file;
+Class name (MUST be exactly): EventItemWriter_writeItemsTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.interfaces.handling.file;
+
+import jakarta.batch.api.chunk.AbstractItemWriter;
+import jakarta.batch.runtime.context.JobContext;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.application.util.DateConverter;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.cargo.VoyageNumber;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class EventItemWriter_writeItemsTestGenerated {
+
+    private EventItemWriter eventItemWriter;
+    private JobContext jobContext;
+    private ApplicationEvents applicationEvents;
+
+    @BeforeEach
+    void setUp() {
+        jobContext = Mockito.mock(JobContext.class);
+        applicationEvents = Mockito.mock(ApplicationEvents.class);
+
+        eventItemWriter = new EventItemWriter(jobContext, applicationEvents);
+    }
+
+    @Test
+    void writeItems_validItems_writesToArchive() throws Exception {
+        when(jobContext.getProperties().getProperty("ARCHIVE_DIRECTORY")).thenReturn("/tmp/archive");
+        List<Object> items = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
+        items.add(new HandlingEventRegistrationAttempt(now, now.plusHours(1), new TrackingId("123"), new VoyageNumber("Voyage1"), HandlingEvent.LOADED, new UnLocode("UNLOC1")));
+
+        eventItemWriter.writeItems(items);
+
+        verify(applicationEvents).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+    }
+
+    @Test
+    void writeItems_emptyList_doesNothing() throws Exception {
+        when(jobContext.getProperties().getProperty("ARCHIVE_DIRECTORY")).thenReturn("/tmp/archive");
+        List<Object> items = new ArrayList<>();
+
+        eventItemWriter.writeItems(items);
+
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+    }
+
+    @Test
+    void writeItems_nullItemsList_throwsException() throws Exception {
+        when(jobContext.getProperties().getProperty("ARCHIVE_DIRECTORY")).thenReturn("/tmp/archive");
+        List<Object> items = null;
+
+        assertThrows(NullPointerException.class, () -> eventItemWriter.writeItems(items));
+
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+    }
+
+    @Test
+    void writeItems_invalidItemType_handlesException() throws Exception {
+        when(jobContext.getProperties().getProperty("ARCHIVE_DIRECTORY")).thenReturn("/tmp/archive");
+        List<Object> items = new ArrayList<>();
+        items.add("Not a HandlingEventRegistrationAttempt");
+
+        eventItemWriter.writeItems(items);
+
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+    }
+
+    @Test
+    void writeItems_archiveDirectoryNull_throwsException() throws Exception {
+        when(jobContext.getProperties().getProperty("ARCHIVE_DIRECTORY")).thenReturn(null);
+        List<Object> items = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
+        items.add(new HandlingEventRegistrationAttempt(now, now.plusHours(1), new TrackingId("123"), new VoyageNumber("Voyage1"), HandlingEvent.LOADED, new UnLocode("UNLOC1")));
+
+        assertThrows(NullPointerException.class, () -> eventItemWriter.writeItems(items));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[18] cannot find symbol
+  symbol:   class VoyageNumber
+  location: package org.eclipse.cargotracker.domain.model.cargo
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: EventItemWriter_writeItemsTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

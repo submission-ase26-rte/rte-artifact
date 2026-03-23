@@ -1,0 +1,135 @@
+Here's the complete JUnit 5 test class for the `lookupMethod` method of `MethodLookupUtils`:
+
+```java
+package org.apache.commons.jxpath.util;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.HashMap;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+class MethodLookupUtils_lookupMethodTestGenerated {
+
+    private Class<?> targetClass;
+    private Method mockMethod;
+    private Method[] mockMethods;
+
+    @BeforeEach
+    void setUp() {
+        targetClass = mock(Class.class);
+        mockMethod = mock(Method.class);
+        mockMethods = new Method[]{mockMethod};
+
+        when(mockMethod.getName()).thenReturn("testMethod");
+        when(mockMethod.getParameterTypes()).thenReturn(new Class<?>[]{String.class, Integer.class});
+        when(mockMethod.getModifiers()).thenReturn(Modifier.PUBLIC);
+        when(targetClass.getMethods()).thenReturn(mockMethods);
+        when(targetClass.getMethod(anyString(), any())).thenReturn(mockMethod);
+    }
+
+    @Test
+    void testLookupMethod_NullParameters_ReturnsNull() {
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "testMethod", null);
+        assertNull(result);
+
+        result = MethodLookupUtils.lookupMethod(targetClass, "testMethod", new Object[0]);
+        assertNull(result);
+
+        result = MethodLookupUtils.lookupMethod(targetClass, "testMethod", new Object[]{null});
+        assertNull(result);
+    }
+
+    @Test
+    void testLookupMethod_NoMatchType_ReturnsNull() {
+        when(MethodLookupUtils.matchType(any(), any())).thenReturn(MethodLookupUtils.NO_MATCH);
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "testMethod", new Object[]{"param"});
+        assertNull(result);
+    }
+
+    @Test
+    void testLookupMethod_ExactMatch_Found() throws Exception {
+        when(MethodLookupUtils.matchType(any(), any())).thenReturn(MethodLookupUtils.EXACT_MATCH);
+        when(mockMethod.getModifiers()).thenReturn(Modifier.PUBLIC);
+
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "testMethod", new Object[]{"param"});
+        assertNotNull(result);
+        verify(targetClass).getMethod("testMethod", new Class<?>[]{String.class});
+    }
+
+    @Test
+    void testLookupMethod_StaticMethod_ReturnsNull() throws Exception {
+        when(MethodLookupUtils.matchType(any(), any())).thenReturn(MethodLookupUtils.EXACT_MATCH);
+        when(mockMethod.getModifiers()).thenReturn(Modifier.STATIC);
+
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "testMethod", new Object[]{"param"});
+        assertNull(result);
+        verify(targetClass).getMethod("testMethod", new Class<?>[]{String.class});
+    }
+
+    @Test
+    void testLookupMethod_ApproximateMatch_Found() throws Exception {
+        when(MethodLookupUtils.matchType(any(), any())).thenReturn(MethodLookupUtils.EXACT_MATCH);
+        when(mockMethod.getModifiers()).thenReturn(Modifier.PUBLIC);
+        when(mockMethod.getName()).thenReturn("testMethod");
+        when(MethodLookupUtils.matchParameterTypes(any(), any())).thenReturn(MethodLookupUtils.APPROXIMATE_MATCH);
+
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "testMethod", new Object[]{"param", 123});
+        assertNotNull(result);
+    }
+
+    @Test
+    void testLookupMethod_ExactMatch_MultipleMethods() throws Exception {
+        Method mockMethod2 = mock(Method.class);
+        when(mockMethod2.getName()).thenReturn("testMethod");
+        when(mockMethod2.getParameterTypes()).thenReturn(new Class<?>[]{String.class, Integer.class});
+        when(mockMethod2.getModifiers()).thenReturn(Modifier.PUBLIC);
+        mockMethods = new Method[]{mockMethod, mockMethod2};
+
+        when(MethodLookupUtils.matchType(any(), any())).thenReturn(MethodLookupUtils.EXACT_MATCH);
+        when(mockMethod.getModifiers()).thenReturn(Modifier.PUBLIC);
+        when(mockMethod2.getModifiers()).thenReturn(Modifier.PUBLIC);
+        when(mockMethod.getParameterTypes()).thenReturn(new Class<?>[]{String.class, Integer.class});
+        when(mockMethod2.getParameterTypes()).thenReturn(new Class<?>[]{String.class, Integer.class});
+        when(MethodLookupUtils.matchParameterTypes(any(), any())).thenReturn(MethodLookupUtils.EXACT_MATCH);
+
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "testMethod", new Object[]{"param", 123});
+        assertNotNull(result);
+    }
+
+    @Test
+    void testLookupMethod_AmbiguousMatch_ThrowsException() throws Exception {
+        Method mockMethod2 = mock(Method.class);
+        when(mockMethod2.getName()).thenReturn("testMethod");
+        when(mockMethod2.getParameterTypes()).thenReturn(new Class<?>[]{String.class, Long.class});
+        when(mockMethod2.getModifiers()).thenReturn(Modifier.PUBLIC);
+        mockMethods = new Method[]{mockMethod, mockMethod2};
+
+        when(MethodLookupUtils.matchType(any(), any())).thenReturn(MethodLookupUtils.EXACT_MATCH);
+        when(mockMethod.getModifiers()).thenReturn(Modifier.PUBLIC);
+        when(mockMethod2.getModifiers()).thenReturn(Modifier.PUBLIC);
+        when(mockMethod.getParameterTypes()).thenReturn(new Class<?>[]{String.class, Integer.class});
+        when(mockMethod2.getParameterTypes()).thenReturn(new Class<?>[]{String.class, Long.class});
+        when(MethodLookupUtils.matchParameterTypes(eq(new Class<?>[]{String.class, Integer.class}), any())).thenReturn(MethodLookupUtils.EXACT_MATCH);
+        when(MethodLookupUtils.matchParameterTypes(eq(new Class<?>[]{String.class, Long.class}), any())).thenReturn(MethodLookupUtils.EXACT_MATCH);
+
+        assertThrows(JXPathException.class, () -> {
+            MethodLookupUtils.lookupMethod(targetClass, "testMethod", new Object[]{"param", 123});
+        });
+    }
+
+    @Test
+    void testLookupMethod_NullParametersInMiddle_NotExact() throws Exception {
+        when(MethodLookupUtils.matchType(any(), any())).thenReturn(MethodLookupUtils.EXACT_MATCH);
+        when(mockMethod.getModifiers()).thenReturn(Modifier.PUBLIC);
+
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "testMethod", new Object[]{"param", null, 123});
+        assertNotNull(result);
+        verify(targetClass).getMethod("testMethod", new Class<?>[]{String.class, Integer.class});
+    }
+}
+```

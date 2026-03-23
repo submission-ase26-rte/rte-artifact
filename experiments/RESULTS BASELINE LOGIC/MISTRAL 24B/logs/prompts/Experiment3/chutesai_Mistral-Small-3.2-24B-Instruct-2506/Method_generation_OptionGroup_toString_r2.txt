@@ -1,0 +1,344 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.cli;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class OptionGroup_toStringTestGenerated {
+    @Mock
+    private Option option1;
+    @Mock
+    private Option option2;
+    @Mock
+    private Option option3;
+    private OptionGroup optionGroup;
+
+    @BeforeEach
+    void setUp() {
+        optionGroup = new OptionGroup();
+        ReflectionTestUtils.setField(optionGroup, "options", new ArrayList<>());
+    }
+
+    @Test
+    void testToStringWithMultipleOptionsWithShortOpt() {
+        when(option1.getOpt()).thenReturn("a");
+        when(option1.getDescription()).thenReturn("description1");
+        when(option2.getOpt()).thenReturn("b");
+        when(option2.getDescription()).thenReturn("description2");
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        options.add(option2);
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+        String result = optionGroup.toString();
+        assertEquals("[-a description1, -b description2]", result);
+    }
+
+    @Test
+    void testToStringWithMultipleOptionsWithLongOpt() {
+        when(option1.getLongOpt()).thenReturn("option1");
+        when(option1.getDescription()).thenReturn("description1");
+        when(option2.getLongOpt()).thenReturn("option2");
+        when(option2.getDescription()).thenReturn("description2");
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        options.add(option2);
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+        String result = optionGroup.toString();
+        assertEquals("[--option1 description1, --option2 description2]", result);
+    }
+
+    @Test
+    void testToStringWithMixedOptions() {
+        when(option1.getOpt()).thenReturn("a");
+        when(option1.getDescription()).thenReturn("description1");
+        when(option2.getLongOpt()).thenReturn("option2");
+        when(option2.getDescription()).thenReturn("description2");
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        options.add(option2);
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+        String result = optionGroup.toString();
+        assertEquals("[-a description1, --option2 description2]", result);
+    }
+
+    @Test
+    void testToStringWithNoDescription() {
+        when(option1.getOpt()).thenReturn("a");
+        when(option2.getOpt()).thenReturn("b");
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        options.add(option2);
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+        String result = optionGroup.toString();
+        assertEquals("[-a, -b]", result);
+    }
+
+    @Test
+    void testToStringWithSingleOption() {
+        when(option1.getOpt()).thenReturn("a");
+        when(option1.getDescription()).thenReturn("description1");
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+        String result = optionGroup.toString();
+        assertEquals("[-a description1]", result);
+    }
+
+    @Test
+    void testToStringWithEmptyOptionGroup() {
+        String result = optionGroup.toString();
+        assertEquals("[]", result);
+    }
+
+    @Test
+    void testToStringWithNullOptions() {
+        when(option1.getOpt()).thenReturn(null);
+        when(option1.getLongOpt()).thenReturn(null);
+        when(option1.getDescription()).thenReturn("description1");
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+        String result = optionGroup.toString();
+        assertEquals("[]", result);
+    }
+
+    @Test
+    void testToStringWithOptionWithNullOptAndNullLongOpt() {
+        when(option1.getOpt()).thenReturn(null);
+        when(option1.getLongOpt()).thenReturn(null);
+        when(option1.getDescription()).thenReturn("description1");
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+        String result = optionGroup.toString();
+        assertEquals("[]", result);
+    }
+
+    @Test
+    void testToStringWithOptionWithNullDescription() {
+        when(option1.getOpt()).thenReturn("a");
+        when(option1.getDescription()).thenReturn(null);
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+        String result = optionGroup.toString();
+        assertEquals("[-a]", result);
+    }
+
+    @Test
+    void testToStringWithMultipleOptionsWithSomeNullOptions() {
+        when(option1.getOpt()).thenReturn("a");
+        when(option1.getDescription()).thenReturn("description1");
+        when(option2.getOpt()).thenReturn(null);
+        when(option2.getLongOpt()).thenReturn(null);
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        options.add(option2);
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+        String result = optionGroup.toString();
+        assertEquals("[-a description1]", result);
+    }
+
+    @Test
+    void testToStringWithMultipleOptionsWithNullDescription() {
+        when(option1.getOpt()).thenReturn("a");
+        when(option1.getDescription()).thenReturn(null);
+        when(option2.getOpt()).thenReturn("b");
+        when(option2.getDescription()).thenReturn(null);
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        options.add(option2);
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+        String result = optionGroup.toString();
+        assertEquals("[-a, -b]", result);
+    }
+
+    @Test
+    void testToStringWithMultipleOptions() {
+        when(option1.getOpt()).thenReturn("a");
+        when(option1.getDescription()).thenReturn("description1");
+        when(option2.getOpt()).thenReturn("b");
+        when(option2.getDescription()).thenReturn("description2");
+        when(option3.getOpt()).thenReturn("c");
+        when(option3.getDescription()).thenReturn("description3");
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        options.add(option2);
+        options.add(option3);
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+        String result = optionGroup.toString();
+        assertEquals("[-a description1, -b description2, -c description3]", result);
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 33.33% | Branch: 12.50%
+- Tests: 0/12 passed
+
+TEST STATUS:
+- PASSED (0): none
+- FAILED (0): none
+- ERRORS (12): testToStringWithMultipleOptionsWithShortOpt, testToStringWithMultipleOptionsWithLongOpt, testToStringWithMixedOptions, testToStringWithNoDescription, testToStringWithSingleOption, testToStringWithEmptyOptionGroup, testToStringWithNullOptions, testToStringWithOptionWithNullOptAndNullLongOpt, testToStringWithOptionWithNullDescription, testToStringWithMultipleOptionsWithSomeNullOptions, testToStringWithMultipleOptionsWithNullDescription, testToStringWithMultipleOptions
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PREVIOUSLY GENERATED METHOD:
+public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("[");
+    boolean first = true;
+
+    if (optionMap != null) {
+        for (Option option : optionMap) {
+            if (option != null) {
+                String optionString = null;
+                if (option.getOpt() != null) {
+                    optionString = "-" + option.getOpt();
+                } else if (option.getLongOpt() != null) {
+                    optionString = "--" + option.getLongOpt();
+                }
+
+                if (optionString != null) {
+                    if (!first) {
+                        sb.append(", ");
+                    }
+                    sb.append(optionString);
+                    if (option.getDescription() != null) {
+                        sb.append(" ").append(option.getDescription());
+                    }
+                    first = false;
+                }
+            }
+        }
+    }
+
+    sb.append("]");
+    return sb.toString();
+}
+
+ADDITIONAL INSTRUCTIONS:
+- Compare the previous method with the one you are about to generate
+- Improve quality and correctness compared to the previous version
+- Maintain compatibility with all provided tests
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Serializable -> java.io.Serializable
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   LinkedHashMap -> java.util.LinkedHashMap
+//   Map -> java.util.Map
+
+// === Class: OptionGroup ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final Map optionMap;
+    private String selected;
+    private boolean required;
+
+// Getter/Setter Methods (for test assertions):
+public Collection<String> getNames();
+public Collection<Option> getOptions();
+public String getSelected();
+public boolean isRequired();
+public void setRequired(final boolean required);
+public void setSelected(final Option option) throws AlreadySelectedException;
+
+// Internal Method Signatures (used by target method):
+public Collection getOptions();
+
+// === External Class: Option ===
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   Objects -> java.util.Objects
+// Fields (with actual visibility):
+    private static final Class DEFAULT_TYPE;
+    private int argCount;
+    private String argName;
+    private Converter converter;
+    private final DeprecatedAttributes deprecated;
+    private String description;
+    private String longOption;
+    private final String option;
+    private boolean optionalArg;
+    private boolean required;
+    private Class type;
+    private char valueSeparator;
+    package-private static final Option[] EMPTY_ARRAY;
+    private static final long serialVersionUID;
+    public static final int UNINITIALIZED;
+    public static final int UNLIMITED_VALUES;
+    private List values;
+    private char valuesep;
+
+// Constructors:
+private Builder(String option);
+private Option(Builder builder);
+public Option(String option, boolean hasArg, String description);
+public Option(String option, String description);
+public Option(String option, String longOption, boolean hasArg, String description);
+
+// Method Signatures (used by target method):
+public String getDescription();
+public String getLongOpt();
+public String getOpt();
+
+
+TASK:
+Regenerate ONLY the method "toString" OF CLASS "OptionGroup" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public String toString() {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.cli
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in OptionGroup
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

@@ -1,0 +1,80 @@
+{
+  "method_id": 26,
+  "tested_method": "createArchiveInputStream",
+  "tested_class": "ArchiveStreamFactory",
+  "project": "Compress",
+  "timestamp": "2026-01-27T18:47:17.900955",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\Compress\\Run-1\\src\\test\\java\\org\\apache\\commons\\compress\\archivers\\Metodo26_unit_createArchiveInputStream_ArchiveStreamFactory_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 4,
+    "tests_total": 7,
+    "tests_failed": 3,
+    "line_coverage": 38.88888888888889,
+    "branch_coverage": 38.88888888888889,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testCreateArchiveInputStreamSevenZ_dHZR8 --\nERROR: java.util.ServiceConfigurationError: org.apache.commons.compress.archivers.ArchiveStreamProvider: Provider org.apache.commons.compress.archivers.TestArchiveStreamProvider not found\n--------------------------------------------------\nTEST: testCreateArchiveInputStreamNullEncoding_wpjv12_osBl0 --\nERROR: org.apache.commons.compress.archivers.ArchiveException\nCaused by: java.io.EOFException\n... 8 more\n--------------------------------------------------\nTEST: testCreateArchiveInputStreamUnknownArchiverName_FIhm11 --\nERROR: java.util.ServiceConfigurationError: org.apache.commons.compress.archivers.ArchiveStreamProvider: Provider org.apache.commons.compress.archivers.TestArchiveStreamProvider not found",
+    "test_info": {
+      "valid_tests": [
+        "testCreateArchiveInputStreamNullArchiverName_ipon9",
+        "testCreateArchiveInputStreamNullInputStream_TJkQ10",
+        "testCreateArchiveInputStreamZip_zTMB2_Btcz0",
+        "testCreateArchiveInputStreamCpio_VdaE6_DXHZ0"
+      ],
+      "invalid_tests": [
+        "testCreateArchiveInputStreamSevenZ_dHZR8",
+        "testCreateArchiveInputStreamUnknownArchiverName_FIhm11",
+        "testCreateArchiveInputStreamNullEncoding_wpjv12_osBl0"
+      ],
+      "failed_assert_tests": [],
+      "runtime_error_tests": [
+        "testCreateArchiveInputStreamSevenZ_dHZR8",
+        "testCreateArchiveInputStreamUnknownArchiverName_FIhm11",
+        "testCreateArchiveInputStreamNullEncoding_wpjv12_osBl0"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 7,
+    "assertion_complexity": 0.2551,
+    "pct_null_assertions": 0.6364,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.3636,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.701,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 1.0,
+    "overall_naturalness_score": 0.8775
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.06632250826813302,
+    "string_similarity": 0.2012158054711246,
+    "token_similarity": 0.45614035087719296,
+    "ast_similarity": 0.15555555555555556,
+    "embedding_similarity": 0.8256394863128662,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.09375,
+      "similar_blocks": 6,
+      "total_blocks": 128
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.42097886115462085,
+    "passes_threshold": false
+  },
+  "original_method": "    public <I extends ArchiveInputStream<? extends ArchiveEntry>> I createArchiveInputStream(final String archiverName, final InputStream in,\n            final String actualEncoding) throws ArchiveException {\n\n        if (archiverName == null) {\n            throw new IllegalArgumentException(\"Archiver name must not be null.\");\n        }\n\n        if (in == null) {\n            throw new IllegalArgumentException(\"InputStream must not be null.\");\n        }\n\n        if (AR.equalsIgnoreCase(archiverName)) {\n            return (I) new ArArchiveInputStream(in);\n        }\n        if (ARJ.equalsIgnoreCase(archiverName)) {\n            if (actualEncoding != null) {\n                return (I) new ArjArchiveInputStream(in, actualEncoding);\n            }\n            return (I) new ArjArchiveInputStream(in);\n        }\n        if (ZIP.equalsIgnoreCase(archiverName)) {\n            if (actualEncoding != null) {\n                return (I) new ZipArchiveInputStream(in, actualEncoding);\n            }\n            return (I) new ZipArchiveInputStream(in);\n        }\n        if (TAR.equalsIgnoreCase(archiverName)) {\n            if (actualEncoding != null) {\n                return (I) new TarArchiveInputStream(in, actualEncoding);\n            }\n            return (I) new TarArchiveInputStream(in);\n        }\n        if (JAR.equalsIgnoreCase(archiverName) || APK.equalsIgnoreCase(archiverName)) {\n            if (actualEncoding != null) {\n                return (I) new JarArchiveInputStream(in, actualEncoding);\n            }\n            return (I) new JarArchiveInputStream(in);\n        }\n        if (CPIO.equalsIgnoreCase(archiverName)) {\n            if (actualEncoding != null) {\n                return (I) new CpioArchiveInputStream(in, actualEncoding);\n            }\n            return (I) new CpioArchiveInputStream(in);\n        }\n        if (DUMP.equalsIgnoreCase(archiverName)) {\n            if (actualEncoding != null) {\n                return (I) new DumpArchiveInputStream(in, actualEncoding);\n            }\n            return (I) new DumpArchiveInputStream(in);\n        }\n        if (SEVEN_Z.equalsIgnoreCase(archiverName)) {\n            throw new StreamingNotSupportedException(SEVEN_Z);\n        }\n\n        final ArchiveStreamProvider archiveStreamProvider = getArchiveInputStreamProviders().get(toKey(archiverName));\n        if (archiveStreamProvider != null) {\n            return archiveStreamProvider.createArchiveInputStream(archiverName, in, actualEncoding);\n        }\n\n        throw new ArchiveException(\"Archiver: \" + archiverName + \" not found.\");\n    }",
+  "regenerated_method": "@Override\n    public <I extends ArchiveInputStream<? extends ArchiveEntry>> I createArchiveInputStream(final String archiverName, final InputStream in, final String actualEncoding) throws ArchiveException {\n        ArchiveStreamProvider provider = getArchiveInputStreamProviders().get(toKey(archiverName));\n        if (provider == null) {\n            throw new ArchiveException(\"No ArchiveStreamProvider found for archiver name: \" + archiverName);\n        }\n        try {\n            return (I) provider.createArchiveInputStream(archiverName, in, actualEncoding);\n        } catch (StreamingNotSupportedException e) {\n            throw new ArchiveException(\"Streaming not supported for \" + archiverName, e);\n        }\n    }",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6625905986496899,
+  "original_metrics": {
+    "loc": 61,
+    "sloc": 56,
+    "complexity": 24
+  }
+}

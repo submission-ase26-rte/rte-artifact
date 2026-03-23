@@ -1,0 +1,366 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.compress.archivers;
+Class name (MUST be exactly): ArchiveStreamFactory_createArchiveInputStreamTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testCreateArchiveInputStreamArjWithEncoding --
+ERROR: org.apache.commons.compress.archivers.ArchiveException
+Caused by: java.io.EOFException
+... 7 more
+--------------------------------------------------
+TEST: testCreateArchiveInputStreamUnknownArchiver --
+ERROR: java.util.ServiceConfigurationError: org.apache.commons.compress.archivers.ArchiveStreamProvider: Provider org.apache.commons.compress.archivers.TestArchiveStreamProvider not found
+--------------------------------------------------
+TEST: testCreateArchiveInputStreamDumpWithEncoding --
+ERROR: org.apache.commons.compress.archivers.ArchiveException: unexpected EOF
+Caused by: org.apache.commons.compress.archivers.dump.ShortFileException: unexpected EOF
+... 7 more
+--------------------------------------------------
+TEST: testCreateArchiveInputStreamDumpWithoutEncoding --
+ERROR: org.apache.commons.compress.archivers.ArchiveException: unexpected EOF
+Caused by: org.apache.commons.compress.archivers.dump.ShortFileException: unexpected EOF
+... 8 more
+--------------------------------------------------
+TEST: testCreateArchiveInputStreamArjWithoutEncoding --
+ERROR: org.apache.commons.compress.archivers.ArchiveException
+Caused by: java.io.EOFException
+... 8 more
+
+TEST CODE TO FIX:
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.Collections;
+import java.util.Locale;
+import java.util.ServiceLoader;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import org.apache.commons.compress.archivers.ar.ArArchiveInputStream;
+import org.apache.commons.compress.archivers.arj.ArjArchiveInputStream;
+import org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;
+import org.apache.commons.compress.archivers.dump.DumpArchiveInputStream;
+import org.apache.commons.compress.archivers.jar.JarArchiveInputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.compress.utils.Sets;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArchiveStreamFactory_createArchiveInputStreamTestGenerated {
+    private ArchiveStreamFactory factory;
+    @BeforeEach
+    public void setUp() {
+        factory = new ArchiveStreamFactory();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        factory = null;
+    }
+
+
+    @Test
+        public void testCreateArchiveInputStreamArjWithEncoding() throws Exception {
+            InputStream in = new ByteArrayInputStream(new byte[]{});
+            ArjArchiveInputStream archiveInputStream = factory.createArchiveInputStream(ArchiveStreamFactory.ARJ, in, "UTF-8");
+            assertNotNull(archiveInputStream);
+            archiveInputStream.close();
+        }
+
+    @Test
+        public void testCreateArchiveInputStreamArjWithoutEncoding() throws Exception {
+            InputStream in = new ByteArrayInputStream(new byte[]{});
+            ArjArchiveInputStream archiveInputStream = factory.createArchiveInputStream(ArchiveStreamFactory.ARJ, in, null);
+            assertNotNull(archiveInputStream);
+            archiveInputStream.close();
+        }
+
+    @Test
+        public void testCreateArchiveInputStreamDumpWithEncoding() throws Exception {
+            InputStream in = new ByteArrayInputStream(new byte[]{});
+            DumpArchiveInputStream archiveInputStream = factory.createArchiveInputStream(ArchiveStreamFactory.DUMP, in, "UTF-8");
+            assertNotNull(archiveInputStream);
+            archiveInputStream.close();
+        }
+
+    @Test
+        public void testCreateArchiveInputStreamDumpWithoutEncoding() throws Exception {
+            InputStream in = new ByteArrayInputStream(new byte[]{});
+            DumpArchiveInputStream archiveInputStream = factory.createArchiveInputStream(ArchiveStreamFactory.DUMP, in, null);
+            assertNotNull(archiveInputStream);
+            archiveInputStream.close();
+        }
+
+    @Test
+        public void testCreateArchiveInputStreamUnknownArchiver() throws Exception {
+            InputStream in = new ByteArrayInputStream(new byte[]{});
+            try {
+                factory.createArchiveInputStream("unknown", in, null);
+                fail("Expected ArchiveException");
+            } catch (ArchiveException e) {
+                // Expected
+            }
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    public void testCreateArchiveInputStreamAr() {}
+    @Test
+    public void testCreateArchiveInputStreamZipWithEncoding() {}
+    @Test
+    public void testCreateArchiveInputStreamZipWithoutEncoding() {}
+    @Test
+    public void testCreateArchiveInputStreamTarWithEncoding() {}
+    @Test
+    public void testCreateArchiveInputStreamTarWithoutEncoding() {}
+    @Test
+    public void testCreateArchiveInputStreamJarWithEncoding() {}
+    @Test
+    public void testCreateArchiveInputStreamJarWithoutEncoding() {}
+    @Test
+    public void testCreateArchiveInputStreamJarApkWithEncoding() {}
+    @Test
+    public void testCreateArchiveInputStreamJarApkWithoutEncoding() {}
+    @Test
+    public void testCreateArchiveInputStreamCpioWithEncoding() {}
+    @Test
+    public void testCreateArchiveInputStreamCpioWithoutEncoding() {}
+    @Test
+    public void testCreateArchiveInputStreamSevenZ() {}
+    @Test
+    public void testCreateArchiveInputStreamNullArchiverName() {}
+    @Test
+    public void testCreateArchiveInputStreamNullInputStream() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ByteArrayInputStream -> java.io.ByteArrayInputStream
+//   IOException -> java.io.IOException
+//   InputStream -> java.io.InputStream
+//   OutputStream -> java.io.OutputStream
+//   AccessController -> java.security.AccessController
+//   PrivilegedAction -> java.security.PrivilegedAction
+//   Collections -> java.util.Collections
+//   Locale -> java.util.Locale
+//   ServiceLoader -> java.util.ServiceLoader
+//   Set -> java.util.Set
+//   SortedMap -> java.util.SortedMap
+//   TreeMap -> java.util.TreeMap
+//   ArArchiveInputStream -> org.apache.commons.compress.archivers.ar.ArArchiveInputStream
+//   ArArchiveOutputStream -> org.apache.commons.compress.archivers.ar.ArArchiveOutputStream
+//   ArjArchiveInputStream -> org.apache.commons.compress.archivers.arj.ArjArchiveInputStream
+//   CpioArchiveInputStream -> org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream
+//   CpioArchiveOutputStream -> org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream
+//   DumpArchiveInputStream -> org.apache.commons.compress.archivers.dump.DumpArchiveInputStream
+//   JarArchiveInputStream -> org.apache.commons.compress.archivers.jar.JarArchiveInputStream
+//   JarArchiveOutputStream -> org.apache.commons.compress.archivers.jar.JarArchiveOutputStream
+//   SevenZFile -> org.apache.commons.compress.archivers.sevenz.SevenZFile
+//   TarArchiveEntry -> org.apache.commons.compress.archivers.tar.TarArchiveEntry
+//   TarArchiveInputStream -> org.apache.commons.compress.archivers.tar.TarArchiveInputStream
+//   TarArchiveOutputStream -> org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
+//   ZipArchiveInputStream -> org.apache.commons.compress.archivers.zip.ZipArchiveInputStream
+//   ZipArchiveOutputStream -> org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream
+//   IOUtils -> org.apache.commons.compress.utils.IOUtils
+//   Sets -> org.apache.commons.compress.utils.Sets
+
+// === Class: ArchiveStreamFactory ===
+// Fields (with actual visibility):
+    private static final int TAR_HEADER_SIZE;
+    private static final int TAR_TEST_ENTRY_COUNT;
+    private static final int DUMP_SIGNATURE_SIZE;
+    private static final int SIGNATURE_SIZE;
+    public static final ArchiveStreamFactory DEFAULT;
+    public static final String APK;
+    public static final String XAPK;
+    public static final String APKS;
+    public static final String APKM;
+    public static final String AR;
+    public static final String ARJ;
+    public static final String CPIO;
+    public static final String DUMP;
+    public static final String JAR;
+    public static final String TAR;
+    public static final String ZIP;
+    public static final String SEVEN_Z;
+    private String entryEncoding;
+    private SortedMap archiveInputStreamProviders;
+    private SortedMap archiveOutputStreamProviders;
+
+// Constructors:
+public ArchiveStreamFactory();
+public ArchiveStreamFactory(String encoding);
+
+// Getter/Setter Methods (for test assertions):
+public SortedMap<String, ArchiveStreamProvider> getArchiveInputStreamProviders();
+public SortedMap<String, ArchiveStreamProvider> getArchiveOutputStreamProviders();
+public String getEntryEncoding();
+public Set<String> getInputStreamArchiveNames();
+public Set<String> getOutputStreamArchiveNames();
+public void setEntryEncoding(final String entryEncoding);
+
+// Internal Method Signatures (used by target method):
+public SortedMap getArchiveInputStreamProviders();
+static private String toKey(final String name);
+
+// === External Class: ArchiveStreamProvider ===
+// Import paths:
+//   InputStream -> java.io.InputStream
+//   OutputStream -> java.io.OutputStream
+//   Set -> java.util.Set
+// Method Signatures (used by target method):
+I createArchiveInputStream(String archiverName, InputStream inputStream, String encoding);
+
+
+// === Exception Class: ArchiveException ===
+// NOTE: The target method throws this exception. Tests must handle it correctly.
+// Constructors:
+public ArchiveException(String message);
+public ArchiveException(String message, Exception cause);
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    public void setUp() {
+        factory = new ArchiveStreamFactory();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        factory = null;
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public <I extends ArchiveInputStream<? extends ArchiveEntry>> I createArchiveInputStream(final String archiverName, final InputStream in,
+            final String actualEncoding) throws ArchiveException {
+
+        if (archiverName == null) {
+            throw new IllegalArgumentException("Archiver name must not be null.");
+        }
+
+        if (in == null) {
+            throw new IllegalArgumentException("InputStream must not be null.");
+        }
+
+        if (AR.equalsIgnoreCase(archiverName)) {
+            return (I) new ArArchiveInputStream(in);
+        }
+        if (ARJ.equalsIgnoreCase(archiverName)) {
+            if (actualEncoding != null) { // NOT COVERED BY TESTS
+                return (I) new ArjArchiveInputStream(in, actualEncoding); // NOT COVERED BY TESTS
+            }
+            return (I) new ArjArchiveInputStream(in); // NOT COVERED BY TESTS
+        }
+        if (ZIP.equalsIgnoreCase(archiverName)) {
+            if (actualEncoding != null) {
+                return (I) new ZipArchiveInputStream(in, actualEncoding);
+            }
+            return (I) new ZipArchiveInputStream(in);
+        }
+        if (TAR.equalsIgnoreCase(archiverName)) {
+            if (actualEncoding != null) {
+                return (I) new TarArchiveInputStream(in, actualEncoding);
+            }
+            return (I) new TarArchiveInputStream(in);
+        }
+        if (JAR.equalsIgnoreCase(archiverName) || APK.equalsIgnoreCase(archiverName)) {
+            if (actualEncoding != null) {
+                return (I) new JarArchiveInputStream(in, actualEncoding);
+            }
+            return (I) new JarArchiveInputStream(in);
+        }
+        if (CPIO.equalsIgnoreCase(archiverName)) {
+            if (actualEncoding != null) {
+                return (I) new CpioArchiveInputStream(in, actualEncoding);
+            }
+            return (I) new CpioArchiveInputStream(in);
+        }
+        if (DUMP.equalsIgnoreCase(archiverName)) {
+            if (actualEncoding != null) { // NOT COVERED BY TESTS
+                return (I) new DumpArchiveInputStream(in, actualEncoding); // NOT COVERED BY TESTS
+            }
+            return (I) new DumpArchiveInputStream(in); // NOT COVERED BY TESTS
+        }
+        if (SEVEN_Z.equalsIgnoreCase(archiverName)) { // NOT COVERED BY TESTS
+            throw new StreamingNotSupportedException(SEVEN_Z);
+        }
+
+        final ArchiveStreamProvider archiveStreamProvider = getArchiveInputStreamProviders().get(toKey(archiverName)); // NOT COVERED BY TESTS
+        if (archiveStreamProvider != null) { // NOT COVERED BY TESTS
+            return archiveStreamProvider.createArchiveInputStream(archiverName, in, actualEncoding); // NOT COVERED BY TESTS
+        }
+
+        throw new ArchiveException("Archiver: " + archiverName + " not found."); // NOT COVERED BY TESTS
+    }
+
+
+COVERAGE ISSUES:
+Current line coverage: 77.78%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers only if ensuring unique names.
+- DO NOT mock the target class
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

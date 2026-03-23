@@ -1,0 +1,207 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.compress.archivers;
+Class name (MUST be exactly): ArchiveStreamFactory_createArchiveInputStreamTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.compress.archivers;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.Collections;
+import java.util.Locale;
+import java.util.SortedMap;
+
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.arj.ArArchiveInputStream;
+import org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;
+import org.apache.commons.compress.archivers.dump.DumpArchiveInputStream;
+import org.apache.commons.compress.archivers.jar.JarArchiveInputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.utils.IOUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.junit.jupiter.api.Timeout;
+import org.apache.commons.compress.archivers.ArchiveStreamProvider;
+import org.apache.commons.compress.archivers.StreamingNotSupportedException;
+import org.apache.commons.compress.archivers.ArchiveException;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class ArchiveStreamFactory_createArchiveInputStreamTestGenerated {
+
+    private ArchiveStreamFactory factory;
+
+    @BeforeEach
+    void setUp() {
+        factory = new ArchiveStreamFactory();
+    }
+
+    @Test
+    void testCreateArchiveInputStream_ar() throws ArchiveException {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream archiveInputStream = factory.createArchiveInputStream("ar", in, null);
+        assertInstanceOf(ArArchiveInputStream.class, archiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStream_arj_withEncoding() throws ArchiveException {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream archiveInputStream = factory.createArchiveInputStream("arj", in, "UTF-8");
+        assertInstanceOf(ArjArchiveInputStream.class, archiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStream_arj_withoutEncoding() throws ArchiveException {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream archiveInputStream = factory.createArchiveInputStream("arj", in, null);
+        assertInstanceOf(ArjArchiveInputStream.class, archiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStream_zip_withEncoding() throws ArchiveException {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream archiveInputStream = factory.createArchiveInputStream("zip", in, "UTF-8");
+        assertInstanceOf(ZipArchiveInputStream.class, archiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStream_zip_withoutEncoding() throws ArchiveException {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream archiveInputStream = factory.createArchiveInputStream("zip", in, null);
+        assertInstanceOf(ZipArchiveInputStream.class, archiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStream_tar_withEncoding() throws ArchiveException {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream archiveInputStream = factory.createArchiveInputStream("tar", in, "UTF-8");
+        assertInstanceOf(TarArchiveInputStream.class, archiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStream_tar_withoutEncoding() throws ArchiveException {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream archiveInputStream = factory.createArchiveInputStream("tar", in, null);
+        assertInstanceOf(TarArchiveInputStream.class, archiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStream_jar_withEncoding() throws ArchiveException {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream archiveInputStream = factory.createArchiveInputStream("jar", in, "UTF-8");
+        assertInstanceOf(JarArchiveInputStream.class, archiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStream_jar_withoutEncoding() throws ArchiveException {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream archiveInputStream = factory.createArchiveInputStream("jar", in, null);
+        assertInstanceOf(JarArchiveInputStream.class, archiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStream_apk_withEncoding() throws ArchiveException {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream archiveInputStream = factory.createArchiveInputStream("apk", in, "UTF-8");
+        assertInstanceOf(JarArchiveInputStream.class, archiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStream_apk_withoutEncoding() throws ArchiveException {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream archiveInputStream = factory.createArchiveInputStream("apk", in, null);
+        assertInstanceOf(JarArchiveInputStream.class, archiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStream_cpio_withEncoding() throws ArchiveException {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream archiveInputStream = factory.createArchiveInputStream("cpio", in, "UTF-8");
+        assertInstanceOf(CpioArchiveInputStream.class, archiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStream_cpio_withoutEncoding() throws ArchiveException {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream archiveInputStream = factory.createArchiveInputStream("cpio", in, null);
+        assertInstanceOf(CpioArchiveInputStream.class, archiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStream_dump_withEncoding() throws ArchiveException {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream archiveInputStream = factory.createArchiveInputStream("dump", in, "UTF-8");
+        assertInstanceOf(DumpArchiveInputStream.class, archiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStream_dump_withoutEncoding() throws ArchiveException {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream archiveInputStream = factory.createArchiveInputStream("dump", in, null);
+        assertInstanceOf(DumpArchiveInputStream.class, archiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStream_unsupported_archive() {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        ArchiveStreamProvider provider = mock(ArchiveStreamProvider.class);
+        factory.getArchiveInputStreamProviders().put("xyz", provider);
+        assertThrows(ArchiveException.class, () -> factory.createArchiveInputStream("xyz", in, null));
+    }
+
+    @Test
+    void testCreateArchiveInputStream_nullArchiverName() {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> factory.createArchiveInputStream(null, in, null));
+        assertEquals("Archiver name must not be null.", exception.getMessage());
+    }
+
+    @Test
+    void testCreateArchiveInputStream_nullInputStream() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> factory.createArchiveInputStream("tar", null, null));
+        assertEquals("InputStream must not be null.", exception.getMessage());
+    }
+
+    @Test
+    void testCreateArchiveInputStream_sevenZ() {
+        InputStream in = new ByteArrayInputStream(new byte[0]);
+        StreamingNotSupportedException exception = assertThrows(StreamingNotSupportedException.class, () -> factory.createArchiveInputStream("sevenZ", in, null));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveInputStreamTestGenerated.java:[17] cannot find symbol
+  symbol:   class ArArchiveInputStream
+  location: package org.apache.commons.compress.archivers.arj
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveInputStreamTestGenerated.java:[46] cannot find symbol
+  symbol:   class ArArchiveInputStream
+  location: class org.apache.commons.compress.archivers.ArchiveStreamFactory_createArchiveInputStreamTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveInputStreamTestGenerated.java:[53] cannot find symbol
+  symbol:   class ArjArchiveInputStream
+  location: class org.apache.commons.compress.archivers.ArchiveStreamFactory_createArchiveInputStreamTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveInputStreamTestGenerated.java:[60] cannot find symbol
+  symbol:   class ArjArchiveInputStream
+  location: class org.apache.commons.compress.archivers.ArchiveStreamFactory_createArchiveInputStreamTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: ArchiveStreamFactory_createArchiveInputStreamTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

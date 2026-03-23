@@ -1,0 +1,205 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.web.servlet;
+Class name (MUST be exactly): TradeWebContextListener_contextInitializedTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.MockedStatic;
+import org.springframework.mock.web.MockServletContext;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import java.io.InputStream;
+import java.util.Properties;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeWebContextListener_contextInitializedTestGenerated {
+
+    @Mock
+    private InputStream mockInputStream;
+
+    private TradeWebContextListener tradeWebContextListener;
+    private ServletContextEvent mockServletContextEvent;
+    private MockServletContext mockServletContext;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        tradeWebContextListener = new TradeWebContextListener();
+        mockServletContext = new MockServletContext();
+        mockServletContextEvent = mock(ServletContextEvent.class);
+        when(mockServletContextEvent.getServletContext()).thenReturn(mockServletContext);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        mockServletContext = null;
+        mockServletContextEvent = null;
+        tradeWebContextListener = null;
+    }
+
+    @Test
+    public void testContextInitializedWithPropertiesFile() {
+        Properties prop = new Properties();
+        prop.setProperty("runtimeMode", "1");
+        prop.setProperty("orderProcessingMode", "1");
+        prop.setProperty("maxUsers", "100");
+        prop.setProperty("maxQuotes", "1000");
+        prop.setProperty("publishQuotePriceChange", "true");
+        prop.setProperty("displayOrderAlerts", "true");
+        prop.setProperty("webInterface", "1");
+        prop.setProperty("listQuotePriceChangeFrequency", "10");
+        prop.setProperty("primIterations", "100");
+        prop.setProperty("marketSummaryInterval", "60");
+        prop.setProperty("longRun", "false");
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(mockServletContext.getResourceAsStream("/properties/daytrader.properties")).thenReturn(mockInputStream);
+            when(mockInputStream.available()).thenReturn(1);
+            when(mockInputStream.read(any(byte[].class))).thenAnswer(invocation -> {
+                byte[] buffer = invocation.getArgument(0);
+                byte[] data = prop.toString().getBytes();
+                System.arraycopy(data, 0, buffer, 0, data.length);
+                return data.length;
+            });
+
+            tradeWebContextListener.contextInitialized(mockServletContextEvent);
+
+            assertEquals(1, TradeConfig.getRunTimeMode());
+            assertEquals(1, TradeConfig.getOrderProcessingMode());
+            assertEquals(100, TradeConfig.getMAX_USERS());
+            assertEquals(1000, TradeConfig.getMAX_QUOTES());
+            assertTrue(TradeConfig.getPublishQuotePriceChange());
+            assertTrue(TradeConfig.getDisplayOrderAlerts());
+            assertEquals(1, TradeConfig.getWebInterface());
+            assertEquals(10, TradeConfig.getListQuotePriceChangeFrequency());
+            assertEquals(100, TradeConfig.getPrimIterations());
+            assertEquals(60, TradeConfig.getMarketSummaryInterval());
+            assertFalse(TradeConfig.getLongRun());
+        }
+    }
+
+    @Test
+    public void testContextInitializedWithEnvironmentVariables() {
+        System.setProperty("RUNTIME_MODE", "2");
+        System.setProperty("ORDER_PROCESSING_MODE", "2");
+        System.setProperty("MAX_USERS", "200");
+        System.setProperty("MAX_QUOTES", "2000");
+        System.setProperty("PUBLISH_QUOTES", "false");
+        System.setProperty("DISPLAY_ORDER_ALERTS", "false");
+        System.setProperty("WEB_INTERFACE", "2");
+        System.setProperty("LIST_QUOTE_PRICE_CHANGE_FREQUENCY", "20");
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(mockServletContext.getResourceAsStream("/properties/daytrader.properties")).thenReturn(null);
+
+            tradeWebContextListener.contextInitialized(mockServletContextEvent);
+
+            assertEquals(2, TradeConfig.getRunTimeMode());
+            assertEquals(2, TradeConfig.getOrderProcessingMode());
+            assertEquals(200, TradeConfig.getMAX_USERS());
+            assertEquals(2000, TradeConfig.getMAX_QUOTES());
+            assertFalse(TradeConfig.getPublishQuotePriceChange());
+            assertFalse(TradeConfig.getDisplayOrderAlerts());
+            assertEquals(2, TradeConfig.getWebInterface());
+            assertEquals(20, TradeConfig.getListQuotePriceChangeFrequency());
+        } finally {
+            System.clearProperty("RUNTIME_MODE");
+            System.clearProperty("ORDER_PROCESSING_MODE");
+            System.clearProperty("MAX_USERS");
+            System.clearProperty("MAX_QUOTES");
+            System.clearProperty("PUBLISH_QUOTES");
+            System.clearProperty("DISPLAY_ORDER_ALERTS");
+            System.clearProperty("WEB_INTERFACE");
+            System.clearProperty("LIST_QUOTE_PRICE_CHANGE_FREQUENCY");
+        }
+    }
+
+    @Test
+    public void testContextInitializedWithMissingPropertiesFile() {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(mockServletContext.getResourceAsStream("/properties/daytrader.properties")).thenReturn(null);
+
+            tradeWebContextListener.contextInitialized(mockServletContextEvent);
+
+            assertEquals(0, TradeConfig.getRunTimeMode());
+            assertEquals(0, TradeConfig.getOrderProcessingMode());
+            assertEquals(0, TradeConfig.getMAX_USERS());
+            assertEquals(0, TradeConfig.getMAX_QUOTES());
+            assertFalse(TradeConfig.getPublishQuotePriceChange());
+            assertFalse(TradeConfig.getDisplayOrderAlerts());
+            assertEquals(0, TradeConfig.getWebInterface());
+            assertEquals(0, TradeConfig.getListQuotePriceChangeFrequency());
+        }
+    }
+
+    @Test
+    public void testContextInitializedWithInvalidProperties() {
+        Properties prop = new Properties();
+        prop.setProperty("runtimeMode", "invalid");
+        prop.setProperty("orderProcessingMode", "invalid");
+        prop.setProperty("maxUsers", "invalid");
+        prop.setProperty("maxQuotes", "invalid");
+        prop.setProperty("publishQuotePriceChange", "invalid");
+        prop.setProperty("displayOrderAlerts", "invalid");
+        prop.setProperty("webInterface", "invalid");
+        prop.setProperty("listQuotePriceChangeFrequency", "invalid");
+        prop.setProperty("primIterations", "invalid");
+        prop.setProperty("marketSummaryInterval", "invalid");
+        prop.setProperty("longRun", "invalid");
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(mockServletContext.getResourceAsStream("/properties/daytrader.properties")).thenReturn(mockInputStream);
+            when(mockInputStream.available()).thenReturn(1);
+            when(mockInputStream.read(any(byte[].class))).thenAnswer(invocation -> {
+                byte[] buffer = invocation.getArgument(0);
+                byte[] data = prop.toString().getBytes();
+                System.arraycopy(data, 0, buffer, 0, data.length);
+                return data.length;
+            });
+
+            assertThrows(NumberFormatException.class, () -> {
+                tradeWebContextListener.contextInitialized(mockServletContextEvent);
+            });
+        }
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[65] unreported exception java.io.IOException; must be caught or declared to be thrown
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[66] unreported exception java.io.IOException; must be caught or declared to be thrown
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[160] unreported exception java.io.IOException; must be caught or declared to be thrown
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[161] unreported exception java.io.IOException; must be caught or declared to be thrown
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- DO NOT mock javax.servlet classes directly (ServletOutputStream, etc.) - use MockHttpServletRequest/Response from spring-test instead
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- For static method calls, ensure mockStatic is properly closed (use try-with-resources)
+- Keep the SAME class name: TradeWebContextListener_contextInitializedTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

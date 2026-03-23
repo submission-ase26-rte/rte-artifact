@@ -1,0 +1,132 @@
+```java
+package org.apache.commons.jxpath.ri.model.dom;
+
+import java.util.Locale;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.ri.NamespaceResolver;
+import org.apache.commons.jxpath.ri.QName;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.apache.commons.jxpath.ri.model.beans.NullPointer;
+import org.apache.commons.jxpath.ri.model.dom.DOMNodePointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Comment;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.ProcessingInstruction;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+public class DOMNodePointer_asPathTestGenerated {
+    @Mock
+    private Node node;
+    @Mock
+    private Locale locale;
+    @Mock
+    private NamespaceResolver namespaceResolver;
+    private DOMNodePointer domNodePointer;
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        domNodePointer = new DOMNodePointer(node, locale);
+    }
+
+    @Test
+    public void testAsPathWithId() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        domNodePointer = new DOMNodePointer(node, locale, "testId");
+        assertEquals("id('testId')", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithElementNode() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn(null);
+        when(node.getPreviousSibling()).thenReturn(null);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/element[1]"));
+    }
+
+    @Test
+    public void testAsPathWithTextNode() {
+        when(node.getNodeType()).thenReturn(Node.TEXT_NODE);
+        when(node.getPreviousSibling()).thenReturn(null);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertEquals("/text()[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithProcessingInstructionNode() {
+        when(node.getNodeType()).thenReturn(Node.PROCESSING_INSTRUCTION_NODE);
+        when(((ProcessingInstruction) node).getTarget()).thenReturn("target");
+        when(node.getPreviousSibling()).thenReturn(null);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertEquals("/processing-instruction('target')[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithDocumentNode() {
+        when(node.getNodeType()).thenReturn(Node.DOCUMENT_NODE);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertEquals("", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithNamespace() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn("http://example.com");
+        when(node.getPreviousSibling()).thenReturn(null);
+        when(namespaceResolver.getPrefix("http://example.com")).thenReturn("prefix");
+        when(domNodePointer.getNamespaceResolver()).thenReturn(namespaceResolver);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/prefix:element[1]"));
+    }
+
+    @Test
+    public void testAsPathWithNoNamespacePrefix() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn("http://example.com");
+        when(node.getPreviousSibling()).thenReturn(null);
+        when(namespaceResolver.getPrefix("http://example.com")).thenReturn(null);
+        when(domNodePointer.getNamespaceResolver()).thenReturn(namespaceResolver);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/node()[1]"));
+    }
+
+    @Test
+    public void testAsPathWithParentNode() {
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        when(domNodePointer.getParent()).thenReturn(parentPointer);
+        when(parentPointer.asPath()).thenReturn("/parent");
+        assertEquals("/parent", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithTextAndCDATA() {
+        when(node.getNodeType()).thenReturn(Node.CDATA_SECTION_NODE);
+        when(node.getPreviousSibling()).thenReturn(mock(Node.class));
+        when(node.getPreviousSibling().getNodeType()).thenReturn(Node.TEXT_NODE);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/text()[1]"));
+    }
+```

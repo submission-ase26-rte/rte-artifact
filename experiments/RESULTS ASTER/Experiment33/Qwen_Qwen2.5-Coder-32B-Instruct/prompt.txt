@@ -1,0 +1,581 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Extracted tests for method: performTask(HttpServletRequest req, HttpServletResponse resp)
+ * Original class: TradeAppServlet
+ * Source: ASTER GPT-4
+ */
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+import static org.mockito.Mockito.*;
+
+public class Metodo33_performTask_TradeAppServlet_Test {
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithLoginAction_JYzl1_ktHH0() throws Exception {
+    TradeAppServlet servlet = new TradeAppServlet();
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    ServletConfig config = mock(ServletConfig.class);
+    when(req.getParameter("action")).thenReturn("login");
+    when(req.getParameter("uid")).thenReturn("user1");
+    when(req.getParameter("passwd")).thenReturn("pass1");
+    when(req.getServletContext()).thenReturn(ctx);
+    when(servlet.getServletConfig()).thenReturn(config);
+    when(config.getServletContext()).thenReturn(ctx);
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(req).getParameter("uid");
+    verify(req).getParameter("passwd");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithRegisterAction_jRTY2_deSi0() throws Exception {
+    TradeAppServlet servlet = new TradeAppServlet();
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    ServletConfig config = mock(ServletConfig.class);
+    when(req.getParameter("action")).thenReturn("register");
+    when(req.getParameter("user id")).thenReturn("newUser");
+    when(req.getParameter("passwd")).thenReturn("newPass");
+    when(req.getParameter("confirm passwd")).thenReturn("newPass");
+    when(req.getParameter("Full Name")).thenReturn("New User");
+    when(req.getParameter("Credit Card Number")).thenReturn("1234567890123456");
+    when(req.getParameter("money")).thenReturn("1000");
+    when(req.getParameter("email")).thenReturn("newuser@example.com");
+    when(req.getParameter("snail mail")).thenReturn("123 New St, New City");
+    when(config.getServletContext()).thenReturn(ctx);
+    when(servlet.getServletConfig()).thenReturn(config);
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(req, times(8)).getParameter(anyString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithSellAction_CjQF5_VTco0() throws Exception {
+    TradeAppServlet servlet = new TradeAppServlet();
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    ServletConfig config = mock(ServletConfig.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getParameter("action")).thenReturn("sell");
+    when(req.getParameter("holdingID")).thenReturn("1001");
+    when(req.getSession()).thenReturn(session);
+    when(session.getAttribute("uidBean")).thenReturn("user1");
+    when(servlet.getServletConfig()).thenReturn(config);
+    when(config.getServletContext()).thenReturn(ctx);
+    when(req.getServletContext()).thenReturn(ctx);
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(req).getParameter("holdingID");
+    verify(session).getAttribute("uidBean");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithPortfolioAction_ZMZh6_zznE0() throws Exception {
+    TradeAppServlet servlet = new TradeAppServlet();
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    ServletConfig config = mock(ServletConfig.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getParameter("action")).thenReturn("portfolio");
+    when(req.getSession()).thenReturn(session);
+    when(session.getAttribute("uidBean")).thenReturn("user1");
+    when(config.getServletContext()).thenReturn(ctx);
+    when(servlet.getServletConfig()).thenReturn(config);
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(session).getAttribute("uidBean");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithLogoutAction_LTnv7_FhTk0() throws Exception {
+    TradeAppServlet servlet = new TradeAppServlet();
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    ServletConfig config = mock(ServletConfig.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getParameter("action")).thenReturn("logout");
+    when(req.getSession()).thenReturn(session);
+    when(session.getAttribute("uidBean")).thenReturn("user1");
+    when(req.getServletContext()).thenReturn(ctx);
+    when(config.getServletContext()).thenReturn(ctx);
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(session).getAttribute("uidBean");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithHomeAction_rPDY8_xzSJ0() throws Exception {
+    TradeAppServlet servlet = new TradeAppServlet();
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    ServletConfig config = mock(ServletConfig.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getParameter("action")).thenReturn("home");
+    when(req.getSession()).thenReturn(session);
+    when(session.getAttribute("uidBean")).thenReturn("user1");
+    when(req.getServletContext()).thenReturn(ctx);
+    when(config.getServletContext()).thenReturn(ctx);
+    when(servlet.getServletConfig()).thenReturn(config);
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(session).getAttribute("uidBean");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithAccountAction_ccsv9_CrBP0() throws Exception {
+    TradeAppServlet servlet = new TradeAppServlet();
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    ServletConfig config = mock(ServletConfig.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getParameter("action")).thenReturn("account");
+    when(req.getSession()).thenReturn(session);
+    when(session.getAttribute("uidBean")).thenReturn("user1");
+    when(config.getServletContext()).thenReturn(ctx);
+    when(req.getServletContext()).thenReturn(ctx);
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(session).getAttribute("uidBean");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithUpdateProfileAction_ZLVB10_ZDsh0() throws Exception {
+    TradeAppServlet servlet = new TradeAppServlet();
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    ServletConfig config = mock(ServletConfig.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getParameter("action")).thenReturn("update_profile");
+    when(req.getParameter("password")).thenReturn("newPass");
+    when(req.getParameter("cpassword")).thenReturn("newPass");
+    when(req.getParameter("fullname")).thenReturn("Updated User");
+    when(req.getParameter("address")).thenReturn("123 Updated St, Updated City");
+    when(req.getParameter("creditcard")).thenReturn("9876543210987654");
+    when(req.getParameter("email")).thenReturn("updateduser@example.com");
+    when(req.getSession()).thenReturn(session);
+    when(session.getAttribute("uidBean")).thenReturn("user1");
+    when(servlet.getServletConfig()).thenReturn(config);
+    when(config.getServletContext()).thenReturn(ctx);
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(req, times(6)).getParameter(anyString());
+    verify(session).getAttribute("uidBean");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithLoginAction_JYzl1_ktHH0_fid2() throws Exception {
+    TradeAppServlet servlet = mock(TradeAppServlet.class);
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    ServletConfig config = mock(ServletConfig.class);
+    when(req.getParameter("action")).thenReturn("login");
+    when(req.getParameter("uid")).thenReturn("user1");
+    when(req.getParameter("passwd")).thenReturn("pass1");
+    when(req.getServletContext()).thenReturn(ctx);
+    when(servlet.getServletConfig()).thenReturn(config);
+    when(config.getServletContext()).thenReturn(ctx);
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(req).getParameter("uid");
+    verify(req).getParameter("passwd");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithRegisterAction_jRTY2_deSi0_fid2() throws Exception {
+    TradeAppServlet servlet = mock(TradeAppServlet.class);
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    ServletConfig config = mock(ServletConfig.class);
+    when(req.getParameter("action")).thenReturn("register");
+    when(req.getParameter("user id")).thenReturn("newUser");
+    when(req.getParameter("passwd")).thenReturn("newPass");
+    when(req.getParameter("confirm passwd")).thenReturn("newPass");
+    when(req.getParameter("Full Name")).thenReturn("New User");
+    when(req.getParameter("Credit Card Number")).thenReturn("1234567890123456");
+    when(req.getParameter("money")).thenReturn("1000");
+    when(req.getParameter("email")).thenReturn("newuser@example.com");
+    when(req.getParameter("snail mail")).thenReturn("123 New St, New City");
+    when(config.getServletContext()).thenReturn(ctx);
+    when(servlet.getServletConfig()).thenReturn(config);
+    doNothing().when(servlet).performTask(req, resp);
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(req, times(8)).getParameter(anyString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithSellAction_CjQF5_VTco0_fid2() throws Exception {
+    TradeAppServlet servlet = mock(TradeAppServlet.class);
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    ServletConfig config = mock(ServletConfig.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getParameter("action")).thenReturn("sell");
+    when(req.getParameter("holdingID")).thenReturn("1001");
+    when(req.getSession()).thenReturn(session);
+    when(session.getAttribute("uidBean")).thenReturn("user1");
+    when(servlet.getServletConfig()).thenReturn(config);
+    when(config.getServletContext()).thenReturn(ctx);
+    when(req.getServletContext()).thenReturn(ctx);
+    doNothing().when(servlet).performTask(req, resp);
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(req).getParameter("holdingID");
+    verify(session).getAttribute("uidBean");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithPortfolioAction_ZMZh6_zznE0_fid2() throws Exception {
+    TradeAppServlet servlet = mock(TradeAppServlet.class);
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    ServletConfig config = mock(ServletConfig.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getParameter("action")).thenReturn("portfolio");
+    when(req.getSession()).thenReturn(session);
+    when(session.getAttribute("uidBean")).thenReturn("user1");
+    when(config.getServletContext()).thenReturn(ctx);
+    when(servlet.getServletConfig()).thenReturn(config);
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(session).getAttribute("uidBean");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithLogoutAction_LTnv7_FhTk0_fid2() throws Exception {
+    // Assuming TradeAppServlet is now accessible or properly mocked
+    TradeAppServlet servlet = mock(TradeAppServlet.class);
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    ServletConfig config = mock(ServletConfig.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getParameter("action")).thenReturn("logout");
+    when(req.getSession()).thenReturn(session);
+    when(session.getAttribute("uidBean")).thenReturn("user1");
+    when(req.getServletContext()).thenReturn(ctx);
+    when(config.getServletContext()).thenReturn(ctx);
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(session).getAttribute("uidBean");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithHomeAction_rPDY8_xzSJ0_fid2() throws Exception {
+    TradeAppServlet servlet = mock(TradeAppServlet.class);
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    ServletConfig config = mock(ServletConfig.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getParameter("action")).thenReturn("home");
+    when(req.getSession()).thenReturn(session);
+    when(session.getAttribute("uidBean")).thenReturn("user1");
+    when(req.getServletContext()).thenReturn(ctx);
+    when(config.getServletContext()).thenReturn(ctx);
+    when(servlet.getServletConfig()).thenReturn(config);
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(session).getAttribute("uidBean");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithAccountAction_ccsv9_CrBP0_fid2() throws Exception {
+    // Assuming TradeAppServlet is now accessible or correctly mocked
+    TradeAppServlet servlet = mock(TradeAppServlet.class);
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    ServletConfig config = mock(ServletConfig.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getParameter("action")).thenReturn("account");
+    when(req.getSession()).thenReturn(session);
+    when(session.getAttribute("uidBean")).thenReturn("user1");
+    when(config.getServletContext()).thenReturn(ctx);
+    when(req.getServletContext()).thenReturn(ctx);
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(session).getAttribute("uidBean");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithUpdateProfileAction_ZLVB10_ZDsh0_fid2() throws Exception {
+    TradeAppServlet servlet = mock(TradeAppServlet.class);
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    ServletContext ctx = mock(ServletContext.class);
+    ServletConfig config = mock(ServletConfig.class);
+    HttpSession session = mock(HttpSession.class);
+    when(req.getParameter("action")).thenReturn("update_profile");
+    when(req.getParameter("password")).thenReturn("newPass");
+    when(req.getParameter("cpassword")).thenReturn("newPass");
+    when(req.getParameter("fullname")).thenReturn("Updated User");
+    when(req.getParameter("address")).thenReturn("123 Updated St, Updated City");
+    when(req.getParameter("creditcard")).thenReturn("9876543210987654");
+    when(req.getParameter("email")).thenReturn("updateduser@example.com");
+    when(req.getSession()).thenReturn(session);
+    when(session.getAttribute("uidBean")).thenReturn("user1");
+    when(servlet.getServletConfig()).thenReturn(config);
+    when(config.getServletContext()).thenReturn(ctx);
+    doNothing().when(servlet).performTask(req, resp);
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(req, times(6)).getParameter(anyString());
+    verify(session).getAttribute("uidBean");
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 0/16 passed
+
+TEST STATUS:
+- PASSED (0): none
+- FAILED (0): none
+- ERRORS (16): testPerformTaskWithLoginAction_JYzl1_ktHH0, testPerformTaskWithRegisterAction_jRTY2_deSi0, testPerformTaskWithSellAction_CjQF5_VTco0, testPerformTaskWithPortfolioAction_ZMZh6_zznE0, testPerformTaskWithLogoutAction_LTnv7_FhTk0, testPerformTaskWithHomeAction_rPDY8_xzSJ0, testPerformTaskWithAccountAction_ccsv9_CrBP0, testPerformTaskWithUpdateProfileAction_ZLVB10_ZDsh0, testPerformTaskWithLoginAction_JYzl1_ktHH0_fid2, testPerformTaskWithRegisterAction_jRTY2_deSi0_fid2, testPerformTaskWithSellAction_CjQF5_VTco0_fid2, testPerformTaskWithPortfolioAction_ZMZh6_zznE0_fid2, testPerformTaskWithLogoutAction_LTnv7_FhTk0_fid2, testPerformTaskWithHomeAction_rPDY8_xzSJ0_fid2, testPerformTaskWithAccountAction_ccsv9_CrBP0_fid2, testPerformTaskWithUpdateProfileAction_ZLVB10_ZDsh0_fid2
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Trace -> com.ibm.websphere.samples.daytrader.interfaces.Trace
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   IOException -> java.io.IOException
+//   Inject -> javax.inject.Inject
+//   ServletConfig -> javax.servlet.ServletConfig
+//   ServletContext -> javax.servlet.ServletContext
+//   ServletException -> javax.servlet.ServletException
+//   WebServlet -> javax.servlet.annotation.WebServlet
+//   TradeAppServlet -> com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet
+
+// === Class: TradeAppServlet ===
+// Fields (with actual visibility):
+    package-private TradeServletAction tsAction;
+    private static final long serialVersionUID;
+
+// Internal Methods (full implementation for context):
+  private void pushHeaderImages(PushBuilder pushBuilder) {
+    if (pushBuilder != null) {
+      pushBuilder.path("images/menuHome.gif").addHeader("content-type", "image/gif").push();
+      pushBuilder.path("images/account.gif").addHeader("content-type", "image/gif").push();
+      pushBuilder.path("images/portfolio.gif").addHeader("content-type", "image/gif").push();
+      pushBuilder.path("images/quotes.gif").addHeader("content-type", "image/gif").push();
+      pushBuilder.path("images/logout.gif").addHeader("content-type", "image/gif").push();
+      pushBuilder.path("images/graph.gif").addHeader("content-type", "image/gif").push();
+      pushBuilder.path("images/line.gif").addHeader("content-type", "image/gif").push();
+      Log.trace("HTTP/2 is enabled");
+    } else {
+      Log.error("HTTP/2 not enabled");
+    }
+
+  }
+
+// === External Class: TradeServletAction ===
+// Full import path: com.ibm.websphere.samples.daytrader.web.servlet.TradeServletAction
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private TradeServices tAction;
+// Constructors:
+public TradeServletAction(Instance services);
+public TradeServletAction();
+// Method Signatures (used by target method):
+void doPortfolio(ServletContext ctx, HttpServletRequest req, HttpServletResponse resp, String userID, String results);
+void doWelcome(ServletContext ctx, HttpServletRequest req, HttpServletResponse resp, String status);
+void doAccountUpdate(ServletContext ctx, HttpServletRequest req, HttpServletResponse resp, String userID, String password, String cpassword, String fullName, String address, String creditcard, String email);
+void doRegister(ServletContext ctx, HttpServletRequest req, HttpServletResponse resp, String userID, String passwd, String cpasswd, String fullname, String ccn, String openBalanceString, String email, String address);
+void doMarketSummary(ServletContext ctx, HttpServletRequest req, HttpServletResponse resp, String userID);
+void doSell(ServletContext ctx, HttpServletRequest req, HttpServletResponse resp, String userID, Integer holdingID);
+void doAccount(ServletContext ctx, HttpServletRequest req, HttpServletResponse resp, String userID, String results);
+void doQuotes(ServletContext ctx, HttpServletRequest req, HttpServletResponse resp, String userID, String symbols);
+void doLogout(ServletContext ctx, HttpServletRequest req, HttpServletResponse resp, String userID);
+void doHome(ServletContext ctx, HttpServletRequest req, HttpServletResponse resp, String userID, String results);
+void doBuy(ServletContext ctx, HttpServletRequest req, HttpServletResponse resp, String userID, String symbol, String quantity);
+void doLogin(ServletContext ctx, HttpServletRequest req, HttpServletResponse resp, String userID, String passwd);
+
+// === External Class: TradeConfig ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.TradeConfig
+// Fields (with actual visibility):
+    private static String[] runTimeModeNames;
+    public static final int EJB3;
+    public static final int DIRECT;
+    public static final int SESSION_TO_DIRECT;
+    private static int runTimeMode;
+    private static String[] orderProcessingModeNames;
+    public static final int SYNCH;
+    public static final int ASYNCH;
+    public static final int ASYNCH_2PHASE;
+    private static int orderProcessingMode;
+    private static String[] accessModeNames;
+    public static final int STANDARD;
+    private static int accessMode;
+    private static String[] webInterfaceNames;
+    public static final int JSP;
+    public static final int JSP_Images;
+    public static final int JSP_Images_HTTP2;
+    private static int webInterface;
+    private static int MAX_USERS;
+    private static int MAX_QUOTES;
+    public static boolean JDBCDriverNeedsGlobalTransation;
+    public static String DATASOURCE;
+    public static int KEYBLOCKSIZE;
+    public static int QUOTES_PER_PAGE;
+    public static boolean RND_USER;
+    private static int MAX_HOLDINGS;
+    private static int count;
+    private static Object userID_count_semaphore;
+    private static int userID_count;
+    private static String hostName;
+    private static Random r0;
+    private static Random randomNumberGenerator;
+    public static final String newUserPrefix;
+    public static final int verifyPercent;
+    private static boolean updateQuotePrices;
+    private static int primIterations;
+    private static boolean longRun;
+    private static boolean publishQuotePriceChange;
+    private static int listQuotePriceChangeFrequency;
+    private static boolean displayOrderAlerts;
+    private static int marketSummaryInterval;
+    public static BigDecimal PENNY_STOCK_PRICE;
+    public static BigDecimal PENNY_STOCK_RECOVERY_MIRACLE_MULTIPLIER;
+    public static BigDecimal MAXIMUM_STOCK_PRICE;
+    public static BigDecimal MAXIMUM_STOCK_SPLIT_MULTIPLIER;
+    public static final int HOME_OP;
+    public static final int QUOTE_OP;
+    public static final int LOGIN_OP;
+    public static final int LOGOUT_OP;
+    public static final int REGISTER_OP;
+    public static final int ACCOUNT_OP;
+    public static final int PORTFOLIO_OP;
+    public static final int BUY_OP;
+    public static final int SELL_OP;
+    public static final int UPDATEACCOUNT_OP;
+    private static int[][] scenarioMixes;
+    private static char[] actions;
+    private static int sellDeficit;
+    public static final int WELCOME_PAGE;
+    public static final int REGISTER_PAGE;
+    public static final int PORTFOLIO_PAGE;
+    public static final int QUOTE_PAGE;
+    public static final int HOME_PAGE;
+    public static final int ACCOUNT_PAGE;
+    public static final int ORDER_PAGE;
+    public static final int CONFIG_PAGE;
+    public static final int STATS_PAGE;
+    public static final int MARKET_SUMMARY_PAGE;
+    public static String[][] webUI;
+    private static int scenarioCount;
+    private static final BigDecimal orderFee;
+    private static final BigDecimal cashFee;
+    private static final BigDecimal ONE;
+    private static ArrayList deck;
+    private static int card;
+// Method Signatures (used by target method):
+static public int getWebInterface();
+// Public Getter Methods (for test assertions):
+public static String getPage(int pageNumber);
+public static java getRunTimeModeNames();
+public static char getScenarioAction(boolean newUser);
+public static String getUserID();
+public static BigDecimal getOrderFee(String orderType);
+public static BigDecimal getRandomPriceChangeFactor();
+public static String getOrderProcessingModeNames();
+public static String getWebInterfaceNames();
+public static int getScenarioMixes();
+public static int getMAX_USERS();
+
+
+TASK:
+Regenerate ONLY the method "performTask" OF CLASS "TradeAppServlet" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void performTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    // your implementation here
+}
+```
+
+- Package: com.ibm.websphere.samples.daytrader.web.servlet
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "performTask"
+- Allowed imports: exactly those already present in TradeAppServlet
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

@@ -1,0 +1,109 @@
+```java
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class OptionBuilder_createTestGenerated {
+
+    @Test
+    void createWithMultiCharOpt() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Option.builder("ab").build();
+        });
+    }
+
+    @Test
+    void createWithDefaultProperties() {
+        Option option = Option.builder("o").build();
+        assertNull(option.getLongOpt());
+        assertFalse(option.isRequired());
+        assertFalse(option.hasOptionalArg());
+        assertEquals(0, option.getArgs());
+        assertNull(option.getType());
+        assertNull(option.getArgName());
+        assertEquals(' ', option.getValueSeparator());
+        assertNull(option.getDescription());
+    }
+
+    @Test
+    void createWithLongOption() {
+        Option option = Option.builder("o").longOpt("longOption").build();
+        assertEquals("longOption", option.getLongOpt());
+    }
+
+    @Test
+    void createWithRequired() {
+        Option option = Option.builder("o").required().build();
+        assertTrue(option.isRequired());
+    }
+
+    @Test
+    void createWithOptionalArg() {
+        Option option = Option.builder("o").optionalArg(true).build();
+        assertTrue(option.hasOptionalArg());
+    }
+
+    @Test
+    void createWithArgsCount() {
+        Option option = Option.builder("o").numberOfArgs(2).build();
+        assertEquals(2, option.getArgs());
+    }
+
+    @Test
+    void createWithType() {
+        Option option = Option.builder("o").type(String.class).build();
+        assertEquals(String.class, option.getType());
+    }
+
+    @Test
+    void createWithArgName() {
+        Option option = Option.builder("o").argName("argName").build();
+        assertEquals("argName", option.getArgName());
+    }
+
+    @Test
+    void createWithValueSeparator() {
+        Option option = Option.builder("o").valueSeparator('=').build();
+        assertEquals('=', option.getValueSeparator());
+    }
+
+    @Test
+    void createWithEmptyOpt() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Option.builder("").build();
+        });
+    }
+
+    @Test
+    void createWithDescription() {
+        Option option = Option.builder("o").description("description").build();
+        assertEquals("description", option.getDescription());
+    }
+
+    @Test
+    void createWithResetBetweenCalls() {
+        Option option1 = Option.builder("o1").longOpt("long1").build();
+        Option option2 = Option.builder("o2").longOpt("long2").build();
+        assertNotEquals(option1.getLongOpt(), option2.getLongOpt());
+    }
+
+    @Test
+    void createWithOptionCreation() {
+        Option option = Option.builder("o").build();
+        assertNotNull(option);
+    }
+
+    @Test
+    void createWithConverter() {
+        Option option = Option.builder("o").type(Integer.class).build();
+        assertNotNull(option.getConverter());
+    }
+
+    @Test
+    void createWithDefaultConverter() {
+        Option option = Option.builder("o").type(String.class).build();
+        assertNotNull(option.getConverter());
+    }
+}
+```

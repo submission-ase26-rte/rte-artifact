@@ -1,0 +1,114 @@
+/**
+ * Filtered unit tests for method: getPet(String name, boolean ignoreNew)
+ * Original class: Owner
+ * Tests that actually call the target method
+ */
+package org.springframework.samples.petclinic.owner;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo48_unit_getPet_Owner_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetExistingPet_PhgC0() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("testPet");
+    owner.getPets().add(pet);
+    Pet result = owner.getPet("testPet", false);
+    assertEquals(pet, result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetNonExistingPet_ofkI1() {
+    Owner owner = new Owner();
+    Pet result = owner.getPet("nonExistingPet", false);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetNonExistingPetIgnoreNew_tcjx3() {
+    Owner owner = new Owner();
+    Pet result = owner.getPet("nonExistingPet", true);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetExistingPetNewPet_gkCj4_ttHn0() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("testPet");
+    owner.setAddress("testAddress");
+    owner.getPets().add(pet);
+    Pet result = owner.getPet("testPet", false);
+    assertEquals(pet, result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetExistingPet_Gewy0() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("pet1");
+    owner.getPets().add(pet);
+    Pet result = owner.getPet("pet1", false);
+    assert result != null;
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetNonExistingPet_qTED1() {
+    Owner owner = new Owner();
+    Pet result = owner.getPet("pet1", false);
+    assert result == null;
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetNonExistingPetIgnoreNew_KSgs3() {
+    Owner owner = new Owner();
+    Pet result = owner.getPet("pet1", true);
+    assert result == null;
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetCaseSensitive_qwuA4() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("Pet1");
+    owner.getPets().add(pet);
+    Pet result = owner.getPet("pet1", false);
+    assert result == null;
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetNullPetName_PSVw5() {
+    Owner owner = new Owner();
+    Pet result = owner.getPet(null, false);
+    assert result == null;
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetEmptyPetName_yAaf6() {
+    Owner owner = new Owner();
+    Pet result = owner.getPet("", false);
+    assert result == null;
+    }
+}

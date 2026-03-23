@@ -1,0 +1,277 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.MDBStats;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeDirectDBUtils_buildDBTestGenerated {
+    private TradeDirectDBUtils tradeDirectDBUtils;
+    private DataSource dataSource;
+    private TradeServices tradeServices;
+    private Connection connection;
+    private Statement statement;
+    private PreparedStatement preparedStatement;
+    private ResultSet resultSet;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        tradeDirectDBUtils = new TradeDirectDBUtils();
+        dataSource = mock(DataSource.class);
+        tradeServices = mock(TradeServices.class);
+        connection = mock(Connection.class);
+        statement = mock(Statement.class);
+        preparedStatement = mock(PreparedStatement.class);
+        resultSet = mock(ResultSet.class);
+
+        ReflectionTestUtils.setField(tradeDirectDBUtils, "datasource", dataSource);
+        ReflectionTestUtils.setField(tradeDirectDBUtils, "ts", tradeServices);
+
+        when(dataSource.getConnection()).thenReturn(connection);
+        when(connection.createStatement()).thenReturn(statement);
+        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+    }
+
+    @Test
+    public void testBuildDB_WithNullDdlFile() throws Exception {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        tradeDirectDBUtils.buildDB(out, null);
+
+        assert(outContent.toString().contains("TradeBuildDB: **** Unable to parse DDL file for the specified database ****</BR></BODY>"));
+    }
+
+    @Test
+    public void testBuildDB_WithEmptyDdlFile() throws Exception {
+        InputStream ddlFile = new ByteArrayInputStream("".getBytes());
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+
+        assert(outContent.toString().contains("TradeBuildDB: **** Parsing DDL file returned empty buffer, please check that a valid DB specific DDL file is available and retry ****</BR></BODY>"));
+    }
+
+    @Test
+    public void testBuildDB_WithValidDdlFile() throws Exception {
+        InputStream ddlFile = new ByteArrayInputStream("CREATE TABLE test_table (id INT);".getBytes());
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+
+        assert(outContent.toString().contains("TradeBuildDB: **** DayTrader tables successfully created! ****</BR><BR><b> Please Stop and Re-start your Daytrader application (or your application server) and then use the \"Repopulate Daytrader Database\" link to populate your database.</b></BR><BR><BR></BODY>"));
+    }
+
+    @Test
+    public void testBuildDB_WithExceptionInCreateQuote() throws Exception {
+        InputStream ddlFile = new ByteArrayInputStream("CREATE TABLE test_table (id INT);".getBytes());
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+        doThrow(new SQLException()).when(tradeServices).createQuote(anyString(), anyString(), any(BigDecimal.class));
+
+        assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(out, ddlFile));
+    }
+
+    @Test
+    public void testBuildDB_WithExceptionInRegister() throws Exception {
+        InputStream ddlFile = new ByteArrayInputStream("CREATE TABLE test_table (id INT);".getBytes());
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+        doThrow(new SQLException()).when(tradeServices).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class));
+
+        assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(out, ddlFile));
+    }
+
+    @Test
+    public void testBuildDB_WithExceptionInBuy() throws Exception {
+        InputStream ddlFile = new ByteArrayInputStream("CREATE TABLE test_table (id INT);".getBytes());
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+        doThrow(new SQLException()).when(tradeServices).buy(anyString(), anyString(), anyDouble(), anyInt());
+
+        assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(out, ddlFile));
+    }
+
+    @Test
+    public void testBuildDB_WithExceptionInResetTrade() throws Exception {
+        InputStream ddlFile = new ByteArrayInputStream("CREATE TABLE test_table (id INT);".getBytes());
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+        doThrow(new SQLException()).when(tradeDirectDBUtils).resetTrade(anyBoolean());
+
+        assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(out, ddlFile));
+    }
+
+    @Test
+    public void testBuildDB_WithExceptionInParseDDLToBuffer() throws Exception {
+        InputStream ddlFile = new ByteArrayInputStream("CREATE TABLE test_table (id INT);".getBytes());
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        doThrow(new Exception()).when(tradeDirectDBUtils).parseDDLToBuffer(any(InputStream.class));
+
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+
+        assert(outContent.toString().contains("TradeBuildDB: **** Unable to parse DDL file for the specified database ****</BR></BODY>"));
+    }
+
+    @Test
+    public void testBuildDB_WithExceptionInCreateQuoteErrorCount() throws Exception {
+        InputStream ddlFile = new ByteArrayInputStream("CREATE TABLE test_table (id INT);".getBytes());
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+        doThrow(new SQLException()).when(tradeServices).createQuote(anyString(), anyString(), any(BigDecimal.class));
+
+        assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(out, ddlFile));
+
+        assert(outContent.toString().contains("Populate Trade DB aborting after 10 create quote errors"));
+    }
+
+    @Test
+    public void testBuildDB_WithExceptionInRegisterErrorCount() throws Exception {
+        InputStream ddlFile = new ByteArrayInputStream("CREATE TABLE test_table (id INT);".getBytes());
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+        doThrow(new SQLException()).when(tradeServices).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class));
+
+        assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(out, ddlFile));
+
+        assert(outContent.toString().contains("Populate Trade DB aborting after 10 user registration errors"));
+    }
+
+    @Test
+    public void testBuildDB_WithValidDdlFileAndCreateQuote() throws Exception {
+        InputStream ddlFile = new ByteArrayInputStream("CREATE TABLE test_table (id INT);".getBytes());
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+
+        assert(outContent.toString().contains("TradeBuildDB: **** DayTrader tables successfully created! ****</BR><BR><b> Please Stop and Re-start your Daytrader application (or your application server) and then use the \"Repopulate Daytrader Database\" link to populate your database.</b></BR><BR><BR></BODY>"));
+    }
+
+    @Test
+    public void testBuildDB_WithValidDdlFileAndRegister() throws Exception {
+        InputStream ddlFile = new ByteArrayInputStream("CREATE TABLE test_table (id INT);".getBytes());
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+
+        assert(outContent.toString().contains("TradeBuildDB: **** DayTrader tables successfully created! ****</BR><BR><b> Please Stop and Re-start your Daytrader application (or your application server) and then use the \"Repopulate Daytrader Database\" link to populate your database.</b></BR><BR><BR></BODY>"));
+    }
+
+    @Test
+    public void testBuildDB_WithValidDdlFileAndBuy() throws Exception {
+        InputStream ddlFile = new ByteArrayInputStream("CREATE TABLE test_table (id INT);".getBytes());
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+
+        assert(outContent.toString().contains("TradeBuildDB: **** DayTrader tables successfully created! ****</BR><BR><b> Please Stop and Re-start your Daytrader application (or your application server) and then use the \"Repopulate Daytrader Database\" link to populate your database.</b></BR><BR><BR></BODY>"));
+    }
+
+    @Test
+    public void testBuildDB_WithValidDdlFileAndResetTrade() throws Exception {
+        InputStream ddlFile = new ByteArrayInputStream("CREATE TABLE test_table (id INT);".getBytes());
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+
+        assert(outContent.toString().contains("TradeBuildDB: **** DayTrader tables successfully created! ****</BR><BR><b> Please Stop and Re-start your Daytrader application (or your application server) and then use the \"Repopulate Daytrader Database\" link to populate your database.</b></BR><BR><BR></BODY>"));
+    }
+
+    @Test
+    public void testBuildDB_WithValidDdlFileAndParseDDLToBuffer() throws Exception {
+        InputStream ddlFile = new ByteArrayInputStream("CREATE TABLE test_table (id INT);".getBytes());
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+
+        assert(outContent.toString().contains("TradeBuildDB: **** DayTrader tables successfully created! ****</BR><BR><b> Please Stop and Re-start your Daytrader application (or your application server) and then use the \"Repopulate Daytrader Database\" link to populate your database.</b></BR><BR><BR></BODY>"));
+    }
+
+    @Test
+    public void testBuildDB_WithValidDdlFileAndCreateQuoteWithErrorCount() throws Exception {
+        InputStream ddlFile = new ByteArrayInputStream("CREATE TABLE test_table (id INT);".getBytes());
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+        when(tradeServices.createQuote(anyString(), anyString(), any(BigDecimal.class))).thenThrow(new SQLException());
+
+        assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(out, ddlFile));
+
+        assert(outContent.toString().contains("Populate Trade DB aborting after 10 create quote errors"));
+    }
+
+    @Test
+    public void testBuildDB_WithValidDdlFileAndRegisterWithErrorCount() throws Exception {
+        InputStream ddlFile = new ByteArrayInputStream("CREATE TABLE test_table (id INT);".getBytes());
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outContent);
+
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+        when(tradeServices.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class))).thenThrow(new SQLException());
+
+        assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(out, ddlFile));
+
+        assert(outContent.toString().contains("Populate Trade DB aborting after 10 user registration errors"));
+    }
+}
+```

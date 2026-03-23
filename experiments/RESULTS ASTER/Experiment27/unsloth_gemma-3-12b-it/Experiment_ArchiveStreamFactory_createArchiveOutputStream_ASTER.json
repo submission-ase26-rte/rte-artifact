@@ -1,0 +1,76 @@
+{
+  "method_id": 27,
+  "tested_method": "createArchiveOutputStream",
+  "tested_class": "ArchiveStreamFactory",
+  "project": "Compress",
+  "timestamp": "2026-01-27T18:48:14.373430",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\Compress\\Run-1\\src\\test\\java\\org\\apache\\commons\\compress\\archivers\\Metodo27_unit_createArchiveOutputStream_ArchiveStreamFactory_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 1,
+    "tests_total": 3,
+    "tests_failed": 2,
+    "line_coverage": 10.344827586206897,
+    "branch_coverage": 7.6923076923076925,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testCreateArchiveOutputStreamNullOutputStream_UMvO7_ifxY0_fid3 --\nERROR: org.opentest4j.AssertionFailedError: expected: <outputStream cannot be null> but was: <OutputStream must not be null.>\n--------------------------------------------------\nTEST: testCreateArchiveOutputStreamUnknownArchiverName_ewpD8_cbgw0 --\nERROR: java.lang.IllegalArgumentException: OutputStream must not be null.",
+    "test_info": {
+      "valid_tests": [
+        "testCreateArchiveOutputStreamNullOutputStream_UMvO7_ifxY0"
+      ],
+      "invalid_tests": [
+        "testCreateArchiveOutputStreamNullOutputStream_UMvO7_ifxY0_fid3",
+        "testCreateArchiveOutputStreamUnknownArchiverName_ewpD8_cbgw0"
+      ],
+      "failed_assert_tests": [
+        "testCreateArchiveOutputStreamNullOutputStream_UMvO7_ifxY0_fid3"
+      ],
+      "runtime_error_tests": [
+        "testCreateArchiveOutputStreamUnknownArchiverName_ewpD8_cbgw0"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 3,
+    "assertion_complexity": 0.2063,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.75,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.6703,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.7273,
+    "overall_naturalness_score": 0.8494
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.1127853838013719,
+    "string_similarity": 0.2458594037541406,
+    "token_similarity": 0.4528301886792453,
+    "ast_similarity": 0.22857142857142856,
+    "embedding_similarity": 0.8902576565742493,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.1509433962264151,
+      "similar_blocks": 8,
+      "total_blocks": 106
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.47202625144919397,
+    "passes_threshold": false
+  },
+  "original_method": "    public <O extends ArchiveOutputStream<? extends ArchiveEntry>> O createArchiveOutputStream(final String archiverName, final OutputStream out,\n            final String actualEncoding) throws ArchiveException {\n        if (archiverName == null) {\n            throw new IllegalArgumentException(\"Archiver name must not be null.\");\n        }\n        if (out == null) {\n            throw new IllegalArgumentException(\"OutputStream must not be null.\");\n        }\n\n        if (AR.equalsIgnoreCase(archiverName)) {\n            return (O) new ArArchiveOutputStream(out);\n        }\n        if (ZIP.equalsIgnoreCase(archiverName)) {\n            final ZipArchiveOutputStream zip = new ZipArchiveOutputStream(out);\n            if (actualEncoding != null) {\n                zip.setEncoding(actualEncoding);\n            }\n            return (O) zip;\n        }\n        if (TAR.equalsIgnoreCase(archiverName)) {\n            if (actualEncoding != null) {\n                return (O) new TarArchiveOutputStream(out, actualEncoding);\n            }\n            return (O) new TarArchiveOutputStream(out);\n        }\n        if (JAR.equalsIgnoreCase(archiverName)) {\n            if (actualEncoding != null) {\n                return (O) new JarArchiveOutputStream(out, actualEncoding);\n            }\n            return (O) new JarArchiveOutputStream(out);\n        }\n        if (CPIO.equalsIgnoreCase(archiverName)) {\n            if (actualEncoding != null) {\n                return (O) new CpioArchiveOutputStream(out, actualEncoding);\n            }\n            return (O) new CpioArchiveOutputStream(out);\n        }\n        if (SEVEN_Z.equalsIgnoreCase(archiverName)) {\n            throw new StreamingNotSupportedException(SEVEN_Z);\n        }\n\n        final ArchiveStreamProvider archiveStreamProvider = getArchiveOutputStreamProviders().get(toKey(archiverName));\n        if (archiveStreamProvider != null) {\n            return archiveStreamProvider.createArchiveOutputStream(archiverName, out, actualEncoding);\n        }\n\n        throw new ArchiveException(\"Archiver: \" + archiverName + \" not found.\");\n    }",
+  "regenerated_method": "@Override\npublic <O extends ArchiveOutputStream<? extends ArchiveEntry>> O createArchiveOutputStream(final String archiverName, final OutputStream out, final String actualEncoding) throws ArchiveException {\n    ArchiveStreamProvider streamProvider = getArchiveOutputStreamProviders().get(toKey(archiverName));\n    if (streamProvider == null) {\n        throw new ArchiveException(\"No provider for archiver: \" + archiverName);\n    }\n    if (out == null) {\n        throw new IllegalArgumentException(\"outputStream cannot be null\");\n    }\n    return (O) streamProvider.createArchiveOutputStream(archiverName, out, actualEncoding);\n}",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6673393743112328,
+  "original_metrics": {
+    "loc": 48,
+    "sloc": 45,
+    "complexity": 19
+  }
+}

@@ -1,0 +1,252 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.springframework.samples.petclinic.owner;
+Class name (MUST be exactly): Owner_addPetTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: addPet_WhenPetsIsNull_ShouldNotThrowException --
+ERROR: org.mockito.exceptions.misusing.MissingMethodInvocationException:
+when() requires an argument which has to be 'a method call on a mock'.
+For example:
+when(mock.getArticles()).thenReturn(articles);
+Also, this error might show up because:
+1. you stub either of: final/private/native/equals()/hashCode() methods.
+Those methods *cannot* be stubbed/verified.
+Mocking methods declared on non-public parent classes is not supported.
+2. inside when() you don't call method on mock but on some other object.
+--------------------------------------------------
+TEST: addPet_WhenPetIsNewAndPetsIsNull_ShouldNotThrowException --
+ERROR: org.mockito.exceptions.misusing.MissingMethodInvocationException:
+when() requires an argument which has to be 'a method call on a mock'.
+For example:
+when(mock.getArticles()).thenReturn(articles);
+Also, this error might show up because:
+1. you stub either of: final/private/native/equals()/hashCode() methods.
+Those methods *cannot* be stubbed/verified.
+Mocking methods declared on non-public parent classes is not supported.
+2. inside when() you don't call method on mock but on some other object.
+--------------------------------------------------
+TEST: addPet_WhenPetIsNew_ShouldAddToPets --
+ERROR: org.mockito.exceptions.misusing.MissingMethodInvocationException:
+when() requires an argument which has to be 'a method call on a mock'.
+For example:
+when(mock.getArticles()).thenReturn(articles);
+Also, this error might show up because:
+1. you stub either of: final/private/native/equals()/hashCode() methods.
+Those methods *cannot* be stubbed/verified.
+Mocking methods declared on non-public parent classes is not supported.
+2. inside when() you don't call method on mock but on some other object.
+--------------------------------------------------
+TEST: addPet_WhenPetIsNull_ShouldThrowNullPointerException --
+ERROR: org.mockito.exceptions.misusing.MissingMethodInvocationException:
+when() requires an argument which has to be 'a method call on a mock'.
+For example:
+when(mock.getArticles()).thenReturn(articles);
+Also, this error might show up because:
+1. you stub either of: final/private/native/equals()/hashCode() methods.
+Those methods *cannot* be stubbed/verified.
+Mocking methods declared on non-public parent classes is not supported.
+2. inside when() you don't call method on mock but on some other object.
+--------------------------------------------------
+TEST: addPet_WhenPetIsNotNew_ShouldNotAddToPets --
+ERROR: org.mockito.exceptions.misusing.MissingMethodInvocationException:
+when() requires an argument which has to be 'a method call on a mock'.
+For example:
+when(mock.getArticles()).thenReturn(articles);
+Also, this error might show up because:
+1. you stub either of: final/private/native/equals()/hashCode() methods.
+Those methods *cannot* be stubbed/verified.
+Mocking methods declared on non-public parent classes is not supported.
+2. inside when() you don't call method on mock but on some other object.
+
+TEST CODE TO FIX:
+package org.springframework.samples.petclinic.owner;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Owner_addPetTestGenerated {
+    @Mock
+    private List<Pet> pets;
+    @InjectMocks
+    private Owner owner;
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        when(owner.getPets()).thenReturn(pets);
+    }
+
+
+    @Test
+        void addPet_WhenPetIsNew_ShouldAddToPets() {
+            // Arrange
+            Pet newPet = mock(Pet.class);
+            when(newPet.isNew()).thenReturn(true);
+            // Act
+            owner.addPet(newPet);
+            // Assert
+            verify(pets).add(newPet);
+        }
+
+    @Test
+        void addPet_WhenPetIsNotNew_ShouldNotAddToPets() {
+            // Arrange
+            Pet existingPet = mock(Pet.class);
+            when(existingPet.isNew()).thenReturn(false);
+            // Act
+            owner.addPet(existingPet);
+            // Assert
+            verify(pets, never()).add(existingPet);
+        }
+
+    @Test
+        void addPet_WhenPetIsNull_ShouldThrowNullPointerException() {
+            // Act & Assert
+            assertThrows(NullPointerException.class, () -> owner.addPet(null));
+        }
+
+    @Test
+        void addPet_WhenPetsIsNull_ShouldNotThrowException() {
+            // Arrange
+            when(owner.getPets()).thenReturn(null);
+            Pet newPet = mock(Pet.class);
+            when(newPet.isNew()).thenReturn(true);
+            // Act
+            owner.addPet(newPet);
+            // Assert
+            // No exception should be thrown and no operation should be performed
+            verifyNoInteractions(newPet);
+        }
+
+    @Test
+        void addPet_WhenPetIsNewAndPetsIsNull_ShouldNotThrowException() {
+            // Arrange
+            when(owner.getPets()).thenReturn(null);
+            Pet newPet = mock(Pet.class);
+            when(newPet.isNew()).thenReturn(true);
+            // Act
+            owner.addPet(newPet);
+            // Assert
+            verifyNoInteractions(pets);
+        }
+
+}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   ToStringCreator -> org.springframework.core.style.ToStringCreator
+//   Person -> org.springframework.samples.petclinic.model.Person
+//   Assert -> org.springframework.util.Assert
+//   CascadeType -> jakarta.persistence.CascadeType
+//   Column -> jakarta.persistence.Column
+//   Entity -> jakarta.persistence.Entity
+//   FetchType -> jakarta.persistence.FetchType
+//   JoinColumn -> jakarta.persistence.JoinColumn
+//   OneToMany -> jakarta.persistence.OneToMany
+//   OrderBy -> jakarta.persistence.OrderBy
+//   Table -> jakarta.persistence.Table
+//   Pattern -> jakarta.validation.constraints.Pattern
+//   NotBlank -> jakarta.validation.constraints.NotBlank
+
+// === Class: Owner ===
+// Fields (with actual visibility):
+    private String address;
+    private String city;
+    private String telephone;
+    private List pets;
+
+// Getter/Setter Methods (for test assertions):
+public String getAddress();
+public void setAddress(String address);
+public String getCity();
+public void setCity(String city);
+public String getTelephone();
+public void setTelephone(String telephone);
+public List<Pet> getPets();
+public Pet getPet(String name);
+public Pet getPet(Integer id);
+public Pet getPet(String name, boolean ignoreNew);
+
+// Internal Method Signatures (used by target method):
+public List getPets();
+
+// === External Class: Pet ===
+// Import paths:
+//   LocalDate -> java.time.LocalDate
+//   Collection -> java.util.Collection
+//   LinkedHashSet -> java.util.LinkedHashSet
+//   Set -> java.util.Set
+//   DateTimeFormat -> org.springframework.format.annotation.DateTimeFormat
+// Fields (with actual visibility):
+    private LocalDate birthDate;
+    private PetType type;
+    private Set visits;
+
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        when(owner.getPets()).thenReturn(pets);
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+	public void addPet(Pet pet) {
+		if (pet.isNew()) { // NOT COVERED BY TESTS
+			getPets().add(pet); // NOT COVERED BY TESTS
+		}
+	}
+
+
+COVERAGE ISSUES:
+Current line coverage: 0.00%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers only if ensuring unique names.
+- DO NOT mock the target class
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

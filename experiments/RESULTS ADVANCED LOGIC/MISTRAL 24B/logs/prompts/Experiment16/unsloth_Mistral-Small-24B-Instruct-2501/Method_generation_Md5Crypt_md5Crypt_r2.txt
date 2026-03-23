@@ -1,0 +1,246 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.codec.digest;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.apache.commons.codec.digest.B64;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.digest.Md5Crypt;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Md5Crypt_md5CryptTestGenerated {
+    private SecureRandom secureRandom;
+    private Random random;
+
+    @BeforeEach
+    public void setUp() {
+        secureRandom = new SecureRandom();
+        random = new Random();
+    }
+
+    @Test
+    public void testMd5CryptWithEmptySalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "";
+        String prefix = "$1$";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+        });
+        assertEquals("Invalid salt value: ", exception.getMessage());
+    }
+
+    @Test
+    public void testMd5CryptWithNullSalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String prefix = "$1$";
+        String result = Md5Crypt.md5Crypt(keyBytes, null, prefix, random);
+        assertNotNull(result);
+        assertTrue(result.startsWith(prefix));
+        assertEquals(34, result.length());
+    }
+
+    @Test
+    public void testMd5CryptWithValidSalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "$1$abcdefgh";
+        String prefix = "$1$";
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+        assertNotNull(result);
+        assertTrue(result.startsWith(prefix));
+        assertEquals(34, result.length());
+    }
+
+    @Test
+    public void testMd5CryptWithSecureRandom() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String prefix = "$1$";
+        String result = Md5Crypt.md5Crypt(keyBytes, null, prefix, secureRandom);
+        assertNotNull(result);
+        assertTrue(result.startsWith(prefix));
+        assertEquals(34, result.length());
+    }
+
+    @Test
+    public void testMd5CryptWithEmptyKey() {
+        byte[] keyBytes = new byte[0];
+        String prefix = "$1$";
+        String result = Md5Crypt.md5Crypt(keyBytes, null, prefix, random);
+        assertNotNull(result);
+        assertTrue(result.startsWith(prefix));
+        assertEquals(34, result.length());
+    }
+
+    @Test
+    public void testMd5CryptWithInvalidSalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "$1$invalid";
+        String prefix = "$1$";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+        });
+        assertEquals("Invalid salt value: " + salt, exception.getMessage());
+    }
+
+    @Test
+    public void testMd5CryptWithNullKey() {
+        byte[] keyBytes = null;
+        String prefix = "$1$";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, null, prefix, random);
+        });
+        assertEquals("source cannot be null", exception.getMessage());
+    }
+
+    @Test
+    public void testMd5CryptWithNullRandom() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String prefix = "$1$";
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, null, prefix, null);
+        });
+        assertEquals("random cannot be null", exception.getMessage());
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 100.00%
+- Tests: 5/8 passed
+
+TEST STATUS:
+- PASSED (5): testMd5CryptWithEmptySalt, testMd5CryptWithNullSalt, testMd5CryptWithValidSalt, testMd5CryptWithSecureRandom, testMd5CryptWithEmptyKey
+- FAILED (3): testMd5CryptWithInvalidSalt, testMd5CryptWithNullKey, testMd5CryptWithNullRandom
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   StandardCharsets -> java.nio.charset.StandardCharsets
+//   MessageDigest -> java.security.MessageDigest
+//   SecureRandom -> java.security.SecureRandom
+//   Arrays -> java.util.Arrays
+//   Random -> java.util.Random
+//   Matcher -> java.util.regex.Matcher
+//   Pattern -> java.util.regex.Pattern
+//   Md5Crypt -> org.apache.commons.codec.digest.Md5Crypt
+//   B64 -> org.apache.commons.codec.digest.B64
+//   DigestUtils -> org.apache.commons.codec.digest.DigestUtils
+
+// === Class: Md5Crypt ===
+// Fields (with actual visibility):
+    package-private static final String APR1_PREFIX;
+    private static final int BLOCKSIZE;
+    package-private static final String MD5_PREFIX;
+    private static final int ROUNDS;
+
+// Constructors:
+public Md5Crypt();
+
+// Internal Methods (full implementation for context):
+    public static String apr1Crypt(final byte[] keyBytes) {
+        return apr1Crypt(keyBytes, APR1_PREFIX + B64.getRandomSalt(8));
+    }
+
+// === External Class: B64 ===
+// Full import path: org.apache.commons.codec.digest.B64
+// Import paths:
+//   SecureRandom -> java.security.SecureRandom
+//   Random -> java.util.Random
+// Fields (with actual visibility):
+    package-private static final String B64T_STRING;
+    package-private static final char[] B64T_ARRAY;
+
+// Method Signatures (used by target method):
+static String getRandomSalt(final int num);
+static void b64from24bit(final byte b2, final byte b1, final byte b0, final int outLen, final StringBuilder buffer);
+
+// === External Class: DigestUtils ===
+// Full import path: org.apache.commons.codec.digest.DigestUtils
+// Import paths:
+//   BufferedInputStream -> java.io.BufferedInputStream
+//   File -> java.io.File
+//   FileInputStream -> java.io.FileInputStream
+//   IOException -> java.io.IOException
+//   InputStream -> java.io.InputStream
+// Fields (with actual visibility):
+    package-private static final int BUFFER_SIZE;
+    private final MessageDigest messageDigest;
+
+// Constructors:
+public DigestUtils();
+public DigestUtils(MessageDigest digest);
+public DigestUtils(String name);
+
+// Method Signatures (used by target method):
+public static MessageDigest getMd5Digest();
+
+// Public Getter Methods (for test assertions):
+public static MessageDigest getDigest(String algorithm);
+public static MessageDigest getDigest(String algorithm, MessageDigest defaultMessageDigest);
+public static MessageDigest getMd2Digest();
+public static MessageDigest getSha1Digest();
+public static MessageDigest getSha256Digest();
+public static MessageDigest getSha3_224Digest();
+public static MessageDigest getSha3_256Digest();
+public static MessageDigest getSha3_384Digest();
+public static MessageDigest getSha3_512Digest();
+public static MessageDigest getSha384Digest();
+public static MessageDigest getSha512_224Digest();
+public static MessageDigest getSha512_256Digest();
+public static MessageDigest getSha512Digest();
+public static MessageDigest getShaDigest();
+public static boolean isAvailable(String messageDigestAlgorithm);
+
+
+TASK:
+Regenerate ONLY the method "md5Crypt" OF CLASS "Md5Crypt" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public static String md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.codec.digest
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "md5Crypt"
+– Allowed imports: exactly those already present in Md5Crypt
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

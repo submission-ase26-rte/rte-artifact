@@ -1,0 +1,169 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): PatternOptionBuilder_parsePatternTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.cli;
+
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PatternOptionBuilder_parsePatternTestGenerated {
+
+    @Test
+        void testParsePattern_patternWithOnlyType() {
+            Options options = PatternOptionBuilder.parsePattern("$");
+            assertEquals(0, options.getOptions().size());
+        }
+
+    @Test
+    void testParsePattern_emptyPattern() {}
+
+    @Test
+    void testParsePattern_patternWithOnlyRequired() {}
+
+    @Test
+    void testParsePattern_patternWithRequiredAndType() {
+        Options options = PatternOptionBuilder.parsePattern("!i");
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("i", option.getOption());
+        assertTrue(option.isRequired());
+        assertEquals(PatternOptionBuilder.INTEGER_VALUE, option.getType());
+    }
+
+    @Test
+    void testParsePattern_patternWithMultipleOptions() {
+        Options options = PatternOptionBuilder.parsePattern("ai!f");
+        assertEquals(2, options.getOptions().size());
+
+        Option option1 = options.getOptions().get(0);
+        assertEquals("a", option1.getOption());
+        assertEquals(PatternOptionBuilder.STRING_VALUE, option1.getType());
+
+        Option option2 = options.getOptions().get(1);
+        assertEquals("f", option2.getOption());
+        assertTrue(option2.isRequired());
+        assertEquals(PatternOptionBuilder.FILE_VALUE, option2.getType());
+    }
+
+    @Test
+    void testParsePattern_patternWithConverter() {
+        Options options = PatternOptionBuilder.parsePattern("d");
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("d", option.getOption());
+        assertEquals(PatternOptionBuilder.DOUBLE_VALUE, option.getType());
+    }
+
+    @Test
+    void testParsePattern_patternWithTrailingOption() {
+        Options options = PatternOptionBuilder.parsePattern("a!");
+        assertEquals(1, options.getOptions().size());
+
+        Option option = options.getOptions().get(0);
+        assertEquals("a", option.getOption());
+        assertTrue(option.isRequired());
+        assertEquals(PatternOptionBuilder.STRING_VALUE, option.getType());
+    }
+
+    @Test
+    void testParsePattern_patternWithUnrecognizedType() {
+        Options options = PatternOptionBuilder.parsePattern("z");
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("z", option.getOption());
+        assertEquals(PatternOptionBuilder.STRING_VALUE, option.getType());
+    }
+
+    @Test
+    void testParsePattern_patternWithMultipleRequiredOptions() {
+        Options options = PatternOptionBuilder.parsePattern("!a!b");
+        assertEquals(2, options.getOptions().size());
+
+        Option option1 = options.getOptions().get(0);
+        assertEquals("a", option1.getOption());
+        assertTrue(option1.isRequired());
+
+        Option option2 = options.getOptions().get(1);
+        assertEquals("b", option2.getOption());
+        assertTrue(option2.isRequired());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[30] cannot find symbol
+  symbol:   method get(int)
+  location: interface java.util.Collection<org.apache.commons.cli.Option>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[31] cannot find symbol
+  symbol:   method getOption()
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[33] cannot find symbol
+  symbol:   variable INTEGER_VALUE
+  location: class org.apache.commons.cli.PatternOptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[41] cannot find symbol
+  symbol:   method get(int)
+  location: interface java.util.Collection<org.apache.commons.cli.Option>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[42] cannot find symbol
+  symbol:   method getOption()
+  location: variable option1 of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[45] cannot find symbol
+  symbol:   method get(int)
+  location: interface java.util.Collection<org.apache.commons.cli.Option>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[46] cannot find symbol
+  symbol:   method getOption()
+  location: variable option2 of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[55] cannot find symbol
+  symbol:   method get(int)
+  location: interface java.util.Collection<org.apache.commons.cli.Option>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[56] cannot find symbol
+  symbol:   method getOption()
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[57] cannot find symbol
+  symbol:   variable DOUBLE_VALUE
+  location: class org.apache.commons.cli.PatternOptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[65] cannot find symbol
+  symbol:   method get(int)
+  location: interface java.util.Collection<org.apache.commons.cli.Option>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[66] cannot find symbol
+  symbol:   method getOption()
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[75] cannot find symbol
+  symbol:   method get(int)
+  location: interface java.util.Collection<org.apache.commons.cli.Option>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[76] cannot find symbol
+  symbol:   method getOption()
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[85] cannot find symbol
+  symbol:   method get(int)
+  location: interface java.util.Collection<org.apache.commons.cli.Option>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[86] cannot find symbol
+  symbol:   method getOption()
+  location: variable option1 of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[89] cannot find symbol
+  symbol:   method get(int)
+  location: interface java.util.Collection<org.apache.commons.cli.Option>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/PatternOptionBuilder_parsePatternTestGenerated.java:[90] cannot find symbol
+  symbol:   method getOption()
+  location: variable option2 of type org.apache.commons.cli.Option
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: PatternOptionBuilder_parsePatternTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

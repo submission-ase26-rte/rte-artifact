@@ -1,0 +1,372 @@
+ROLE:
+You are an expert Java developer. The current test suite achieves 100% code coverage 
+and all tests pass, but the tests are TOO GENERIC.
+
+CURRENT SITUATION:
+- Line Coverage: 100%
+- Tests: 3/3 passed (all passing)
+- Similarity Score: 0.6002 (threshold: 0.6747425010840047)
+
+The low similarity score indicates that a DIFFERENT implementation could also pass 
+all these tests. Your task is to ADD MORE SPECIFIC tests that capture the unique 
+behavior of the original method.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.interfaces.handling.mobile;
+Class name (MUST be exactly): EventLogger_initTestGenerated
+
+
+EXISTING TEST SUITE (100% COVERAGE, ALL PASSING):
+The following is the COMPLETE current test suite. It achieves 100% coverage and all tests pass.
+It is provided fully implemented so you can see EXACTLY what logic is already covered.
+
+CRITICAL INSTRUCTIONS:
+1. READ these tests carefully to understand the current coverage.
+2. DO NOT modify, reimplement, or remove any of these tests.
+3. Your task is to ADD NEW TESTS that cover specific logic/paths/values NOT already covered by these tests.
+4. Avoid adding tests that are redundant with the ones below.
+
+package org.eclipse.cargotracker.interfaces.handling.mobile;
+
+import jakarta.faces.model.SelectItem;
+import jakarta.inject.Inject;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import org.eclipse.cargotracker.domain.model.cargo.Cargo;
+import org.eclipse.cargotracker.domain.model.cargo.CargoRepository;
+import org.eclipse.cargotracker.domain.model.cargo.Delivery;
+import org.eclipse.cargotracker.domain.model.cargo.Itinerary;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.cargo.TransportStatus;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.Schedule;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class EventLogger_initTestGenerated {
+    @Mock
+    private CargoRepository cargoRepository;
+    @Mock
+    private LocationRepository locationRepository;
+    @Mock
+    private VoyageRepository voyageRepository;
+    @InjectMocks
+    private EventLogger eventLogger;
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(eventLogger, "cargoRepository", cargoRepository);
+        ReflectionTestUtils.setField(eventLogger, "locationRepository", locationRepository);
+        ReflectionTestUtils.setField(eventLogger, "voyageRepository", voyageRepository);
+    }
+
+
+    @Test
+        public void testInitWithNoCargo() {
+            when(cargoRepository.findAll()).thenReturn(new ArrayList<>());
+    
+            eventLogger.init();
+    
+            List<SelectItem> trackingIds = eventLogger.getTrackingIds();
+            assertNotNull(trackingIds);
+            assertEquals(0, trackingIds.size());
+        }
+
+    @Test
+        public void testInitWithNoLocations() {
+            List<Cargo> cargos = new ArrayList<>();
+            when(cargoRepository.findAll()).thenReturn(cargos);
+            when(locationRepository.findAll()).thenReturn(new ArrayList<>());
+    
+            eventLogger.init();
+    
+            List<SelectItem> locationsList = eventLogger.getLocations();
+            assertNotNull(locationsList);
+            assertEquals(0, locationsList.size());
+        }
+
+    @Test
+        public void testInitWithNoVoyages() {
+            List<Cargo> cargos = new ArrayList<>();
+            when(cargoRepository.findAll()).thenReturn(cargos);
+            when(voyageRepository.findAll()).thenReturn(new ArrayList<>());
+    
+            eventLogger.init();
+    
+            List<SelectItem> voyagesList = eventLogger.getVoyages();
+            assertNotNull(voyagesList);
+            assertEquals(0, voyagesList.size());
+        }
+
+}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   PostConstruct -> jakarta.annotation.PostConstruct
+//   FacesMessage -> jakarta.faces.application.FacesMessage
+//   FacesContext -> jakarta.faces.context.FacesContext
+//   SelectItem -> jakarta.faces.model.SelectItem
+//   ViewScoped -> jakarta.faces.view.ViewScoped
+//   Inject -> jakarta.inject.Inject
+//   Named -> jakarta.inject.Named
+//   Serializable -> java.io.Serializable
+//   LocalDateTime -> java.time.LocalDateTime
+//   Function -> java.util.function.Function
+//   ApplicationEvents -> org.eclipse.cargotracker.application.ApplicationEvents
+//   DateConverter -> org.eclipse.cargotracker.application.util.DateConverter
+//   Cargo -> org.eclipse.cargotracker.domain.model.cargo.Cargo
+//   CargoRepository -> org.eclipse.cargotracker.domain.model.cargo.CargoRepository
+//   TrackingId -> org.eclipse.cargotracker.domain.model.cargo.TrackingId
+//   TransportStatus -> org.eclipse.cargotracker.domain.model.cargo.TransportStatus
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+//   Location -> org.eclipse.cargotracker.domain.model.location.Location
+//   LocationRepository -> org.eclipse.cargotracker.domain.model.location.LocationRepository
+//   UnLocode -> org.eclipse.cargotracker.domain.model.location.UnLocode
+//   Voyage -> org.eclipse.cargotracker.domain.model.voyage.Voyage
+//   VoyageNumber -> org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+//   VoyageRepository -> org.eclipse.cargotracker.domain.model.voyage.VoyageRepository
+//   HandlingEventRegistrationAttempt -> org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+//   FlowEvent -> org.primefaces.event.FlowEvent
+//   EventLogger -> org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+
+// === Class: EventLogger ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private CargoRepository cargoRepository;
+    private LocationRepository locationRepository;
+    private VoyageRepository voyageRepository;
+    private ApplicationEvents applicationEvents;
+    private FacesContext context;
+    private List trackingIds;
+    private List locations;
+    private List voyages;
+    private String trackingId;
+    private String location;
+    private HandlingEvent eventType;
+    private String voyageNumber;
+    private LocalDateTime completionTime;
+
+// Getter/Setter Methods (for test assertions):
+public String getTrackingId();
+public void setTrackingId(String trackingId);
+public List<SelectItem> getTrackingIds();
+public String getLocation();
+public void setLocation(String location);
+public List<SelectItem> getLocations();
+public void setEventType(HandlingEvent.Type eventType);
+public String getVoyageNumber();
+public void setVoyageNumber(String voyageNumber);
+public List<SelectItem> getVoyages();
+public LocalDateTime getCompletionTime();
+public void setCompletionTime(LocalDateTime completionTime);
+public String getCompletionTimeValue();
+public String getCompletionTimePattern();
+
+// === External Class: CargoRepository ===
+// Full import path: org.eclipse.cargotracker.domain.model.cargo.CargoRepository
+// Import paths:
+//   List -> java.util.List
+// Method Signatures (used by target method):
+List findAll();
+
+// === External Class: Cargo ===
+// Full import path: org.eclipse.cargotracker.domain.model.cargo.Cargo
+// Import paths:
+//   NotNull -> jakarta.validation.constraints.NotNull
+//   Serializable -> java.io.Serializable
+//   Validate -> org.apache.commons.lang3.Validate
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+//   HandlingHistory -> org.eclipse.cargotracker.domain.model.handling.HandlingHistory
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private Long id;
+    private TrackingId trackingId;
+    private Location origin;
+    private RouteSpecification routeSpecification;
+    private Itinerary itinerary;
+    private Delivery delivery;
+
+// Constructors:
+public Cargo();
+public Cargo(TrackingId trackingId, RouteSpecification routeSpecification);
+
+// Method Signatures (used by target method):
+public TrackingId getTrackingId();
+public Itinerary getItinerary();
+public Delivery getDelivery();
+
+// Public Getter Methods (for test assertions):
+public Location getOrigin();
+public RouteSpecification getRouteSpecification();
+public String toString();
+
+// === External Class: LocationRepository ===
+// Full import path: org.eclipse.cargotracker.domain.model.location.LocationRepository
+// Import paths:
+//   List -> java.util.List
+// Method Signatures (used by target method):
+List findAll();
+
+// === External Class: VoyageRepository ===
+// Full import path: org.eclipse.cargotracker.domain.model.voyage.VoyageRepository
+// Import paths:
+//   List -> java.util.List
+// Method Signatures (used by target method):
+List findAll();
+
+// === External Class: Voyage ===
+// Full import path: org.eclipse.cargotracker.domain.model.voyage.Voyage
+// Import paths:
+//   NotNull -> jakarta.validation.constraints.NotNull
+//   Serializable -> java.io.Serializable
+//   LocalDateTime -> java.time.LocalDateTime
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    public static final Voyage NONE;
+    private Long id;
+    private VoyageNumber voyageNumber;
+    private Schedule schedule;
+    private List carrierMovements;
+    private Location departureLocation;
+
+// Constructors:
+public Voyage();
+public Voyage(VoyageNumber voyageNumber, Schedule schedule);
+public Builder(VoyageNumber voyageNumber, Location departureLocation);
+
+// Method Signatures (used by target method):
+public VoyageNumber getVoyageNumber();
+
+// Public Getter Methods (for test assertions):
+public Schedule getSchedule();
+public String toString();
+
+// === External Class: Location ===
+// Full import path: org.eclipse.cargotracker.domain.model.location.Location
+// Import paths:
+//   NotEmpty -> jakarta.validation.constraints.NotEmpty
+//   NotNull -> jakarta.validation.constraints.NotNull
+//   Serializable -> java.io.Serializable
+//   Validate -> org.apache.commons.lang3.Validate
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    public static final Location UNKNOWN;
+    private Long id;
+    private UnLocode unLocode;
+    private String name;
+
+// Constructors:
+public Location();
+public Location(UnLocode unLocode, String name);
+
+// Method Signatures (used by target method):
+public UnLocode getUnLocode();
+public String getName();
+
+// Public Getter Methods (for test assertions):
+public String toString();
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(eventLogger, "cargoRepository", cargoRepository);
+        ReflectionTestUtils.setField(eventLogger, "locationRepository", locationRepository);
+        ReflectionTestUtils.setField(eventLogger, "voyageRepository", voyageRepository);
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+The following is the complete original method that needs to be tested. NOTE: The current test suite achieves 100% line coverage on this method:
+
+
+  @PostConstruct
+  public void init() {
+    List<Cargo> cargos = cargoRepository.findAll();
+
+    trackingIds = new ArrayList<>(cargos.size());
+
+    // List only routed cargo that is not claimed yet.
+    cargos
+            .stream()
+            .filter(
+                    cargo ->
+                            !cargo.getItinerary().getLegs().isEmpty()
+                                    && !(cargo
+                                    .getDelivery()
+                                    .getTransportStatus()
+                                    .sameValueAs(TransportStatus.CLAIMED)))
+            .map(cargo -> cargo.getTrackingId().getIdString())
+            .forEachOrdered(trackingId -> trackingIds.add(new SelectItem(trackingId, trackingId)));
+
+    List<Location> locations = locationRepository.findAll();
+
+    this.locations = new ArrayList<>(locations.size());
+
+    locations.forEach(
+            location -> {
+              String locationCode = location.getUnLocode().getIdString();
+              this.locations.add(
+                      new SelectItem(locationCode, location.getName() + " (" + locationCode + ")"));
+            });
+
+    List<Voyage> voyages = voyageRepository.findAll();
+
+    this.voyages = new ArrayList<>(voyages.size());
+
+    voyages.forEach(
+            voyage ->
+                    this.voyages.add(
+                            new SelectItem(
+                                    voyage.getVoyageNumber().getIdString(),
+                                    voyage.getVoyageNumber().getIdString())));
+  }
+
+
+INSTRUCTIONS:
+- KEEP ALL existing tests - they are working correctly
+- ADD new tests with unique names (e.g., testMethodName_specificBehavior)
+- Focus on SPECIFIC RETURN VALUES - test exact values, not just types
+- Focus on BOUNDARY CONDITIONS - edge cases unique to this implementation
+- Focus on SPECIFIC EXCEPTION MESSAGES if applicable
+- Focus on INTERNAL LOGIC PATHS specific to this implementation
+- The goal: new tests should FAIL if someone wrote a different implementation
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

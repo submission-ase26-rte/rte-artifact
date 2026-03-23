@@ -1,0 +1,330 @@
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import com.ibm.websphere.samples.daytrader.interfaces.Trace;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.io.IOException;
+import javax.servlet.http.HttpSession;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.util.ReflectionTestUtils;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeAppServlet_performTaskTestGenerated {
+    @Mock
+    private TradeServletAction tsAction;
+    @Mock
+    private ServletConfig servletConfig;
+    @Mock
+    private ServletContext servletContext;
+    @Mock
+    private HttpSession httpSession;
+    @InjectMocks
+    private TradeAppServlet tradeAppServlet;
+
+    @BeforeEach
+    public void setUp() throws ServletException {
+        MockitoAnnotations.openMocks(this);
+        when(servletConfig.getServletContext()).thenReturn(servletContext);
+        tradeAppServlet.init(servletConfig);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        ReflectionTestUtils.setField(tradeAppServlet, "tsAction", null);
+    }
+
+    @Test
+    public void testPerformTask_NoAction() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doWelcome(servletContext, request, response, "");
+    }
+
+    @Test
+    public void testPerformTask_Login() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("action", "login");
+        request.setParameter("uid", "testUser");
+        request.setParameter("passwd", "testPass");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doLogin(servletContext, request, response, "testUser", "testPass");
+    }
+
+    @Test
+    public void testPerformTask_Register() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("action", "register");
+        request.setParameter("user id", "testUser");
+        request.setParameter("passwd", "testPass");
+        request.setParameter("confirm passwd", "testPass");
+        request.setParameter("Full Name", "Test User");
+        request.setParameter("Credit Card Number", "1234567890123456");
+        request.setParameter("money", "10000");
+        request.setParameter("email", "test@example.com");
+        request.setParameter("snail mail", "123 Test St");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doRegister(servletContext, request, response, "testUser", "testPass", "testPass", "Test User", "1234567890123456", "10000", "test@example.com", "123 Test St");
+    }
+
+    @Test
+    public void testPerformTask_Quotes() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("action", "quotes");
+        request.setParameter("symbols", "IBM,MSFT");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        when(request.getSession()).thenReturn(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("testUser");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doQuotes(servletContext, request, response, "testUser", "IBM,MSFT");
+    }
+
+    @Test
+    public void testPerformTask_Buy() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("action", "buy");
+        request.setParameter("symbol", "IBM");
+        request.setParameter("quantity", "10");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        when(request.getSession()).thenReturn(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("testUser");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doBuy(servletContext, request, response, "testUser", "IBM", "10");
+    }
+
+    @Test
+    public void testPerformTask_Sell() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("action", "sell");
+        request.setParameter("holdingID", "123");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        when(request.getSession()).thenReturn(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("testUser");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doSell(servletContext, request, response, "testUser", 123);
+    }
+
+    @Test
+    public void testPerformTask_Portfolio() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("action", "portfolio");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        when(request.getSession()).thenReturn(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("testUser");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doPortfolio(servletContext, request, response, "testUser", "Portfolio as of " + new java.util.Date());
+    }
+
+    @Test
+    public void testPerformTask_Logout() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("action", "logout");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        when(request.getSession()).thenReturn(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("testUser");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doLogout(servletContext, request, response, "testUser");
+    }
+
+    @Test
+    public void testPerformTask_Home() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("action", "home");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        when(request.getSession()).thenReturn(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("testUser");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doHome(servletContext, request, response, "testUser", "Ready to Trade");
+    }
+
+    @Test
+    public void testPerformTask_Account() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("action", "account");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        when(request.getSession()).thenReturn(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("testUser");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doAccount(servletContext, request, response, "testUser", "");
+    }
+
+    @Test
+    public void testPerformTask_UpdateProfile() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("action", "update_profile");
+        request.setParameter("password", "newPass");
+        request.setParameter("cpassword", "newPass");
+        request.setParameter("fullname", "New Test User");
+        request.setParameter("address", "456 New Test St");
+        request.setParameter("creditcard", "6543210987654321");
+        request.setParameter("email", "newtest@example.com");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        when(request.getSession()).thenReturn(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("testUser");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doAccountUpdate(servletContext, request, response, "testUser", "newPass", "newPass", "New Test User", "456 New Test St", "6543210987654321", "newtest@example.com");
+    }
+
+    @Test
+    public void testPerformTask_Mksummary() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("action", "mksummary");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        when(request.getSession()).thenReturn(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("testUser");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doMarketSummary(servletContext, request, response, "testUser");
+    }
+
+    @Test
+    public void testPerformTask_InvalidAction() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("action", "invalidAction");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        when(request.getSession()).thenReturn(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("testUser");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doWelcome(servletContext, request, response, "TradeAppServlet: Invalid ActioninvalidAction");
+    }
+
+    @Test
+    public void testPerformTask_UserNotLoggedIn() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("action", "portfolio");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        when(request.getSession()).thenReturn(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn(null);
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doWelcome(servletContext, request, response, "User Not Logged in");
+    }
+
+    @Test
+    public void testPerformTask_Http2Push() throws ServletException, IOException {
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getWebInterface).thenReturn(TradeConfig.JSP_Images_HTTP2);
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            request.setParameter("action", "quotes");
+            request.setParameter("symbols", "IBM,MSFT");
+            MockHttpServletResponse response = new MockHttpServletResponse();
+            when(request.getSession()).thenReturn(httpSession);
+            when(httpSession.getAttribute("uidBean")).thenReturn("testUser");
+            tradeAppServlet.performTask(request, response);
+            verify(tsAction).doQuotes(servletContext, request, response, "testUser", "IBM,MSFT");
+        }
+    }
+
+    @Test
+    public void testPerformTask_Http2Push_NotEnabled() throws ServletException, IOException {
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getWebInterface).thenReturn(TradeConfig.JSP);
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            request.setParameter("action", "quotes");
+            request.setParameter("symbols", "IBM,MSFT");
+            MockHttpServletResponse response = new MockHttpServletResponse();
+            when(request.getSession()).thenReturn(httpSession);
+            when(httpSession.getAttribute("uidBean")).thenReturn("testUser");
+            tradeAppServlet.performTask(request, response);
+            verify(tsAction).doQuotes(servletContext, request, response, "testUser", "IBM,MSFT");
+        }
+    }
+
+    @Test
+    public void testPerformTask_UncoveredLines() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doWelcome(servletContext, request, response, "");
+        request.setParameter("action", "login");
+        request.setParameter("uid", "testUser");
+        request.setParameter("passwd", "testPass");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doLogin(servletContext, request, response, "testUser", "testPass");
+        request.setParameter("action", "register");
+        request.setParameter("user id", "testUser");
+        request.setParameter("passwd", "testPass");
+        request.setParameter("confirm passwd", "testPass");
+        request.setParameter("Full Name", "Test User");
+        request.setParameter("Credit Card Number", "1234567890123456");
+        request.setParameter("money", "10000");
+        request.setParameter("email", "test@example.com");
+        request.setParameter("snail mail", "123 Test St");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doRegister(servletContext, request, response, "testUser", "testPass", "testPass", "Test User", "1234567890123456", "10000", "test@example.com", "123 Test St");
+        request.setParameter("action", "quotes");
+        request.setParameter("symbols", "IBM,MSFT");
+        when(request.getSession()).thenReturn(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("testUser");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doQuotes(servletContext, request, response, "testUser", "IBM,MSFT");
+        request.setParameter("action", "buy");
+        request.setParameter("symbol", "IBM");
+        request.setParameter("quantity", "10");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doBuy(servletContext, request, response, "testUser", "IBM", "10");
+        request.setParameter("action", "sell");
+        request.setParameter("holdingID", "123");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doSell(servletContext, request, response, "testUser", 123);
+        request.setParameter("action", "portfolio");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doPortfolio(servletContext, request, response, "testUser", "Portfolio as of " + new java.util.Date());
+        request.setParameter("action", "logout");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doLogout(servletContext, request, response, "testUser");
+        request.setParameter("action", "home");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doHome(servletContext, request, response, "testUser", "Ready to Trade");
+        request.setParameter("action", "account");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doAccount(servletContext, request, response, "testUser", "");
+        request.setParameter("action", "update_profile");
+        request.setParameter("password", "newPass");
+        request.setParameter("cpassword", "newPass");
+        request.setParameter("fullname", "New Test User");
+        request.setParameter("address", "456 New Test St");
+        request.setParameter("creditcard", "6543210987654321");
+        request.setParameter("email", "newtest@example.com");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doAccountUpdate(servletContext, request, response, "testUser", "newPass", "newPass", "New Test User", "456 New Test St", "6543210987654321", "newtest@example.com");
+        request.setParameter("action", "mksummary");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doMarketSummary(servletContext, request, response, "testUser");
+        request.setParameter("action", "invalidAction");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doWelcome(servletContext, request, response, "TradeAppServlet: Invalid ActioninvalidAction");
+        request.setParameter("action", "portfolio");
+        when(httpSession.getAttribute("uidBean")).thenReturn(null);
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doWelcome(servletContext, request, response, "User Not Logged in");
+    }
+
+    @Test
+    public void testPerformTask_UncoveredLines_Part2() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doWelcome(servletContext, request, response, "");
+        request.setParameter("action", "portfolioNoEdge");
+        when(request.getSession()).thenReturn(httpSession);
+        when(httpSession.getAttribute("uidBean")).thenReturn("testUser");
+        tradeAppServlet.performTask(request, response);
+        verify(tsAction).doPortfolio(servletContext, request, response, "testUser", "Portfolio as of " + new java.util.Date());
+    }
+
+}

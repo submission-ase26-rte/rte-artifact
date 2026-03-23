@@ -1,0 +1,194 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package org.apache.commons.cli;
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   File -> java.io.File
+//   FileInputStream -> java.io.FileInputStream
+//   URL -> java.net.URL
+//   Date -> java.util.Date
+//   Map -> java.util.Map
+
+// === Class: PatternOptionBuilder ===
+// Fields (with actual visibility):
+    public static final Class STRING_VALUE;
+    public static final Class OBJECT_VALUE;
+    public static final Class NUMBER_VALUE;
+    public static final Class DATE_VALUE;
+    public static final Class CLASS_VALUE;
+    public static final Class EXISTING_FILE_VALUE;
+    public static final Class FILE_VALUE;
+    public static final Class FILES_VALUE;
+    public static final Class URL_VALUE;
+    private static final Converter UNSUPPORTED;
+
+// Getter/Setter Methods (for test assertions):
+public static Object getValueClass(final char ch);
+public static boolean isValueCode(final char ch);
+
+// Internal Method Signatures (used by target method):
+public static Class getValueType(final char ch);
+static T unsupported();
+public static boolean isValueCode(final char ch);
+
+// === External Class: Option ===
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   Objects -> java.util.Objects
+// Fields (with actual visibility):
+    private static final Class DEFAULT_TYPE;
+    private int argCount;
+    private String argName;
+    private Converter converter;
+    private final DeprecatedAttributes deprecated;
+    private String description;
+    private String longOption;
+    private final String option;
+    private boolean optionalArg;
+    private boolean required;
+    private Class type;
+    private char valueSeparator;
+    package-private static final Option[] EMPTY_ARRAY;
+    private static final long serialVersionUID;
+    public static final int UNINITIALIZED;
+    public static final int UNLIMITED_VALUES;
+    private List values;
+    private char valuesep;
+
+// Constructors:
+private Builder(String option);
+private Option(Builder builder);
+public Option(String option, boolean hasArg, String description);
+public Option(String option, String description);
+public Option(String option, String longOption, boolean hasArg, String description);
+
+// Method Signatures (used by target method):
+public static Builder builder();
+
+// === External Class: Options ===
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   Collection -> java.util.Collection
+//   Collections -> java.util.Collections
+//   HashSet -> java.util.HashSet
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final Map shortOpts;
+    private final Map longOpts;
+    private final List requiredOpts;
+    private final Map optionGroups;
+
+// Method Signatures (used by target method):
+public Options addOption(final Option opt);
+
+// === External Class: TypeHandler ===
+// Import paths:
+//   File -> java.io.File
+//   FileInputStream -> java.io.FileInputStream
+//   BigDecimal -> java.math.BigDecimal
+//   BigInteger -> java.math.BigInteger
+//   URL -> java.net.URL
+// Fields (with actual visibility):
+    private static final TypeHandler DEFAULT;
+    private static final int HEX_RADIX;
+    private final Map converterMap;
+
+// Constructors:
+public TypeHandler();
+public TypeHandler(Map converterMap);
+
+// Method Signatures (used by target method):
+public static Map createDefaultMap();
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+    /**
+     * Returns the {@link Options} instance represented by {@code pattern}.
+     *
+     * @param pattern the pattern string
+     * @return The {@link Options} instance
+     */
+    public static Options parsePattern(final String pattern) {
+        char opt = Char.SP;
+        boolean required = false;
+        Class<?> type = null;
+        Converter<?, ?> converter = Converter.DEFAULT;
+
+        final Options options = new Options();
+
+        for (int i = 0; i < pattern.length(); i++) {
+            final char ch = pattern.charAt(i);
+
+            // a value code comes after an option and specifies
+            // details about it
+            if (!isValueCode(ch)) {
+                if (opt != Char.SP) {
+                    // @formatter:off
+                    final Option option = Option.builder(String.valueOf(opt))
+                            .hasArg(type != null)
+                            .required(required)
+                            .type(type)
+                            .converter(converter)
+                            .build();
+                    // @formatter:on
+                    // we have a previous one to deal with
+                    options.addOption(option);
+                    required = false;
+                    type = null;
+                    converter = Converter.DEFAULT;
+                }
+
+                opt = ch;
+            } else if (ch == '!') {
+                required = true;
+            } else {
+                type = getValueType(ch);
+                final Map<Class<?>, Converter<?, ? extends Throwable>> map = TypeHandler.createDefaultMap();
+                // Backward compatibility (probably).
+                map.put(FILES_VALUE, unsupported());
+                converter = new TypeHandler(map).getConverter(getValueType(ch));
+            }
+        }
+
+        if (opt != Char.SP) {
+            final Option option = Option.builder(String.valueOf(opt)).hasArg(type != null).required(required).type(type).build();
+
+            // we have a final one to deal with
+            options.addOption(option);
+        }
+
+        return options;
+    }
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "parsePattern" of class "PatternOptionBuilder".
+
+REQUIREMENTS:
+- Test class name: PatternOptionBuilder_parsePatternTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths, edge cases, and boundary conditions
+- Test both valid inputs and error scenarios (null values, empty collections, invalid arguments)
+- Cover expected exceptions declared in the method signature
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- DO NOT use getter/setter methods that are not present in the provided class context
+- DO NOT mock the target class
+- For creating test instances of the target class, PREFER MOCKING constructor parameters (using @Mock) rather than instantiating domain objects directly, to avoid validation errors in value objects
+- Generate ONLY the test class without explanations or comments outside the code
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

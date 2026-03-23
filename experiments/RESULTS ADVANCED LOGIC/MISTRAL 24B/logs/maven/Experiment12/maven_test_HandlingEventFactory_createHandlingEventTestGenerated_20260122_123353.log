@@ -1,0 +1,152 @@
+=== MAVEN OUTPUT LOG ===
+Test Class: HandlingEventFactory_createHandlingEventTestGenerated
+Experiment: Esperimento12
+Phase: test
+Timestamp: 2026-01-22T12:33:53.601279
+============================================================
+
+[INFO] Error stacktraces are turned on.
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< org.eclipse.ee4j:cargo-tracker >-------------------
+[INFO] Building Eclipse Cargo Tracker 3.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ war ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ cargo-tracker ---
+[INFO] Deleting C:\Workspace\Project\JAVA_PROJECTS\aster-main\java\aster\GPT-4\Cargotracker\Run-1\target
+[INFO] 
+[INFO] --- jacoco:0.8.11:prepare-agent (prepare-agent) @ cargo-tracker ---
+[INFO] argLine set to -javaagent:C:\\Users\\author\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.11\\org.jacoco.agent-0.8.11-runtime.jar=destfile=C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\GPT-4\\Cargotracker\\Run-1\\target\\jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ cargo-tracker ---
+[INFO] Copying 4 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ cargo-tracker ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 104 source files with javac [debug release 11] to target\classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ cargo-tracker ---
+[INFO] Copying 3 resources from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ cargo-tracker ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 3 source files with javac [debug release 11] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ cargo-tracker ---
+[INFO] Surefire report directory: C:\Workspace\Project\JAVA_PROJECTS\aster-main\java\aster\GPT-4\Cargotracker\Run-1\target\surefire-reports
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory_createHandlingEventTestGenerated
+[ERROR] Tests run: 5, Failures: 2, Errors: 2, Skipped: 0, Time elapsed: 2.369 s <<< FAILURE! -- in org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory_createHandlingEventTestGenerated
+[ERROR] org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory_createHandlingEventTestGenerated.testCreateHandlingEvent_UnknownVoyageException -- Time elapsed: 2.229 s <<< ERROR!
+org.mockito.exceptions.base.MockitoException: 
+
+Checked exception is invalid for this method!
+Invalid: org.eclipse.cargotracker.domain.model.handling.UnknownVoyageException: No voyage with number VN123 exists in the system.
+	at org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory_createHandlingEventTestGenerated.testCreateHandlingEvent_UnknownVoyageException(HandlingEventFactory_createHandlingEventTestGenerated.java:124)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+
+[ERROR] org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory_createHandlingEventTestGenerated.testCreateHandlingEvent_SuccessWithoutVoyage -- Time elapsed: 0.017 s <<< ERROR!
+org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException: java.lang.IllegalArgumentException: Voyage is required for event type UNLOAD
+	at org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory.createHandlingEvent(HandlingEventFactory.java:61)
+	at org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory_createHandlingEventTestGenerated.testCreateHandlingEvent_SuccessWithoutVoyage(HandlingEventFactory_createHandlingEventTestGenerated.java:89)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.lang.IllegalArgumentException: Voyage is required for event type UNLOAD
+	at org.eclipse.cargotracker.domain.model.handling.HandlingEvent.<init>(HandlingEvent.java:145)
+	at org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory.createHandlingEvent(HandlingEventFactory.java:56)
+	... 6 more
+
+[ERROR] org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory_createHandlingEventTestGenerated.testCreateHandlingEvent_UnknownLocationException -- Time elapsed: 0.013 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <org.eclipse.cargotracker.domain.model.handling.UnknownLocationException> but was: <org.eclipse.cargotracker.domain.model.handling.UnknownVoyageException>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3111)
+	at org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory_createHandlingEventTestGenerated.testCreateHandlingEvent_UnknownLocationException(HandlingEventFactory_createHandlingEventTestGenerated.java:141)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: org.eclipse.cargotracker.domain.model.handling.UnknownVoyageException: No voyage with number VN123 exists in the system.
+	at org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory.findVoyage(HandlingEventFactory.java:83)
+	at org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory.createHandlingEvent(HandlingEventFactory.java:51)
+	at org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory_createHandlingEventTestGenerated.lambda$testCreateHandlingEvent_UnknownLocationException$2(HandlingEventFactory_createHandlingEventTestGenerated.java:141)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
+	... 8 more
+
+[ERROR] org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory_createHandlingEventTestGenerated.testCreateHandlingEvent_SuccessWithVoyage -- Time elapsed: 0.013 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <2026-01-22T13:33:49.135497500> but was: <2026-01-22T13:33:49>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1141)
+	at org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory_createHandlingEventTestGenerated.testCreateHandlingEvent_SuccessWithVoyage(HandlingEventFactory_createHandlingEventTestGenerated.java:71)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   HandlingEventFactory_createHandlingEventTestGenerated.testCreateHandlingEvent_SuccessWithVoyage:71 expected: <2026-01-22T13:33:49.135497500> but was: <2026-01-22T13:33:49>
+[ERROR]   HandlingEventFactory_createHandlingEventTestGenerated.testCreateHandlingEvent_UnknownLocationException:141 Unexpected exception type thrown, expected: <org.eclipse.cargotracker.domain.model.handling.UnknownLocationException> but was: <org.eclipse.cargotracker.domain.model.handling.UnknownVoyageException>
+[ERROR] Errors: 
+[ERROR]   HandlingEventFactory_createHandlingEventTestGenerated.testCreateHandlingEvent_SuccessWithoutVoyage:89 » CannotCreateHandlingEvent java.lang.IllegalArgumentException: Voyage is required for event type UNLOAD
+[ERROR]   HandlingEventFactory_createHandlingEventTestGenerated.testCreateHandlingEvent_UnknownVoyageException:124 Mockito 
+Checked exception is invalid for this method!
+Invalid: org.eclipse.cargotracker.domain.model.handling.UnknownVoyageException: No voyage with number VN123 exists in the system.
+[INFO] 
+[ERROR] Tests run: 5, Failures: 2, Errors: 2, Skipped: 0
+[INFO] 
+[ERROR] There are test failures.
+
+Please refer to C:\Workspace\Project\JAVA_PROJECTS\aster-main\java\aster\GPT-4\Cargotracker\Run-1\target\surefire-reports for the individual test results.
+Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[INFO] 
+[INFO] --- jacoco:0.8.11:report (report) @ cargo-tracker ---
+[INFO] Loading execution data file C:\Workspace\Project\JAVA_PROJECTS\aster-main\java\aster\GPT-4\Cargotracker\Run-1\target\jacoco.exec
+[INFO] Analyzed bundle 'Eclipse Cargo Tracker' with 96 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  11.171 s
+[INFO] Finished at: 2026-01-22T12:33:50+01:00
+[INFO] ------------------------------------------------------------------------
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+
+
+=== JaCoCo Report Generation ===
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< org.eclipse.ee4j:cargo-tracker >-------------------
+[INFO] Building Eclipse Cargo Tracker 3.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ war ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.11:report (default-cli) @ cargo-tracker ---
+[INFO] Loading execution data file C:\Workspace\Project\JAVA_PROJECTS\aster-main\java\aster\GPT-4\Cargotracker\Run-1\target\jacoco.exec
+[INFO] Analyzed bundle 'Eclipse Cargo Tracker' with 96 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.376 s
+[INFO] Finished at: 2026-01-22T12:33:53+01:00
+[INFO] ------------------------------------------------------------------------

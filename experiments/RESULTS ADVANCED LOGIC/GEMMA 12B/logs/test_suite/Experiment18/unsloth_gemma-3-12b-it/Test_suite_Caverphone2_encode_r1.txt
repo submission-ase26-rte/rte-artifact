@@ -1,0 +1,91 @@
+package org.apache.commons.codec.language;
+
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.StringEncoder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Caverphone2_encodeTestGenerated {
+
+    @Test
+        public void testEncode_nullInput() {
+            Caverphone2 caverphone2 = new Caverphone2();
+            assertThrows(NullPointerException.class, () -> caverphone2.encode(null));
+        }
+
+    @Test
+        public void testEncode_emptyInput() {
+            Caverphone2 caverphone2 = new Caverphone2();
+            assertEquals("TEN_1", caverphone2.encode(""));
+        }
+
+    @Test
+        public void testEncode_simpleWord() {
+            Caverphone2 caverphone2 = new Caverphone2();
+            assertEquals("AT3AT3", caverphone2.encode("at"));
+        }
+
+    @Test
+        public void testEncode_wordWithSpecialChars() {
+            Caverphone2 caverphone2 = new Caverphone2();
+            assertEquals("AT3AT3", caverphone2.encode("at!"));
+        }
+
+    @Test
+        public void testEncode_cough() {
+            Caverphone2 caverphone2 = new Caverphone2();
+            assertEquals("A22F", caverphone2.encode("cough"));
+        }
+
+    @Test
+        public void testEncode_rough() {
+            Caverphone2 caverphone2 = new Caverphone2();
+            assertEquals("A22F", caverphone2.encode("rough"));
+        }
+
+    @Test
+        public void testEncode_enough() {
+            Caverphone2 caverphone2 = new Caverphone2();
+            assertEquals("A322F", caverphone2.encode("enough"));
+        }
+
+    @Test
+        public void testEncode_trough() {
+            Caverphone2 caverphone2 = new Caverphone2();
+            assertEquals("A22F", caverphone2.encode("trough"));
+        }
+
+    @Test
+        public void testEncode_complexWord() {
+            Caverphone2 caverphone2 = new Caverphone2();
+            assertEquals("A33232", caverphone2.encode("example"));
+        }
+
+    @Test
+        public void testEncode_wordWithV() {
+            Caverphone2 caverphone2 = new Caverphone2();
+            assertEquals("A3F3", caverphone2.encode("five"));
+        }
+
+    @Test
+        public void testEncode_wordWithZ() {
+            Caverphone2 caverphone2 = new Caverphone2();
+            assertEquals("A3S", caverphone2.encode("zoo"));
+        }
+
+    @Test
+        public void testEncode_wordWithGH() {
+            Caverphone2 caverphone2 = new Caverphone2();
+            assertEquals("A22", caverphone2.encode("gh"));
+        }
+
+    @Test
+        public void testEncode_wordWithMB() {
+            Caverphone2 caverphone2 = new Caverphone2();
+            assertEquals("A3M2", caverphone2.encode("amb"));
+        }
+
+}

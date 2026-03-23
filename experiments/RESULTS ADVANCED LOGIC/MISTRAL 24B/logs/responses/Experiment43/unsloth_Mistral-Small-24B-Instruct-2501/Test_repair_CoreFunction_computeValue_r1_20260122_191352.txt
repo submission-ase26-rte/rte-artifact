@@ -1,0 +1,328 @@
+```java
+package org.apache.commons.jxpath.ri.compiler;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Collection;
+import java.util.Locale;
+
+import org.apache.commons.jxpath.BasicNodeSet;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.JXPathInvalidSyntaxException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.ri.EvalContext;
+import org.apache.commons.jxpath.ri.Compiler;
+import org.apache.commons.jxpath.ri.axes.NodeSetContext;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.apache.commons.jxpath.ri.InfoSetUtil;
+import org.apache.commons.jxpath.ri.compiler.CoreFunction;
+import org.apache.commons.jxpath.ri.compiler.Expression;
+import org.apache.commons.jxpath.ri.model.QName;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class CoreFunction_computeValueTestGenerated {
+
+    private CoreFunction coreFunction;
+    private EvalContext context;
+    private JXPathContext jxPathContext;
+
+    @BeforeEach
+    void setUp() {
+        context = mock(EvalContext.class);
+        jxPathContext = mock(JXPathContext.class);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+    }
+
+    @Test
+    void testFunctionLast() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_LAST, new Expression[0]);
+        when(context.hasNext()).thenReturn(true).thenReturn(false);
+        when(context.nextNode()).thenReturn(true);
+        assertEquals(Double.valueOf(1), coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionPosition() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_POSITION, new Expression[0]);
+        when(context.getCurrentPosition()).thenReturn(5);
+        assertEquals(Integer.valueOf(5), coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionCount() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_COUNT, new Expression[0]);
+        Expression arg1 = mock(Expression.class);
+        when(arg1.compute(context)).thenReturn(mock(EvalContext.class));
+        when(context.hasNext()).thenReturn(true).thenReturn(false).thenReturn(true).thenReturn(false);
+        when(context.next()).thenReturn(mock(NodePointer.class));
+        assertEquals(Double.valueOf(2), coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionLang() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_LANG, new Expression[1]);
+        NodePointer pointer = mock(NodePointer.class);
+        when(context.getSingleNodePointer()).thenReturn(pointer);
+        when(pointer.isLanguage("en")).thenReturn(true);
+        when(context.getCurrentNodePointer()).thenReturn(pointer);
+        assertEquals(Boolean.TRUE, coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionID() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_ID, new Expression[1]);
+        Expression arg1 = mock(Expression.class);
+        String id = "testID";
+        when(arg1.computeValue(context)).thenReturn(id);
+        NodePointer pointer = mock(NodePointer.class);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(jxPathContext.getContextPointer()).thenReturn(pointer);
+        when(pointer.getPointerByID(jxPathContext, id)).thenReturn(pointer);
+        assertEquals(pointer, coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionLocalName() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_LOCAL_NAME, new Expression[0]);
+        NodePointer pointer = mock(NodePointer.class);
+        when(context.getCurrentNodePointer()).thenReturn(pointer);
+        when(pointer.getName()).thenReturn(mock(QName.class));
+        when(pointer.getName().getName()).thenReturn("testName");
+        assertEquals("testName", coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionNamespaceURI() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_NAMESPACE_URI, new Expression[0]);
+        NodePointer pointer = mock(NodePointer.class);
+        when(context.getCurrentNodePointer()).thenReturn(pointer);
+        when(pointer.getNamespaceURI()).thenReturn("testURI");
+        assertEquals("testURI", coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionName() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_NAME, new Expression[0]);
+        NodePointer pointer = mock(NodePointer.class);
+        when(context.getCurrentNodePointer()).thenReturn(pointer);
+        when(pointer.getName()).thenReturn(mock(QName.class));
+        when(pointer.getName().toString()).thenReturn("testName");
+        assertEquals("testName", coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionString() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_STRING, new Expression[0]);
+        NodePointer pointer = mock(NodePointer.class);
+        when(context.getCurrentNodePointer()).thenReturn(pointer);
+        when(InfoSetUtil.stringValue(pointer)).thenReturn("testString");
+        assertEquals("testString", coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionConcat() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_CONCAT, new Expression[2]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(context.computeValue()).thenReturn("test1");
+        when(context.computeValue()).thenReturn("test2");
+        assertEquals("test1test2", coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionStartsWith() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_STARTS_WITH, new Expression[2]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(context.computeValue()).thenReturn("testString");
+        when(context.computeValue()).thenReturn("test");
+        assertEquals(Boolean.TRUE, coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionEndsWith() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_ENDS_WITH, new Expression[2]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(context.computeValue()).thenReturn("testString");
+        when(context.computeValue()).thenReturn("String");
+        assertEquals(Boolean.TRUE, coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionContains() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_CONTAINS, new Expression[2]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(context.computeValue()).thenReturn("testString");
+        when(context.computeValue()).thenReturn("String");
+        assertEquals(Boolean.TRUE, coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionSubstringBefore() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_SUBSTRING_BEFORE, new Expression[2]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(context.computeValue()).thenReturn("testString");
+        when(context.computeValue()).thenReturn("String");
+        assertEquals("test", coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionSubstringAfter() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_SUBSTRING_AFTER, new Expression[2]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(context.computeValue()).thenReturn("testString");
+        when(context.computeValue()).thenReturn("test");
+        assertEquals("String", coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionSubstring() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_SUBSTRING, new Expression[2]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(context.computeValue()).thenReturn("testString");
+        when(context.computeValue()).thenReturn(3.0);
+        assertEquals("String", coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionStringLength() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_STRING_LENGTH, new Expression[0]);
+        when(context.getCurrentNodePointer()).thenReturn(mock(NodePointer.class));
+        when(InfoSetUtil.stringValue(mock(NodePointer.class))).thenReturn("testString");
+        assertEquals(Double.valueOf(10), coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionNormalizeSpace() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_NORMALIZE_SPACE, new Expression[1]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(context.computeValue()).thenReturn(" test String ");
+        assertEquals("test String", coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionTranslate() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_TRANSLATE, new Expression[3]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(context.computeValue()).thenReturn("testString");
+        when(context.computeValue()).thenReturn("tS");
+        when(context.computeValue()).thenReturn("12");
+        assertEquals("1e2tring", coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionBoolean() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_BOOLEAN, new Expression[1]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(context.computeValue()).thenReturn(Boolean.TRUE);
+        assertEquals(Boolean.TRUE, coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionNot() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_NOT, new Expression[1]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(context.computeValue()).thenReturn(Boolean.TRUE);
+        assertEquals(Boolean.FALSE, coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionTrue() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_TRUE, new Expression[0]);
+        assertEquals(Boolean.TRUE, coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionFalse() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_FALSE, new Expression[0]);
+        assertEquals(Boolean.FALSE, coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionNull() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_NULL, new Expression[0]);
+        assertNull(coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionNumber() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_NUMBER, new Expression[0]);
+        when(context.getCurrentNodePointer()).thenReturn(mock(NodePointer.class));
+        when(InfoSetUtil.number(mock(NodePointer.class))).thenReturn(10.0);
+        assertEquals(10.0, coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionSum() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_SUM, new Expression[1]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        EvalContext evalContext = mock(EvalContext.class);
+        when(evalContext.hasNext()).thenReturn(true).thenReturn(false);
+        when(evalContext.next()).thenReturn(mock(NodePointer.class));
+        when(context.computeValue()).thenReturn(evalContext);
+        when(InfoSetUtil.doubleValue(mock(NodePointer.class))).thenReturn(10.0).thenReturn(20.0);
+        assertEquals(Double.valueOf(30.0), coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionFloor() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_FLOOR, new Expression[1]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(context.computeValue()).thenReturn(10.5);
+        assertEquals(Double.valueOf(10.0), coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionCeiling() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_CEILING, new Expression[1]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(context.computeValue()).thenReturn(10.5);
+        assertEquals(Double.valueOf(11.0), coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionRound() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_ROUND, new Expression[1]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(context.computeValue()).thenReturn(10.5);
+        assertEquals(Double.valueOf(11.0), coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionKey() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_KEY, new Expression[2]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(context.computeValue()).thenReturn("testKey");
+        when(context.computeValue()).thenReturn(10);
+        NodeSet nodeSet = mock(NodeSet.class);
+        when(jxPathContext.getNodeSetByKey("testKey", 10)).thenReturn(nodeSet);
+        assertEquals(new NodeSetContext(context, nodeSet), coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testFunctionFormatNumber() {
+        coreFunction = new CoreFunction(Compiler.FUNCTION_FORMAT_NUMBER, new Expression[2]);
+        when(context.getJXPathContext()).thenReturn(jxPathContext);
+        when(context.computeValue()).thenReturn(1234.56);
+        when(context.computeValue()).thenReturn("#.##");
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.ENGLISH);
+        DecimalFormat format = (DecimalFormat) NumberFormat.getInstance();
+        format.setDecimalFormatSymbols(symbols);
+        format.applyLocalizedPattern("#.##");
+        assertEquals("1234.56", coreFunction.computeValue(context));
+    }
+
+    @Test
+    void testDefaultCase() {
+        coreFunction = new CoreFunction(-1, new Expression[0]);
+        assertNull(coreFunction.computeValue(context));
+    }
+}
+```

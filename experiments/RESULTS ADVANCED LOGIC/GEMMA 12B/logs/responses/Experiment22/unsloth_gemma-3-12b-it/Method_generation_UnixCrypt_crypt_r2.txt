@@ -1,0 +1,39 @@
+```java
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+
+public static String crypt(final byte[] original, String salt) {
+    if (salt == null) {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] saltBytes = new byte[2];
+        secureRandom.nextBytes(saltBytes);
+        salt = String.valueOf(saltBytes[0]) + String.valueOf(saltBytes[1]);
+    }
+
+    if (!salt.matches("[a-zA-Z0-9]{2}")) {
+        throw new IllegalArgumentException("Salt must be a string of exactly two alphanumeric characters.");
+    }
+
+    int[] keySchedule = desSetKey(original);
+    int[] state = new int[2];
+    Arrays.fill(state, 0);
+
+    int eSwap0 = 0x01234567;
+    int eSwap1 = 0x89abcdef;
+
+    int[] keyScheduleFirstRound = Arrays.copyOfRange(keySchedule, 0, 16);
+    int[] keyScheduleSecondRound = Arrays.copyOfRange(keySchedule, 16, 32);
+
+    for (int i = 0; i < original.length; i++) {
+        state[0] = original[i] & 0xFF;
+        state[1] = (original[i] >>> 8) & 0xFF;
+        int[] result = body(keySchedule, eSwap0, eSwap1);
+        eSwap0 = result[0];
+        eSwap1 = result[1];
+    }
+
+    return salt + String.format("%08x%08x", eSwap0, eSwap1);
+}
+```

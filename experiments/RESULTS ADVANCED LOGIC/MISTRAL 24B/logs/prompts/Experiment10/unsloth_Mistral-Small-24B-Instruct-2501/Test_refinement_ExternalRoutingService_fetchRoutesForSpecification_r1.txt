@@ -1,0 +1,286 @@
+ROLE:
+You are an expert Java developer. Task: improve coverage.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.infrastructure.routing;
+Class name (MUST be exactly): ExternalRoutingService_fetchRoutesForSpecificationTestGenerated
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+Test class structure (reference):
+package org.eclipse.cargotracker.infrastructure.routing;
+
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.eclipse.cargotracker.domain.model.cargo.Itinerary;
+import org.eclipse.cargotracker.domain.model.cargo.Leg;
+import org.eclipse.cargotracker.domain.model.cargo.RouteSpecification;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.eclipse.pathfinder.api.TransitEdge;
+import org.eclipse.pathfinder.api.TransitPath;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
+public class ExternalRoutingService_fetchRoutesForSpecificationTestGenerated {
+    @Mock
+    private Logger logger;
+    @Mock
+    private WebTarget graphTraversalResource;
+    @Mock
+    private LocationRepository locationRepository;
+    @Mock
+    private VoyageRepository voyageRepository;
+    private ExternalRoutingService externalRoutingService;
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        externalRoutingService = new ExternalRoutingService();
+        ReflectionTestUtils.setField(externalRoutingService, "logger", logger);
+        ReflectionTestUtils.setField(externalRoutingService, "graphTraversalResource", graphTraversalResource);
+        ReflectionTestUtils.setField(externalRoutingService, "locationRepository", locationRepository);
+        ReflectionTestUtils.setField(externalRoutingService, "voyageRepository", voyageRepository);
+    }
+
+
+}
+
+Valid test signatures:
+    @Test
+    public void testFetchRoutesForSpecification_withNullRouteSpecification() {}
+}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   PostConstruct -> jakarta.annotation.PostConstruct
+//   Resource -> jakarta.annotation.Resource
+//   Stateless -> jakarta.ejb.Stateless
+//   Inject -> jakarta.inject.Inject
+//   ClientBuilder -> jakarta.ws.rs.client.ClientBuilder
+//   WebTarget -> jakarta.ws.rs.client.WebTarget
+//   GenericType -> jakarta.ws.rs.core.GenericType
+//   MediaType -> jakarta.ws.rs.core.MediaType
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   Level -> java.util.logging.Level
+//   Logger -> java.util.logging.Logger
+//   Collectors -> java.util.stream.Collectors
+//   Itinerary -> org.eclipse.cargotracker.domain.model.cargo.Itinerary
+//   Leg -> org.eclipse.cargotracker.domain.model.cargo.Leg
+//   RouteSpecification -> org.eclipse.cargotracker.domain.model.cargo.RouteSpecification
+//   LocationRepository -> org.eclipse.cargotracker.domain.model.location.LocationRepository
+//   UnLocode -> org.eclipse.cargotracker.domain.model.location.UnLocode
+//   VoyageNumber -> org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+//   VoyageRepository -> org.eclipse.cargotracker.domain.model.voyage.VoyageRepository
+//   RoutingService -> org.eclipse.cargotracker.domain.service.RoutingService
+//   TransitEdge -> org.eclipse.pathfinder.api.TransitEdge
+//   TransitPath -> org.eclipse.pathfinder.api.TransitPath
+//   ExternalRoutingService -> org.eclipse.cargotracker.infrastructure.routing.ExternalRoutingService
+
+// === Class: ExternalRoutingService ===
+// Fields (with actual visibility):
+    private Logger logger;
+    private String graphTraversalUrl;
+    private WebTarget graphTraversalResource;
+    private LocationRepository locationRepository;
+    private VoyageRepository voyageRepository;
+
+// Internal Methods (full implementation for context):
+  private Itinerary toItinerary(TransitPath transitPath) {
+    List<Leg> legs =
+            transitPath.getTransitEdges().stream().map(this::toLeg).collect(Collectors.toList());
+    return new Itinerary(legs);
+  }
+
+// === External Class: RouteSpecification ===
+// Full import path: org.eclipse.cargotracker.domain.model.cargo.RouteSpecification
+// Import paths:
+//   Column -> jakarta.persistence.Column
+//   Embeddable -> jakarta.persistence.Embeddable
+//   JoinColumn -> jakarta.persistence.JoinColumn
+//   ManyToOne -> jakarta.persistence.ManyToOne
+//   NotNull -> jakarta.validation.constraints.NotNull
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private Location origin;
+    private Location destination;
+    private LocalDate arrivalDeadline;
+
+// Constructors:
+public RouteSpecification();
+public RouteSpecification(Location origin, Location destination, LocalDate arrivalDeadline);
+
+// Method Signatures (used by target method):
+public Location getOrigin();
+public boolean isSatisfiedBy(Itinerary itinerary);
+public Location getDestination();
+
+// Public Getter Methods (for test assertions):
+public LocalDate getArrivalDeadline();
+
+// === External Class: Itinerary ===
+// Full import path: org.eclipse.cargotracker.domain.model.cargo.Itinerary
+// Import paths:
+//   NotEmpty -> jakarta.validation.constraints.NotEmpty
+//   Size -> jakarta.validation.constraints.Size
+//   Serializable -> java.io.Serializable
+//   LocalDateTime -> java.time.LocalDateTime
+//   Collections -> java.util.Collections
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    public static final Itinerary EMPTY_ITINERARY;
+    private List legs;
+
+// Constructors:
+public Itinerary();
+public Itinerary(List legs);
+
+
+// Public Getter Methods (for test assertions):
+public List<Leg> getLegs();
+public boolean isExpected(HandlingEvent event);
+public String toString();
+
+// === External Class: TransitPath ===
+// Full import path: org.eclipse.pathfinder.api.TransitPath
+// Import paths:
+//   XmlRootElement -> jakarta.xml.bind.annotation.XmlRootElement
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private List transitEdges;
+
+// Constructors:
+public TransitPath();
+public TransitPath(List transitEdges);
+
+
+// Public Getter Methods (for test assertions):
+public List<TransitEdge> getTransitEdges();
+public String toString();
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        externalRoutingService = new ExternalRoutingService();
+        ReflectionTestUtils.setField(externalRoutingService, "logger", logger);
+        ReflectionTestUtils.setField(externalRoutingService, "graphTraversalResource", graphTraversalResource);
+        ReflectionTestUtils.setField(externalRoutingService, "locationRepository", locationRepository);
+        ReflectionTestUtils.setField(externalRoutingService, "voyageRepository", voyageRepository);
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+  @Override
+  public List<Itinerary> fetchRoutesForSpecification(RouteSpecification routeSpecification) {
+    // The RouteSpecification is picked apart and adapted to the external API.
+    String origin = routeSpecification.getOrigin().getUnLocode().getIdString(); // NOT COVERED BY TESTS
+    String destination = routeSpecification.getDestination().getUnLocode().getIdString(); // NOT COVERED BY TESTS
+
+    List<TransitPath> transitPaths = // NOT COVERED BY TESTS
+            graphTraversalResource
+                    .queryParam("origin", origin) // NOT COVERED BY TESTS
+                    .queryParam("destination", destination) // NOT COVERED BY TESTS
+                    .request(MediaType.APPLICATION_JSON_TYPE) // NOT COVERED BY TESTS
+                    .get(new GenericType<List<TransitPath>>() { // NOT COVERED BY TESTS
+                    });
+
+    // The returned result is then translated back into our domain model.
+    List<Itinerary> itineraries = new ArrayList<>(); // NOT COVERED BY TESTS
+
+    // Use the specification to safe-guard against invalid itineraries
+    transitPaths // NOT COVERED BY TESTS
+            .stream() // NOT COVERED BY TESTS
+            .map(this::toItinerary) // NOT COVERED BY TESTS
+            .forEach( // NOT COVERED BY TESTS
+                    itinerary -> {
+                      if (routeSpecification.isSatisfiedBy(itinerary)) { // NOT COVERED BY TESTS
+                        itineraries.add(itinerary); // NOT COVERED BY TESTS
+                      } else {
+                        logger.log( // NOT COVERED BY TESTS
+                                Level.FINE, "Received itinerary that did not satisfy the route specification");
+                      }
+                    }); // NOT COVERED BY TESTS
+
+    return itineraries; // NOT COVERED BY TESTS
+  }
+
+
+COVERAGE ANALYSIS:
+ STATUS: All tests are currently PASSING and there are NO compilation errors.
+  ISSUE: The test suite does not meet the minimum coverage threshold.
+
+COVERAGE METRICS:
+- Current line coverage: 0.00%
+- Target line coverage: 100%
+
+YOUR TASK:
+You MUST add NEW test cases to improve coverage from 0.00% to 100%.
+
+The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. 
+Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+IMPORTANT: Maintain all existing passing tests - do NOT modify or remove them. Only ADD new test cases.
+
+
+
+INSTRUCTIONS:
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

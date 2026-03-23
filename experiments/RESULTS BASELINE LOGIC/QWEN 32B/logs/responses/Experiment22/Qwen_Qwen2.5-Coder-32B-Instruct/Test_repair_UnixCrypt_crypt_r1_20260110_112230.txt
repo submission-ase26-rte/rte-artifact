@@ -1,0 +1,137 @@
+```java
+package org.apache.commons.codec.digest;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class UnixCrypt_cryptTestGenerated {
+
+    private UnixCrypt unixCrypt;
+
+    @BeforeEach
+    public void setUp() {
+        unixCrypt = new UnixCrypt();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        unixCrypt = null;
+    }
+
+    @Test
+    public void testCryptWithNullSalt() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String result = UnixCrypt.crypt(original, null);
+        assertNotNull(result);
+        assertEquals(13, result.length());
+    }
+
+    @Test
+    public void testCryptWithValidSalt() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "ab";
+        String result = UnixCrypt.crypt(original, salt);
+        assertNotNull(result);
+        assertEquals(13, result.length());
+        assertTrue(result.startsWith(salt));
+    }
+
+    @Test
+    public void testCryptWithValidSaltAndShortPassword() {
+        byte[] original = "a".getBytes(StandardCharsets.UTF_8);
+        String salt = "xy";
+        String result = UnixCrypt.crypt(original, salt);
+        assertNotNull(result);
+        assertEquals(13, result.length());
+        assertTrue(result.startsWith(salt));
+    }
+
+    @Test
+    public void testCryptWithValidSaltAndLongPassword() {
+        byte[] original = "averylongpasswordthatshouldbemorethan8characters".getBytes(StandardCharsets.UTF_8);
+        String salt = "pq";
+        String result = UnixCrypt.crypt(original, salt);
+        assertNotNull(result);
+        assertEquals(13, result.length());
+        assertTrue(result.startsWith(salt));
+    }
+
+    @Test
+    public void testCryptWithInvalidSalt() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "a1";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            UnixCrypt.crypt(original, salt);
+        });
+        assertEquals("Invalid salt value: a1", exception.getMessage());
+    }
+
+    @Test
+    public void testCryptWithEmptySalt() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            UnixCrypt.crypt(original, salt);
+        });
+        assertEquals("Invalid salt value: ", exception.getMessage());
+    }
+
+    @Test
+    public void testCryptWithSingleCharacterSalt() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "a";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            UnixCrypt.crypt(original, salt);
+        });
+        assertEquals("Invalid salt value: a", exception.getMessage());
+    }
+
+    @Test
+    public void testCryptWithTooLongSalt() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "abcd";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            UnixCrypt.crypt(original, salt);
+        });
+        assertEquals("Invalid salt value: abcd", exception.getMessage());
+    }
+
+    @Test
+    public void testCryptWithSpecialCharactersInSalt() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "a@";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            UnixCrypt.crypt(original, salt);
+        });
+        assertEquals("Invalid salt value: a@", exception.getMessage());
+    }
+
+    @Test
+    public void testCryptWithNullPassword() {
+        byte[] original = null;
+        String salt = "ab";
+        Exception exception = assertThrows(NullPointerException.class, () -> {
+            UnixCrypt.crypt(original, salt);
+        });
+        assertEquals("Cannot invoke \"byte.length\" because \"original\" is null", exception.getMessage());
+    }
+
+    @Test
+    public void testCryptWithEmptyPassword() {
+        byte[] original = new byte[0];
+        String salt = "xy";
+        String result = UnixCrypt.crypt(original, salt);
+        assertNotNull(result);
+        assertEquals(13, result.length());
+        assertTrue(result.startsWith(salt));
+    }
+}
+```

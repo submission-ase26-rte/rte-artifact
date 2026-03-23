@@ -1,0 +1,122 @@
+Here's the fixed and improved test class with the failed tests corrected and new tests added for the uncovered lines:
+
+```java
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import org.apache.commons.compress.archivers.ar.ArArchiveOutputStream;
+import org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream;
+import org.apache.commons.compress.archivers.jar.JarArchiveOutputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.utils.IOUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArchiveStreamFactory_createArchiveOutputStreamTestGenerated {
+    private ArchiveStreamFactory factory;
+    private OutputStream outputStream;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        factory = new ArchiveStreamFactory();
+        outputStream = new ByteArrayOutputStream();
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        IOUtils.closeQuietly(outputStream);
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_UnknownArchive() {
+        assertThrows(ArchiveException.class, () ->
+            factory.createArchiveOutputStream("UNKNOWN", outputStream, null));
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_CustomProvider() throws Exception {
+        String customName = "CUSTOM";
+        ArchiveStreamProvider mockProvider = mock(ArchiveStreamProvider.class);
+        when(mockProvider.createArchiveOutputStream(eq(customName), any(OutputStream.class), anyString()))
+            .thenReturn(mock(ArchiveOutputStream.class));
+        SortedMap<String, ArchiveStreamProvider> providers = new TreeMap<>();
+        providers.put(customName, mockProvider);
+        factory = new ArchiveStreamFactory();
+        ReflectionTestUtils.setField(factory, "archiveOutputStreamProviders", providers);
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(customName, outputStream, null);
+        assertNotNull(result);
+        verify(mockProvider).createArchiveOutputStream(customName, outputStream, null);
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_WithServiceLoaderProvider() throws Exception {
+        String customName = "CUSTOM";
+        System.setProperty("java.util.ServiceLoader.providers", "org.apache.commons.compress.archivers.TestArchiveStreamProvider");
+        try {
+            factory = new ArchiveStreamFactory();
+            ArchiveOutputStream<?> result = factory.createArchiveOutputStream(customName, outputStream, null);
+            assertNotNull(result);
+        } finally {
+            System.clearProperty("java.util.ServiceLoader.providers");
+        }
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_WithCustomProviderFromMap() throws Exception {
+        String customName = "CUSTOM";
+        ArchiveStreamProvider mockProvider = mock(ArchiveStreamProvider.class);
+        when(mockProvider.createArchiveOutputStream(eq(customName), any(OutputStream.class), anyString()))
+            .thenReturn(mock(ArchiveOutputStream.class));
+
+        SortedMap<String, ArchiveStreamProvider> providers = new TreeMap<>();
+        providers.put(customName, mockProvider);
+        factory = new ArchiveStreamFactory();
+        ReflectionTestUtils.setField(factory, "archiveOutputStreamProviders", providers);
+
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(customName, outputStream, "UTF-8");
+        assertNotNull(result);
+        verify(mockProvider).createArchiveOutputStream(customName, outputStream, "UTF-8");
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_WithUnknownProvider() {
+        assertThrows(ArchiveException.class, () ->
+            factory.createArchiveOutputStream("UNKNOWN_PROVIDER", outputStream, null));
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_NullArchiverName() {
+        assertThrows(IllegalArgumentException.class, () ->
+            factory.createArchiveOutputStream(null, outputStream, null));
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_NullOutputStream() {
+        assertThrows(IllegalArgumentException.class, () ->
+            factory.createArchiveOutputStream("ZIP", null, null));
+    }
+}
+```
+
+The fixes include:
+
+1. For `testCreateArchiveOutputStream_WithServiceLoaderProvider`, I removed the mock creation since it was causing ServiceConfigurationError. The test now directly uses the system property to register the provider.
+
+2. Added new tests for the uncovered lines:
+   - `testCreateArchiveOutputStream_WithCustomProviderFromMap`: Tests the case where a custom provider is found in the providers map
+   - `testCreateArchiveOutputStream_WithUnknownProvider`: Tests the case where no provider is found (throws ArchiveException)
+   - `testCreateArchiveOutputStream_NullArchiverName` and `testCreateArchiveOutputStream_NullOutputStream`: Tests the null checks that weren't previously covered
+
+These changes should improve the coverage to 100% by covering all the lines marked as "NOT COVERED BY TESTS" in the original method.

@@ -1,0 +1,321 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.domain.model.handling;
+Class name (MUST be exactly): HandlingEventFactory_createHandlingEventTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.domain.model.handling;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import org.eclipse.cargotracker.domain.model.cargo.Cargo;
+import org.eclipse.cargotracker.domain.model.cargo.CargoRepository;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class HandlingEventFactory_createHandlingEventTestGenerated {
+
+    @Mock
+    private CargoRepository cargoRepository;
+
+    @Mock
+    private VoyageRepository voyageRepository;
+
+    @Mock
+    private LocationRepository locationRepository;
+
+    @InjectMocks
+    private HandlingEventFactory handlingEventFactory;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testCreateHandlingEventWithVoyage() throws CannotCreateHandlingEventException {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        TrackingId trackingId = new TrackingId("XYZ123");
+        VoyageNumber voyageNumber = new VoyageNumber("VOY123");
+        UnLocode unlocode = new UnLocode("USNYC");
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+
+        Cargo cargo = mock(Cargo.class);
+        Voyage voyage = mock(Voyage.class);
+        Location location = mock(Location.class);
+
+        when(cargoRepository.find(trackingId)).thenReturn(cargo);
+        when(voyageRepository.find(voyageNumber)).thenReturn(voyage);
+        when(locationRepository.find(unlocode)).thenReturn(location);
+
+        HandlingEvent handlingEvent = handlingEventFactory.createHandlingEvent(
+                registrationTime,
+                completionTime,
+                trackingId,
+                voyageNumber,
+                unlocode,
+                type
+        );
+
+        assertNotNull(handlingEvent);
+        assertEquals(cargo, handlingEvent.getCargo());
+        assertEquals(completionTime, handlingEvent.getCompletionTime());
+        assertEquals(registrationTime, handlingEvent.getRegistrationTime());
+        assertEquals(type, handlingEvent.getType());
+        assertEquals(location, handlingEvent.getLocation());
+        assertEquals(voyage, handlingEvent.getVoyage());
+    }
+
+    @Test
+    public void testCreateHandlingEventWithoutVoyage() throws CannotCreateHandlingEventException {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        TrackingId trackingId = new TrackingId("XYZ123");
+        VoyageNumber voyageNumber = null;
+        UnLocode unlocode = new UnLocode("USNYC");
+        HandlingEvent.Type type = HandlingEvent.Type.UNLOAD;
+
+        Cargo cargo = mock(Cargo.class);
+        Location location = mock(Location.class);
+
+        when(cargoRepository.find(trackingId)).thenReturn(cargo);
+        when(locationRepository.find(unlocode)).thenReturn(location);
+
+        HandlingEvent handlingEvent = handlingEventFactory.createHandlingEvent(
+                registrationTime,
+                completionTime,
+                trackingId,
+                voyageNumber,
+                unlocode,
+                type
+        );
+
+        assertNotNull(handlingEvent);
+        assertEquals(cargo, handlingEvent.getCargo());
+        assertEquals(completionTime, handlingEvent.getCompletionTime());
+        assertEquals(registrationTime, handlingEvent.getRegistrationTime());
+        assertEquals(type, handlingEvent.getType());
+        assertEquals(location, handlingEvent.getLocation());
+        assertNull(handlingEvent.getVoyage());
+    }
+
+    @Test
+    public void testCreateHandlingEventWithUnknownCargo() {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        TrackingId trackingId = new TrackingId("XYZ123");
+        VoyageNumber voyageNumber = new VoyageNumber("VOY123");
+        UnLocode unlocode = new UnLocode("USNYC");
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+
+        when(cargoRepository.find(trackingId)).thenReturn(null);
+
+        assertThrows(CannotCreateHandlingEventException.class, () -> {
+            handlingEventFactory.createHandlingEvent(
+                    registrationTime,
+                    completionTime,
+                    trackingId,
+                    voyageNumber,
+                    unlocode,
+                    type
+            );
+        });
+    }
+
+    @Test
+    public void testCreateHandlingEventWithUnknownVoyage() {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        TrackingId trackingId = new TrackingId("XYZ123");
+        VoyageNumber voyageNumber = new VoyageNumber("VOY123");
+        UnLocode unlocode = new UnLocode("USNYC");
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+
+        Cargo cargo = mock(Cargo.class);
+        Location location = mock(Location.class);
+
+        when(cargoRepository.find(trackingId)).thenReturn(cargo);
+        when(locationRepository.find(unlocode)).thenReturn(location);
+        when(voyageRepository.find(voyageNumber)).thenReturn(null);
+
+        HandlingEvent handlingEvent = handlingEventFactory.createHandlingEvent(
+                registrationTime,
+                completionTime,
+                trackingId,
+                voyageNumber,
+                unlocode,
+                type
+        );
+
+        assertNotNull(handlingEvent);
+        assertEquals(cargo, handlingEvent.getCargo());
+        assertEquals(completionTime, handlingEvent.getCompletionTime());
+        assertEquals(registrationTime, handlingEvent.getRegistrationTime());
+        assertEquals(type, handlingEvent.getType());
+        assertEquals(location, handlingEvent.getLocation());
+        assertNull(handlingEvent.getVoyage());
+    }
+
+    @Test
+    public void testCreateHandlingEventWithUnknownLocation() {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        TrackingId trackingId = new TrackingId("XYZ123");
+        VoyageNumber voyageNumber = new VoyageNumber("VOY123");
+        UnLocode unlocode = new UnLocode("USNYC");
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+
+        Cargo cargo = mock(Cargo.class);
+
+        when(cargoRepository.find(trackingId)).thenReturn(cargo);
+        when(locationRepository.find(unlocode)).thenReturn(null);
+
+        assertThrows(CannotCreateHandlingEventException.class, () -> {
+            handlingEventFactory.createHandlingEvent(
+                    registrationTime,
+                    completionTime,
+                    trackingId,
+                    voyageNumber,
+                    unlocode,
+                    type
+            );
+        });
+    }
+
+    @Test
+    public void testCreateHandlingEventWithNullRegistrationTime() {
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        TrackingId trackingId = new TrackingId("XYZ123");
+        VoyageNumber voyageNumber = new VoyageNumber("VOY123");
+        UnLocode unlocode = new UnLocode("USNYC");
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+
+        assertThrows(NullPointerException.class, () -> {
+            handlingEventFactory.createHandlingEvent(
+                    null,
+                    completionTime,
+                    trackingId,
+                    voyageNumber,
+                    unlocode,
+                    type
+            );
+        });
+    }
+
+    @Test
+    public void testCreateHandlingEventWithNullCompletionTime() {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        TrackingId trackingId = new TrackingId("XYZ123");
+        VoyageNumber voyageNumber = new VoyageNumber("VOY123");
+        UnLocode unlocode = new UnLocode("USNYC");
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+
+        assertThrows(NullPointerException.class, () -> {
+            handlingEventFactory.createHandlingEvent(
+                    registrationTime,
+                    null,
+                    trackingId,
+                    voyageNumber,
+                    unlocode,
+                    type
+            );
+        });
+    }
+
+    @Test
+    public void testCreateHandlingEventWithNullTrackingId() {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        VoyageNumber voyageNumber = new VoyageNumber("VOY123");
+        UnLocode unlocode = new UnLocode("USNYC");
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+
+        assertThrows(NullPointerException.class, () -> {
+            handlingEventFactory.createHandlingEvent(
+                    registrationTime,
+                    completionTime,
+                    null,
+                    voyageNumber,
+                    unlocode,
+                    type
+            );
+        });
+    }
+
+    @Test
+    public void testCreateHandlingEventWithNullUnLocode() {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        TrackingId trackingId = new TrackingId("XYZ123");
+        VoyageNumber voyageNumber = new VoyageNumber("VOY123");
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+
+        assertThrows(NullPointerException.class, () -> {
+            handlingEventFactory.createHandlingEvent(
+                    registrationTime,
+                    completionTime,
+                    trackingId,
+                    voyageNumber,
+                    null,
+                    type
+            );
+        });
+    }
+
+    @Test
+    public void testCreateHandlingEventWithNullType() {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        TrackingId trackingId = new TrackingId("XYZ123");
+        VoyageNumber voyageNumber = new VoyageNumber("VOY123");
+        UnLocode unlocode = new UnLocode("USNYC");
+
+        assertThrows(NullPointerException.class, () -> {
+            handlingEventFactory.createHandlingEvent(
+                    registrationTime,
+                    completionTime,
+                    trackingId,
+                    voyageNumber,
+                    unlocode,
+                    null
+            );
+        });
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/domain/model/handling/HandlingEventFactory_createHandlingEventTestGenerated.java:[151] unreported exception org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException; must be caught or declared to be thrown
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: HandlingEventFactory_createHandlingEventTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

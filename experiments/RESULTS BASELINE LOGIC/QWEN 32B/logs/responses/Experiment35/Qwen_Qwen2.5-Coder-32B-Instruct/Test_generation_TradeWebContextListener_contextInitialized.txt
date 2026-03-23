@@ -1,0 +1,169 @@
+```java
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.mock.web.MockServletContext;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import java.io.InputStream;
+import java.util.Properties;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
+public class TradeWebContextListener_contextInitializedTestGenerated {
+
+    @Mock
+    private InputStream inputStream;
+
+    private TradeWebContextListener listener;
+    private ServletContextEvent contextEvent;
+    private MockServletContext servletContext;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        listener = new TradeWebContextListener();
+        servletContext = new MockServletContext();
+        contextEvent = mock(ServletContextEvent.class);
+        when(contextEvent.getServletContext()).thenReturn(servletContext);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        MockitoAnnotations.openMocks(this).close();
+    }
+
+    @Test
+    public void testContextInitializedWithPropertiesFile() throws Exception {
+        Properties prop = new Properties();
+        prop.setProperty("runtimeMode", "1");
+        prop.setProperty("orderProcessingMode", "2");
+        prop.setProperty("maxUsers", "100");
+        prop.setProperty("maxQuotes", "1000");
+        prop.setProperty("publishQuotePriceChange", "true");
+        prop.setProperty("displayOrderAlerts", "false");
+        prop.setProperty("webInterface", "3");
+        prop.setProperty("listQuotePriceChangeFrequency", "5");
+        prop.setProperty("primIterations", "10");
+        prop.setProperty("marketSummaryInterval", "60");
+        prop.setProperty("longRun", "false");
+
+        servletContext.setResourceAsStream("/properties/daytrader.properties", inputStream);
+        when(inputStream.read(any(byte[].class))).thenAnswer(invocation -> {
+            byte[] buffer = invocation.getArgument(0);
+            System.arraycopy(prop.toString().getBytes(), 0, buffer, 0, Math.min(buffer.length, prop.toString().getBytes().length));
+            return Math.min(buffer.length, prop.toString().getBytes().length);
+        });
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            listener.contextInitialized(contextEvent);
+            mockedLog.verify(() -> Log.trace(anyString()), times(1));
+        }
+
+        assertEquals(1, TradeConfig.getRunTimeMode());
+        assertEquals(2, TradeConfig.getOrderProcessingMode());
+        assertEquals(100, TradeConfig.getMAX_USERS());
+        assertEquals(1000, TradeConfig.getMAX_QUOTES());
+        assertTrue(TradeConfig.getPublishQuotePriceChange());
+        assertFalse(TradeConfig.getDisplayOrderAlerts());
+        assertEquals(3, TradeConfig.getWebInterface());
+        assertEquals(5, TradeConfig.getListQuotePriceChangeFrequency());
+        assertEquals(10, TradeConfig.primIterations);
+        assertEquals(60, TradeConfig.marketSummaryInterval);
+        assertFalse(TradeConfig.longRun);
+    }
+
+    @Test
+    public void testContextInitializedWithEnvironmentVariables() throws Exception {
+        System.setProperty("RUNTIME_MODE", "1");
+        System.setProperty("ORDER_PROCESSING_MODE", "2");
+        System.setProperty("MAX_USERS", "100");
+        System.setProperty("MAX_QUOTES", "1000");
+        System.setProperty("PUBLISH_QUOTES", "true");
+        System.setProperty("DISPLAY_ORDER_ALERTS", "false");
+        System.setProperty("WEB_INTERFACE", "3");
+        System.setProperty("LIST_QUOTE_PRICE_CHANGE_FREQUENCY", "5");
+
+        servletContext.setResourceAsStream("/properties/daytrader.properties", null);
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            listener.contextInitialized(contextEvent);
+            mockedLog.verify(() -> Log.trace(anyString()), times(1));
+        }
+
+        assertEquals(1, TradeConfig.getRunTimeMode());
+        assertEquals(2, TradeConfig.getOrderProcessingMode());
+        assertEquals(100, TradeConfig.getMAX_USERS());
+        assertEquals(1000, TradeConfig.getMAX_QUOTES());
+        assertTrue(TradeConfig.getPublishQuotePriceChange());
+        assertFalse(TradeConfig.getDisplayOrderAlerts());
+        assertEquals(3, TradeConfig.getWebInterface());
+        assertEquals(5, TradeConfig.getListQuotePriceChangeFrequency());
+    }
+
+    @Test
+    public void testContextInitializedWithMissingPropertiesFile() throws Exception {
+        servletContext.setResourceAsStream("/properties/daytrader.properties", null);
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            listener.contextInitialized(contextEvent);
+            mockedLog.verify(() -> Log.trace(anyString()), times(1));
+        }
+
+        assertEquals(0, TradeConfig.getRunTimeMode());
+        assertEquals(0, TradeConfig.getOrderProcessingMode());
+        assertEquals(0, TradeConfig.getMAX_USERS());
+        assertEquals(0, TradeConfig.getMAX_QUOTES());
+        assertFalse(TradeConfig.getPublishQuotePriceChange());
+        assertFalse(TradeConfig.getDisplayOrderAlerts());
+        assertEquals(0, TradeConfig.getWebInterface());
+        assertEquals(0, TradeConfig.getListQuotePriceChangeFrequency());
+    }
+
+    @Test
+    public void testContextInitializedWithInvalidProperties() throws Exception {
+        Properties prop = new Properties();
+        prop.setProperty("runtimeMode", "invalid");
+        prop.setProperty("orderProcessingMode", "invalid");
+        prop.setProperty("maxUsers", "invalid");
+        prop.setProperty("maxQuotes", "invalid");
+        prop.setProperty("publishQuotePriceChange", "invalid");
+        prop.setProperty("displayOrderAlerts", "invalid");
+        prop.setProperty("webInterface", "invalid");
+        prop.setProperty("listQuotePriceChangeFrequency", "invalid");
+        prop.setProperty("primIterations", "invalid");
+        prop.setProperty("marketSummaryInterval", "invalid");
+        prop.setProperty("longRun", "invalid");
+
+        servletContext.setResourceAsStream("/properties/daytrader.properties", inputStream);
+        when(inputStream.read(any(byte[].class))).thenAnswer(invocation -> {
+            byte[] buffer = invocation.getArgument(0);
+            System.arraycopy(prop.toString().getBytes(), 0, buffer, 0, Math.min(buffer.length, prop.toString().getBytes().length));
+            return Math.min(buffer.length, prop.toString().getBytes().length);
+        });
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            listener.contextInitialized(contextEvent);
+            mockedLog.verify(() -> Log.trace(anyString()), times(1));
+        }
+
+        assertEquals(0, TradeConfig.getRunTimeMode());
+        assertEquals(0, TradeConfig.getOrderProcessingMode());
+        assertEquals(0, TradeConfig.getMAX_USERS());
+        assertEquals(0, TradeConfig.getMAX_QUOTES());
+        assertFalse(TradeConfig.getPublishQuotePriceChange());
+        assertFalse(TradeConfig.getDisplayOrderAlerts());
+        assertEquals(0, TradeConfig.getWebInterface());
+        assertEquals(0, TradeConfig.getListQuotePriceChangeFrequency());
+    }
+}
+```

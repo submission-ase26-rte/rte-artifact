@@ -1,0 +1,33 @@
+```java
+public void writeItems(List<Object> items) throws Exception {
+    if (items == null) {
+        throw new Exception("Items list cannot be null");
+    }
+    if (items.isEmpty()) {
+        return;
+    }
+    String archiveDirectory = jobContext.getProperties().getProperty("archiveDirectory");
+    if (archiveDirectory == null || archiveDirectory.isEmpty()) {
+        throw new Exception("Archive directory is not set");
+    }
+    Path archivePath = Paths.get(archiveDirectory, "archive_" + jobContext.getJobName() + "_" + jobContext.getInstanceId() + ".csv");
+    try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(archivePath))) {
+        for (Object item : items) {
+            if (item == null) {
+                throw new Exception("Item in list cannot be null");
+            }
+            HandlingEventRegistrationAttempt attempt = (HandlingEventRegistrationAttempt) item;
+            applicationEvents.receivedHandlingEventRegistrationAttempt(attempt);
+            String line = DateConverter.toString(attempt.getRegistrationTime()) + ","
+                    + DateConverter.toString(attempt.getCompletionTime()) + ","
+                    + attempt.getTrackingId() + ","
+                    + attempt.getVoyageNumber() + ","
+                    + attempt.getUnLocode() + ","
+                    + attempt.getType();
+            writer.println(line);
+        }
+    } catch (IOException e) {
+        throw new Exception("Failed to write to archive file", e);
+    }
+}
+```

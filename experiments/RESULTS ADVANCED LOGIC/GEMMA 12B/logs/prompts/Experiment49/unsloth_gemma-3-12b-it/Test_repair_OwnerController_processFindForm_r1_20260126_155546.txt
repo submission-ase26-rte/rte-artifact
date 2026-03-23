@@ -1,0 +1,167 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.springframework.samples.petclinic.owner;
+Class name (MUST be exactly): OwnerController_processFindFormTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.springframework.samples.petclinic.owner;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class OwnerController_processFindFormTestGenerated {
+
+	@Configuration
+	static class TestConfig {
+		@Bean
+		public OwnerService ownerService() {
+			return Mockito.mock(OwnerService.class);
+		}
+
+		@Bean
+		public OwnerController ownerController(OwnerService ownerService) {
+			return new OwnerController(ownerService);
+		}
+	}
+
+	@Autowired
+	private OwnerController ownerController;
+
+	@Autowired
+	private OwnerService ownerService;
+
+	private MockMvc mockMvc;
+
+	@BeforeEach
+	public void setUp() {
+		mockMvc = MockMvcBuilders.standaloneSetup(ownerController).build();
+	}
+
+	@Test
+	public void testProcessFindForm_noOwnersFound() throws Exception {
+		Owner owner = new Owner("testLastName");
+		Page<Owner> emptyPage = PageImpl.of();
+		when(ownerService.findPaginatedForOwnersLastName(1, "testLastName")).thenReturn(emptyPage);
+
+		mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/owners").param("lastName", "testLastName"))
+				.andExpect(view().name("owners/findOwners"))
+				.andExpect(redirectedUrl().isEmpty());
+	}
+
+	@Test
+	public void testProcessFindForm_oneOwnerFound() throws Exception {
+		Owner owner = new Owner("testLastName");
+		owner.setId(1);
+		Page<Owner> pageWithOneOwner = PageImpl.of(owner);
+		when(ownerService.findPaginatedForOwnersLastName(1, "testLastName")).thenReturn(pageWithOneOwner);
+
+		mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/owners").param("lastName", "testLastName"))
+				.andExpect(redirectedUrl().endsWith("/owners/1"));
+	}
+
+	@Test
+	public void testProcessFindForm_multipleOwnersFound() throws Exception {
+		Owner owner1 = new Owner("testLastName");
+		owner1.setId(1);
+		Owner owner2 = new Owner("testLastName");
+		owner2.setId(2);
+		Page<Owner> pageWithMultipleOwners = PageImpl.of(owner1, owner2);
+		when(ownerService.findPaginatedForOwnersLastName(1, "testLastName")).thenReturn(pageWithMultipleOwners);
+
+		mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/owners").param("lastName", "testLastName"))
+				.andExpect(view().name("owners/findOwners"));
+	}
+
+	@Test
+	public void testProcessFindForm_noLastNameProvided() throws Exception {
+		Owner owner = new Owner();
+		Page<Owner> allOwnersPage = PageImpl.of(owner);
+		when(ownerService.findPaginatedForOwnersLastName(1, "")).thenReturn(allOwnersPage);
+
+		mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/owners"))
+				.andExpect(view().name("owners/findOwners"));
+	}
+
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[15] cannot find symbol
+  symbol:   class Owner
+  location: package org.springframework.samples.petclinic.model
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[42] cannot find symbol
+  symbol:   class OwnerService
+  location: class org.springframework.samples.petclinic.owner.OwnerController_processFindFormTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[28] cannot find symbol
+  symbol:   class OwnerService
+  location: class org.springframework.samples.petclinic.owner.OwnerController_processFindFormTestGenerated.TestConfig
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[33] cannot find symbol
+  symbol:   class OwnerService
+  location: class org.springframework.samples.petclinic.owner.OwnerController_processFindFormTestGenerated.TestConfig
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[29] cannot find symbol
+  symbol:   class OwnerService
+  location: class org.springframework.samples.petclinic.owner.OwnerController_processFindFormTestGenerated.TestConfig
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[53] constructor Owner in class org.springframework.samples.petclinic.owner.Owner cannot be applied to given types;
+  required: no arguments
+  found:    java.lang.String
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[54] cannot find symbol
+  symbol:   method of()
+  location: class org.springframework.data.domain.PageImpl
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[59] method redirectedUrl in class org.springframework.test.web.servlet.result.MockMvcResultMatchers cannot be applied to given types;
+  required: java.lang.String
+  found:    no arguments
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[64] constructor Owner in class org.springframework.samples.petclinic.owner.Owner cannot be applied to given types;
+  required: no arguments
+  found:    java.lang.String
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[66] cannot find symbol
+  symbol:   method of(org.springframework.samples.petclinic.owner.Owner)
+  location: class org.springframework.data.domain.PageImpl
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[70] method redirectedUrl in class org.springframework.test.web.servlet.result.MockMvcResultMatchers cannot be applied to given types;
+  required: java.lang.String
+  found:    no arguments
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[75] constructor Owner in class org.springframework.samples.petclinic.owner.Owner cannot be applied to given types;
+  required: no arguments
+  found:    java.lang.String
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[77] constructor Owner in class org.springframework.samples.petclinic.owner.Owner cannot be applied to given types;
+  required: no arguments
+  found:    java.lang.String
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[79] cannot find symbol
+  symbol:   method of(org.springframework.samples.petclinic.owner.Owner,org.springframework.samples.petclinic.owner.Owner)
+  location: class org.springframework.data.domain.PageImpl
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[89] cannot find symbol
+  symbol:   method of(org.springframework.samples.petclinic.owner.Owner)
+  location: class org.springframework.data.domain.PageImpl
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: OwnerController_processFindFormTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

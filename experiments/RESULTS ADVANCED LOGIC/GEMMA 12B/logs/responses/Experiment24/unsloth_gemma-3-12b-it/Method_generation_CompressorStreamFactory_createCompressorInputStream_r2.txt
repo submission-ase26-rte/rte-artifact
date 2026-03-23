@@ -1,0 +1,20 @@
+```java
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.commons.compress.compressors.CompressorInputStream;
+import org.apache.commons.compress.compressors.CompressorStreamProvider;
+
+public CompressorInputStream createCompressorInputStream(final String name, final InputStream in, final boolean actualDecompressConcatenated) throws CompressorException {
+    if (name == null) {
+        throw new IllegalArgumentException("Compressor name must not be null");
+    }
+    if (in == null) {
+        throw new IllegalArgumentException("Input stream must not be null");
+    }
+    CompressorStreamProvider provider = compressorInputStreamProviders().get(name);
+    if (provider == null) {
+        throw new CompressorException("No compressor stream provider found for " + name);
+    }
+    return provider.createCompressorInputStream(name, in, actualDecompressConcatenated);
+}
+```

@@ -1,0 +1,110 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): HelpFormatter_printHelpTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.cli;
+
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class HelpFormatter_printHelpTestGenerated {
+
+    @Test
+    void testPrintHelp_withHeaderAndFooter_autoUsageFalse() throws Exception {
+        HelpFormatter formatter = new HelpFormatter();
+        PrintWriter pw = new StringWriter();
+        Options options = new Options();
+        String cmdLineSyntax = "myApp -h";
+        String header = "My Application Header";
+        String footer = "My Application Footer";
+
+        formatter.printHelp(pw, 80, cmdLineSyntax, header, options, 0, 0, footer, false);
+
+        String output = pw.toString();
+        assertTrue(output.contains(cmdLineSyntax));
+        assertTrue(output.contains(header));
+        assertTrue(output.contains(footer));
+        assertFalse(output.contains("Usage:"));
+    }
+
+    @Test
+    void testPrintHelp_withAutoUsageTrue() throws Exception {
+        HelpFormatter formatter = new HelpFormatter();
+        PrintWriter pw = new StringWriter();
+        Options options = new Options();
+        String cmdLineSyntax = "myApp -h";
+
+        formatter.printHelp(pw, 80, cmdLineSyntax, null, options, 0, 0, null, true);
+
+        String output = pw.toString();
+        assertTrue(output.contains("Usage:"));
+        assertTrue(output.contains(cmdLineSyntax));
+    }
+
+    @Test
+    void testPrintHelp_withEmptyHeaderAndFooter_autoUsageFalse() throws Exception {
+        HelpFormatter formatter = new HelpFormatter();
+        PrintWriter pw = new StringWriter();
+        Options options = new Options();
+        String cmdLineSyntax = "myApp -h";
+
+        formatter.printHelp(pw, 80, cmdLineSyntax, null, options, 0, 0, null, false);
+
+        String output = pw.toString();
+        assertTrue(output.contains(cmdLineSyntax));
+        assertFalse(output.contains("Usage:"));
+    }
+
+    @Test
+    void testPrintHelp_withNullCmdLineSyntax_throwsIllegalArgumentException() throws Exception {
+        HelpFormatter formatter = new HelpFormatter();
+        PrintWriter pw = new StringWriter();
+        Options options = new Options();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            formatter.printHelp(pw, 80, null, null, options, 0, 0, null, false);
+        });
+    }
+
+    @Test
+    void testPrintHelp_withEmptyCmdLineSyntax_throwsIllegalArgumentException() throws Exception {
+        HelpFormatter formatter = new HelpFormatter();
+        PrintWriter pw = new StringWriter();
+        Options options = new Options();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            formatter.printHelp(pw, 80, "", null, options, 0, 0, null, false);
+        });
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/HelpFormatter_printHelpTestGenerated.java:[19] incompatible types: java.io.StringWriter cannot be converted to java.io.PrintWriter
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/HelpFormatter_printHelpTestGenerated.java:[37] incompatible types: java.io.StringWriter cannot be converted to java.io.PrintWriter
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/HelpFormatter_printHelpTestGenerated.java:[51] incompatible types: java.io.StringWriter cannot be converted to java.io.PrintWriter
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/HelpFormatter_printHelpTestGenerated.java:[65] incompatible types: java.io.StringWriter cannot be converted to java.io.PrintWriter
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/HelpFormatter_printHelpTestGenerated.java:[76] incompatible types: java.io.StringWriter cannot be converted to java.io.PrintWriter
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: HelpFormatter_printHelpTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

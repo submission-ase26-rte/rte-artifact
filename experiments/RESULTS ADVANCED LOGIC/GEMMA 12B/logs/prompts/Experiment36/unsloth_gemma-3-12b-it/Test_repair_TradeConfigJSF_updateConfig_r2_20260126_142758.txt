@@ -1,0 +1,170 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.web.jsf;
+Class name (MUST be exactly): TradeConfigJSF_updateConfigTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.web.jsf;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
+
+import javax.enterprise.context.RequestScoped;
+import javax.faces.context.ExternalContext;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.servlet.http.HttpSession;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.MockedStatic;
+import org.junit.jupiter.api.Timeout;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeConfigJSF_updateConfigTestGenerated {
+
+    @Inject
+    private TradeConfigJSF tradeConfigJSF;
+
+    @Mock
+    private ExternalContext mockExternalContext;
+
+    @Mock
+    private TradeDirectDBUtils mockTradeDirectDBUtils;
+
+    @BeforeEach
+    public void setUp() {
+        tradeConfigJSF = new TradeConfigJSF();
+        tradeConfigJSF.context = mockExternalContext;
+        tradeConfigJSF.dbUtils = mockTradeDirectDBUtils;
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.resetMocks(tradeConfigJSF);
+    }
+
+    @Test
+    public void testUpdateConfig_validInput() {
+        tradeConfigJSF.runtimeMode = "Realtime";
+        tradeConfigJSF.orderProcessingMode = "Asynch";
+        tradeConfigJSF.webInterface = "JSP";
+        tradeConfigJSF.maxUsers = 10;
+        tradeConfigJSF.maxQuotes = 20;
+        tradeConfigJSF.marketSummaryInterval = 60;
+        tradeConfigJSF.primIterations = 5;
+        tradeConfigJSF.publishQuotePriceChange = true;
+        tradeConfigJSF.listQuotePriceChangeFrequency = 50;
+        tradeConfigJSF.longRun = false;
+        tradeConfigJSF.displayOrderAlerts = true;
+
+        tradeConfigJSF.updateConfig();
+
+        assertEquals("DayTrader Configuration Updated", tradeConfigJSF.getResult());
+        assertEquals("Realtime", TradeConfig.getRunTimeModeNames()[TradeConfig.getRunTimeMode()]);
+        assertEquals("Asynch", TradeConfig.getOrderProcessingModeNames()[TradeConfig.getOrderProcessingMode()]);
+        assertEquals("JSP", TradeConfig.getWebInterfaceNames()[TradeConfig.getWebInterface()]);
+        assertEquals(10, TradeConfig.getMAX_USERS());
+        assertEquals(20, TradeConfig.getMAX_QUOTES());
+        assertEquals(60, TradeConfig.getMarketSummaryInterval());
+        assertEquals(5, TradeConfig.getPrimIterations());
+        assertTrue(TradeConfig.getPublishQuotePriceChange());
+        assertEquals(50, TradeConfig.getListQuotePriceChangeFrequency());
+        assertFalse(TradeConfig.getLongRun());
+        assertTrue(TradeConfig.getDisplayOrderAlerts());
+    }
+
+    @Test
+    public void testUpdateConfig_invalidOrderProcessingMode() {
+        tradeConfigJSF.runtimeMode = "Realtime";
+        tradeConfigJSF.orderProcessingMode = "InvalidMode";
+        tradeConfigJSF.webInterface = "JSP";
+        tradeConfigJSF.maxUsers = 10;
+        tradeConfigJSF.maxQuotes = 20;
+        tradeConfigJSF.marketSummaryInterval = 60;
+        tradeConfigJSF.primIterations = 5;
+        tradeConfigJSF.publishQuotePriceChange = true;
+        tradeConfigJSF.listQuotePriceChangeFrequency = 50;
+        tradeConfigJSF.longRun = false;
+        tradeConfigJSF.displayOrderAlerts = true;
+
+        tradeConfigJSF.updateConfig();
+        assertEquals("DayTrader Configuration Updated", tradeConfigJSF.getResult());
+    }
+
+    @Test
+    public void testUpdateConfig_invalidWebInterface() {
+        tradeConfigJSF.runtimeMode = "Realtime";
+        tradeConfigJSF.orderProcessingMode = "Asynch";
+        tradeConfigJSF.webInterface = "InvalidInterface";
+        tradeConfigJSF.maxUsers = 10;
+        tradeConfigJSF.maxQuotes = 20;
+        tradeConfigJSF.marketSummaryInterval = 60;
+        tradeConfigJSF.primIterations = 5;
+        tradeConfigJSF.publishQuotePriceChange = true;
+        tradeConfigJSF.listQuotePriceChangeFrequency = 50;
+        tradeConfigJSF.longRun = false;
+        tradeConfigJSF.displayOrderAlerts = true;
+
+        tradeConfigJSF.updateConfig();
+        assertEquals("DayTrader Configuration Updated", tradeConfigJSF.getResult());
+    }
+
+    @Test
+    public void testUpdateConfig_errorLogging() {
+        tradeConfigJSF.runtimeMode = "Realtime";
+        tradeConfigJSF.orderProcessingMode = "Asynch";
+        tradeConfigJSF.webInterface = "JSP";
+        tradeConfigJSF.maxUsers = 10;
+        tradeConfigJSF.maxQuotes = 20;
+        tradeConfigJSF.marketSummaryInterval = 60;
+        tradeConfigJSF.primIterations = 5;
+        tradeConfigJSF.publishQuotePriceChange = true;
+        tradeConfigJSF.listQuotePriceChangeFrequency = 50;
+        tradeConfigJSF.longRun = false;
+        tradeConfigJSF.displayOrderAlerts = true;
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            mockedLog.when(Log::error(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+                    .thenReturn(null);
+
+            tradeConfigJSF.updateConfig();
+            assertEquals("DayTrader Configuration Updated", tradeConfigJSF.getResult());
+        }
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/jsf/TradeConfigJSF_updateConfigTestGenerated.java:[133] ')' expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/jsf/TradeConfigJSF_updateConfigTestGenerated.java:[133] ';' expected
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- DO NOT mock javax.servlet classes directly (ServletOutputStream, etc.) - use MockHttpServletRequest/Response from spring-test instead
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- For static method calls, ensure mockStatic is properly closed (use try-with-resources)
+- Keep the SAME class name: TradeConfigJSF_updateConfigTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

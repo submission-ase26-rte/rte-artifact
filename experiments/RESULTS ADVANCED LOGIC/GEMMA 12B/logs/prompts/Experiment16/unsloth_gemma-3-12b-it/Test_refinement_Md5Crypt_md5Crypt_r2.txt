@@ -1,0 +1,369 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.digest;
+Class name (MUST be exactly): Md5Crypt_md5CryptTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testMd5CryptWithInvalidSalt --
+ERROR: org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown.
+--------------------------------------------------
+TEST: testMd5CryptWithNullKeyBytes --
+ERROR: org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <java.lang.IllegalArgumentException> but was: <java.lang.NullPointerException>
+Caused by: java.lang.NullPointerException: Cannot read the array length because "keyBytes" is null
+... 8 more
+
+TEST CODE TO FIX:
+package org.apache.commons.codec.digest;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.apache.commons.codec.digest.B64;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.digest.Md5Crypt;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Md5Crypt_md5CryptTestGenerated {
+    private Md5Crypt md5Crypt;
+    private Random random;
+    @BeforeEach
+    void setUp() {
+        md5Crypt = new Md5Crypt();
+        random = mock(SecureRandom.class);
+    }
+
+
+    @Test
+            void testMd5CryptWithInvalidSalt() {
+                byte[] keyBytes = "test".getBytes(StandardCharsets.UTF_8);
+                String salt = "$apr1$invalidSalt";
+                String prefix = "$apr1$";
+                IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+                    Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+                });
+                assertEquals("Invalid salt value: $apr1$invalidSalt", exception.getMessage());
+            }
+
+    @Test
+            void testMd5CryptWithNullKeyBytes() {
+                byte[] keyBytes = null;
+                String salt = "$apr1$someSalt";
+                String prefix = "$apr1$";
+                IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+                    Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+                });
+                assertNotNull(exception);
+            }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+        void testMd5CryptWithProvidedSalt() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   StandardCharsets -> java.nio.charset.StandardCharsets
+//   MessageDigest -> java.security.MessageDigest
+//   SecureRandom -> java.security.SecureRandom
+//   Arrays -> java.util.Arrays
+//   Random -> java.util.Random
+//   Matcher -> java.util.regex.Matcher
+//   Pattern -> java.util.regex.Pattern
+//   Md5Crypt -> org.apache.commons.codec.digest.Md5Crypt
+//   B64 -> org.apache.commons.codec.digest.B64
+//   DigestUtils -> org.apache.commons.codec.digest.DigestUtils
+
+// === Class: Md5Crypt ===
+// Fields (with actual visibility):
+    package-private static final String APR1_PREFIX;
+    private static final int BLOCKSIZE;
+    package-private static final String MD5_PREFIX;
+    private static final int ROUNDS;
+
+// Constructors:
+public Md5Crypt();
+
+// Internal Methods (full implementation for context):
+    public static String apr1Crypt(final byte[] keyBytes) {
+        return apr1Crypt(keyBytes, APR1_PREFIX + B64.getRandomSalt(8));
+    }
+
+// === External Class: B64 ===
+// Full import path: org.apache.commons.codec.digest.B64
+// Import paths:
+//   SecureRandom -> java.security.SecureRandom
+//   Random -> java.util.Random
+// Fields (with actual visibility):
+    package-private static final String B64T_STRING;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    package-private static final char[] B64T_ARRAY;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+
+// Method Signatures (used by target method):
+static void b64from24bit(final byte b2, final byte b1, final byte b0, final int outLen, final StringBuilder buffer);
+static String getRandomSalt(final int num);
+
+// === External Class: DigestUtils ===
+// Full import path: org.apache.commons.codec.digest.DigestUtils
+// Import paths:
+//   BufferedInputStream -> java.io.BufferedInputStream
+//   File -> java.io.File
+//   FileInputStream -> java.io.FileInputStream
+//   IOException -> java.io.IOException
+//   InputStream -> java.io.InputStream
+// Fields (with actual visibility):
+    package-private static final int BUFFER_SIZE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private final MessageDigest messageDigest;
+
+// Constructors:
+public DigestUtils();
+public DigestUtils(MessageDigest digest);
+public DigestUtils(String name);
+
+// Method Signatures (used by target method):
+public static MessageDigest getMd5Digest();
+
+// Public Getter Methods (for test assertions):
+public static MessageDigest getDigest(String algorithm);
+public static MessageDigest getDigest(String algorithm, MessageDigest defaultMessageDigest);
+public static MessageDigest getMd2Digest();
+public static MessageDigest getSha1Digest();
+public static MessageDigest getSha256Digest();
+public static MessageDigest getSha3_224Digest();
+public static MessageDigest getSha3_256Digest();
+public static MessageDigest getSha3_384Digest();
+public static MessageDigest getSha3_512Digest();
+public static MessageDigest getSha384Digest();
+public static MessageDigest getSha512_224Digest();
+public static MessageDigest getSha512_256Digest();
+public static MessageDigest getSha512Digest();
+public static MessageDigest getShaDigest();
+public static boolean isAvailable(String messageDigestAlgorithm);
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() {
+        md5Crypt = new Md5Crypt();
+        random = mock(SecureRandom.class);
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+    /**
+     * Generates a libc6 crypt() "$1$" or Apache htpasswd "$apr1$" hash value.
+     * <p>
+     * See {@link Crypt#crypt(String, String)} or {@link #apr1Crypt(String, String)} for details.
+     * </p>
+     *
+     * @param keyBytes
+     *            plaintext string to hash. Each array element is set to {@code 0} before returning.
+     * @param salt
+     *            real salt value without prefix or "rounds=". The salt may be null, in which case a salt
+     *            is generated for you using {@link SecureRandom}.
+     * @param prefix
+     *            salt prefix
+     * @param random
+     *            the instance of {@link Random} to use for generating the salt.
+     *            Consider using {@link SecureRandom} for more secure salts.
+     * @return the hash value
+     * @throws IllegalArgumentException
+     *             if the salt does not match the allowed pattern
+     * @throws IllegalArgumentException
+     *             when a {@link java.security.NoSuchAlgorithmException} is caught.
+     * @since 1.12
+     */
+    public static String md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) {
+        final int keyLen = keyBytes.length;
+
+        // Extract the real salt from the given string which can be a complete hash string.
+        final String saltString;
+        if (salt == null) { // NOT COVERED BY TESTS
+            saltString = B64.getRandomSalt(8, random); // NOT COVERED BY TESTS
+        } else {
+            final Pattern p = Pattern.compile("^" + prefix.replace("$", "\\$") + "([\\.\\/a-zA-Z0-9]{1,8}).*");
+            final Matcher m = p.matcher(salt);
+            if (!m.find()) { // NOT COVERED BY TESTS
+                throw new IllegalArgumentException("Invalid salt value: " + salt); // NOT COVERED BY TESTS
+            }
+            saltString = m.group(1);
+        }
+        final byte[] saltBytes = saltString.getBytes(StandardCharsets.UTF_8);
+
+        final MessageDigest ctx = DigestUtils.getMd5Digest();
+
+        /*
+         * The password first, since that is what is most unknown
+         */
+        ctx.update(keyBytes);
+
+        /*
+         * Then our magic string
+         */
+        ctx.update(prefix.getBytes(StandardCharsets.UTF_8));
+
+        /*
+         * Then the raw salt
+         */
+        ctx.update(saltBytes);
+
+        /*
+         * Then just as many characters of the MD5(pw,salt,pw)
+         */
+        MessageDigest ctx1 = DigestUtils.getMd5Digest();
+        ctx1.update(keyBytes);
+        ctx1.update(saltBytes);
+        ctx1.update(keyBytes);
+        byte[] finalb = ctx1.digest();
+        int ii = keyLen;
+        while (ii > 0) {
+            ctx.update(finalb, 0, Math.min(ii, 16));
+            ii -= 16;
+        }
+
+        /*
+         * Don't leave anything around in JVM they could use.
+         */
+        Arrays.fill(finalb, (byte) 0);
+
+        /*
+         * Then something really weird...
+         */
+        ii = keyLen;
+        final int j = 0;
+        while (ii > 0) {
+            if ((ii & 1) == 1) {
+                ctx.update(finalb[j]);
+            } else {
+                ctx.update(keyBytes[j]);
+            }
+            ii >>= 1;
+        }
+
+        /*
+         * Now make the output string
+         */
+        final StringBuilder passwd = new StringBuilder(prefix + saltString + "$");
+        finalb = ctx.digest();
+
+        /*
+         * and now, just to make sure things don't run too fast On a 60 Mhz Pentium this takes 34 milliseconds, so you
+         * would need 30 seconds to build a 1000 entry dictionary...
+         */
+        for (int i = 0; i < ROUNDS; i++) {
+            ctx1 = DigestUtils.getMd5Digest();
+            if ((i & 1) != 0) {
+                ctx1.update(keyBytes);
+            } else {
+                ctx1.update(finalb, 0, BLOCKSIZE);
+            }
+
+            if (i % 3 != 0) {
+                ctx1.update(saltBytes);
+            }
+
+            if (i % 7 != 0) {
+                ctx1.update(keyBytes);
+            }
+
+            if ((i & 1) != 0) {
+                ctx1.update(finalb, 0, BLOCKSIZE);
+            } else {
+                ctx1.update(keyBytes);
+            }
+            finalb = ctx1.digest();
+        }
+
+        // The following was nearly identical to the Sha2Crypt code.
+        // Again, the buflen is not really needed.
+        // int buflen = MD5_PREFIX.length() - 1 + salt_string.length() + 1 + BLOCKSIZE + 1;
+        B64.b64from24bit(finalb[0], finalb[6], finalb[12], 4, passwd);
+        B64.b64from24bit(finalb[1], finalb[7], finalb[13], 4, passwd);
+        B64.b64from24bit(finalb[2], finalb[8], finalb[14], 4, passwd);
+        B64.b64from24bit(finalb[3], finalb[9], finalb[15], 4, passwd);
+        B64.b64from24bit(finalb[4], finalb[10], finalb[5], 4, passwd);
+        B64.b64from24bit((byte) 0, (byte) 0, finalb[11], 2, passwd);
+
+        /*
+         * Don't leave anything around in JVM they could use.
+         */
+        // Is there a better way to do this with the JVM?
+        ctx.reset();
+        ctx1.reset();
+        Arrays.fill(keyBytes, (byte) 0);
+        Arrays.fill(saltBytes, (byte) 0);
+        Arrays.fill(finalb, (byte) 0);
+
+        return passwd.toString();
+    }
+
+
+COVERAGE ISSUES:
+Current line coverage: 96.49%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

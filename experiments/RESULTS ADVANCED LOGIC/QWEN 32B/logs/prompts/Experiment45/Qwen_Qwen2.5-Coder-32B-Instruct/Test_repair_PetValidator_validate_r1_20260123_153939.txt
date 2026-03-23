@@ -1,0 +1,159 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.springframework.samples.petclinic.owner;
+Class name (MUST be exactly): PetValidator_validateTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.springframework.samples.petclinic.owner;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.Errors;
+
+import java.time.LocalDate;
+
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PetValidator_validateTestGenerated {
+
+    private PetValidator petValidator;
+
+    @Mock
+    private Errors errors;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        petValidator = new PetValidator();
+    }
+
+    @Test
+    public void testValidate_NameEmpty() {
+        Pet pet = new Pet();
+        pet.setName("");
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verify(errors).rejectValue("name", PetValidator.REQUIRED, PetValidator.REQUIRED);
+    }
+
+    @Test
+    public void testValidate_NameNull() {
+        Pet pet = new Pet();
+        pet.setName(null);
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verify(errors).rejectValue("name", PetValidator.REQUIRED, PetValidator.REQUIRED);
+    }
+
+    @Test
+    public void testValidate_NameValid() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verify(errors, never()).rejectValue("name", PetValidator.REQUIRED, PetValidator.REQUIRED);
+    }
+
+    @Test
+    public void testValidate_TypeNull_NewPet() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(null);
+        pet.setBirthDate(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verify(errors).rejectValue("type", PetValidator.REQUIRED, PetValidator.REQUIRED);
+    }
+
+    @Test
+    public void testValidate_TypeValid_NewPet() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verify(errors, never()).rejectValue("type", PetValidator.REQUIRED, PetValidator.REQUIRED);
+    }
+
+    @Test
+    public void testValidate_TypeNull_ExistingPet() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(null);
+        pet.setBirthDate(LocalDate.now());
+        pet.setId(1);
+
+        petValidator.validate(pet, errors);
+
+        verify(errors, never()).rejectValue("type", PetValidator.REQUIRED, PetValidator.REQUIRED);
+    }
+
+    @Test
+    public void testValidate_BirthDateNull() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(null);
+
+        petValidator.validate(pet, errors);
+
+        verify(errors).rejectValue("birthDate", PetValidator.REQUIRED, PetValidator.REQUIRED);
+    }
+
+    @Test
+    public void testValidate_BirthDateValid() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verify(errors, never()).rejectValue("birthDate", PetValidator.REQUIRED, PetValidator.REQUIRED);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/PetValidator_validateTestGenerated.java:[38] REQUIRED has private access in org.springframework.samples.petclinic.owner.PetValidator
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/PetValidator_validateTestGenerated.java:[50] REQUIRED has private access in org.springframework.samples.petclinic.owner.PetValidator
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/PetValidator_validateTestGenerated.java:[62] REQUIRED has private access in org.springframework.samples.petclinic.owner.PetValidator
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/PetValidator_validateTestGenerated.java:[74] REQUIRED has private access in org.springframework.samples.petclinic.owner.PetValidator
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/PetValidator_validateTestGenerated.java:[86] REQUIRED has private access in org.springframework.samples.petclinic.owner.PetValidator
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/PetValidator_validateTestGenerated.java:[99] REQUIRED has private access in org.springframework.samples.petclinic.owner.PetValidator
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/PetValidator_validateTestGenerated.java:[111] REQUIRED has private access in org.springframework.samples.petclinic.owner.PetValidator
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/PetValidator_validateTestGenerated.java:[123] REQUIRED has private access in org.springframework.samples.petclinic.owner.PetValidator
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: PetValidator_validateTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

@@ -1,0 +1,289 @@
+{
+  "experiments": {
+    "version_": {
+      "tested_method": "updateConfig",
+      "similarity_threshold": 0.665051499783199,
+      "passes_evaluation": false,
+      "timestamp": "2026-01-22T17:08:36.605788",
+      "executed_phases": {
+        "first_phase": true,
+        "second_phase": true
+      },
+      "metrics": {
+        "crystalbleu_similarity": 0.1929780450109025,
+        "string_similarity": 0.29162956366874443,
+        "token_similarity": 0.33043478260869563,
+        "ast_similarity": 0.6037735849056604,
+        "embedding_similarity": 0.8906519412994385,
+        "clone_detection": {
+          "exact_match": false,
+          "clone_percentage": 0.22598870056497175,
+          "similar_blocks": 20,
+          "total_blocks": 177
+        },
+        "weights": {
+          "crystalbleu_similarity": 0.2,
+          "string_similarity": 0.08,
+          "token_similarity": 0.15,
+          "ast_similarity": 0.22,
+          "embedding_similarity": 0.35
+        },
+        "overall_similarity": 0.5560495596210331,
+        "passes_threshold": false
+      },
+      "test_results": {
+        "original": {
+          "success": true,
+          "tests_passed": 1,
+          "tests_total": 3,
+          "tests_failed": 2,
+          "line_coverage": 89.74358974358975,
+          "branch_coverage": 83.33333333333334,
+          "has_compilation_errors": false,
+          "test_info": {
+            "valid_tests": [
+              "testUpdateConfigWithValidInputs"
+            ],
+            "invalid_tests": [
+              "testUpdateConfigWithInvalidOrderProcessingMode",
+              "testUpdateConfigWithInvalidWebInterface"
+            ],
+            "failed_assert_tests": [
+              "testUpdateConfigWithInvalidOrderProcessingMode",
+              "testUpdateConfigWithInvalidWebInterface"
+            ],
+            "runtime_error_tests": []
+          }
+        },
+        "regenerated": {
+          "success": true,
+          "tests_passed": 1,
+          "tests_total": 3,
+          "tests_failed": 2,
+          "line_coverage": 100.0,
+          "branch_coverage": 100.0,
+          "has_compilation_errors": false,
+          "test_info": {
+            "valid_tests": [
+              "testUpdateConfigWithValidInputs"
+            ],
+            "invalid_tests": [
+              "testUpdateConfigWithInvalidOrderProcessingMode",
+              "testUpdateConfigWithInvalidWebInterface"
+            ],
+            "failed_assert_tests": [],
+            "runtime_error_tests": [
+              "testUpdateConfigWithInvalidOrderProcessingMode",
+              "testUpdateConfigWithInvalidWebInterface"
+            ]
+          }
+        }
+      },
+      "test_filtering": {},
+      "context": {
+        "dependency_selection": {
+          "active": true,
+          "method": "structural",
+          "top_k": null,
+          "weights": null,
+          "selected_classes": [
+            {
+              "class": "TradeConfig",
+              "score": null,
+              "norm_score": null,
+              "rank": null
+            },
+            {
+              "class": "Log",
+              "score": null,
+              "norm_score": null,
+              "rank": null
+            }
+          ],
+          "rankings": {},
+          "project_type_flags": {
+            "has_servlet": true,
+            "has_spring": false,
+            "has_jpa": false,
+            "has_ejb": false,
+            "has_cdi": true,
+            "has_jndi": false,
+            "has_static_utils": true
+          }
+        }
+      },
+      "paths": {
+        "original_file": "./../JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/main/java/com/ibm/websphere/samples/daytrader/web/jsf/TradeConfigJSF.java",
+        "regenerated_file": "results/outputs\\Final_TradeConfigJSF_updateConfig.java"
+      },
+      "original_metrics": {
+        "loc": 66,
+        "sloc": 50,
+        "complexity": 9
+      },
+      "retry_history": [
+        {
+          "type": "initial_test_execution",
+          "test_results_originale": {
+            "tests_passed": 1,
+            "tests_total": 3,
+            "tests_failed": 2,
+            "line_coverage": 89.74358974358975,
+            "branch_coverage": 83.33333333333334,
+            "test_info": {
+              "valid_tests": [
+                "testUpdateConfigWithValidInputs"
+              ],
+              "invalid_tests": [
+                "testUpdateConfigWithInvalidOrderProcessingMode",
+                "testUpdateConfigWithInvalidWebInterface"
+              ],
+              "failed_assert_tests": [
+                "testUpdateConfigWithInvalidOrderProcessingMode",
+                "testUpdateConfigWithInvalidWebInterface"
+              ],
+              "runtime_error_tests": []
+            }
+          }
+        },
+        {
+          "refinement_iteration": 1,
+          "type": "forced_regeneration",
+          "overall_similarity": 0.5560495596210331,
+          "passes_threshold": false,
+          "similarity_metrics": {
+            "crystalbleu_similarity": 0.1929780450109025,
+            "string_similarity": 0.29162956366874443,
+            "token_similarity": 0.33043478260869563,
+            "ast_similarity": 0.6037735849056604,
+            "embedding_similarity": 0.8906519412994385,
+            "clone_detection": {
+              "exact_match": false,
+              "clone_percentage": 0.22598870056497175,
+              "similar_blocks": 20,
+              "total_blocks": 177
+            },
+            "weights": {
+              "crystalbleu_similarity": 0.2,
+              "string_similarity": 0.08,
+              "token_similarity": 0.15,
+              "ast_similarity": 0.22,
+              "embedding_similarity": 0.35
+            },
+            "overall_similarity": 0.5560495596210331,
+            "passes_threshold": false
+          },
+          "original_method": "  public void updateConfig() {\n    String currentConfigStr = \"\\n\\n########## Trade configuration update. Current config:\\n\\n\";\n\n    currentConfigStr += \"\\t\\tRunTimeMode:\\t\\t\\t\" + TradeConfig.getRunTimeModeNames()[TradeConfig.getRunTimeMode()] + \"\\n\";\n\n    String orderProcessingModeStr = this.orderProcessingMode;\n    if (orderProcessingModeStr != null) {\n      try {\n        for (int i = 0; i < orderProcessingModeList.length; i++) {\n          if (orderProcessingModeStr.equals(orderProcessingModeList[i])) {\n            TradeConfig.setOrderProcessingMode(i);\n          }\n        }\n      } catch (Exception e) {\n        Log.error(e, \"TradeConfigJSF.updateConfig(..): minor exception caught\", \"trying to set orderProcessing to \" + orderProcessingModeStr,\n            \"reverting to current value\");\n\n      } // If the value is bad, simply revert to current\n    }\n    currentConfigStr += \"\\t\\tOrderProcessingMode:\\t\\t\" + TradeConfig.getOrderProcessingModeNames()[TradeConfig.getOrderProcessingMode()] + \"\\n\";\n\n    String webInterfaceStr = webInterface;\n    if (webInterfaceStr != null) {\n      try {\n        for (int i = 0; i < webInterfaceList.length; i++) {\n          if (webInterfaceStr.equals(webInterfaceList[i])) {\n            TradeConfig.setWebInterface(i);\n          }\n        }\n      } catch (Exception e) {\n        Log.error(e, \"TradeConfigJSF.updateConfig(..): minor exception caught\", \"trying to set WebInterface to \" + webInterfaceStr,\n            \"reverting to current value\");\n\n      } // If the value is bad, simply revert to current\n    }\n    currentConfigStr += \"\\t\\tWeb Interface:\\t\\t\\t\" + TradeConfig.getWebInterfaceNames()[TradeConfig.getWebInterface()] + \"\\n\";\n\n    TradeConfig.setMAX_USERS(maxUsers);\n    TradeConfig.setMAX_QUOTES(maxQuotes);\n\n    currentConfigStr += \"\\t\\tTrade  Users:\\t\\t\\t\" + TradeConfig.getMAX_USERS() + \"\\n\";\n    currentConfigStr += \"\\t\\tTrade Quotes:\\t\\t\\t\" + TradeConfig.getMAX_QUOTES() + \"\\n\";\n\n    TradeConfig.setMarketSummaryInterval(marketSummaryInterval);\n\n    currentConfigStr += \"\\t\\tMarket Summary Interval:\\t\" + TradeConfig.getMarketSummaryInterval() + \"\\n\";\n\n    TradeConfig.setPrimIterations(primIterations);\n\n    currentConfigStr += \"\\t\\tPrimitive Iterations:\\t\\t\" + TradeConfig.getPrimIterations() + \"\\n\";\n\n    TradeConfig.setPublishQuotePriceChange(publishQuotePriceChange);\n    currentConfigStr += \"\\t\\tTradeStreamer MDB Enabled:\\t\" + TradeConfig.getPublishQuotePriceChange() + \"\\n\";\n\n    TradeConfig.setListQuotePriceChangeFrequency(listQuotePriceChangeFrequency);\n    currentConfigStr += \"\\t\\t% of trades on Websocket:\\t\" + TradeConfig.getListQuotePriceChangeFrequency() + \"\\n\";\n\n    TradeConfig.setLongRun(longRun);\n    currentConfigStr += \"\\t\\tLong Run Enabled:\\t\\t\" + TradeConfig.getLongRun() + \"\\n\";\n\n    TradeConfig.setDisplayOrderAlerts(displayOrderAlerts);\n    currentConfigStr += \"\\t\\tDisplay Order Alerts:\\t\\t\" + TradeConfig.getDisplayOrderAlerts() + \"\\n\";\n\n    System.out.println(currentConfigStr);\n    setResult(\"DayTrader Configuration Updated\");\n  }",
+          "regenerated_method": "public void updateConfig() {\n    String[] orderProcessingModeNames = TradeConfig.getOrderProcessingModeNames();\n    String[] webInterfaceNames = TradeConfig.getWebInterfaceNames();\n\n    int orderProcessingModeIndex = -1;\n    for (int i = 0; i < orderProcessingModeNames.length; i++) {\n        if (orderProcessingModeNames[i].equals(orderProcessingMode)) {\n            orderProcessingModeIndex = i;\n            break;\n        }\n    }\n\n    int webInterfaceIndex = -1;\n    for (int i = 0; i < webInterfaceNames.length; i++) {\n        if (webInterfaceNames[i].equals(webInterface)) {\n            webInterfaceIndex = i;\n            break;\n        }\n    }\n\n    if (orderProcessingModeIndex == -1) {\n        Log.error(\"Invalid order processing mode: \" + orderProcessingMode);\n        orderProcessingModeIndex = 0; // Default to first mode\n    }\n\n    if (webInterfaceIndex == -1) {\n        Log.error(\"Invalid web interface: \" + webInterface);\n        webInterfaceIndex = 0; // Default to first interface\n    }\n\n    TradeConfig.setOrderProcessingMode(orderProcessingModeIndex);\n    TradeConfig.setWebInterface(webInterfaceIndex);\n    TradeConfig.setMAX_USERS(maxUsers);\n    TradeConfig.setMAX_QUOTES(maxQuotes);\n    TradeConfig.setMarketSummaryInterval(marketSummaryInterval);\n    TradeConfig.setPrimIterations(primIterations);\n    TradeConfig.setPublishQuotePriceChange(publishQuotePriceChange);\n    TradeConfig.setListQuotePriceChangeFrequency(listQuotePriceChangeFrequency);\n    TradeConfig.setLongRun(longRun);\n    TradeConfig.setDisplayOrderAlerts(displayOrderAlerts);\n\n    setResult(\"DayTrader Configuration Updated\");\n}",
+          "test_results_originale": {
+            "tests_passed": 1,
+            "tests_total": 3,
+            "line_coverage": 89.74358974358975,
+            "test_info": {
+              "valid_tests": [
+                "testUpdateConfigWithValidInputs"
+              ],
+              "failed_assert_tests": [
+                "testUpdateConfigWithInvalidOrderProcessingMode",
+                "testUpdateConfigWithInvalidWebInterface"
+              ],
+              "runtime_error_tests": []
+            }
+          },
+          "test_results_rigenerato": {
+            "tests_passed": 1,
+            "tests_total": 3,
+            "line_coverage": 100.0,
+            "test_info": {
+              "valid_tests": [
+                "testUpdateConfigWithValidInputs"
+              ],
+              "failed_assert_tests": [],
+              "runtime_error_tests": [
+                "testUpdateConfigWithInvalidOrderProcessingMode",
+                "testUpdateConfigWithInvalidWebInterface"
+              ]
+            }
+          }
+        }
+      ],
+      "original_method_display": "  public void updateConfig() {\n    String currentConfigStr = \"\\n\\n########## Trade configuration update. Current config:\\n\\n\";\n\n    currentConfigStr += \"\\t\\tRunTimeMode:\\t\\t\\t\" + TradeConfig.getRunTimeModeNames()[TradeConfig.getRunTimeMode()] + \"\\n\";\n\n    String orderProcessingModeStr = this.orderProcessingMode;\n    if (orderProcessingModeStr != null) {\n      try {\n        for (int i = 0; i < orderProcessingModeList.length; i++) {\n          if (orderProcessingModeStr.equals(orderProcessingModeList[i])) {\n            TradeConfig.setOrderProcessingMode(i);\n          }\n        }\n      } catch (Exception e) {\n        Log.error(e, \"TradeConfigJSF.updateConfig(..): minor exception caught\", \"trying to set orderProcessing to \" + orderProcessingModeStr,\n            \"reverting to current value\");\n\n      } // If the value is bad, simply revert to current\n    }\n    currentConfigStr += \"\\t\\tOrderProcessingMode:\\t\\t\" + TradeConfig.getOrderProcessingModeNames()[TradeConfig.getOrderProcessingMode()] + \"\\n\";\n\n    String webInterfaceStr = webInterface;\n    if (webInterfaceStr != null) {\n      try {\n        for (int i = 0; i < webInterfaceList.length; i++) {\n          if (webInterfaceStr.equals(webInterfaceList[i])) {\n            TradeConfig.setWebInterface(i);\n          }\n        }\n      } catch (Exception e) {\n        Log.error(e, \"TradeConfigJSF.updateConfig(..): minor exception caught\", \"trying to set WebInterface to \" + webInterfaceStr,\n            \"reverting to current value\");\n\n      } // If the value is bad, simply revert to current\n    }\n    currentConfigStr += \"\\t\\tWeb Interface:\\t\\t\\t\" + TradeConfig.getWebInterfaceNames()[TradeConfig.getWebInterface()] + \"\\n\";\n\n    TradeConfig.setMAX_USERS(maxUsers);\n    TradeConfig.setMAX_QUOTES(maxQuotes);\n\n    currentConfigStr += \"\\t\\tTrade  Users:\\t\\t\\t\" + TradeConfig.getMAX_USERS() + \"\\n\";\n    currentConfigStr += \"\\t\\tTrade Quotes:\\t\\t\\t\" + TradeConfig.getMAX_QUOTES() + \"\\n\";\n\n    TradeConfig.setMarketSummaryInterval(marketSummaryInterval);\n\n    currentConfigStr += \"\\t\\tMarket Summary Interval:\\t\" + TradeConfig.getMarketSummaryInterval() + \"\\n\";\n\n    TradeConfig.setPrimIterations(primIterations);\n\n    currentConfigStr += \"\\t\\tPrimitive Iterations:\\t\\t\" + TradeConfig.getPrimIterations() + \"\\n\";\n\n    TradeConfig.setPublishQuotePriceChange(publishQuotePriceChange);\n    currentConfigStr += \"\\t\\tTradeStreamer MDB Enabled:\\t\" + TradeConfig.getPublishQuotePriceChange() + \"\\n\";\n\n    TradeConfig.setListQuotePriceChangeFrequency(listQuotePriceChangeFrequency);\n    currentConfigStr += \"\\t\\t% of trades on Websocket:\\t\" + TradeConfig.getListQuotePriceChangeFrequency() + \"\\n\";\n\n    TradeConfig.setLongRun(longRun);\n    currentConfigStr += \"\\t\\tLong Run Enabled:\\t\\t\" + TradeConfig.getLongRun() + \"\\n\";\n\n    TradeConfig.setDisplayOrderAlerts(displayOrderAlerts);\n    currentConfigStr += \"\\t\\tDisplay Order Alerts:\\t\\t\" + TradeConfig.getDisplayOrderAlerts() + \"\\n\";\n\n    System.out.println(currentConfigStr);\n    setResult(\"DayTrader Configuration Updated\");\n  }",
+      "regenerated_method_display": "public void updateConfig() {\n    String[] orderProcessingModeNames = TradeConfig.getOrderProcessingModeNames();\n    String[] webInterfaceNames = TradeConfig.getWebInterfaceNames();\n\n    int orderProcessingModeIndex = -1;\n    for (int i = 0; i < orderProcessingModeNames.length; i++) {\n        if (orderProcessingModeNames[i].equals(orderProcessingMode)) {\n            orderProcessingModeIndex = i;\n            break;\n        }\n    }\n\n    int webInterfaceIndex = -1;\n    for (int i = 0; i < webInterfaceNames.length; i++) {\n        if (webInterfaceNames[i].equals(webInterface)) {\n            webInterfaceIndex = i;\n            break;\n        }\n    }\n\n    if (orderProcessingModeIndex == -1) {\n        Log.error(\"Invalid order processing mode: \" + orderProcessingMode);\n        orderProcessingModeIndex = 0; // Default to first mode\n    }\n\n    if (webInterfaceIndex == -1) {\n        Log.error(\"Invalid web interface: \" + webInterface);\n        webInterfaceIndex = 0; // Default to first interface\n    }\n\n    TradeConfig.setOrderProcessingMode(orderProcessingModeIndex);\n    TradeConfig.setWebInterface(webInterfaceIndex);\n    TradeConfig.setMAX_USERS(maxUsers);\n    TradeConfig.setMAX_QUOTES(maxQuotes);\n    TradeConfig.setMarketSummaryInterval(marketSummaryInterval);\n    TradeConfig.setPrimIterations(primIterations);\n    TradeConfig.setPublishQuotePriceChange(publishQuotePriceChange);\n    TradeConfig.setListQuotePriceChangeFrequency(listQuotePriceChangeFrequency);\n    TradeConfig.setLongRun(longRun);\n    TradeConfig.setDisplayOrderAlerts(displayOrderAlerts);\n\n    setResult(\"DayTrader Configuration Updated\");\n}",
+      "token_usage": {
+        "test_generation": {
+          "input_tokens": 3455,
+          "output_tokens": 1755
+        },
+        "method_generation": {
+          "calls": 1,
+          "details": [
+            {
+              "input_tokens": 4224,
+              "output_tokens": 372,
+              "refinement_iteration": 1
+            }
+          ],
+          "total_input_tokens": 4224,
+          "total_output_tokens": 372
+        },
+        "test_refinement": {
+          "calls": 1,
+          "details": [
+            {
+              "input_tokens": 7231,
+              "output_tokens": 2102,
+              "iteration": 1
+            }
+          ],
+          "total_input_tokens": 7231,
+          "total_output_tokens": 2102
+        },
+        "test_repair_after_refinement": {
+          "calls": 2,
+          "details": [
+            {
+              "input_tokens": 2852,
+              "output_tokens": 2111,
+              "iteration": 1,
+              "after_refinement": 1
+            },
+            {
+              "input_tokens": 2861,
+              "output_tokens": 2243,
+              "iteration": 2,
+              "after_refinement": 1
+            }
+          ],
+          "total_input_tokens": 5713,
+          "total_output_tokens": 4354
+        },
+        "totals": {
+          "total_input_tokens": 20623,
+          "total_output_tokens": 8583,
+          "total_tokens": 29206
+        }
+      },
+      "test_naturalness": {
+        "num_test_methods": 3,
+        "assertion_complexity": 0.2099,
+        "pct_null_assertions": 0.0,
+        "pct_duplicate_assertions": 0.0,
+        "pct_exception_assertions": 0.0,
+        "pct_no_assertion": 0.0,
+        "naturalness_method_name": 0.7733,
+        "pct_focal_method_covered": 1.0,
+        "diversity_literal_values": 0.3763,
+        "overall_naturalness_score": 0.7874
+      }
+    }
+  },
+  "general_info": {
+    "tested_class": "TradeConfigJSF",
+    "tested_method": "updateConfig",
+    "last_update": "2026-01-22T17:08:36.801423",
+    "description": "Test updateConfig() - High - unsloth/Mistral-Small-24B-Instruct-2501",
+    "provider": "chutes",
+    "model": "unsloth/Mistral-Small-24B-Instruct-2501",
+    "similarity_threshold": 0.665051499783199
+  }
+}

@@ -1,0 +1,276 @@
+package org.eclipse.cargotracker.infrastructure.routing;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+import org.eclipse.cargotracker.domain.model.cargo.Itinerary;
+import org.eclipse.cargotracker.domain.model.cargo.Leg;
+import org.eclipse.cargotracker.domain.model.cargo.RouteSpecification;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.eclipse.cargotracker.domain.service.RoutingService;
+import org.eclipse.pathfinder.api.TransitEdge;
+import org.eclipse.pathfinder.api.TransitPath;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class ExternalRoutingService_fetchRoutesForSpecificationTestGenerated {
+    @Mock
+    private LocationRepository locationRepository;
+    @Mock
+    private VoyageRepository voyageRepository;
+    @Mock
+    private WebTarget graphTraversalResource;
+    @InjectMocks
+    private ExternalRoutingService externalRoutingService;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        Logger logger = Logger.getLogger(ExternalRoutingService.class.getName());
+        ReflectionTestUtils.setField(externalRoutingService, "logger", logger);
+        ReflectionTestUtils.setField(externalRoutingService, "graphTraversalUrl", "http://example.com");
+        ReflectionTestUtils.setField(externalRoutingService, "graphTraversalResource", graphTraversalResource);
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithNullRouteSpecification() {
+        // Arrange
+        RouteSpecification routeSpecification = null;
+        // Act & Assert
+        assertThrows(NullPointerException.class, () -> externalRoutingService.fetchRoutesForSpecification(routeSpecification));
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithNullUnLocodeOrigin() {
+        // Arrange
+        Location origin = mock(Location.class);
+        when(origin.getUnLocode()).thenReturn(null);
+        Location destination = mock(Location.class);
+        when(destination.getUnLocode()).thenReturn(new UnLocode("SESTO"));
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(10));
+        // Act & Assert
+        assertThrows(NullPointerException.class, () -> externalRoutingService.fetchRoutesForSpecification(routeSpecification));
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithNullUnLocodeDestination() {
+        // Arrange
+        Location origin = mock(Location.class);
+        when(origin.getUnLocode()).thenReturn(new UnLocode("USNYC"));
+        Location destination = mock(Location.class);
+        when(destination.getUnLocode()).thenReturn(null);
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(10));
+        // Act & Assert
+        assertThrows(NullPointerException.class, () -> externalRoutingService.fetchRoutesForSpecification(routeSpecification));
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithValidInput() {
+        Location origin = mock(Location.class);
+        when(origin.getUnLocode()).thenReturn(new UnLocode("USNYC"));
+        Location destination = mock(Location.class);
+        when(destination.getUnLocode()).thenReturn(new UnLocode("SESTO"));
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(10));
+        TransitEdge transitEdge = mock(TransitEdge.class);
+        TransitPath transitPath = new TransitPath(List.of(transitEdge));
+        List<TransitPath> transitPaths = List.of(transitPath);
+        when(graphTraversalResource.queryParam(any(), any()).queryParam(any(), any()).request(MediaType.APPLICATION_JSON_TYPE).get(any(GenericType.class))).thenReturn(transitPaths);
+        Itinerary itinerary = mock(Itinerary.class);
+        when(itinerary.isExpected(any())).thenReturn(true);
+        when(routeSpecification.isSatisfiedBy(itinerary)).thenReturn(true);
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+        assertEquals(1, result.size());
+        assertEquals(itinerary, result.get(0));
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithNoSatisfyingItineraries() {
+        Location origin = mock(Location.class);
+        when(origin.getUnLocode()).thenReturn(new UnLocode("USNYC"));
+        Location destination = mock(Location.class);
+        when(destination.getUnLocode()).thenReturn(new UnLocode("SESTO"));
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(10));
+        TransitEdge transitEdge = mock(TransitEdge.class);
+        TransitPath transitPath = new TransitPath(List.of(transitEdge));
+        List<TransitPath> transitPaths = List.of(transitPath);
+        when(graphTraversalResource.queryParam(any(), any()).queryParam(any(), any()).request(MediaType.APPLICATION_JSON_TYPE).get(any(GenericType.class))).thenReturn(transitPaths);
+        Itinerary itinerary = mock(Itinerary.class);
+        when(itinerary.isExpected(any())).thenReturn(true);
+        when(routeSpecification.isSatisfiedBy(itinerary)).thenReturn(false);
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithEmptyTransitPaths() {
+        Location origin = mock(Location.class);
+        when(origin.getUnLocode()).thenReturn(new UnLocode("USNYC"));
+        Location destination = mock(Location.class);
+        when(destination.getUnLocode()).thenReturn(new UnLocode("SESTO"));
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(10));
+        List<TransitPath> transitPaths = new ArrayList<>();
+        when(graphTraversalResource.queryParam(any(), any()).queryParam(any(), any()).request(MediaType.APPLICATION_JSON_TYPE).get(any(GenericType.class))).thenReturn(transitPaths);
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithNullOrigin() {
+        Location origin = null;
+        Location destination = mock(Location.class);
+        when(destination.getUnLocode()).thenReturn(new UnLocode("SESTO"));
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(10));
+        assertThrows(NullPointerException.class, () -> externalRoutingService.fetchRoutesForSpecification(routeSpecification));
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithNullDestination() {
+        Location origin = mock(Location.class);
+        when(origin.getUnLocode()).thenReturn(new UnLocode("USNYC"));
+        Location destination = null;
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(10));
+        assertThrows(NullPointerException.class, () -> externalRoutingService.fetchRoutesForSpecification(routeSpecification));
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithNonEmptyTransitPaths() {
+        Location origin = mock(Location.class);
+        when(origin.getUnLocode()).thenReturn(new UnLocode("USNYC"));
+        Location destination = mock(Location.class);
+        when(destination.getUnLocode()).thenReturn(new UnLocode("SESTO"));
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(10));
+        TransitEdge transitEdge = mock(TransitEdge.class);
+        TransitPath transitPath = new TransitPath(List.of(transitEdge));
+        List<TransitPath> transitPaths = List.of(transitPath);
+        when(graphTraversalResource.queryParam(any(), any()).queryParam(any(), any()).request(MediaType.APPLICATION_JSON_TYPE).get(any(GenericType.class))).thenReturn(transitPaths);
+        Itinerary itinerary = mock(Itinerary.class);
+        when(itinerary.isExpected(any())).thenReturn(true);
+        when(routeSpecification.isSatisfiedBy(itinerary)).thenReturn(true);
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+        assertEquals(1, result.size());
+        assertEquals(itinerary, result.get(0));
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithMultipleTransitPaths() {
+        Location origin = mock(Location.class);
+        when(origin.getUnLocode()).thenReturn(new UnLocode("USNYC"));
+        Location destination = mock(Location.class);
+        when(destination.getUnLocode()).thenReturn(new UnLocode("SESTO"));
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(10));
+        TransitEdge transitEdge1 = mock(TransitEdge.class);
+        TransitEdge transitEdge2 = mock(TransitEdge.class);
+        TransitPath transitPath1 = new TransitPath(List.of(transitEdge1));
+        TransitPath transitPath2 = new TransitPath(List.of(transitEdge2));
+        List<TransitPath> transitPaths = List.of(transitPath1, transitPath2);
+        when(graphTraversalResource.queryParam(any(), any()).queryParam(any(), any()).request(MediaType.APPLICATION_JSON_TYPE).get(any(GenericType.class))).thenReturn(transitPaths);
+        Itinerary itinerary1 = mock(Itinerary.class);
+        Itinerary itinerary2 = mock(Itinerary.class);
+        when(itinerary1.isExpected(any())).thenReturn(true);
+        when(itinerary2.isExpected(any())).thenReturn(true);
+        when(routeSpecification.isSatisfiedBy(itinerary1)).thenReturn(true);
+        when(routeSpecification.isSatisfiedBy(itinerary2)).thenReturn(true);
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+        assertEquals(2, result.size());
+        assertTrue(result.contains(itinerary1));
+        assertTrue(result.contains(itinerary2));
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithMultipleTransitPathsOneSatisfying() {
+        Location origin = mock(Location.class);
+        when(origin.getUnLocode()).thenReturn(new UnLocode("USNYC"));
+        Location destination = mock(Location.class);
+        when(destination.getUnLocode()).thenReturn(new UnLocode("SESTO"));
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(10));
+        TransitEdge transitEdge1 = mock(TransitEdge.class);
+        TransitEdge transitEdge2 = mock(TransitEdge.class);
+        TransitPath transitPath1 = new TransitPath(List.of(transitEdge1));
+        TransitPath transitPath2 = new TransitPath(List.of(transitEdge2));
+        List<TransitPath> transitPaths = List.of(transitPath1, transitPath2);
+        when(graphTraversalResource.queryParam(any(), any()).queryParam(any(), any()).request(MediaType.APPLICATION_JSON_TYPE).get(any(GenericType.class))).thenReturn(transitPaths);
+        Itinerary itinerary1 = mock(Itinerary.class);
+        Itinerary itinerary2 = mock(Itinerary.class);
+        when(itinerary1.isExpected(any())).thenReturn(true);
+        when(itinerary2.isExpected(any())).thenReturn(true);
+        when(routeSpecification.isSatisfiedBy(itinerary1)).thenReturn(true);
+        when(routeSpecification.isSatisfiedBy(itinerary2)).thenReturn(false);
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+        assertEquals(1, result.size());
+        assertEquals(itinerary1, result.get(0));
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithNullGraphTraversalResource() {
+        ReflectionTestUtils.setField(externalRoutingService, "graphTraversalResource", null);
+        Location origin = mock(Location.class);
+        when(origin.getUnLocode()).thenReturn(new UnLocode("USNYC"));
+        Location destination = mock(Location.class);
+        when(destination.getUnLocode()).thenReturn(new UnLocode("SESTO"));
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(10));
+        assertThrows(NullPointerException.class, () -> externalRoutingService.fetchRoutesForSpecification(routeSpecification));
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithEmptyTransitPathsAndNullGraphTraversalResource() {
+        ReflectionTestUtils.setField(externalRoutingService, "graphTraversalResource", null);
+        Location origin = mock(Location.class);
+        when(origin.getUnLocode()).thenReturn(new UnLocode("USNYC"));
+        Location destination = mock(Location.class);
+        when(destination.getUnLocode()).thenReturn(new UnLocode("SESTO"));
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(10));
+        assertThrows(NullPointerException.class, () -> externalRoutingService.fetchRoutesForSpecification(routeSpecification));
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithNoTransitPaths() {
+        Location origin = mock(Location.class);
+        when(origin.getUnLocode()).thenReturn(new UnLocode("USNYC"));
+        Location destination = mock(Location.class);
+        when(destination.getUnLocode()).thenReturn(new UnLocode("SESTO"));
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(10));
+        when(graphTraversalResource.queryParam(any(), any()).queryParam(any(), any()).request(MediaType.APPLICATION_JSON_TYPE).get(any(GenericType.class))).thenReturn(new ArrayList<>());
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithUnsatisfiedItinerary() {
+        Location origin = mock(Location.class);
+        when(origin.getUnLocode()).thenReturn(new UnLocode("USNYC"));
+        Location destination = mock(Location.class);
+        when(destination.getUnLocode()).thenReturn(new UnLocode("SESTO"));
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(10));
+        TransitEdge transitEdge = mock(TransitEdge.class);
+        TransitPath transitPath = new TransitPath(List.of(transitEdge));
+        List<TransitPath> transitPaths = List.of(transitPath);
+        when(graphTraversalResource.queryParam(any(), any()).queryParam(any(), any()).request(MediaType.APPLICATION_JSON_TYPE).get(any(GenericType.class))).thenReturn(transitPaths);
+        Itinerary itinerary = mock(Itinerary.class);
+        when(itinerary.isExpected(any())).thenReturn(true);
+        when(routeSpecification.isSatisfiedBy(itinerary)).thenReturn(false);
+        List<Itinerary> result = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+        assertTrue(result.isEmpty());
+    }
+
+}

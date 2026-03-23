@@ -1,0 +1,51 @@
+```java
+public String asPath() {
+    if (id != null) {
+        return "id('" + id + "')";
+    }
+    switch (node.getNodeType()) {
+        case Node.DOCUMENT_NODE:
+            return "";
+        case Node.ELEMENT_NODE:
+            String localName = DOMNodePointer.getLocalName(node);
+            String namespaceURI = getNamespaceURI();
+            String prefix = namespaceResolver.getPrefix(namespaceURI);
+            String path = "";
+            if (parent != null) {
+                path = parent.asPath();
+                if (!path.isEmpty()) {
+                    path += "/";
+                }
+            }
+            if (prefix != null) {
+                path += prefix + ":";
+            }
+            path += localName;
+            int position = relativePositionByQName;
+            if (position == 0) {
+                position = getRelativePositionByQName();
+            }
+            return path + "[" + position + "]";
+        case Node.TEXT_NODE:
+            int textPosition = relativePositionOfTextNode;
+            if (textPosition == 0) {
+                textPosition = getRelativePositionOfTextNode();
+            }
+            return "/text()[" + textPosition + "]";
+        case Node.PROCESSING_INSTRUCTION_NODE:
+            ProcessingInstruction pi = (ProcessingInstruction) node;
+            String target = pi.getTarget();
+            int piPosition = relativePositionOfPI;
+            if (piPosition == 0) {
+                piPosition = getRelativePositionOfPI();
+            }
+            if (target != null) {
+                return "/processing-instruction('" + target + "')[" + piPosition + "]";
+            } else {
+                return "/processing-instruction()[" + piPosition + "]";
+            }
+        default:
+            return "";
+    }
+}
+```

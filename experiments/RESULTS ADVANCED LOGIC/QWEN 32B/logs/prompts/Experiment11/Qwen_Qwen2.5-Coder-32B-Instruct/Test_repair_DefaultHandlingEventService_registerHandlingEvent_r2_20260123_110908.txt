@@ -1,0 +1,186 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.application.internal;
+Class name (MUST be exactly): DefaultHandlingEventService_registerHandlingEventTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.application.internal;
+
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.application.HandlingEventService;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEventRepository;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent.Type;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+public class DefaultHandlingEventService_registerHandlingEventTestGenerated {
+
+    @Mock
+    private ApplicationEvents applicationEvents;
+
+    @Mock
+    private HandlingEventRepository handlingEventRepository;
+
+    @Mock
+    private HandlingEventFactory handlingEventFactory;
+
+    @InjectMocks
+    private DefaultHandlingEventService defaultHandlingEventService;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testRegisterHandlingEventSuccess() throws CannotCreateHandlingEventException {
+        LocalDateTime completionTime = LocalDateTime.now();
+        TrackingId trackingId = new TrackingId("XYZ");
+        VoyageNumber voyageNumber = new VoyageNumber("V123");
+        UnLocode unLocode = new UnLocode("USNYC");
+        Type type = Type.LOAD;
+
+        HandlingEvent event = mock(HandlingEvent.class);
+        when(handlingEventFactory.createHandlingEvent(any(), eq(completionTime), eq(trackingId), eq(voyageNumber), eq(unLocode), eq(type)))
+                .thenReturn(event);
+
+        defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type);
+
+        verify(handlingEventRepository).store(event);
+        verify(applicationEvents).cargoWasHandled(event);
+    }
+
+    @Test
+    public void testRegisterHandlingEventFactoryThrowsException() {
+        LocalDateTime completionTime = LocalDateTime.now();
+        TrackingId trackingId = new TrackingId("XYZ");
+        VoyageNumber voyageNumber = new VoyageNumber("V123");
+        UnLocode unLocode = new UnLocode("USNYC");
+        Type type = Type.LOAD;
+
+        when(handlingEventFactory.createHandlingEvent(any(), eq(completionTime), eq(trackingId), eq(voyageNumber), eq(unLocode), eq(type)))
+                .thenThrow(new CannotCreateHandlingEventException("Error"));
+
+        assertThrows(CannotCreateHandlingEventException.class, () -> 
+            defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type)
+        );
+
+        verify(handlingEventRepository, never()).store(any());
+        verify(applicationEvents, never()).cargoWasHandled(any());
+    }
+
+    @Test
+    public void testRegisterHandlingEventWithNullCompletionTime() {
+        TrackingId trackingId = new TrackingId("XYZ");
+        VoyageNumber voyageNumber = new VoyageNumber("V123");
+        UnLocode unLocode = new UnLocode("USNYC");
+        Type type = Type.LOAD;
+
+        assertThrows(NullPointerException.class, () -> 
+            defaultHandlingEventService.registerHandlingEvent(null, trackingId, voyageNumber, unLocode, type)
+        );
+
+        verify(handlingEventRepository, never()).store(any());
+        verify(applicationEvents, never()).cargoWasHandled(any());
+    }
+
+    @Test
+    public void testRegisterHandlingEventWithNullTrackingId() {
+        LocalDateTime completionTime = LocalDateTime.now();
+        VoyageNumber voyageNumber = new VoyageNumber("V123");
+        UnLocode unLocode = new UnLocode("USNYC");
+        Type type = Type.LOAD;
+
+        assertThrows(NullPointerException.class, () -> 
+            defaultHandlingEventService.registerHandlingEvent(completionTime, null, voyageNumber, unLocode, type)
+        );
+
+        verify(handlingEventRepository, never()).store(any());
+        verify(applicationEvents, never()).cargoWasHandled(any());
+    }
+
+    @Test
+    public void testRegisterHandlingEventWithNullVoyageNumber() {
+        LocalDateTime completionTime = LocalDateTime.now();
+        TrackingId trackingId = new TrackingId("XYZ");
+        UnLocode unLocode = new UnLocode("USNYC");
+        Type type = Type.LOAD;
+
+        assertThrows(NullPointerException.class, () -> 
+            defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, null, unLocode, type)
+        );
+
+        verify(handlingEventRepository, never()).store(any());
+        verify(applicationEvents, never()).cargoWasHandled(any());
+    }
+
+    @Test
+    public void testRegisterHandlingEventWithNullUnLocode() {
+        LocalDateTime completionTime = LocalDateTime.now();
+        TrackingId trackingId = new TrackingId("XYZ");
+        VoyageNumber voyageNumber = new VoyageNumber("V123");
+        Type type = Type.LOAD;
+
+        assertThrows(NullPointerException.class, () -> 
+            defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, voyageNumber, null, type)
+        );
+
+        verify(handlingEventRepository, never()).store(any());
+        verify(applicationEvents, never()).cargoWasHandled(any());
+    }
+
+    @Test
+    public void testRegisterHandlingEventWithNullType() {
+        LocalDateTime completionTime = LocalDateTime.now();
+        TrackingId trackingId = new TrackingId("XYZ");
+        VoyageNumber voyageNumber = new VoyageNumber("V123");
+        UnLocode unLocode = new UnLocode("USNYC");
+
+        assertThrows(NullPointerException.class, () -> 
+            defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, null)
+        );
+
+        verify(handlingEventRepository, never()).store(any());
+        verify(applicationEvents, never()).cargoWasHandled(any());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/application/internal/DefaultHandlingEventService_registerHandlingEventTestGenerated.java:[75] incompatible types: java.lang.String cannot be converted to java.lang.Exception
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: DefaultHandlingEventService_registerHandlingEventTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

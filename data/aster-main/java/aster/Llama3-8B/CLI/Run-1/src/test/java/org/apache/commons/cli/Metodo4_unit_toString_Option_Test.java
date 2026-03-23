@@ -1,0 +1,308 @@
+/**
+ * Filtered unit tests for method: toString()
+ * Original class: Option
+ * Tests that actually call the target method
+ */
+package org.apache.commons.cli;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo4_unit_toString_Option_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_SingleOptionWithOpt_jqxt1() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt", "description"));
+    assertEquals("[-opt, description]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_SingleOptionWithoutOpt_FTIY2() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option(null, "description"));
+    assertEquals("[--description]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_MultipleOptionsWithOpt_CzGu3() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt1", "description1"));
+    optionGroup.getOptions().add(new Option("opt2", "description2"));
+    assertEquals("[-opt1, description1, -opt2, description2]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_MultipleOptionsWithoutOpt_CsuQ4() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option(null, "description1"));
+    optionGroup.getOptions().add(new Option(null, "description2"));
+    assertEquals("[--description1, --description2]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_MixedOptions_ZXYl5() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt1", "description1"));
+    optionGroup.getOptions().add(new Option(null, "description2"));
+    assertEquals("[-opt1, description1, --description2]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_OptionsWithDescription_eFzU6() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt1", "description1"));
+    optionGroup.getOptions().add(new Option(null, "description2 with space"));
+    assertEquals("[-opt1, description1, --description2 with space]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_OptionsWithCommaInDescription_VvyM8() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt1", "description, with, comma"));
+    assertEquals("[-opt1, description, with, comma]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_OptionsWithCommaInOpt_ZYrP9() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt, with, comma", "description"));
+    assertEquals("[-opt, with, comma, description]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_OptionsWithCommaInLongOpt_yUha10() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option(null, "description, with, comma"));
+    assertEquals("[--description, with, comma]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_OptionsWithMultipleCommas_LmLm11() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt, with, multiple, commas", "description, with, multiple, commas"));
+    assertEquals("[-opt, with, multiple, commas, description, with, multiple, commas]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_OptionsWithEscapedCommas_shgP12() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt,\\,with,comma", "description,\\,with,comma"));
+    assertEquals("[-opt,\\,with,comma, description,\\,with,comma]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_OptionsWithBackslashes_VegS13() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt,with\\backslash,comma", "description,with\\backslash,comma"));
+    assertEquals("[-opt,with\\backslash,comma, description,with\\backslash,comma]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_EmptyOptionGroup_dExk0() {
+    OptionGroup optionGroup = new OptionGroup();
+    assertEquals("[]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_EmptyOptions_aQQo0() {
+    OptionGroup optionGroup = new OptionGroup();
+    String result = optionGroup.toString();
+    assert result.equals("[]");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_SingleOption_ASuR1() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt", "description"));
+    String result = optionGroup.toString();
+    assert result.equals("[-opt description]");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_MultipleOptions_iHKA2() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt1", "description1"));
+    optionGroup.getOptions().add(new Option("opt2", "description2"));
+    String result = optionGroup.toString();
+    assert result.equals("[-opt1 description1, --opt2 description2]");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_SingleLongOption_wbWW3_QmRY1() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("o", "longOpt", true, "description"));
+    String result = optionGroup.toString();
+    assert result.equals("[--longOpt, description]");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_MultipleLongOptions_rGVF4_GbKq0() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("o1", "longOpt1", true, "description1"));
+    optionGroup.getOptions().add(new Option(null, "longOpt2", false, "description2"));
+    String result = optionGroup.toString();
+    assert result.equals("[--longOpt1 description1, --longOpt2 description2]");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_vXcD1() {
+    Options options = new Options();
+    String result = options.toString();
+    assertEquals("[ Options: [ short  ] [ long  ]]", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToStringWithShortOptions_swCN2_YVrW1() {
+    Options options = new Options();
+    options.addOption("s", "short");
+    String result = options.toString();
+    assertEquals("[ Options: [ s ] [ long  ]]", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToStringWithLongOptions_AhrL3_dtQK1() {
+    Options options = new Options();
+    options.addOption("long", "long description", true, "long");
+    String result = options.toString();
+    assertEquals("[ Options: [  ] [ long ]]", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToStringWithShortAndLongOptions_Cwrt4_QdCi0() {
+    Options options = new Options();
+    options.addOption("s", "short", false, "short");
+    options.addOption("l", "long", false, "long");
+    String result = options.toString();
+    assertEquals("[ Options: [ s short ] [ l long ]]", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_vXcD1_fid2() {
+    Options options = new Options();
+    String result = options.toString();
+    assertEquals("[ Options: [ short {} ] [ long {} ]", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToStringWithShortOptions_swCN2_YVrW1_fid2() {
+    Options options = new Options();
+    options.addOption("s", "short");
+    String result = options.toString();
+    assertEquals("[ Options: [ short {s=[ Option s :: short :: class java.lang.String ]} ] [ long {} ]", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToStringWithLongOptions_AhrL3_dtQK1_fid2() {
+    Options options = new Options();
+    options.addOption("long", "long description", true, "long");
+    String result = options.toString();
+    assertEquals("[ Options: [ short {long=[ Option long long description [ARG] :: long :: class java.lang.String ]} ] [ long {long description=[ Option long long description [ARG] :: long :: class java.lang.String ]} ]", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToStringWithShortAndLongOptions_Cwrt4_QdCi0_fid2() {
+    Options options = new Options();
+    options.addOption("s", "short", false, "short");
+    options.addOption("l", "long", false, "long");
+    String result = options.toString();
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToStringWithOptionAndDescription_hzgQ0() throws Exception {
+    Option option = new Option("o", "option", false, "This is a test option");
+    assertEquals("[ Option o :: This is a test option :: ]", option.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToStringWithLongOptionAndDescription_mJVT1() throws Exception {
+    Option option = new Option("o", "option-long", false, "This is a test option");
+    assertEquals("[ Option o :: option-long :: ]", option.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToStringWithOptionAndArgAndDescription_pqOi2() throws Exception {
+    Option option = new Option("o", true, "This is a test option");
+    assertEquals("[ Option o [ARG] :: This is a test option :: ]", option.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToStringWithOptionAndArgsAndDescription_RvQn3() throws Exception {
+    Option option = new Option("o", true, "This is a test option");
+    assertEquals("[ Option o [ARG...] :: This is a test option :: ]", option.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToStringWithOptionAndDeprecatedAndDescription_tEBh4_ICNa0() throws Exception {
+    Option option = new Option("o", "option", true, "This is a test option");
+    assertEquals("[ Option o :: option :: This is a test option :: ]", option.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToStringWithOptionAndDescription_hzgQ0_fid2() throws Exception {
+    Option option = new Option("o", "option", false, "This is a test option");
+    assertEquals("[ Option o option :: This is a test option :: class java.lang.String ]", option.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToStringWithLongOptionAndDescription_mJVT1_fid2() throws Exception {
+    Option option = new Option("o", "option-long", false, "This is a test option");
+    assertEquals("[ Option o option-long :: This is a test option :: class java.lang.String ]", option.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToStringWithOptionAndArgAndDescription_pqOi2_fid2() throws Exception {
+    Option option = new Option("o", true, "This is a test option");
+    assertEquals("[ Option o [ARG] :: This is a test option :: class java.lang.String ]", option.toString());
+    }
+}

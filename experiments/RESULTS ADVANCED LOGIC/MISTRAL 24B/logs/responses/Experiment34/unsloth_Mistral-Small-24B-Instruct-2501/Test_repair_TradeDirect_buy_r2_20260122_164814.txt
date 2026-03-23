@@ -1,0 +1,167 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.*;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class TradeDirect_buyTestGenerated {
+    private TradeDirect tradeDirect;
+    private DataSource dataSource;
+    private UserTransaction userTransaction;
+
+    @BeforeEach
+    void setUp() {
+        dataSource = mock(DataSource.class);
+        userTransaction = mock(UserTransaction.class);
+        tradeDirect = new TradeDirect();
+        ReflectionTestUtils.setField(tradeDirect, "datasource", dataSource);
+        ReflectionTestUtils.setField(tradeDirect, "txn", userTransaction);
+        ReflectionTestUtils.setField(tradeDirect, "connection", mock(Connection.class)); // Assuming connection is a private field
+    }
+
+    @AfterEach
+    void tearDown() {
+        tradeDirect = null;
+        dataSource = null;
+        userTransaction = null;
+    }
+
+    @Test
+    void testBuy_ValidParameters() throws Exception {
+        String userID = "testUser";
+        String symbol = "AAPL";
+        double quantity = 10;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        AccountDataBean accountData = mock(AccountDataBean.class);
+        QuoteDataBean quoteData = mock(QuoteDataBean.class);
+        HoldingDataBean holdingData = null;
+        OrderDataBean orderData = mock(OrderDataBean.class);
+
+        Connection connection = mock(Connection.class);
+        when(dataSource.getConnection()).thenReturn(connection);
+        when(tradeDirect.getAccountData(eq(connection), anyString())).thenReturn(accountData);
+        when(tradeDirect.getQuoteData(eq(connection), anyString())).thenReturn(quoteData);
+        when(tradeDirect.createOrder(any(AccountDataBean.class), any(QuoteDataBean.class), any(HoldingDataBean.class), anyString(), anyDouble())).thenReturn(orderData);
+        when(tradeDirect.getOrderData(eq(connection), anyInt())).thenReturn(orderData);
+        when(tradeDirect.getConn()).thenReturn(connection); // Assuming getConn() is a private method
+
+        OrderDataBean result = tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+
+        assertNotNull(result);
+        verify(tradeDirect).getConn();
+        verify(tradeDirect).getAccountData(any(Connection.class), anyString());
+        verify(tradeDirect).getQuoteData(any(Connection.class), anyString());
+        verify(tradeDirect).createOrder(any(AccountDataBean.class), any(QuoteDataBean.class), any(HoldingDataBean.class), anyString(), anyDouble());
+        verify(tradeDirect).completeOrder(anyInt(), eq(true), any(Connection.class));
+        verify(tradeDirect).getOrderData(any(Connection.class), anyInt());
+        verify(tradeDirect).commit(any(Connection.class));
+        verify(tradeDirect).releaseConn(any(Connection.class));
+    }
+
+    @Test
+    void testBuy_Async2Phase() throws Exception {
+        String userID = "testUser";
+        String symbol = "AAPL";
+        double quantity = 10;
+        int orderProcessingMode = TradeConfig.ASYNCH_2PHASE;
+
+        AccountDataBean accountData = mock(AccountDataBean.class);
+        QuoteDataBean quoteData = mock(QuoteDataBean.class);
+        HoldingDataBean holdingData = null;
+        OrderDataBean orderData = mock(OrderDataBean.class);
+
+        Connection connection = mock(Connection.class);
+        when(dataSource.getConnection()).thenReturn(connection);
+        when(tradeDirect.getAccountData(eq(connection), anyString())).thenReturn(accountData);
+        when(tradeDirect.getQuoteData(eq(connection), anyString())).thenReturn(quoteData);
+        when(tradeDirect.createOrder(any(AccountDataBean.class), any(QuoteDataBean.class), any(HoldingDataBean.class), anyString(), anyDouble())).thenReturn(orderData);
+        when(tradeDirect.getOrderData(eq(connection), anyInt())).thenReturn(orderData);
+        when(tradeDirect.getConn()).thenReturn(connection); // Assuming getConn() is a private method
+
+        OrderDataBean result = tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+
+        assertNotNull(result);
+        verify(tradeDirect).getConn();
+        verify(tradeDirect).getAccountData(any(Connection.class), anyString());
+        verify(tradeDirect).getQuoteData(any(Connection.class), anyString());
+        verify(tradeDirect).createOrder(any(AccountDataBean.class), any(QuoteDataBean.class), any(HoldingDataBean.class), anyString(), anyDouble());
+        verify(tradeDirect).queueOrder(anyInt(), eq(true));
+        verify(tradeDirect).getOrderData(any(Connection.class), anyInt());
+        verify(tradeDirect).commit(any(Connection.class));
+        verify(tradeDirect).releaseConn(any(Connection.class));
+    }
+
+    @Test
+    void testBuy_Async() throws Exception {
+        String userID = "testUser";
+        String symbol = "AAPL";
+        double quantity = 10;
+        int orderProcessingMode = TradeConfig.ASYNCH;
+
+        AccountDataBean accountData = mock(AccountDataBean.class);
+        QuoteDataBean quoteData = mock(QuoteDataBean.class);
+        HoldingDataBean holdingData = null;
+        OrderDataBean orderData = mock(OrderDataBean.class);
+
+        Connection connection = mock(Connection.class);
+        when(dataSource.getConnection()).thenReturn(connection);
+        when(tradeDirect.getAccountData(eq(connection), anyString())).thenReturn(accountData);
+        when(tradeDirect.getQuoteData(eq(connection), anyString())).thenReturn(quoteData);
+        when(tradeDirect.createOrder(any(AccountDataBean.class), any(QuoteDataBean.class), any(HoldingDataBean.class), anyString(), anyDouble())).thenReturn(orderData);
+        when(tradeDirect.getOrderData(eq(connection), anyInt())).thenReturn(orderData);
+        when(tradeDirect.getConn()).thenReturn(connection); // Assuming getConn() is a private method
+
+        OrderDataBean result = tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+
+        assertNotNull(result);
+        verify(tradeDirect).getConn();
+        verify(tradeDirect).getAccountData(any(Connection.class), anyString());
+        verify(tradeDirect).getQuoteData(any(Connection.class), anyString());
+        verify(tradeDirect).createOrder(any(AccountDataBean.class), any(QuoteDataBean.class), any(HoldingDataBean.class), anyString(), anyDouble());
+        verify(tradeDirect).completeOrderAsync(anyInt(), eq(true));
+        verify(tradeDirect).getOrderData(any(Connection.class), anyInt());
+        verify(tradeDirect).commit(any(Connection.class));
+        verify(tradeDirect).releaseConn(any(Connection.class));
+    }
+
+    @Test
+    void testBuy_ExceptionHandling() throws Exception {
+        String userID = "testUser";
+        String symbol = "AAPL";
+        double quantity = 10;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        when(dataSource.getConnection()).thenThrow(new SQLException("Connection error"));
+        when(tradeDirect.getConn()).thenThrow(new SQLException("Connection error")); // Assuming getConn() is a private method
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+        });
+
+        assertNotNull(exception);
+        verify(tradeDirect).getConn();
+        verify(tradeDirect).releaseConn(any(Connection.class));
+    }
+}
+```

@@ -1,0 +1,168 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.ejb3;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Collection;
+
+import javax.ejb.EJBException;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
+
+import com.ibm.websphere.samples.daytrader.beans.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.beans.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.beans.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.beans.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeEJB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+
+public class TradeSLSBBean_completeOrderTestGenerated {
+
+    private TradeSLSBBean tradeSLSBBean;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        tradeSLSBBean = new TradeSLSBBean();
+    }
+
+    @AfterEach
+    public void tearDown() {
+    }
+
+    @Test
+    public void testCompleteOrderBuySuccess() throws Exception {
+        // Mock dependencies
+        OrderDataBean order = mock(OrderDataBean.class);
+        when(order.getOrderID()).thenReturn(1);
+        when(order.isCompleted()).thenReturn(false);
+        when(order.isBuy()).thenReturn(true);
+
+        AccountDataBean account = mock(AccountDataBean.class);
+        when(order.getAccount()).thenReturn(account);
+
+        QuoteDataBean quote = mock(QuoteDataBean.class);
+        when(order.getQuote()).thenReturn(quote);
+
+        HoldingDataBean holding = mock(HoldingDataBean.class);
+        when(order.getHolding()).thenReturn(holding);
+
+        BigDecimal price = new BigDecimal("10.00");
+        double quantity = 10;
+        when(order.getPrice()).thenReturn(price);
+        when(order.getQuantity()).thenReturn(quantity);
+
+        when(tradeSLSBBean.updateQuotePriceVolume(anyString(), any(), anyDouble())).thenReturn(quote);
+
+        // Execute
+        OrderDataBean result = tradeSLSBBean.completeOrder(1, false);
+
+        // Verify
+        assertEquals(1, result.getOrderID());
+        assertEquals("closed", result.getOrderStatus());
+        assertNotNull(result.getHolding());
+        verify(tradeSLSBBean).updateQuotePriceVolume(quote.getSymbol(), TradeConfig.getRandomPriceChangeFactor(), quantity);
+    }
+
+    @Test
+    public void testCompleteOrderSellSuccess() throws Exception {
+        // Mock dependencies
+        OrderDataBean order = mock(OrderDataBean.class);
+        when(order.getOrderID()).thenReturn(2);
+        when(order.isCompleted()).thenReturn(false);
+        when(order.isSell()).thenReturn(true);
+
+        AccountDataBean account = mock(AccountDataBean.class);
+        when(order.getAccount()).thenReturn(account);
+
+        QuoteDataBean quote = mock(QuoteDataBean.class);
+        when(order.getQuote()).thenReturn(quote);
+
+        HoldingDataBean holding = mock(HoldingDataBean.class);
+        when(order.getHolding()).thenReturn(holding);
+
+        BigDecimal price = new BigDecimal("10.00");
+        double quantity = 10;
+        when(order.getPrice()).thenReturn(price);
+        when(order.getQuantity()).thenReturn(quantity);
+
+        when(tradeSLSBBean.updateQuotePriceVolume(anyString(), any(), anyDouble())).thenReturn(quote);
+
+        // Execute
+        OrderDataBean result = tradeSLSBBean.completeOrder(2, false);
+
+        // Verify
+        assertEquals(2, result.getOrderID());
+        assertEquals("closed", result.getOrderStatus());
+        assertNull(result.getHolding());
+        verify(tradeSLSBBean).updateQuotePriceVolume(quote.getSymbol(), TradeConfig.getRandomPriceChangeFactor(), quantity);
+    }
+
+    @Test
+    public void testCompleteOrderAlreadyCompleted() throws Exception {
+        // Mock dependencies
+        OrderDataBean order = mock(OrderDataBean.class);
+        when(order.getOrderID()).thenReturn(3);
+        when(order.isCompleted()).thenReturn(true);
+
+        // Execute
+        Exception exception = assertThrows(EJBException.class, () -> {
+            tradeSLSBBean.completeOrder(3, false);
+        });
+
+        // Verify
+        assertEquals("Error: attempt to complete Order that is already completed", exception.getMessage());
+    }
+
+    @Test
+    public void testCompleteOrderNullOrder() throws Exception {
+        // Execute
+        Exception exception = assertThrows(EJBException.class, () -> {
+            tradeSLSBBean.completeOrder(4, false);
+        });
+
+        // Verify
+        assertEquals("Error: attempt to complete Order that is null", exception.getMessage());
+    }
+
+    @Test
+    public void testCompleteOrderSellNullHolding() throws Exception {
+        // Mock dependencies
+        OrderDataBean order = mock(OrderDataBean.class);
+        when(order.getOrderID()).thenReturn(5);
+        when(order.isCompleted()).thenReturn(false);
+        when(order.isSell()).thenReturn(true);
+
+        AccountDataBean account = mock(AccountDataBean.class);
+        when(order.getAccount()).thenReturn(account);
+
+        QuoteDataBean quote = mock(QuoteDataBean.class);
+        when(order.getQuote()).thenReturn(quote);
+
+        when(order.getHolding()).thenReturn(null);
+
+        BigDecimal price = new BigDecimal("10.00");
+        double quantity = 10;
+        when(order.getPrice()).thenReturn(price);
+        when(order.getQuantity()).thenReturn(quantity);
+
+        // Execute
+        OrderDataBean result = tradeSLSBBean.completeOrder(5, false);
+
+        // Verify
+        assertEquals(5, result.getOrderID());
+        assertEquals("closed", result.getOrderStatus());
+        assertNull(result.getHolding());
+    }
+
+}
+```

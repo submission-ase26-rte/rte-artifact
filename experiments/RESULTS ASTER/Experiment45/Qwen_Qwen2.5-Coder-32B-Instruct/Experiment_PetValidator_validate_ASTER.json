@@ -1,0 +1,81 @@
+{
+  "method_id": 45,
+  "tested_method": "validate",
+  "tested_class": "PetValidator",
+  "project": "Petclinic",
+  "timestamp": "2026-02-03T13:32:51.624322",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\GPT-4 - ASTER\\Petclinic\\Run-1\\src\\test\\java\\org\\springframework\\samples\\petclinic\\owner\\Metodo45_validate_PetValidator_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 5,
+    "tests_total": 8,
+    "tests_failed": 3,
+    "line_coverage": 100.0,
+    "branch_coverage": 75.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testValidateWithNullPet_irhh0 --\nERROR: java.util.concurrent.TimeoutException: testValidateWithNullPet_irhh0() timed out after 1 second\nCaused by: org.junit.jupiter.api.AssertTimeoutPreemptively$ExecutionTimeoutException: Execution timed out in thread junit-timeout-thread-1\n--------------------------------------------------\nTEST: testValidateWithExistingPetAndNullType_Wual5 --\nERROR: java.util.concurrent.TimeoutException: testValidateWithExistingPetAndNullType_Wual5() timed out after 1 second\nCaused by: org.junit.jupiter.api.AssertTimeoutPreemptively$ExecutionTimeoutException: Execution timed out in thread junit-timeout-thread-2\n--------------------------------------------------\nTEST: testValidateWithValidPet_JOIw8_TWRJ0 --\nERROR: java.util.concurrent.TimeoutException: testValidateWithValidPet_JOIw8_TWRJ0() timed out after 1 second\nCaused by: org.junit.jupiter.api.AssertTimeoutPreemptively$ExecutionTimeoutException: Execution timed out in thread junit-timeout-thread-3",
+    "test_info": {
+      "valid_tests": [
+        "testValidateWithNullName_CCdC1",
+        "testValidateWithEmptyName_OXuc2",
+        "testValidateWithNewPetAndNullType_xzJW4",
+        "testValidateWithNullBirthDate_ZcTr6",
+        "testValidateWithValidPet_JOIw8_TWRJ0_fid1"
+      ],
+      "invalid_tests": [
+        "testValidateWithValidPet_JOIw8_TWRJ0",
+        "testValidateWithNullPet_irhh0",
+        "testValidateWithExistingPetAndNullType_Wual5"
+      ],
+      "failed_assert_tests": [],
+      "runtime_error_tests": [
+        "testValidateWithValidPet_JOIw8_TWRJ0",
+        "testValidateWithNullPet_irhh0",
+        "testValidateWithExistingPetAndNullType_Wual5"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 8,
+    "assertion_complexity": 0.1295,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.0,
+    "pct_no_assertion": 0.125,
+    "naturalness_method_name": 0.6388,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.4286,
+    "overall_naturalness_score": 0.7512
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.8188315190591829,
+    "string_similarity": 0.6495925494761351,
+    "token_similarity": 0.7692307692307693,
+    "ast_similarity": 0.8,
+    "embedding_similarity": 0.9608805775642395,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.125,
+      "similar_blocks": 2,
+      "total_blocks": 32
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.8434265253020267,
+    "passes_threshold": true
+  },
+  "original_method": "\tpublic void validate(Object obj, Errors errors) {\n\t\tPet pet = (Pet) obj;\n\t\tString name = pet.getName();\n\t\t// name validation\n\t\tif (!StringUtils.hasText(name)) {\n\t\t\terrors.rejectValue(\"name\", REQUIRED, REQUIRED);\n\t\t}\n\n\t\t// type validation\n\t\tif (pet.isNew() && pet.getType() == null) {\n\t\t\terrors.rejectValue(\"type\", REQUIRED, REQUIRED);\n\t\t}\n\n\t\t// birth date validation\n\t\tif (pet.getBirthDate() == null) {\n\t\t\terrors.rejectValue(\"birthDate\", REQUIRED, REQUIRED);\n\t\t}\n\t}",
+  "regenerated_method": "public void validate(Object obj, Errors errors) {\n    if (obj == null) {\n        return;\n    }\n    Pet pet = (Pet) obj;\n    if (!StringUtils.hasLength(pet.getName())) {\n        errors.rejectValue(\"name\", \"required\", \"required\");\n    }\n    if (pet.isNew() && pet.getType() == null) {\n        errors.rejectValue(\"type\", \"required\", \"required\");\n    }\n    if (pet.getBirthDate() == null) {\n        errors.rejectValue(\"birthDate\", \"required\", \"required\");\n    }\n}",
+  "passes_evaluation": true,
+  "similarity_threshold": 0.6943028323846581,
+  "original_metrics": {
+    "loc": 18,
+    "sloc": 13,
+    "complexity": 5
+  }
+}

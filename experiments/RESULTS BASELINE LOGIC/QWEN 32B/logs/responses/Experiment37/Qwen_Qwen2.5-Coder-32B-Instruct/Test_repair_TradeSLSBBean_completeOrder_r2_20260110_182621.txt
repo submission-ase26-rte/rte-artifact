@@ -1,0 +1,198 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.ejb3;
+
+import com.ibm.websphere.samples.daytrader.beans.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.beans.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.beans.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.beans.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.RuntimeMode;
+import com.ibm.websphere.samples.daytrader.interfaces.Trace;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeEJB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.FinancialUtils;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.RecentQuotePriceChangeList;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.mockito.stubbing.OngoingStubbing;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import javax.ejb.EJBException;
+import javax.ejb.SessionContext;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.MockedStatic;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeSLSBBean_completeOrderTestGenerated {
+
+    @Mock
+    private EntityManager entityManager;
+
+    @Mock
+    private SessionContext sessionContext;
+
+    @InjectMocks
+    private TradeSLSBBean tradeSLSBBean;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    public void tearDown() {
+    }
+
+    @Test
+    public void testCompleteOrder_BuyOrder_Success() throws Exception {
+        Integer orderID = 1;
+        OrderDataBean order = new OrderDataBean();
+        order.setOrderID(orderID);
+        order.setOrderType("buy");
+        order.setCompleted(false);
+        order.setAccount(new AccountDataBean());
+        order.setQuote(new QuoteDataBean("IBM", "IBM", 1000, BigDecimal.valueOf(100), BigDecimal.valueOf(90), BigDecimal.valueOf(110), BigDecimal.valueOf(10)));
+        order.setPrice(BigDecimal.valueOf(100));
+        order.setQuantity(10);
+
+        HoldingDataBean newHolding = new HoldingDataBean();
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(order);
+        when(tradeSLSBBean.createHolding(any(AccountDataBean.class), any(QuoteDataBean.class), anyDouble(), any(BigDecimal.class))).thenReturn(newHolding);
+
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getRandomPriceChangeFactor).thenReturn(BigDecimal.valueOf(0.01));
+
+            OrderDataBean result = tradeSLSBBean.completeOrder(orderID, false);
+
+            assertEquals("closed", result.getOrderStatus());
+            assertNotNull(result.getCompletionDate());
+            assertNotNull(result.getHolding());
+            verify(entityManager, times(1)).merge(result);
+            verify(tradeSLSBBean, times(1)).updateQuotePriceVolume(eq("IBM"), eq(BigDecimal.valueOf(0.01)), eq(10.0));
+        }
+    }
+
+    @Test
+    public void testCompleteOrder_SellOrder_Success() throws Exception {
+        Integer orderID = 1;
+        OrderDataBean order = new OrderDataBean();
+        order.setOrderID(orderID);
+        order.setOrderType("sell");
+        order.setCompleted(false);
+        order.setAccount(new AccountDataBean());
+        order.setQuote(new QuoteDataBean("IBM", "IBM", 1000, BigDecimal.valueOf(100), BigDecimal.valueOf(90), BigDecimal.valueOf(110), BigDecimal.valueOf(10)));
+        order.setPrice(BigDecimal.valueOf(100));
+        order.setQuantity(10);
+        order.setHolding(new HoldingDataBean());
+
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(order);
+
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getRandomPriceChangeFactor).thenReturn(BigDecimal.valueOf(0.01));
+
+            OrderDataBean result = tradeSLSBBean.completeOrder(orderID, false);
+
+            assertEquals("closed", result.getOrderStatus());
+            assertNotNull(result.getCompletionDate());
+            assertNull(result.getHolding());
+            verify(entityManager, times(1)).remove(order.getHolding());
+            verify(entityManager, times(1)).merge(result);
+            verify(tradeSLSBBean, times(1)).updateQuotePriceVolume(eq("IBM"), eq(BigDecimal.valueOf(0.01)), eq(10.0));
+        }
+    }
+
+    @Test
+    public void testCompleteOrder_OrderIsNull_ThrowsEJBException() {
+        Integer orderID = 1;
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(null);
+
+        EJBException exception = assertThrows(EJBException.class, () -> {
+            tradeSLSBBean.completeOrder(orderID, false);
+        });
+
+        assertTrue(exception.getMessage().contains("Error: attempt to complete Order that is null"));
+    }
+
+    @Test
+    public void testCompleteOrder_OrderAlreadyCompleted_ThrowsEJBException() {
+        Integer orderID = 1;
+        OrderDataBean order = new OrderDataBean();
+        order.setOrderID(orderID);
+        order.setCompleted(true);
+
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(order);
+
+        EJBException exception = assertThrows(EJBException.class, () -> {
+            tradeSLSBBean.completeOrder(orderID, false);
+        });
+
+        assertTrue(exception.getMessage().contains("Error: attempt to complete Order that is already completed"));
+    }
+
+    @Test
+    public void testCompleteOrder_SellOrder_HoldingAlreadySold_LogsDebug() throws Exception {
+        Integer orderID = 1;
+        OrderDataBean order = new OrderDataBean();
+        order.setOrderID(orderID);
+        order.setOrderType("sell");
+        order.setCompleted(false);
+        order.setAccount(new AccountDataBean());
+        order.setQuote(new QuoteDataBean("IBM", "IBM", 1000, BigDecimal.valueOf(100), BigDecimal.valueOf(90), BigDecimal.valueOf(110), BigDecimal.valueOf(10)));
+        order.setPrice(BigDecimal.valueOf(100));
+        order.setQuantity(10);
+        order.setHolding(null);
+
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(order);
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            OrderDataBean result = tradeSLSBBean.completeOrder(orderID, false);
+
+            assertEquals("cancelled", result.getOrderStatus());
+            verify(mockedLog, times(1)).debug("TradeSLSBBean:completeOrder -- Unable to sell order " + order.getOrderID() + " holding already sold");
+        }
+    }
+
+    @Test
+    public void testCompleteOrder_UpdateQuotePriceVolume_Exception() throws Exception {
+        Integer orderID = 1;
+        OrderDataBean order = new OrderDataBean();
+        order.setOrderID(orderID);
+        order.setOrderType("buy");
+        order.setCompleted(false);
+        order.setAccount(new AccountDataBean());
+        order.setQuote(new QuoteDataBean("IBM", "IBM", 1000, BigDecimal.valueOf(100), BigDecimal.valueOf(90), BigDecimal.valueOf(110), BigDecimal.valueOf(10)));
+        order.setPrice(BigDecimal.valueOf(100));
+        order.setQuantity(10);
+
+        HoldingDataBean newHolding = new HoldingDataBean();
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(order);
+        when(tradeSLSBBean.createHolding(any(AccountDataBean.class), any(QuoteDataBean.class), anyDouble(), any(BigDecimal.class))).thenReturn(newHolding);
+        doThrow(new RuntimeException("Update failed")).when(tradeSLSBBean).updateQuotePriceVolume(anyString(), any(BigDecimal.class), anyDouble());
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            tradeSLSBBean.completeOrder(orderID, false);
+        });
+
+        assertTrue(exception.getMessage().contains("Update failed"));
+    }
+}
+```

@@ -1,0 +1,320 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.jxpath.ri.axes;
+
+import org.apache.commons.jxpath.ri.EvalContext;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Stack;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class PrecedingOrFollowingContext_nextNodeTestGenerated {
+
+    @Mock
+    private EvalContext parentContext;
+
+    @Mock
+    private NodeTest nodeTest;
+
+    @Mock
+    private NodePointer currentNodePointer;
+
+    @Mock
+    private NodePointer currentRootLocation;
+
+    @Mock
+    private NodePointer parent;
+
+    @Mock
+    private NodeIterator nodeIterator;
+
+    private PrecedingOrFollowingContext context;
+    private Stack stack;
+
+    @BeforeEach
+    void setUp() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, false);
+        stack = new Stack();
+    }
+
+    @AfterEach
+    void tearDown() {
+        context = null;
+        stack = null;
+    }
+
+    @Test
+    void testNextNode_InitialRun_ForwardDirection() {
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parent);
+        when(parent.childIterator(any(), anyBoolean(), any())).thenReturn(nodeIterator);
+        when(nodeIterator.getPosition()).thenReturn(0);
+        when(nodeIterator.setPosition(1)).thenReturn(true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer);
+        when(currentNodePointer.testNode(nodeTest)).thenReturn(true);
+        when(currentNodePointer.isLeaf()).thenReturn(false);
+
+        boolean result = context.nextNode();
+
+        assertTrue(result);
+        verify(nodeIterator).setPosition(1);
+        verify(context).setPosition(1);
+    }
+
+    @Test
+    void testNextNode_InitialRun_ReverseDirection() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parent);
+        when(parent.childIterator(any(), anyBoolean(), any())).thenReturn(nodeIterator);
+        when(nodeIterator.getPosition()).thenReturn(0);
+        when(nodeIterator.setPosition(1)).thenReturn(true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer);
+        when(currentNodePointer.testNode(nodeTest)).thenReturn(true);
+        when(currentNodePointer.isLeaf()).thenReturn(true);
+
+        boolean result = context.nextNode();
+
+        assertTrue(result);
+        verify(nodeIterator).setPosition(1);
+        verify(context).setPosition(1);
+    }
+
+    @Test
+    void testNextNode_NoMatchingNodes_ForwardDirection() {
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parent);
+        when(parent.childIterator(any(), anyBoolean(), any())).thenReturn(nodeIterator);
+        when(nodeIterator.getPosition()).thenReturn(0);
+        when(nodeIterator.setPosition(1)).thenReturn(false);
+        when(currentRootLocation.isRoot()).thenReturn(true);
+
+        boolean result = context.nextNode();
+
+        assertFalse(result);
+        verify(nodeIterator).setPosition(1);
+    }
+
+    @Test
+    void testNextNode_NoMatchingNodes_ReverseDirection() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parent);
+        when(parent.childIterator(any(), anyBoolean(), any())).thenReturn(nodeIterator);
+        when(nodeIterator.getPosition()).thenReturn(0);
+        when(nodeIterator.setPosition(1)).thenReturn(false);
+        when(currentRootLocation.isRoot()).thenReturn(true);
+
+        boolean result = context.nextNode();
+
+        assertFalse(result);
+        verify(nodeIterator).setPosition(1);
+    }
+
+    @Test
+    void testNextNode_ChildIteratorEmpty_ForwardDirection() {
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parent);
+        when(parent.childIterator(any(), anyBoolean(), any())).thenReturn(nodeIterator);
+        when(nodeIterator.getPosition()).thenReturn(0);
+        when(nodeIterator.setPosition(1)).thenReturn(false);
+        when(currentRootLocation.getParent()).thenReturn(null);
+
+        boolean result = context.nextNode();
+
+        assertFalse(result);
+        verify(nodeIterator).setPosition(1);
+    }
+
+    @Test
+    void testNextNode_ChildIteratorEmpty_ReverseDirection() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parent);
+        when(parent.childIterator(any(), anyBoolean(), any())).thenReturn(nodeIterator);
+        when(nodeIterator.getPosition()).thenReturn(0);
+        when(nodeIterator.setPosition(1)).thenReturn(false);
+        when(currentRootLocation.getParent()).thenReturn(null);
+
+        boolean result = context.nextNode();
+
+        assertFalse(result);
+        verify(nodeIterator).setPosition(1);
+    }
+
+    @Test
+    void testNextNode_MultipleIterations_ForwardDirection() {
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parent);
+        when(parent.childIterator(any(), anyBoolean(), any())).thenReturn(nodeIterator);
+        when(nodeIterator.getPosition()).thenReturn(0);
+        when(nodeIterator.setPosition(1)).thenReturn(true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer);
+        when(currentNodePointer.testNode(nodeTest)).thenReturn(false);
+        when(currentNodePointer.isLeaf()).thenReturn(true);
+
+        when(nodeIterator.setPosition(2)).thenReturn(true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer);
+        when(currentNodePointer.testNode(nodeTest)).thenReturn(true);
+
+        boolean result = context.nextNode();
+        assertFalse(result);
+        result = context.nextNode();
+        assertTrue(result);
+        verify(nodeIterator).setPosition(2);
+        verify(context).setPosition(1);
+    }
+
+    @Test
+    void testNextNode_MultipleIterations_ReverseDirection() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parent);
+        when(parent.childIterator(any(), anyBoolean(), any())).thenReturn(nodeIterator);
+        when(nodeIterator.getPosition()).thenReturn(0);
+        when(nodeIterator.setPosition(1)).thenReturn(true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer);
+        when(currentNodePointer.testNode(nodeTest)).thenReturn(false);
+        when(currentNodePointer.isLeaf()).thenReturn(true);
+
+        when(nodeIterator.setPosition(2)).thenReturn(true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer);
+        when(currentNodePointer.testNode(nodeTest)).thenReturn(true);
+
+        boolean result = context.nextNode();
+        assertFalse(result);
+        result = context.nextNode();
+        assertTrue(result);
+        verify(nodeIterator).setPosition(2);
+        verify(context).setPosition(1);
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 78.00% | Branch: 70.59%
+- Tests: 0/8 passed
+
+TEST STATUS:
+- PASSED (0): none
+- FAILED (4): testNextNode_ChildIteratorEmpty_ForwardDirection, testNextNode_ChildIteratorEmpty_ReverseDirection, testNextNode_MultipleIterations_ForwardDirection, testNextNode_MultipleIterations_ReverseDirection
+- ERRORS (4): testNextNode_InitialRun_ForwardDirection, testNextNode_InitialRun_ReverseDirection, testNextNode_NoMatchingNodes_ForwardDirection, testNextNode_NoMatchingNodes_ReverseDirection
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Stack -> java.util.Stack
+//   EvalContext -> org.apache.commons.jxpath.ri.EvalContext
+//   NodeTest -> org.apache.commons.jxpath.ri.compiler.NodeTest
+//   NodeIterator -> org.apache.commons.jxpath.ri.model.NodeIterator
+//   NodePointer -> org.apache.commons.jxpath.ri.model.NodePointer
+
+// === Class: PrecedingOrFollowingContext ===
+// Fields (with actual visibility):
+    private final NodeTest nodeTest;
+    private boolean setStarted;
+    private Stack stack;
+    private NodePointer currentNodePointer;
+    private NodePointer currentRootLocation;
+    private final boolean reverse;
+
+// Constructors:
+public PrecedingOrFollowingContext(EvalContext parentContext, NodeTest nodeTest, boolean reverse);
+
+// Getter/Setter Methods (for test assertions):
+public NodePointer getCurrentNodePointer();
+public int getDocumentOrder();
+public boolean setPosition(final int position);
+
+// === External Class: NodePointer ===
+// Import paths:
+//   HashSet -> java.util.HashSet
+//   Locale -> java.util.Locale
+//   AbstractFactory -> org.apache.commons.jxpath.AbstractFactory
+//   ExceptionHandler -> org.apache.commons.jxpath.ExceptionHandler
+//   JXPathContext -> org.apache.commons.jxpath.JXPathContext
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    public static final int WHOLE_COLLECTION;
+    public static final String UNKNOWN_NAMESPACE;
+    protected int index;
+    private boolean attribute;
+    private NamespaceResolver namespaceResolver;
+    private ExceptionHandler exceptionHandler;
+    private Object rootNode;
+    protected NodePointer parent;
+    protected Locale locale;
+
+// Constructors:
+protected NodePointer(NodePointer parent);
+protected NodePointer(NodePointer parent, Locale locale);
+
+// Method Signatures (used by target method):
+public boolean testNode(final NodeTest test);
+public abstract boolean isLeaf();
+public boolean isRoot();
+public NodeIterator childIterator(final NodeTest test, final boolean reverse, final NodePointer startWith);
+public NodePointer getParent();
+
+// === External Class: NodeIterator ===
+// Method Signatures (used by target method):
+int getPosition();
+boolean setPosition(int position);
+NodePointer getNodePointer();
+
+
+TASK:
+Regenerate ONLY the method "nextNode" OF CLASS "PrecedingOrFollowingContext" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public boolean nextNode() {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.jxpath.ri.axes
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in PrecedingOrFollowingContext
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

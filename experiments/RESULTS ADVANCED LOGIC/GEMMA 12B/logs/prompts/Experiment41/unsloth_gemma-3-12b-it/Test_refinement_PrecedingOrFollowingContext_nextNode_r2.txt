@@ -1,0 +1,365 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.ri.axes;
+Class name (MUST be exactly): PrecedingOrFollowingContext_nextNodeTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testNextNode_noStack_rootHasParent_pushIterator --
+ERROR: java.lang.NullPointerException: Cannot invoke "org.apache.commons.jxpath.ri.model.NodeIterator.getPosition()" because "it" is null
+--------------------------------------------------
+TEST: testNextNode_reverse_rootHasParent_pushIterator --
+ERROR: java.lang.NullPointerException: Cannot invoke "org.apache.commons.jxpath.ri.model.NodeIterator.getPosition()" because "it" is null
+
+TEST CODE TO FIX:
+package org.apache.commons.jxpath.ri.axes;
+
+import java.util.Stack;
+import org.apache.commons.jxpath.ri.EvalContext;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class PrecedingOrFollowingContext_nextNodeTestGenerated {
+    private EvalContext mockEvalContext;
+    private NodeTest mockNodeTest;
+    private PrecedingOrFollowingContext target;
+    @BeforeEach
+    void setUp() {
+        mockEvalContext = mock(EvalContext.class);
+        mockNodeTest = mock(NodeTest.class);
+        target = new PrecedingOrFollowingContext(mockEvalContext, mockNodeTest, false);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mockEvalContext = null;
+        mockNodeTest = null;
+        target = null;
+    }
+
+
+    @Test
+            void testNextNode_noStack_rootHasParent_pushIterator() {
+                NodePointer root = Mockito.mock(NodePointer.class);
+                when(root.isLeaf()).thenReturn(false);
+                when(root.getParent()).thenReturn(Mockito.mock(NodePointer.class));
+                when(mockEvalContext.getCurrentNodePointer()).thenReturn(root);
+                NodeIterator iterator = Mockito.mock(NodeIterator.class);
+                when(root.childIterator(null, false, root)).thenReturn(iterator);
+                target.nextNode();
+                verify(root).childIterator(null, false, root);
+            }
+
+    @Test
+        void testNextNode_reverse_rootHasParent_pushIterator() {
+            NodePointer root = Mockito.mock(NodePointer.class);
+            when(root.isLeaf()).thenReturn(false);
+            when(root.getParent()).thenReturn(Mockito.mock(NodePointer.class));
+            when(mockEvalContext.getCurrentNodePointer()).thenReturn(root);
+            NodeIterator iterator = Mockito.mock(NodeIterator.class);
+            when(root.childIterator(null, true, root)).thenReturn(iterator);
+            target = new PrecedingOrFollowingContext(mockEvalContext, mockNodeTest, true);
+            target.nextNode();
+            verify(root).childIterator(null, true, root);
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    void testNextNode_noStack_rootHasNoParent() {}
+    @Test
+    void testNextNode_reverse_rootHasNoParent() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Stack -> java.util.Stack
+//   EvalContext -> org.apache.commons.jxpath.ri.EvalContext
+//   NodeTest -> org.apache.commons.jxpath.ri.compiler.NodeTest
+//   NodeIterator -> org.apache.commons.jxpath.ri.model.NodeIterator
+//   NodePointer -> org.apache.commons.jxpath.ri.model.NodePointer
+//   PrecedingOrFollowingContext -> org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+
+// === Class: PrecedingOrFollowingContext ===
+// Fields (with actual visibility):
+    private final NodeTest nodeTest;
+    private boolean setStarted;
+    private Stack stack;
+    private NodePointer currentNodePointer;
+    private NodePointer currentRootLocation;
+    private final boolean reverse;
+
+// Constructors:
+public PrecedingOrFollowingContext(EvalContext parentContext, NodeTest nodeTest, boolean reverse);
+
+// Getter/Setter Methods (for test assertions):
+public NodePointer getCurrentNodePointer();
+public int getDocumentOrder();
+public boolean setPosition(final int position);
+
+// === Superclass: EvalContext (inherited members) ===
+// Inherited Fields:
+    protected EvalContext parentContext;
+    protected RootContext rootContext;
+    protected int position;
+
+// Inherited Method Signatures:
+public Pointer getContextNodePointer();
+public JXPathContext getJXPathContext();
+public int getPosition();
+public int getDocumentOrder();
+public boolean isChildOrderingRequired();
+public boolean hasNext();
+public Object next();
+public void remove();
+protected void sortPointers(final List l);
+public List getContextNodeList();
+public NodeSet getNodeSet();
+public Object getValue();
+public RootContext getRootContext();
+public void reset();
+public int getCurrentPosition();
+public Pointer getSingleNodePointer();
+abstract public NodePointer getCurrentNodePointer();
+public boolean nextSet();
+abstract public boolean nextNode();
+public boolean setPosition(final int position);
+
+// === External Class: NodePointer ===
+// Full import path: org.apache.commons.jxpath.ri.model.NodePointer
+// Type: ABSTRACT CLASS (cannot instantiate directly - use Mockito.mock() or anonymous subclass)
+// Import paths:
+//   HashSet -> java.util.HashSet
+//   Locale -> java.util.Locale
+//   AbstractFactory -> org.apache.commons.jxpath.AbstractFactory
+//   ExceptionHandler -> org.apache.commons.jxpath.ExceptionHandler
+//   JXPathContext -> org.apache.commons.jxpath.JXPathContext
+// Fields (with actual visibility):
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int WHOLE_COLLECTION;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final String UNKNOWN_NAMESPACE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    protected int index;
+    private boolean attribute;
+    private NamespaceResolver namespaceResolver;
+    private ExceptionHandler exceptionHandler;
+    private Object rootNode;
+    protected NodePointer parent;
+    protected Locale locale;
+
+// Constructors:
+protected NodePointer(NodePointer parent);
+protected NodePointer(NodePointer parent, Locale locale);
+
+// Method Signatures (used by target method):
+public NodePointer getParent();
+public NodeIterator childIterator(final NodeTest test, final boolean reverse, final NodePointer startWith);
+public boolean testNode(final NodeTest test);
+public boolean isRoot();
+abstract public boolean isLeaf();
+
+// Public Getter Methods (for test assertions):
+public NamespaceResolver getNamespaceResolver();
+public NodePointer getImmediateParentPointer();
+public boolean isAttribute();
+public boolean isNode();
+public boolean isContainer();
+public int getIndex();
+public boolean isCollection();
+public int getLength();
+public Object getValue();
+public NodePointer getValuePointer();
+public NodePointer getImmediateValuePointer();
+public boolean isActual();
+public QName getName();
+public Object getBaseValue();
+public Object getNodeValue();
+
+// === External Class: NodeIterator ===
+// Full import path: org.apache.commons.jxpath.ri.model.NodeIterator
+// Type: INTERFACE (cannot instantiate - use Mockito.mock(NodeIterator.class) instead)
+// Method Signatures (used by target method):
+boolean setPosition(int position);
+int getPosition();
+NodePointer getNodePointer();
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() {
+        mockEvalContext = mock(EvalContext.class);
+        mockNodeTest = mock(NodeTest.class);
+        target = new PrecedingOrFollowingContext(mockEvalContext, mockNodeTest, false);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mockEvalContext = null;
+        mockNodeTest = null;
+        target = null;
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+    @Override
+    public boolean nextNode() {
+        if (!setStarted) { // NOT COVERED BY TESTS
+            setStarted = true;
+            if (stack == null) { // NOT COVERED BY TESTS
+                stack = new Stack();
+            }
+            else {
+                stack.clear(); // NOT COVERED BY TESTS
+            }
+            currentRootLocation = parentContext.getCurrentNodePointer();
+            final NodePointer parent = currentRootLocation.getParent();
+            if (parent != null) {
+                // TBD: check type
+                stack.push(
+                    parent.childIterator(null, reverse, currentRootLocation));
+            }
+        }
+
+        while (true) {
+            if (stack.isEmpty()) {
+                currentRootLocation = currentRootLocation.getParent();
+
+                if (currentRootLocation == null // NOT COVERED BY TESTS
+                    || currentRootLocation.isRoot()) { // NOT COVERED BY TESTS
+                    break; // NOT COVERED BY TESTS
+                }
+
+                final NodePointer parent = currentRootLocation.getParent(); // NOT COVERED BY TESTS
+                if (parent != null) { // NOT COVERED BY TESTS
+                    stack.push( // NOT COVERED BY TESTS
+                        parent.childIterator( // NOT COVERED BY TESTS
+                            null,
+                            reverse,
+                            currentRootLocation));
+                }
+            }
+
+            while (!stack.isEmpty()) { // NOT COVERED BY TESTS
+                if (!reverse) {
+                    final NodeIterator it = (NodeIterator) stack.peek();
+                    if (it.setPosition(it.getPosition() + 1)) { // NOT COVERED BY TESTS
+                        currentNodePointer = it.getNodePointer(); // NOT COVERED BY TESTS
+                        if (!currentNodePointer.isLeaf()) { // NOT COVERED BY TESTS
+                            stack.push( // NOT COVERED BY TESTS
+                                currentNodePointer.childIterator( // NOT COVERED BY TESTS
+                                    null,
+                                    reverse,
+                                    null));
+                        }
+                        if (currentNodePointer.testNode(nodeTest)) { // NOT COVERED BY TESTS
+                            super.setPosition(getCurrentPosition() + 1); // NOT COVERED BY TESTS
+                            return true; // NOT COVERED BY TESTS
+                        }
+                    }
+                    else {
+                        // We get here only if the name test failed
+                        // and the iterator ended
+                        stack.pop(); // NOT COVERED BY TESTS
+                    }
+                }
+                else {
+                    NodeIterator it = (NodeIterator) stack.peek();
+                    if (it.setPosition(it.getPosition() + 1)) { // NOT COVERED BY TESTS
+                        currentNodePointer = it.getNodePointer(); // NOT COVERED BY TESTS
+                        if (!currentNodePointer.isLeaf()) { // NOT COVERED BY TESTS
+                            stack.push( // NOT COVERED BY TESTS
+                                currentNodePointer.childIterator( // NOT COVERED BY TESTS
+                                    null,
+                                    reverse,
+                                    null));
+                        }
+                        else if (currentNodePointer.testNode(nodeTest)) {
+                            super.setPosition(getCurrentPosition() + 1); // NOT COVERED BY TESTS
+                            return true; // NOT COVERED BY TESTS
+                        }
+                    }
+                    else {
+                        stack.pop(); // NOT COVERED BY TESTS
+                        if (!stack.isEmpty()) { // NOT COVERED BY TESTS
+                            it = (NodeIterator) stack.peek(); // NOT COVERED BY TESTS
+                            currentNodePointer = it.getNodePointer(); // NOT COVERED BY TESTS
+                            if (currentNodePointer.testNode(nodeTest)) { // NOT COVERED BY TESTS
+                                super.setPosition(getCurrentPosition() + 1); // NOT COVERED BY TESTS
+                                return true; // NOT COVERED BY TESTS
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+COVERAGE ISSUES:
+Current line coverage: 34.00%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

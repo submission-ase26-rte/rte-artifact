@@ -1,0 +1,141 @@
+```java
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class HelpFormatter_printHelpTestGenerated {
+
+    private HelpFormatter helpFormatter;
+    private StringWriter stringWriter;
+    private PrintWriter printWriter;
+
+    @BeforeEach
+    public void setUp() {
+        helpFormatter = new HelpFormatter();
+        stringWriter = new StringWriter();
+        printWriter = new PrintWriter(stringWriter);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        printWriter.close();
+    }
+
+    @Test
+    public void testPrintHelpWithValidInputs() {
+        Options options = new Options();
+        options.addOption("a", "alpha", false, "Alpha option");
+        options.addOption("b", "beta", true, "Beta option");
+
+        helpFormatter.printHelp(printWriter, 80, "command [options]", "Header", options, 2, 5, "Footer", true);
+
+        String result = stringWriter.toString();
+        assertTrue(result.contains("Header"));
+        assertTrue(result.contains("command [options]"));
+        assertTrue(result.contains("a,--alpha"));
+        assertTrue(result.contains("b,--beta <arg>"));
+        assertTrue(result.contains("Footer"));
+    }
+
+    @Test
+    public void testPrintHelpWithNullCmdLineSyntax() {
+        Options options = new Options();
+        Executable executable = () -> helpFormatter.printHelp(printWriter, 80, null, "Header", options, 2, 5, "Footer", true);
+        assertThrows(IllegalArgumentException.class, executable);
+    }
+
+    @Test
+    public void testPrintHelpWithEmptyCmdLineSyntax() {
+        Options options = new Options();
+        Executable executable = () -> helpFormatter.printHelp(printWriter, 80, "", "Header", options, 2, 5, "Footer", true);
+        assertThrows(IllegalArgumentException.class, executable);
+    }
+
+    @Test
+    public void testPrintHelpWithNullHeader() {
+        Options options = new Options();
+        helpFormatter.printHelp(printWriter, 80, "command [options]", null, options, 2, 5, "Footer", true);
+        String result = stringWriter.toString();
+        assertFalse(result.contains("null"));
+    }
+
+    @Test
+    public void testPrintHelpWithEmptyHeader() {
+        Options options = new Options();
+        helpFormatter.printHelp(printWriter, 80, "command [options]", "", options, 2, 5, "Footer", true);
+        String result = stringWriter.toString();
+        assertFalse(result.contains(""));
+    }
+
+    @Test
+    public void testPrintHelpWithNullFooter() {
+        Options options = new Options();
+        helpFormatter.printHelp(printWriter, 80, "command [options]", "Header", options, 2, 5, null, true);
+        String result = stringWriter.toString();
+        assertFalse(result.contains("null"));
+    }
+
+    @Test
+    public void testPrintHelpWithEmptyFooter() {
+        Options options = new Options();
+        helpFormatter.printHelp(printWriter, 80, "command [options]", "Header", options, 2, 5, "", true);
+        String result = stringWriter.toString();
+        assertFalse(result.contains(""));
+    }
+
+    @Test
+    public void testPrintHelpWithNullOptions() {
+        Executable executable = () -> helpFormatter.printHelp(printWriter, 80, "command [options]", "Header", null, 2, 5, "Footer", true);
+        assertThrows(NullPointerException.class, executable);
+    }
+
+    @Test
+    public void testPrintHelpWithEmptyOptions() {
+        Options options = new Options();
+        helpFormatter.printHelp(printWriter, 80, "command [options]", "Header", options, 2, 5, "Footer", true);
+        String result = stringWriter.toString();
+        assertFalse(result.contains("a,--alpha"));
+        assertFalse(result.contains("b,--beta <arg>"));
+    }
+
+    @Test
+    public void testPrintHelpWithAutoUsageTrue() {
+        Options options = new Options();
+        options.addOption("a", "alpha", false, "Alpha option");
+        helpFormatter.printHelp(printWriter, 80, "command [options]", "Header", options, 2, 5, "Footer", true);
+        String result = stringWriter.toString();
+        assertTrue(result.contains("command [options]"));
+    }
+
+    @Test
+    public void testPrintHelpWithAutoUsageFalse() {
+        Options options = new Options();
+        options.addOption("a", "alpha", false, "Alpha option");
+        helpFormatter.printHelp(printWriter, 80, "command [options]", "Header", options, 2, 5, "Footer", false);
+        String result = stringWriter.toString();
+        assertTrue(result.contains("command [options]"));
+    }
+
+    @Test
+    public void testPrintHelpWithZeroWidth() {
+        Options options = new Options();
+        Executable executable = () -> helpFormatter.printHelp(printWriter, 0, "command [options]", "Header", options, 2, 5, "Footer", true);
+        assertThrows(IllegalStateException.class, executable);
+    }
+
+    @Test
+    public void testPrintHelpWithNegativeWidth() {
+        Options options = new Options();
+        Executable executable = () -> helpFormatter.printHelp(printWriter, -1, "command [options]", "Header", options, 2, 5, "Footer", true);
+        assertThrows(IllegalStateException.class, executable);
+    }
+}
+```

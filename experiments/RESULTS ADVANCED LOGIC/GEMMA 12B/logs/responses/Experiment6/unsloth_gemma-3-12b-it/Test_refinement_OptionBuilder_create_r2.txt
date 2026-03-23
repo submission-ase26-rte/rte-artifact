@@ -1,0 +1,62 @@
+```java
+package org.apache.commons.cli;
+
+import java.util.Map;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.apache.commons.cli.OptionBuilder.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class OptionBuilder_createTestGenerated {
+    private static OptionValidator resetValidator;
+    private static String longOption;
+    private static String description;
+    private static String argName;
+    private static boolean required;
+    private static int argCount;
+    private static Class<?> type;
+    private static boolean optionalArg;
+    private static char valueSeparator;
+    @BeforeEach
+    public void setUp() {
+        resetValidator = new OptionValidator();
+        reset();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        resetValidator = null;
+        reset();
+    }
+
+    private static void reset() {
+        longOption = null;
+        description = null;
+        argName = null;
+        required = false;
+        argCount = 0;
+        type = null;
+        optionalArg = false;
+        valueSeparator = ' ';
+    }
+
+
+    @Test
+        void testCreateWithInvalidOptionCharacter() {
+            longOption = "longOpt";
+            description = "Description";
+            argName = "argName";
+            required = false;
+            argCount = 1;
+            type = String.class;
+            optionalArg = false;
+            valueSeparator = ' ';
+            assertThrows(IllegalArgumentException.class, () -> create("\0"));
+        }
+
+}
+```

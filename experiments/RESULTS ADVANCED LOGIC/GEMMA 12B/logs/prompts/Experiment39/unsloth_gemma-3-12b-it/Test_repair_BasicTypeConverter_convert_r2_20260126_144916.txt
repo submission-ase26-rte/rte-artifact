@@ -1,0 +1,258 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.util;
+Class name (MUST be exactly): BasicTypeConverter_convertTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.jxpath.util;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.util.TypeUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class BasicTypeConverter_convertTestGenerated {
+    private BasicTypeConverter basicTypeConverter;
+    @BeforeEach
+    void setUp() {
+        basicTypeConverter = new BasicTypeConverter();
+    }
+
+
+    @Test
+        void testConvertNullToNumber() {
+            Object result = basicTypeConverter.convert(null, Integer.class);
+            assertEquals(0, result);
+        }
+
+    @Test
+        void testConvertNullToPrimitiveBoolean() {
+            Object result = basicTypeConverter.convert(null, boolean.class);
+            assertFalse(result instanceof Boolean);
+            assertEquals(false, (Boolean) result);
+        }
+
+    @Test
+        void testConvertException() {
+            assertThrows(JXPathTypeConversionException.class, () -> {
+                basicTypeConverter.convert(1, String.class);
+            });
+        }
+
+    @Test
+        void testConvertNullToString() {
+            Object result = basicTypeConverter.convert(null, String.class);
+            assertEquals("", result);
+        }
+
+    @Test
+        void testConvertNullToStringUsingNodeSet() {
+            NodeSet nodeSet = mock(NodeSet.class);
+            when(nodeSet.getValues()).thenReturn(null);
+            Object result = basicTypeConverter.convert(nodeSet, String.class);
+            assertEquals("", result);
+        }
+
+    @Test
+        void testConvertNullToStringUsingPointer() {
+            Pointer pointer = mock(Pointer.class);
+            when(pointer.getValue()).thenReturn(null);
+            Object result = basicTypeConverter.convert(pointer, String.class);
+            assertEquals("", result);
+        }
+
+    @Test
+        void testConvertPointerToType() {
+            Pointer pointer = mock(Pointer.class);
+            when(pointer.getValue()).thenReturn(4);
+            Object result = basicTypeConverter.convert(pointer, Integer.class);
+            assertEquals(4, result);
+        }
+
+    @Test
+        void testConvertBooleanToNumber() {
+            Object result = basicTypeConverter.convert(true, Number.class);
+            assertEquals(1, ((Number) result).doubleValue(), 0.0001);
+        }
+
+    @Test
+    void testConvertNullToBoolean() {
+        Object result = basicTypeConverter.convert(null, Boolean.class);
+        assertNull(result);
+    }
+
+    @Test
+    void testConvertToString() {
+        Object result = basicTypeConverter.convert(1, String.class);
+        assertEquals("1", result);
+    }
+
+    @Test
+    void testConvertNumberToBoolean() {
+        Object result = basicTypeConverter.convert(1, Boolean.class);
+        assertTrue((Boolean) result);
+    }
+
+    @Test
+    void testConvertStringToPrimitive() {
+        Object result = basicTypeConverter.convert("true", boolean.class);
+        assertTrue((Boolean) result);
+    }
+
+    @Test
+    void testConvertNullToPrimitiveLong() {
+        Object result = basicTypeConverter.convert(null, long.class);
+        assertEquals(0L, (Long) result);
+    }
+
+    @Test
+    void testConvertNullToPrimitiveDouble() {
+        Object result = basicTypeConverter.convert(null, double.class);
+        assertEquals(0.0, (Double) result);
+    }
+
+    @Test
+    void testConvertNullToPrimitiveFloat() {
+        Object result = basicTypeConverter.convert(null, float.class);
+        assertEquals(0.0f, (Float) result);
+    }
+
+    @Test
+    void testConvertNullToPrimitiveInt() {
+        Object result = basicTypeConverter.convert(null, int.class);
+        assertEquals(0, (Integer) result);
+    }
+
+    @Test
+    void testConvertNullToPrimitiveShort() {
+        Object result = basicTypeConverter.convert(null, short.class);
+        assertEquals((short) 0, (Short) result);
+    }
+
+    @Test
+    void testConvertNullToPrimitiveByte() {
+        Object result = basicTypeConverter.convert(null, byte.class);
+        assertEquals((byte) 0, (Byte) result);
+    }
+
+    @Test
+    void testConvertNullToPrimitiveChar() {
+        Object result = basicTypeConverter.convert(null, char.class);
+        assertEquals('\0', (Character) result);
+    }
+
+    @Test
+    void testConvertObjectArrayToCollection() {
+        Object[] array = new Object[]{1, 2, 3};
+        Collection collection = basicTypeConverter.convert(array, Collection.class);
+        assertEquals(3, collection.size());
+    }
+
+    @Test
+    void testConvertPrimitiveArrayToCollection() {
+        int[] array = new int[]{1, 2, 3};
+        Collection collection = basicTypeConverter.convert(array, Collection.class);
+        assertEquals(3, collection.size());
+    }
+
+    @Test
+    void testConvertCollectionToCollection() {
+        List list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        Collection collection = basicTypeConverter.convert(list, Collection.class);
+        assertEquals(2, collection.size());
+    }
+
+    @Test
+    void testConvertArrayToPrimitiveArray() {
+        Integer[] array = new Integer[]{1, 2, 3};
+        int[] primitiveArray = (int[]) basicTypeConverter.convert(array, int[].class);
+        assertArrayEquals(new int[]{1, 2, 3}, primitiveArray);
+    }
+
+    @Test
+    void testConvertCollectionToArray() {
+        List list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        Integer[] array = (Integer[]) basicTypeConverter.convert(list, Integer[].class);
+        assertArrayEquals(new Integer[]{1, 2}, array);
+    }
+
+    @Test
+    void testConvertObjectToType() {
+        Pointer pointer = mock(Pointer.class);
+        when(pointer.getValue()).thenReturn("4");
+        Object result = basicTypeConverter.convert(pointer, Long.class);
+        assertEquals(4L, result);
+    }
+
+    @Test
+    void testConvertNullToType() {
+        Pointer pointer = mock(Pointer.class);
+        when(pointer.getValue()).thenReturn(null);
+        Object result = basicTypeConverter.convert(pointer, Long.class);
+        assertNull(result);
+    }
+
+    @Test
+    void testConvertNodeSetToType() {
+        NodeSet nodeSet = mock(NodeSet.class);
+        when(nodeSet.getValues()).thenReturn(new Integer[]{1, 2, 3});
+        List<Integer> result = (List<Integer>) basicTypeConverter.convert(nodeSet, List.class);
+        assertEquals(3, result.size());
+    }
+
+    @Test
+    void testConvertArrayOfPrimitivesToType() {
+        int[] array = {1, 2, 3};
+        List<Integer> result = (List<Integer>) basicTypeConverter.convert(array, List.class);
+        assertEquals(3, result.size());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[162] incompatible types: java.lang.Object cannot be converted to java.util.Collection
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[169] incompatible types: java.lang.Object cannot be converted to java.util.Collection
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[178] incompatible types: java.lang.Object cannot be converted to java.util.Collection
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[217] no suitable method found for thenReturn(java.lang.Integer[])
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.util.List) is not applicable
+  (argument mismatch; java.lang.Integer[] cannot be converted to java.util.List)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.util.List,java.util.List...) is not applicable
+  (argument mismatch; java.lang.Integer[] cannot be converted to java.util.List)
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: BasicTypeConverter_convertTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

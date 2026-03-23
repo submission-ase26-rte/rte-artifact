@@ -1,0 +1,55 @@
+{
+  "method_id": 37,
+  "tested_method": "completeOrder",
+  "tested_class": "TradeSLSBBean",
+  "project": "Daytrader",
+  "timestamp": "2026-01-27T18:58:27.204732",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\Daytrader\\Run-1\\src\\test\\java\\com\\ibm\\websphere\\samples\\daytrader\\impl\\ejb3\\Metodo37_unit_completeOrder_TradeSLSBBean_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 3,
+    "tests_total": 7,
+    "tests_failed": 4,
+    "line_coverage": 0.0,
+    "branch_coverage": 0.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testCompleteOrderBuy_DPxo2_ndhg0_fid1 --\nERROR: org.opentest4j.AssertionFailedError\n--------------------------------------------------\nTEST: testCompleteOrderCreateHolding_xzbH0 --\nERROR: java.lang.NullPointerException: Cannot invoke \"javax.persistence.EntityManager.find(java.lang.Class, Object)\" because \"this.entityManager\" is null\n--------------------------------------------------\nTEST: testCompleteOrderNullOrder_cSOT0_fid1 --\nERROR: org.opentest4j.AssertionFailedError\n--------------------------------------------------\nTEST: testCompleteOrderTwoPhase_FWDM5_Lzyq0_fid1 --\nERROR: org.opentest4j.AssertionFailedError",
+    "test_info": {
+      "valid_tests": [
+        "testCompleteOrderNullOrder_cSOT0",
+        "testCompleteOrderBuy_DPxo2_ndhg0",
+        "testCompleteOrderTwoPhase_FWDM5_Lzyq0"
+      ],
+      "invalid_tests": [
+        "testCompleteOrderNullOrder_cSOT0_fid1",
+        "testCompleteOrderBuy_DPxo2_ndhg0_fid1",
+        "testCompleteOrderTwoPhase_FWDM5_Lzyq0_fid1",
+        "testCompleteOrderCreateHolding_xzbH0"
+      ],
+      "failed_assert_tests": [
+        "testCompleteOrderNullOrder_cSOT0_fid1",
+        "testCompleteOrderBuy_DPxo2_ndhg0_fid1",
+        "testCompleteOrderTwoPhase_FWDM5_Lzyq0_fid1"
+      ],
+      "runtime_error_tests": [
+        "testCompleteOrderCreateHolding_xzbH0"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 7,
+    "assertion_complexity": 0.1297,
+    "pct_null_assertions": 0.6667,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.3333,
+    "pct_no_assertion": 0.1429,
+    "naturalness_method_name": 0.6554,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.5,
+    "overall_naturalness_score": 0.721
+  },
+  "metrics": {},
+  "original_method": "",
+  "regenerated_method": "public OrderDataBean completeOrder(Integer orderID, boolean twoPhase) throws EJBException {\n        if (orderID == null) {\n            return null;\n        }\n\n        OrderDataBean order = null;\n        try {\n            order = entityManager.find(OrderDataBean.class, orderID);\n        }\n        catch (Exception e) {\n            return null;\n        }\n\n        if (order == null) {\n            return null;\n        }\n\n        if (order.getOrderStatus().equals(\"open\")) {\n            order.setOrderStatus(\"completed\");\n            order.setCompletionDate(new java.util.Date());\n            order = entityManager.merge(order);\n        }\n        return order;\n    }",
+  "passes_evaluation": false
+}

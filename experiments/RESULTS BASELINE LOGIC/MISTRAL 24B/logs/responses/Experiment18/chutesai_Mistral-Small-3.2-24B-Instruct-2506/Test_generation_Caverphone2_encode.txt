@@ -1,0 +1,143 @@
+Here's the complete JUnit 5 test class for the `encode` method of the `Caverphone2` class:
+
+```java
+package org.apache.commons.codec.language;
+
+import org.apache.commons.codec.StringEncoder;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class Caverphone2_encodeTestGenerated {
+
+    private final StringEncoder caverphone2 = new Caverphone2();
+
+    @Test
+    void testEncodeWithEmptyString() {
+        assertEquals("AAAAAAAAAAA", caverphone2.encode(""));
+    }
+
+    @Test
+    void testEncodeWithNullString() {
+        assertEquals("AAAAAAAAAAA", caverphone2.encode(null));
+    }
+
+    @Test
+    void testEncodeWithWhitespaceOnly() {
+        assertEquals("AAAAAAAAAAA", caverphone2.encode("   \t\n"));
+    }
+
+    @Test
+    void testEncodeWithSimpleWord() {
+        assertEquals("AK100000000", caverphone2.encode("cat"));
+    }
+
+    @Test
+    void testEncodeWithFinalE() {
+        assertEquals("AK100000000", caverphone2.encode("cate"));
+    }
+
+    @Test
+    void testEncodeWithStartingCough() {
+        assertEquals("KU2F1000000", caverphone2.encode("cough"));
+    }
+
+    @Test
+    void testEncodeWithStartingRough() {
+        assertEquals("RU2F1000000", caverphone2.encode("rough"));
+    }
+
+    @Test
+    void testEncodeWithStartingTough() {
+        assertEquals("TU2F1000000", caverphone2.encode("tough"));
+    }
+
+    @Test
+    void testEncodeWithStartingEnough() {
+        assertEquals("ENOU2F10000", caverphone2.encode("enough"));
+    }
+
+    @Test
+    void testEncodeWithStartingTrough() {
+        assertEquals("TROU2F10000", caverphone2.encode("trough"));
+    }
+
+    @Test
+    void testEncodeWithStartingGn() {
+        assertEquals("2NK1000000", caverphone2.encode("gnome"));
+    }
+
+    @Test
+    void testEncodeWithFinalMb() {
+        assertEquals("TAM2000000", caverphone2.encode("tomb"));
+    }
+
+    @Test
+    void testEncodeWithMultipleReplacements() {
+        assertEquals("KI10000000", caverphone2.encode("quick"));
+    }
+
+    @Test
+    void testEncodeWithVowels() {
+        assertEquals("A3A1000000", caverphone2.encode("eat"));
+    }
+
+    @Test
+    void testEncodeWithSpecialCharacters() {
+        assertEquals("AK100000000", caverphone2.encode("cat!@#"));
+    }
+
+    @Test
+    void testEncodeWithLongString() {
+        StringBuilder longStr = new StringBuilder("a");
+        for (int i = 0; i < 100; i++) {
+            longStr.append("a");
+        }
+        assertEquals("A100000000", caverphone2.encode(longStr.toString()));
+    }
+
+    @Test
+    void testEncodeWithOnlyVowels() {
+        assertEquals("A3A1000000", caverphone2.encode("aeiou"));
+    }
+
+    @Test
+    void testEncodeWithMixedCases() {
+        assertEquals("AK100000000", caverphone2.encode("CaT"));
+    }
+
+    @Test
+    void testEncodeWithWh3() {
+        assertEquals("WH31000000", caverphone2.encode("when"));
+    }
+
+    @Test
+    void testEncodeWithR3() {
+        assertEquals("R310000000", caverphone2.encode("right"));
+    }
+
+    @Test
+    void testEncodeWithL3() {
+        assertEquals("L310000000", caverphone2.encode("light"));
+    }
+
+    @Test
+    void testEncodeWithFinalW() {
+        assertEquals("K310000000", caverphone2.encode("cow"));
+    }
+
+    @Test
+    void testEncodeWithFinalR() {
+        assertEquals("T310000000", caverphone2.encode("car"));
+    }
+
+    @Test
+    void testEncodeWithFinalL() {
+        assertEquals("T310000000", caverphone2.encode("cal"));
+    }
+
+    @Test
+    void testEncodeWithMultipleConsonants() {
+        assertEquals("SS10000000", caverphone2.encode("Mississippi"));
+    }
+}
+```

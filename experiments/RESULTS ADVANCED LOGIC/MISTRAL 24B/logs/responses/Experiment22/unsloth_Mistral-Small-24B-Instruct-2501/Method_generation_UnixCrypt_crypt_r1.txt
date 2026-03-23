@@ -1,0 +1,39 @@
+```java
+public static String crypt(final byte[] original, String salt) {
+    if (salt == null) {
+        salt = generateRandomSalt();
+    } else if (salt.length() != 2 || !salt.matches(CRYPT_SALT_REGEX)) {
+        throw new IllegalArgumentException("Invalid salt value: " + salt);
+    }
+
+    final byte[] saltBytes = salt.getBytes(StandardCharsets.UTF_8);
+    final byte[] originalBytes = original == null ? new byte[0] : original;
+
+    final byte[] key = new byte[8];
+    System.arraycopy(originalBytes, 0, key, 0, Math.min(originalBytes.length, 8));
+
+    final int[] desKeySchedule = desSetKey(key);
+    final int[] desKeySchedule2 = desSetKey(key);
+
+    final int[] result = body(desKeySchedule, 0, 0);
+    final int[] result2 = body(desKeySchedule2, 0, 0);
+
+    final byte[] encrypted = new byte[13];
+    encrypted[0] = saltBytes[0];
+    encrypted[1] = saltBytes[1];
+    intToFourBytes(result[0], encrypted, 2);
+    intToFourBytes(result[1], encrypted, 6);
+    intToFourBytes(result2[0], encrypted, 10);
+
+    return new String(encrypted, StandardCharsets.UTF_8);
+}
+
+private static String generateRandomSalt() {
+    final byte[] saltBytes = new byte[2];
+    secureRandom.nextBytes(saltBytes);
+    for (int i = 0; i < saltBytes.length; i++) {
+        saltBytes[i] = (byte) (saltBytes[i] % SALT_CHARS.length);
+    }
+    return new String(saltBytes, StandardCharsets.UTF_8);
+}
+```

@@ -1,0 +1,60 @@
+```java
+public boolean nextNode() {
+    if (!setStarted) {
+        NodePointer ptr = parentContext.getCurrentNodePointer();
+        NodePointer root = ptr.getParent();
+        if (root == null || root.isRoot()) {
+            setStarted = true;
+            return false;
+        }
+
+        stack = new Stack();
+        NodeIterator iter = root.childIterator(nodeTest, reverse, null);
+        stack.push(iter);
+        position = 0;
+        setStarted = true;
+    }
+
+    while (!stack.empty()) {
+        NodeIterator iter = (NodeIterator) stack.peek();
+        int currentPosition = iter.getPosition();
+
+        if (currentPosition >= iter.getCount()) {
+            stack.pop();
+            continue;
+        }
+
+        if (!iter.setPosition(currentPosition + (reverse ? -1 : 1))) {
+            stack.pop();
+            continue;
+        }
+
+        NodePointer ptr = iter.getNodePointer();
+        if (ptr == null) {
+            continue;
+        }
+
+        if (!reverse && currentPosition == 0 && ptr.isRoot()) {
+            stack.pop();
+            continue;
+        }
+
+        if (ptr.testNode(nodeTest)) {
+            if (ptr.isLeaf() || !reverse) {
+                currentNodePointer = ptr;
+                return true;
+            } else {
+                NodeIterator childIter = ptr.childIterator(nodeTest, reverse, null);
+                if (childIter != null && childIter.getCount() > 0) {
+                    stack.push(childIter);
+                    position = iter.getPosition();
+                    continue;
+                }
+            }
+        }
+        position = iter.getPosition();
+    }
+
+    return false;
+}
+```

@@ -1,0 +1,212 @@
+Here's the complete JUnit 5 test class for the `contextInitialized` method of `TradeWebContextListener`:
+
+```java
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class TradeWebContextListener_contextInitializedTestGenerated {
+
+    @Mock
+    private ServletContextEvent event;
+
+    @Mock
+    private ServletContext servletContext;
+
+    private TradeWebContextListener listener;
+
+    @BeforeEach
+    void setUp() {
+        listener = new TradeWebContextListener();
+        when(event.getServletContext()).thenReturn(servletContext);
+    }
+
+    @Test
+    void testContextInitializedWithValidProperties() throws IOException {
+        String propertiesContent = "runtimeMode=1\n" +
+                                 "orderProcessingMode=1\n" +
+                                 "maxUsers=100\n" +
+                                 "maxQuotes=1000\n" +
+                                 "publishQuotePriceChange=true\n" +
+                                 "displayOrderAlerts=true\n" +
+                                 "webInterface=1\n" +
+                                 "listQuotePriceChangeFrequency=60\n" +
+                                 "primIterations=1000\n" +
+                                 "marketSummaryInterval=300\n" +
+                                 "longRun=false";
+
+        InputStream inputStream = new ByteArrayInputStream(propertiesContent.getBytes());
+        when(servletContext.getResourceAsStream("/properties/daytrader.properties")).thenReturn(inputStream);
+
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class);
+             MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+
+            listener.contextInitialized(event);
+
+            // Verify TradeConfig static methods were called
+            mockedTradeConfig.verify(() -> TradeConfig.setRunTimeMode(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setOrderProcessingMode(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setMAX_USERS(100));
+            mockedTradeConfig.verify(() -> TradeConfig.setMAX_QUOTES(1000));
+            mockedTradeConfig.verify(() -> TradeConfig.setPublishQuotePriceChange(true));
+            mockedTradeConfig.verify(() -> TradeConfig.setDisplayOrderAlerts(true));
+            mockedTradeConfig.verify(() -> TradeConfig.setWebInterface(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setListQuotePriceChangeFrequency(60));
+            mockedTradeConfig.verify(() -> TradeConfig.setPrimIterations(1000));
+            mockedTradeConfig.verify(() -> TradeConfig.setMarketSummaryInterval(300));
+            mockedTradeConfig.verify(() -> TradeConfig.setLongRun(false));
+
+            mockedLog.verify(() -> Log.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect"));
+        }
+    }
+
+    @Test
+    void testContextInitializedWithEnvVariables() throws IOException {
+        String propertiesContent = "runtimeMode=1\n" +
+                                 "orderProcessingMode=1\n" +
+                                 "maxUsers=100\n" +
+                                 "maxQuotes=1000\n" +
+                                 "publishQuotePriceChange=true\n" +
+                                 "displayOrderAlerts=true\n" +
+                                 "webInterface=1\n" +
+                                 "listQuotePriceChangeFrequency=60\n" +
+                                 "primIterations=1000\n" +
+                                 "marketSummaryInterval=300\n" +
+                                 "longRun=false";
+
+        InputStream inputStream = new ByteArrayInputStream(propertiesContent.getBytes());
+        when(servletContext.getResourceAsStream("/properties/daytrader.properties")).thenReturn(inputStream);
+        when(System.getenv("RUNTIME_MODE")).thenReturn("2");
+        when(System.getenv("ORDER_PROCESSING_MODE")).thenReturn("2");
+        when(System.getenv("MAX_USERS")).thenReturn("200");
+        when(System.getenv("MAX_QUOTES")).thenReturn("2000");
+        when(System.getenv("PUBLISH_QUOTES")).thenReturn("false");
+        when(System.getenv("DISPLAY_ORDER_ALERTS")).thenReturn("false");
+        when(System.getenv("WEB_INTERFACE")).thenReturn("2");
+        when(System.getenv("LIST_QUOTE_PRICE_CHANGE_FREQUENCY")).thenReturn("120");
+
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class);
+             MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+
+            listener.contextInitialized(event);
+
+            // Verify TradeConfig static methods were called with env values
+            mockedTradeConfig.verify(() -> TradeConfig.setRunTimeMode(2));
+            mockedTradeConfig.verify(() -> TradeConfig.setOrderProcessingMode(2));
+            mockedTradeConfig.verify(() -> TradeConfig.setMAX_USERS(200));
+            mockedTradeConfig.verify(() -> TradeConfig.setMAX_QUOTES(2000));
+            mockedTradeConfig.verify(() -> TradeConfig.setPublishQuotePriceChange(false));
+            mockedTradeConfig.verify(() -> TradeConfig.setDisplayOrderAlerts(false));
+            mockedTradeConfig.verify(() -> TradeConfig.setWebInterface(2));
+            mockedTradeConfig.verify(() -> TradeConfig.setListQuotePriceChangeFrequency(120));
+            mockedTradeConfig.verify(() -> TradeConfig.setPrimIterations(1000));
+            mockedTradeConfig.verify(() -> TradeConfig.setMarketSummaryInterval(300));
+            mockedTradeConfig.verify(() -> TradeConfig.setLongRun(false));
+
+            mockedLog.verify(() -> Log.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect"));
+        }
+    }
+
+    @Test
+    void testContextInitializedWithMissingPropertiesFile() throws IOException {
+        when(servletContext.getResourceAsStream("/properties/daytrader.properties")).thenReturn(null);
+
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class);
+             MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+
+            listener.contextInitialized(event);
+
+            // Verify no TradeConfig calls were made
+            mockedTradeConfig.verifyNoInteractions();
+
+            mockedLog.verify(() -> Log.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect"));
+        }
+    }
+
+    @Test
+    void testContextInitializedWithInvalidProperties() throws IOException {
+        String invalidPropertiesContent = "invalid=property\n" +
+                                        "runtimeMode=invalid\n" +
+                                        "orderProcessingMode=invalid\n" +
+                                        "maxUsers=invalid\n" +
+                                        "maxQuotes=invalid\n" +
+                                        "publishQuotePriceChange=invalid\n" +
+                                        "displayOrderAlerts=invalid\n" +
+                                        "webInterface=invalid\n" +
+                                        "listQuotePriceChangeFrequency=invalid\n" +
+                                        "primIterations=invalid\n" +
+                                        "marketSummaryInterval=invalid\n" +
+                                        "longRun=invalid";
+
+        InputStream inputStream = new ByteArrayInputStream(invalidPropertiesContent.getBytes());
+        when(servletContext.getResourceAsStream("/properties/daytrader.properties")).thenReturn(inputStream);
+
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class);
+             MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+
+            listener.contextInitialized(event);
+
+            // Verify no TradeConfig calls were made with invalid values
+            mockedTradeConfig.verifyNoInteractions();
+
+            mockedLog.verify(() -> Log.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect"));
+        }
+    }
+
+    @Test
+    void testContextInitializedWithPartialProperties() throws IOException {
+        String partialPropertiesContent = "runtimeMode=1\n" +
+                                        "orderProcessingMode=1\n" +
+                                        "maxUsers=100\n" +
+                                        "maxQuotes=1000\n" +
+                                        "publishQuotePriceChange=true\n" +
+                                        "displayOrderAlerts=true\n" +
+                                        "webInterface=1\n" +
+                                        "listQuotePriceChangeFrequency=60\n" +
+                                        "primIterations=1000\n";
+
+        InputStream inputStream = new ByteArrayInputStream(partialPropertiesContent.getBytes());
+        when(servletContext.getResourceAsStream("/properties/daytrader.properties")).thenReturn(inputStream);
+
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class);
+             MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+
+            listener.contextInitialized(event);
+
+            // Verify only the available properties were set
+            mockedTradeConfig.verify(() -> TradeConfig.setRunTimeMode(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setOrderProcessingMode(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setMAX_USERS(100));
+            mockedTradeConfig.verify(() -> TradeConfig.setMAX_QUOTES(1000));
+            mockedTradeConfig.verify(() -> TradeConfig.setPublishQuotePriceChange(true));
+            mockedTradeConfig.verify(() -> TradeConfig.setDisplayOrderAlerts(true));
+            mockedTradeConfig.verify(() -> TradeConfig.setWebInterface(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setListQuotePriceChangeFrequency(60));
+            mockedTradeConfig.verify(() -> TradeConfig.setPrimIterations(1000));
+
+            // Verify default values for missing properties
+            mockedTradeConfig.verify(() -> TradeConfig.setMarketSummaryInterval(anyInt()));
+            mockedTradeConfig.verify(() -> TradeConfig.setLongRun(anyBoolean()));
+
+            mockedLog.verify(() -> Log.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect"));
+        }
+    }
+}
+```

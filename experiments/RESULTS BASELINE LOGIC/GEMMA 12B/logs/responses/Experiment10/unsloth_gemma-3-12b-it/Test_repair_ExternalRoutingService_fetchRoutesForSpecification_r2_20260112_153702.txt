@@ -1,0 +1,136 @@
+```java
+package org.eclipse.cargotracker.infrastructure.routing;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import jakarta.annotation.Resource;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
+import org.eclipse.cargotracker.domain.model.cargo.Itinerary;
+import org.eclipse.cargotracker.domain.model.cargo.Leg;
+import org.eclipse.cargotracker.domain.model.cargo.RouteSpecification;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.domain.service.RoutingService;
+import org.eclipse.pathfinder.api.TransitEdge;
+import org.eclipse.pathfinder.api.TransitPath;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ExternalRoutingService_fetchRoutesForSpecificationTestGenerated {
+
+  @Resource
+  private Logger logger;
+  private ExternalRoutingService externalRoutingService;
+
+  @BeforeEach
+  public void setup() {
+    MockitoAnnotations.initMocks(this);
+    externalRoutingService =
+        new ExternalRoutingService(
+            logger,
+            "http://localhost:8080/graph",
+            Mockito.mock(WebTarget.class),
+            Mockito.mock(LocationRepository.class),
+            Mockito.mock(VoyageRepository.class));
+  }
+
+  @AfterEach
+  public void tearDown() {
+    Mockito.resetMocks(externalRoutingService);
+  }
+
+  @Test
+  public void testFetchRoutesForSpecification_validSpecification() {
+    Location origin = new Location(UnLocode.valueOf("DEHAM"), "origin");
+    Location destination = new Location(UnLocode.valueOf("USNYC"), "destination");
+    LocalDate arrivalDeadline = LocalDate.now();
+    RouteSpecification routeSpecification =
+        new RouteSpecification(origin, destination, arrivalDeadline);
+
+    List<TransitPath> transitPaths = new ArrayList<>();
+    TransitPath transitPath1 = Mockito.mock(TransitPath.class);
+    when(transitPath1.getArrivalDate()).thenReturn(LocalDate.now().plusDays(1));
+    TransitPath transitPath2 = Mockito.mock(TransitPath.class);
+    when(transitPath2.getArrivalDate()).thenReturn(LocalDate.now().plusDays(2));
+    transitPaths.add(transitPath1);
+    transitPaths.add(transitPath2);
+
+    WebTarget graphTraversalResource = externalRoutingService.graphTraversalResource;
+    when(graphTraversalResource.queryParam("origin", origin.getUnLocode().getIdString())
+            .queryParam("destination", destination.getUnLocode().getIdString())
+            .request(MediaType.APPLICATION_JSON_TYPE)
+            .get(java.lang.reflect.ParameterizedType.class))
+        .thenReturn(transitPaths);
+
+    List<Itinerary> itineraries =
+        externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+
+    assertEquals(2, itineraries.size());
+    assertTrue(itineraries.get(0).getVoyageNumbers().size() > 0);
+    assertTrue(itineraries.get(1).getVoyageNumbers().size() > 0);
+  }
+
+  @Test
+  public void testFetchRoutesForSpecification_emptyTransitPaths() {
+    Location origin = new Location(UnLocode.valueOf("DEHAM"), "origin");
+    Location destination = new Location(UnLocode.valueOf("USNYC"), "destination");
+    LocalDate arrivalDeadline = LocalDate.now();
+    RouteSpecification routeSpecification =
+        new RouteSpecification(origin, destination, arrivalDeadline);
+
+    List<TransitPath> transitPaths = new ArrayList<>();
+
+    WebTarget graphTraversalResource = externalRoutingService.graphTraversalResource;
+    when(graphTraversalResource.queryParam("origin", origin.getUnLocode().getIdString())
+            .queryParam("destination", destination.getUnLocode().getIdString())
+            .request(MediaType.APPLICATION_JSON_TYPE)
+            .get(java.lang.reflect.ParameterizedType.class))
+        .thenReturn(transitPaths);
+
+    List<Itinerary> itineraries =
+        externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+
+    assertEquals(0, itineraries.size());
+  }
+
+  @Test
+  public void testFetchRoutesForSpecification_specificationNotSatisfied() {
+    Location origin = new Location(UnLocode.valueOf("DEHAM"), "origin");
+    Location destination = new Location(UnLocode.valueOf("USNYC"), "destination");
+    LocalDate arrivalDeadline = LocalDate.now();
+    RouteSpecification routeSpecification =
+        new RouteSpecification(origin, destination, arrivalDeadline);
+
+    List<TransitPath> transitPaths = new ArrayList<>();
+    TransitPath transitPath1 = Mockito.mock(TransitPath.class);
+    when(transitPath1.getArrivalDate()).thenReturn(LocalDate.now().plusDays(5));
+    transitPaths.add(transitPath1);
+
+    WebTarget graphTraversalResource = externalRoutingService.graphTraversalResource;
+    when(graphTraversalResource.queryParam("origin", origin.getUnLocode().getIdString())
+            .queryParam("destination", destination.getUnLocode().getIdString())
+            .request(MediaType.APPLICATION_JSON_TYPE)
+            .get(java.lang.reflect.ParameterizedType.class))
+        .thenReturn(transitPaths);
+
+    List<Itinerary> itineraries =
+        externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+
+    assertEquals(0, itineraries.size());
+  }
+}
+```

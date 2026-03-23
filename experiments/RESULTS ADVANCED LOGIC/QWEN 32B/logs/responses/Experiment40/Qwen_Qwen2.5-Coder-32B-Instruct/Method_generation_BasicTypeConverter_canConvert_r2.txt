@@ -1,0 +1,78 @@
+```java
+public boolean canConvert(final Object object, final Class toType) {
+    if (object == null) {
+        return true;
+    }
+    if (toType.isInstance(object)) {
+        return true;
+    }
+    if (toType.isAssignableFrom(object.getClass())) {
+        return true;
+    }
+    if (object instanceof String) {
+        if (toType == Boolean.class || toType == boolean.class) {
+            return true;
+        }
+        if (Number.class.isAssignableFrom(toType)) {
+            return true;
+        }
+        if (toType == Character.class || toType == char.class) {
+            return true;
+        }
+    }
+    if (object instanceof Number) {
+        if (toType == String.class) {
+            return true;
+        }
+        if (Number.class.isAssignableFrom(toType)) {
+            return true;
+        }
+        if (toType == Boolean.class || toType == boolean.class) {
+            return true;
+        }
+    }
+    if (object instanceof Boolean) {
+        if (toType == String.class) {
+            return true;
+        }
+        if (Number.class.isAssignableFrom(toType)) {
+            return true;
+        }
+        if (toType == Boolean.class || toType == boolean.class) {
+            return true;
+        }
+    }
+    if (object.getClass().isArray()) {
+        if (toType.isArray()) {
+            return toType.getComponentType().isAssignableFrom(object.getClass().getComponentType());
+        }
+        if (Collection.class.isAssignableFrom(toType)) {
+            return true;
+        }
+        if (toType.isInstance(Array.get(object, 0))) {
+            return true;
+        }
+    }
+    if (object instanceof Collection) {
+        if (toType.isArray()) {
+            return toType.getComponentType().isAssignableFrom(((Collection<?>) object).iterator().next().getClass());
+        }
+        if (Collection.class.isAssignableFrom(toType)) {
+            return true;
+        }
+        if (!((Collection<?>) object).isEmpty() && toType.isInstance(((Collection<?>) object).iterator().next())) {
+            return true;
+        }
+    }
+    if (object instanceof Pointer) {
+        return canConvert(((Pointer) object).getValue(), toType);
+    }
+    if (object instanceof NodeSet) {
+        return canConvert(((NodeSet) object).getValues().iterator().next(), toType);
+    }
+    if (ConvertUtils.lookup(toType) != null) {
+        return true;
+    }
+    return false;
+}
+```

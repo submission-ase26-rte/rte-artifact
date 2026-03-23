@@ -1,0 +1,51 @@
+package org.apache.commons.jxpath.ri.axes;
+
+import org.apache.commons.jxpath.ri.EvalContext;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import java.util.Stack;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class PrecedingOrFollowingContext_nextNodeTestGenerated {
+
+    private EvalContext mockEvalContext;
+    private NodeTest mockNodeTest;
+    private PrecedingOrFollowingContext target;
+
+    @BeforeEach
+    void setUp() {
+        mockEvalContext = mock(EvalContext.class);
+        mockNodeTest = mock(NodeTest.class);
+        target = new PrecedingOrFollowingContext(mockEvalContext, mockNodeTest, false);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mockEvalContext = null;
+        mockNodeTest = null;
+        target = null;
+    }
+
+    @Test
+    void testNextNode_noStack_rootHasParent_pushIterator() {
+        NodePointer root = Mockito.mock(NodePointer.class);
+        when(root.isLeaf()).thenReturn(false);
+        when(root.getParent()).thenReturn(Mockito.mock(NodePointer.class));
+        when(mockEvalContext.getCurrentNodePointer()).thenReturn(root);
+
+        NodeIterator iterator = Mockito.mock(NodeIterator.class);
+        when(root.childIterator(null, false, root)).thenReturn(iterator);
+
+        target.nextNode();
+        verify(root).childIterator(null, false, root);
+    }
+}

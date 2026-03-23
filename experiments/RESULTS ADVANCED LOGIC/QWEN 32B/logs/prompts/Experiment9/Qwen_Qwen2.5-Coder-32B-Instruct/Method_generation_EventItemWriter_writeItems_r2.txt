@@ -1,0 +1,349 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.eclipse.cargotracker.interfaces.handling.file;
+
+import jakarta.batch.api.chunk.AbstractItemWriter;
+import jakarta.batch.runtime.context.JobContext;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.List;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.application.util.DateConverter;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class EventItemWriter_writeItemsTestGenerated {
+    @Mock
+    private JobContext jobContext;
+    @Mock
+    private ApplicationEvents applicationEvents;
+    @InjectMocks
+    private EventItemWriter eventItemWriter;
+    private String archiveDirectory;
+
+    @BeforeEach
+    public void setUp() throws IOException {
+        MockitoAnnotations.openMocks(this);
+        archiveDirectory = Files.createTempDirectory("archive").toString();
+        when(jobContext.getProperties().getProperty("archiveDirectory")).thenReturn(archiveDirectory);
+        when(jobContext.getJobName()).thenReturn("testJob");
+        when(jobContext.getInstanceId()).thenReturn(123L);
+    }
+
+    @AfterEach
+    public void tearDown() throws IOException {
+        Files.walk(Paths.get(archiveDirectory))
+                .sorted((p1, p2) -> -p1.compareTo(p2))
+                .map(Path::toFile)
+                .forEach(File::delete);
+    }
+
+    @Test
+    public void testWriteItems() throws Exception {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        TrackingId trackingId = new TrackingId("XYZ123");
+        VoyageNumber voyageNumber = new VoyageNumber("V123");
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+        UnLocode unLocode = new UnLocode("USNYC");
+        HandlingEventRegistrationAttempt attempt = new HandlingEventRegistrationAttempt(
+                registrationTime, completionTime, trackingId, voyageNumber, type, unLocode);
+        eventItemWriter.writeItems(List.of(attempt));
+        verify(applicationEvents).receivedHandlingEventRegistrationAttempt(attempt);
+        String expectedFileName = archiveDirectory + "/archive_testJob_123.csv";
+        assertTrue(Files.exists(Paths.get(expectedFileName)));
+        String content = new String(Files.readAllBytes(Paths.get(expectedFileName)));
+        String expectedContent = DateConverter.toString(registrationTime) + ","
+                + DateConverter.toString(completionTime) + ","
+                + trackingId + ","
+                + voyageNumber + ","
+                + unLocode + ","
+                + type;
+        assertEquals(expectedContent, content.trim());
+    }
+
+    @Test
+    public void testWriteItemsWithNullItems() {
+        Exception exception = assertThrows(Exception.class, () -> {
+            eventItemWriter.writeItems(null);
+        });
+        assertNotNull(exception);
+    }
+
+    @Test
+    public void testWriteItemsWithEmptyItems() throws Exception {
+        eventItemWriter.writeItems(List.of());
+        verifyNoInteractions(applicationEvents);
+        String expectedFileName = archiveDirectory + "/archive_testJob_123.csv";
+        assertFalse(Files.exists(Paths.get(expectedFileName)));
+    }
+
+    @Test
+    public void testWriteItemsWithNullItem() throws Exception {
+        Exception exception = assertThrows(Exception.class, () -> {
+            eventItemWriter.writeItems(List.of(null));
+        });
+        assertNotNull(exception);
+    }
+
+    @Test
+    public void testWriteItemsWithIOException() throws Exception {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        TrackingId trackingId = new TrackingId("XYZ123");
+        VoyageNumber voyageNumber = new VoyageNumber("V123");
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+        UnLocode unLocode = new UnLocode("USNYC");
+        HandlingEventRegistrationAttempt attempt = new HandlingEventRegistrationAttempt(
+                registrationTime, completionTime, trackingId, voyageNumber, type, unLocode);
+        String invalidPath = "/invalid/path";
+        when(jobContext.getProperties().getProperty("archiveDirectory")).thenReturn(invalidPath);
+        Exception exception = assertThrows(Exception.class, () -> {
+            eventItemWriter.writeItems(List.of(attempt));
+        });
+        assertNotNull(exception);
+    }
+
+    @Test
+    public void testWriteItemsWithSingleItem() throws Exception {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        TrackingId trackingId = new TrackingId("XYZ123");
+        VoyageNumber voyageNumber = new VoyageNumber("V123");
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+        UnLocode unLocode = new UnLocode("USNYC");
+        HandlingEventRegistrationAttempt attempt = new HandlingEventRegistrationAttempt(
+                registrationTime, completionTime, trackingId, voyageNumber, type, unLocode);
+        eventItemWriter.writeItems(List.of(attempt));
+        verify(applicationEvents).receivedHandlingEventRegistrationAttempt(attempt);
+        String expectedFileName = archiveDirectory + "/archive_testJob_123.csv";
+        assertTrue(Files.exists(Paths.get(expectedFileName)));
+        String content = new String(Files.readAllBytes(Paths.get(expectedFileName)));
+        String expectedContent = DateConverter.toString(registrationTime) + ","
+                + DateConverter.toString(completionTime) + ","
+                + trackingId + ","
+                + voyageNumber + ","
+                + unLocode + ","
+                + type;
+        assertEquals(expectedContent, content.trim());
+    }
+
+    @Test
+    public void testWriteItemsWithMultipleItems() throws Exception {
+        LocalDateTime registrationTime1 = LocalDateTime.now();
+        LocalDateTime completionTime1 = LocalDateTime.now().plusHours(1);
+        TrackingId trackingId1 = new TrackingId("XYZ123");
+        VoyageNumber voyageNumber1 = new VoyageNumber("V123");
+        HandlingEvent.Type type1 = HandlingEvent.Type.LOAD;
+        UnLocode unLocode1 = new UnLocode("USNYC");
+        HandlingEventRegistrationAttempt attempt1 = new HandlingEventRegistrationAttempt(
+                registrationTime1, completionTime1, trackingId1, voyageNumber1, type1, unLocode1);
+        LocalDateTime registrationTime2 = LocalDateTime.now().plusDays(1);
+        LocalDateTime completionTime2 = LocalDateTime.now().plusDays(1).plusHours(1);
+        TrackingId trackingId2 = new TrackingId("ABC456");
+        VoyageNumber voyageNumber2 = new VoyageNumber("V456");
+        HandlingEvent.Type type2 = HandlingEvent.Type.UNLOAD;
+        UnLocode unLocode2 = new UnLocode("DEHAM");
+        HandlingEventRegistrationAttempt attempt2 = new HandlingEventRegistrationAttempt(
+                registrationTime2, completionTime2, trackingId2, voyageNumber2, type2, unLocode2);
+        eventItemWriter.writeItems(List.of(attempt1, attempt2));
+        verify(applicationEvents).receivedHandlingEventRegistrationAttempt(attempt1);
+        verify(applicationEvents).receivedHandlingEventRegistrationAttempt(attempt2);
+        String expectedFileName = archiveDirectory + "/archive_testJob_123.csv";
+        assertTrue(Files.exists(Paths.get(expectedFileName)));
+        String content = new String(Files.readAllBytes(Paths.get(expectedFileName)));
+        String expectedContent1 = DateConverter.toString(registrationTime1) + ","
+                + DateConverter.toString(completionTime1) + ","
+                + trackingId1 + ","
+                + voyageNumber1 + ","
+                + unLocode1 + ","
+                + type1;
+        String expectedContent2 = DateConverter.toString(registrationTime2) + ","
+                + DateConverter.toString(completionTime2) + ","
+                + trackingId2 + ","
+                + voyageNumber2 + ","
+                + unLocode2 + ","
+                + type2;
+        assertTrue(content.contains(expectedContent1));
+        assertTrue(content.contains(expectedContent2));
+    }
+
+    @Test
+    public void testWriteItemsWithEmptyArchiveDirectory() throws Exception {
+        when(jobContext.getProperties().getProperty("archiveDirectory")).thenReturn("");
+        Exception exception = assertThrows(Exception.class, () -> {
+            eventItemWriter.writeItems(List.of());
+        });
+        assertNotNull(exception);
+    }
+
+    @Test
+    public void testWriteItemsWithNonExistentArchiveDirectory() throws Exception {
+        String nonExistentPath = "/non/existent/path";
+        when(jobContext.getProperties().getProperty("archiveDirectory")).thenReturn(nonExistentPath);
+        Exception exception = assertThrows(Exception.class, () -> {
+            eventItemWriter.writeItems(List.of());
+        });
+        assertNotNull(exception);
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 0.00% | Branch: 0.00%
+- Tests: 0/9 passed
+
+TEST STATUS:
+- PASSED (0): none
+- FAILED (0): none
+- ERRORS (9): testWriteItems, testWriteItemsWithNullItems, testWriteItemsWithEmptyItems, testWriteItemsWithNullItem, testWriteItemsWithIOException, testWriteItemsWithSingleItem, testWriteItemsWithMultipleItems, testWriteItemsWithEmptyArchiveDirectory, testWriteItemsWithNonExistentArchiveDirectory
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   AbstractItemWriter -> jakarta.batch.api.chunk.AbstractItemWriter
+//   JobContext -> jakarta.batch.runtime.context.JobContext
+//   Dependent -> jakarta.enterprise.context.Dependent
+//   Inject -> jakarta.inject.Inject
+//   Named -> jakarta.inject.Named
+//   Transactional -> jakarta.transaction.Transactional
+//   List -> java.util.List
+//   ApplicationEvents -> org.eclipse.cargotracker.application.ApplicationEvents
+//   DateConverter -> org.eclipse.cargotracker.application.util.DateConverter
+//   HandlingEventRegistrationAttempt -> org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+//   EventItemWriter -> org.eclipse.cargotracker.interfaces.handling.file.EventItemWriter
+
+// === Class: EventItemWriter ===
+// Fields (with actual visibility):
+    private static final String ARCHIVE_DIRECTORY;
+    private JobContext jobContext;
+    private ApplicationEvents applicationEvents;
+
+// === External Class: ApplicationEvents ===
+// Full import path: org.eclipse.cargotracker.application.ApplicationEvents
+// Type: INTERFACE (cannot instantiate - use Mockito.mock(ApplicationEvents.class) instead)
+// Import paths:
+//   Cargo -> org.eclipse.cargotracker.domain.model.cargo.Cargo
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+//   HandlingEventRegistrationAttempt -> org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+// Method Signatures (used by target method):
+void receivedHandlingEventRegistrationAttempt(HandlingEventRegistrationAttempt attempt);
+
+// === External Class: DateConverter ===
+// Full import path: org.eclipse.cargotracker.application.util.DateConverter
+// Import paths:
+//   LocalDate -> java.time.LocalDate
+//   LocalDateTime -> java.time.LocalDateTime
+//   ZoneId -> java.time.ZoneId
+//   DateTimeFormatter -> java.time.format.DateTimeFormatter
+// Fields (with actual visibility):
+    public static final String DATE_FORMAT;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final String DATE_TIME_FORMAT;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final DateTimeFormatter DATE_FORMATTER;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final DateTimeFormatter DATE_TIME_FORMATTER;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+
+// Constructors:
+private DateConverter();
+
+// Method Signatures (used by target method):
+public static String toString(LocalDateTime dateTime);
+
+// Public Getter Methods (for test assertions):
+public static LocalDate toDate(String date);
+public static LocalDateTime toDateTime(String datetime);
+
+// === External Class: HandlingEventRegistrationAttempt ===
+// Full import path: org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   LocalDateTime -> java.time.LocalDateTime
+//   TrackingId -> org.eclipse.cargotracker.domain.model.cargo.TrackingId
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+//   UnLocode -> org.eclipse.cargotracker.domain.model.location.UnLocode
+// Fields (with actual visibility):
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private final LocalDateTime registrationTime;
+    private final LocalDateTime completionTime;
+    private final TrackingId trackingId;
+    private final VoyageNumber voyageNumber;
+    private final HandlingEvent type;
+    private final UnLocode unLocode;
+
+// Constructors:
+public HandlingEventRegistrationAttempt(LocalDateTime registrationDate, LocalDateTime completionDate, TrackingId trackingId, VoyageNumber voyageNumber, HandlingEvent type, UnLocode unLocode);
+
+
+// Public Getter Methods (for test assertions):
+public TrackingId getTrackingId();
+public VoyageNumber getVoyageNumber();
+public HandlingEvent getType();
+public UnLocode getUnLocode();
+public LocalDateTime getRegistrationTime();
+public LocalDateTime getCompletionTime();
+public String toString();
+
+
+TASK:
+Regenerate ONLY the method "writeItems" OF CLASS "EventItemWriter" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void writeItems(List<Object> items) throws Exception {
+    // your implementation here
+}
+```
+
+
+- Package: org.eclipse.cargotracker.interfaces.handling.file
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "writeItems"
+– Allowed imports: exactly those already present in EventItemWriter
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

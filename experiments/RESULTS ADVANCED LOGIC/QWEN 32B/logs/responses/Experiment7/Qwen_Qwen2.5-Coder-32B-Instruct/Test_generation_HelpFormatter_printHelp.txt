@@ -1,0 +1,108 @@
+```java
+package org.apache.commons.cli;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Comparator;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+public class HelpFormatter_printHelpTestGenerated {
+
+    private HelpFormatter helpFormatter;
+    private PrintWriter printWriter;
+    private StringWriter stringWriter;
+    private Options options;
+
+    @BeforeEach
+    public void setUp() {
+        stringWriter = new StringWriter();
+        printWriter = new PrintWriter(stringWriter);
+        helpFormatter = new HelpFormatter();
+        options = new Options();
+    }
+
+    @Test
+    public void testPrintHelpWithNullCmdLineSyntax() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            helpFormatter.printHelp(printWriter, 80, null, "header", options, 4, 4, "footer", true);
+        });
+        assertEquals("cmdLineSyntax not provided", exception.getMessage());
+    }
+
+    @Test
+    public void testPrintHelpWithEmptyCmdLineSyntax() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            helpFormatter.printHelp(printWriter, 80, "", "header", options, 4, 4, "footer", true);
+        });
+        assertEquals("cmdLineSyntax not provided", exception.getMessage());
+    }
+
+    @Test
+    public void testPrintHelpWithAutoUsage() {
+        helpFormatter.printHelp(printWriter, 80, "cmd", "header", options, 4, 4, "footer", true);
+        String output = stringWriter.toString();
+        assertTrue(output.contains("header"));
+        assertTrue(output.contains("footer"));
+    }
+
+    @Test
+    public void testPrintHelpWithoutAutoUsage() {
+        helpFormatter.printHelp(printWriter, 80, "cmd", "header", options, 4, 4, "footer", false);
+        String output = stringWriter.toString();
+        assertTrue(output.contains("header"));
+        assertTrue(output.contains("footer"));
+    }
+
+    @Test
+    public void testPrintHelpWithNullHeader() {
+        helpFormatter.printHelp(printWriter, 80, "cmd", null, options, 4, 4, "footer", true);
+        String output = stringWriter.toString();
+        assertFalse(output.contains("null"));
+        assertTrue(output.contains("footer"));
+    }
+
+    @Test
+    public void testPrintHelpWithEmptyHeader() {
+        helpFormatter.printHelp(printWriter, 80, "cmd", "", options, 4, 4, "footer", true);
+        String output = stringWriter.toString();
+        assertFalse(output.contains(""));
+        assertTrue(output.contains("footer"));
+    }
+
+    @Test
+    public void testPrintHelpWithNullFooter() {
+        helpFormatter.printHelp(printWriter, 80, "cmd", "header", options, 4, 4, null, true);
+        String output = stringWriter.toString();
+        assertTrue(output.contains("header"));
+        assertFalse(output.contains("null"));
+    }
+
+    @Test
+    public void testPrintHelpWithEmptyFooter() {
+        helpFormatter.printHelp(printWriter, 80, "cmd", "header", options, 4, 4, "", true);
+        String output = stringWriter.toString();
+        assertTrue(output.contains("header"));
+        assertFalse(output.contains(""));
+    }
+
+    @Test
+    public void testPrintHelpWithCustomPaddingAndWidth() {
+        helpFormatter.printHelp(printWriter, 120, "cmd", "header", options, 8, 8, "footer", true);
+        String output = stringWriter.toString();
+        assertTrue(output.contains("header"));
+        assertTrue(output.contains("footer"));
+    }
+
+    @Test
+    public void testPrintHelpWithCustomComparator() {
+        Comparator<Option> comparator = mock(Comparator.class);
+        helpFormatter.setOptionComparator(comparator);
+        helpFormatter.printHelp(printWriter, 80, "cmd", "header", options, 4, 4, "footer", true);
+        verify(comparator, times(0)).compare(any(), any());
+    }
+}
+```

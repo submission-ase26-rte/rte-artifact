@@ -1,0 +1,225 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.codec.language;
+
+import org.apache.commons.codec.language.Caverphone2;
+import org.apache.commons.codec.language.SoundexUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Caverphone2_encodeTestGenerated {
+    private Caverphone2 caverphone2;
+
+    @BeforeEach
+    public void setUp() {
+        caverphone2 = new Caverphone2();
+    }
+
+    @Test
+    public void testEmptyString() {
+        String result = caverphone2.encode("");
+        assertEquals("1111111111", result);
+    }
+
+    @Test
+    public void testNullString() {
+        String result = caverphone2.encode(null);
+        assertEquals("1111111111", result);
+    }
+
+    @Test
+    public void testSingleCharacter() {
+        String result = caverphone2.encode("a");
+        assertEquals("A111111111", result);
+    }
+
+    @Test
+    public void testMultipleCharacters() {
+        String result = caverphone2.encode("example");
+        assertEquals("AKMPA11111", result);
+    }
+
+    @Test
+    public void testUpperCaseString() {
+        String result = caverphone2.encode("EXAMPLE");
+        assertEquals("AKMPA11111", result);
+    }
+
+    @Test
+    public void testSpecialCharacters() {
+        String result = caverphone2.encode("ex@mpl3!");
+        assertEquals("AKMPA11111", result);
+    }
+
+    @Test
+    public void testFinalE() {
+        String result = caverphone2.encode("cave");
+        assertEquals("KF11111111", result);
+    }
+
+    @Test
+    public void testEndOptions() {
+        assertEquals("KM11111111", caverphone2.encode("Cmb"));
+    }
+
+    @Test
+    public void testRemovals() {
+        assertEquals("K111111111", caverphone2.encode("K2"));
+        assertEquals("1111111111", caverphone2.encode("3"));
+        assertEquals("K111111111", caverphone2.encode("K3"));
+    }
+
+    @Test
+    public void testStartOptions() {
+        assertEquals("KF11111111", caverphone2.encode("Cough"));
+        assertEquals("RF11111111", caverphone2.encode("Rough"));
+        assertEquals("TOU2F11111", caverphone2.encode("Tough"));
+        assertEquals("ENOU2F1111", caverphone2.encode("Enough"));
+        assertEquals("TROU2F1111", caverphone2.encode("Trough"));
+        assertEquals("2N11111111", caverphone2.encode("Gn"));
+    }
+
+    @Test
+    public void testReplacements() {
+        assertEquals("K111111111", caverphone2.encode("Cq"));
+        assertEquals("SA11111111", caverphone2.encode("Ci"));
+        assertEquals("SE11111111", caverphone2.encode("Ce"));
+        assertEquals("SY11111111", caverphone2.encode("Cy"));
+        assertEquals("2CH111111", caverphone2.encode("Tch"));
+        assertEquals("K111111111", caverphone2.encode("C"));
+        assertEquals("K111111111", caverphone2.encode("Q"));
+        assertEquals("K111111111", caverphone2.encode("X"));
+        assertEquals("F111111111", caverphone2.encode("V"));
+        assertEquals("2G11111111", caverphone2.encode("Dg"));
+        assertEquals("SIO1111111", caverphone2.encode("Tio"));
+        assertEquals("SIA1111111", caverphone2.encode("Tia"));
+        assertEquals("T111111111", caverphone2.encode("D"));
+        assertEquals("FH11111111", caverphone2.encode("Ph"));
+        assertEquals("P111111111", caverphone2.encode("B"));
+        assertEquals("S211111111", caverphone2.encode("Sh"));
+        assertEquals("S111111111", caverphone2.encode("Z"));
+        assertEquals("A111111111", caverphone2.encode("A"));
+        assertEquals("A111111111", caverphone2.encode("E"));
+        assertEquals("A111111111", caverphone2.encode("I"));
+        assertEquals("A111111111", caverphone2.encode("O"));
+        assertEquals("A111111111", caverphone2.encode("U"));
+        assertEquals("3111111111", caverphone2.encode("Aeio"));
+        assertEquals("Y111111111", caverphone2.encode("J"));
+        assertEquals("Y311111111", caverphone2.encode("Y3"));
+        assertEquals("A111111111", caverphone2.encode("Y"));
+        assertEquals("A111111111", caverphone2.encode("Yy"));
+        assertEquals("3KH3111111", caverphone2.encode("3gh3"));
+        assertEquals("2211111111", caverphone2.encode("Gh"));
+        assertEquals("K111111111", caverphone2.encode("G"));
+        assertEquals("S111111111", caverphone2.encode("S"));
+        assertEquals("T111111111", caverphone2.encode("T"));
+        assertEquals("P111111111", caverphone2.encode("P"));
+        assertEquals("K111111111", caverphone2.encode("K"));
+        assertEquals("F111111111", caverphone2.encode("F"));
+        assertEquals("M111111111", caverphone2.encode("M"));
+        assertEquals("N111111111", caverphone2.encode("N"));
+        assertEquals("W311111111", caverphone2.encode("W3"));
+        assertEquals("WH31111111", caverphone2.encode("Wh3"));
+        assertEquals("3111111111", caverphone2.encode("W"));
+        assertEquals("2111111111", caverphone2.encode("W"));
+        assertEquals("A111111111", caverphone2.encode("H"));
+        assertEquals("2111111111", caverphone2.encode("Hh"));
+        assertEquals("R311111111", caverphone2.encode("R3"));
+        assertEquals("3111111111", caverphone2.encode("Rr"));
+        assertEquals("2111111111", caverphone2.encode("R"));
+        assertEquals("L311111111", caverphone2.encode("L3"));
+        assertEquals("3111111111", caverphone2.encode("Ll"));
+        assertEquals("2111111111", caverphone2.encode("L"));
+    }
+
+    @Test
+    public void testFinalResult() {
+        assertEquals("KF11111111", caverphone2.encode("Cave"));
+        assertEquals("A111111111", caverphone2.encode("A"));
+        assertEquals("A111111111", caverphone2.encode("E"));
+        assertEquals("A111111111", caverphone2.encode("I"));
+        assertEquals("A111111111", caverphone2.encode("O"));
+        assertEquals("A111111111", caverphone2.encode("U"));
+        assertEquals("A111111111", caverphone2.encode("Y"));
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 100.00%
+- Tests: 9/12 passed
+
+TEST STATUS:
+- PASSED (9): testEmptyString, testNullString, testSingleCharacter, testMultipleCharacters, testUpperCaseString, testSpecialCharacters, testFinalE, testEndOptions, testRemovals
+- FAILED (3): testStartOptions, testReplacements, testFinalResult
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Caverphone2 -> org.apache.commons.codec.language.Caverphone2
+//   SoundexUtils -> org.apache.commons.codec.language.SoundexUtils
+
+// === Class: Caverphone2 ===
+// Fields (with actual visibility):
+    private static final String TEN_1;
+
+// === Superclass: AbstractCaverphone (inherited members) ===
+// Inherited Method Signatures:
+public Object encode(final Object source);
+public boolean isEncodeEqual(final String str1, final String str2);
+
+// === External Class: SoundexUtils ===
+// Full import path: org.apache.commons.codec.language.SoundexUtils
+// Import paths:
+//   EncoderException -> org.apache.commons.codec.EncoderException
+//   StringEncoder -> org.apache.commons.codec.StringEncoder
+// Method Signatures (used by target method):
+static boolean isEmpty(final CharSequence cs);
+
+
+TASK:
+Regenerate ONLY the method "encode" OF CLASS "Caverphone2" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public String encode(final String source) {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.codec.language
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "encode"
+– Allowed imports: exactly those already present in Caverphone2
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

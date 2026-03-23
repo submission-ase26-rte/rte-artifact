@@ -1,0 +1,136 @@
+```java
+package org.springframework.samples.petclinic.owner;
+
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PetValidator_validateTestGenerated {
+    @InjectMocks
+    private PetValidator petValidator;
+    @Mock
+    private Pet pet;
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        petValidator = new PetValidator();
+    }
+
+    @Test
+    public void testValidate_ValidPet() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        when(pet.getName()).thenReturn("Valid Name");
+        when(pet.isNew()).thenReturn(false);
+        PetType petType = new PetType();
+        when(pet.getType()).thenReturn(petType);
+        when(pet.getBirthDate()).thenReturn(LocalDate.now());
+
+        // Act
+        petValidator.validate(pet, errors);
+
+        // Assert
+        assertEquals(0, errors.getErrorCount());
+    }
+
+    @Test
+    public void testValidate_InvalidName() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        when(pet.getName()).thenReturn("");
+
+        // Act
+        petValidator.validate(pet, errors);
+
+        // Assert
+        assertEquals(2, errors.getErrorCount());
+        assertEquals("required", errors.getFieldError("name").getCode());
+    }
+
+    @Test
+    public void testValidate_NewPetWithNullType() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        when(pet.isNew()).thenReturn(true);
+        when(pet.getType()).thenReturn(null);
+
+        // Act
+        petValidator.validate(pet, errors);
+
+        // Assert
+        assertEquals(2, errors.getErrorCount());
+        assertEquals("required", errors.getFieldError("type").getCode());
+    }
+
+    @Test
+    public void testValidate_NullBirthDate() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        when(pet.getBirthDate()).thenReturn(null);
+
+        // Act
+        petValidator.validate(pet, errors);
+
+        // Assert
+        assertEquals(2, errors.getErrorCount());
+        assertEquals("required", errors.getFieldError("birthDate").getCode());
+    }
+
+    @Test
+    public void testValidate_PetWithNullName() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        when(pet.getName()).thenReturn(null);
+
+        // Act
+        petValidator.validate(pet, errors);
+
+        // Assert
+        assertEquals(2, errors.getErrorCount());
+        assertEquals("required", errors.getFieldError("name").getCode());
+    }
+
+    @Test
+    public void testValidate_NewPetWithType() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        when(pet.isNew()).thenReturn(true);
+        PetType petType = new PetType();
+        when(pet.getType()).thenReturn(petType);
+
+        // Act
+        petValidator.validate(pet, errors);
+
+        // Assert
+        assertEquals(0, errors.getErrorCount());
+    }
+
+    @Test
+    public void testValidate_PetWithBirthDate() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        when(pet.getBirthDate()).thenReturn(LocalDate.now());
+
+        // Act
+        petValidator.validate(pet, errors);
+
+        // Assert
+        assertEquals(0, errors.getErrorCount());
+    }
+}
+```

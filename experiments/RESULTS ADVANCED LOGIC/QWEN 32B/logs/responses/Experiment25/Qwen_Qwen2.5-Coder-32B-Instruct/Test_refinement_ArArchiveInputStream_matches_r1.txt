@@ -1,0 +1,121 @@
+```java
+package org.apache.commons.compress.archivers.ar;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArArchiveInputStream_matchesTestGenerated {
+
+    @Test
+    public void testMatchesValidSignature() {
+        byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertTrue(ArArchiveInputStream.matches(validSignature, validSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidSignature() {
+        byte[] invalidSignature = "!<arch>\r".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesTooShortSignature() {
+        byte[] tooShortSignature = "!<arch>".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(tooShortSignature, tooShortSignature.length));
+    }
+
+    @Test
+    public void testMatchesNullSignature() {
+        assertFalse(ArArchiveInputStream.matches(null, 0));
+    }
+
+    @Test
+    public void testMatchesLengthZero() {
+        byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(validSignature, 0));
+    }
+
+    @Test
+    public void testMatchesLengthLessThanEight() {
+        byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(validSignature, 7));
+    }
+
+    @Test
+    public void testMatchesLengthGreaterThanEight() {
+        byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        byte[] longerSignature = Arrays.copyOf(validSignature, validSignature.length + 1);
+        assertTrue(ArArchiveInputStream.matches(longerSignature, validSignature.length));
+    }
+
+    @Test
+    public void testMatchesWithInputStreamMock() {
+        InputStream mockInputStream = mock(InputStream.class);
+        ArArchiveInputStream arArchiveInputStream = new ArArchiveInputStream(mockInputStream);
+        byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertTrue(ArArchiveInputStream.matches(validSignature, validSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidFirstByte() {
+        byte[] invalidSignature = "?<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidSecondByte() {
+        byte[] invalidSignature = "!>arch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidThirdByte() {
+        byte[] invalidSignature = "!!rarch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidFourthByte() {
+        byte[] invalidSignature = "!<rchr>\n".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidFifthByte() {
+        byte[] invalidSignature = "!<arch>\r".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidSixthByte() {
+        byte[] invalidSignature = "!<arch>\r".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidSeventhByte() {
+        byte[] invalidSignature = "!<arch>\r".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidEighthByte() {
+        byte[] invalidSignature = "!<arch>\r".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesLengthExactlyEight() {
+        byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertTrue(ArArchiveInputStream.matches(validSignature, validSignature.length));
+    }
+}
+```

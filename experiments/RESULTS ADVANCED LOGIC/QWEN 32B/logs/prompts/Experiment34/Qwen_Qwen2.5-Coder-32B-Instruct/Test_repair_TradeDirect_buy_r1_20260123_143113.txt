@@ -1,0 +1,370 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.direct;
+Class name (MUST be exactly): TradeDirect_buyTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import javax.annotation.Resource;
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeDirect_buyTestGenerated {
+
+    @InjectMocks
+    private TradeDirect tradeDirect;
+
+    @Mock
+    private DataSource datasource;
+
+    @Mock
+    private UserTransaction txn;
+
+    @Mock
+    private Connection conn;
+
+    @Mock
+    private PreparedStatement stmt;
+
+    @Mock
+    private ResultSet rs;
+
+    @Mock
+    private AccountDataBean accountData;
+
+    @Mock
+    private QuoteDataBean quoteData;
+
+    @Mock
+    private HoldingDataBean holdingData;
+
+    @Mock
+    private OrderDataBean orderData;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        MockitoAnnotations.openMocks(this);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(stmt.executeUpdate()).thenReturn(1);
+        when(getAccountData(conn, anyString())).thenReturn(accountData);
+        when(getQuoteData(conn, anyString())).thenReturn(quoteData);
+        when(createOrder(accountData, quoteData, holdingData, anyString(), anyDouble())).thenReturn(orderData);
+        when(getOrderData(conn, anyInt())).thenReturn(orderData);
+    }
+
+    @Test
+    public void testBuy_SyncOrderProcessingMode() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.SYNCH).thenReturn(1);
+            tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.SYNCH);
+            verify(stmt, times(3)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, times(1)).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_AsyncOrderProcessingMode() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.ASYNCH).thenReturn(2);
+            tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.ASYNCH);
+            verify(stmt, times(3)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, times(1)).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_Async2PhaseOrderProcessingMode() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.ASYNCH_2PHASE).thenReturn(3);
+            tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.ASYNCH_2PHASE);
+            verify(stmt, times(3)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, times(1)).getOrderID();
+            verify(txn, times(1)).begin();
+            verify(txn, times(1)).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInCreateOrder() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.SYNCH).thenReturn(1);
+            when(createOrder(accountData, quoteData, holdingData, anyString(), anyDouble())).thenThrow(new SQLException("Test Exception"));
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.SYNCH);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, times(2)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, never()).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInCreditAccountBalance() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.SYNCH).thenReturn(1);
+            doThrow(new SQLException("Test Exception")).when(stmt).executeUpdate();
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.SYNCH);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, times(2)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, times(1)).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInCompleteOrder() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.SYNCH).thenReturn(1);
+            doThrow(new SQLException("Test Exception")).when(stmt).executeUpdate();
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.SYNCH);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, times(2)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, times(1)).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInGetAccountData() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.SYNCH).thenReturn(1);
+            when(getAccountData(conn, anyString())).thenThrow(new SQLException("Test Exception"));
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.SYNCH);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, never()).executeUpdate();
+            verify(stmt, never()).executeQuery();
+            verify(orderData, never()).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInGetQuoteData() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.SYNCH).thenReturn(1);
+            when(getQuoteData(conn, anyString())).thenThrow(new SQLException("Test Exception"));
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.SYNCH);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, never()).executeUpdate();
+            verify(stmt, never()).executeQuery();
+            verify(orderData, never()).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInGetOrderData() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.SYNCH).thenReturn(1);
+            when(getOrderData(conn, anyInt())).thenThrow(new SQLException("Test Exception"));
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.SYNCH);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, times(3)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, times(1)).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInTransactionBegin() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.ASYNCH_2PHASE).thenReturn(3);
+            doThrow(new Exception("Test Exception")).when(txn).begin();
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.ASYNCH_2PHASE);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, never()).executeUpdate();
+            verify(stmt, never()).executeQuery();
+            verify(orderData, never()).getOrderID();
+            verify(txn, times(1)).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInTransactionCommit() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.ASYNCH_2PHASE).thenReturn(3);
+            doThrow(new Exception("Test Exception")).when(txn).commit();
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.ASYNCH_2PHASE);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, times(3)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, times(1)).getOrderID();
+            verify(txn, times(1)).begin();
+            verify(txn, times(1)).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInTransactionRollback() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.SYNCH).thenReturn(1);
+            doThrow(new SQLException("Test Exception")).when(stmt).executeUpdate();
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.SYNCH);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, times(2)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, times(1)).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[74] cannot find symbol
+  symbol:   method getAccountData(java.sql.Connection,java.lang.String)
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[75] cannot find symbol
+  symbol:   method getQuoteData(java.sql.Connection,java.lang.String)
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[76] cannot find symbol
+  symbol:   method createOrder(com.ibm.websphere.samples.daytrader.entities.AccountDataBean,com.ibm.websphere.samples.daytrader.entities.QuoteDataBean,com.ibm.websphere.samples.daytrader.entities.HoldingDataBean,java.lang.String,double)
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[77] cannot find symbol
+  symbol:   method getOrderData(java.sql.Connection,int)
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[82] cannot find symbol
+  symbol:   class MockedStatic
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[96] cannot find symbol
+  symbol:   class MockedStatic
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[110] cannot find symbol
+  symbol:   class MockedStatic
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[124] cannot find symbol
+  symbol:   class MockedStatic
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[126] cannot find symbol
+  symbol:   method createOrder(com.ibm.websphere.samples.daytrader.entities.AccountDataBean,com.ibm.websphere.samples.daytrader.entities.QuoteDataBean,com.ibm.websphere.samples.daytrader.entities.HoldingDataBean,java.lang.String,double)
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[142] cannot find symbol
+  symbol:   class MockedStatic
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[160] cannot find symbol
+  symbol:   class MockedStatic
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[178] cannot find symbol
+  symbol:   class MockedStatic
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[180] cannot find symbol
+  symbol:   method getAccountData(java.sql.Connection,java.lang.String)
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[196] cannot find symbol
+  symbol:   class MockedStatic
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[198] cannot find symbol
+  symbol:   method getQuoteData(java.sql.Connection,java.lang.String)
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[214] cannot find symbol
+  symbol:   class MockedStatic
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[216] cannot find symbol
+  symbol:   method getOrderData(java.sql.Connection,int)
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[232] cannot find symbol
+  symbol:   class MockedStatic
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[250] cannot find symbol
+  symbol:   class MockedStatic
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_buyTestGenerated.java:[268] cannot find symbol
+  symbol:   class MockedStatic
+  location: class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect_buyTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- For static method calls, ensure mockStatic is properly closed (use try-with-resources)
+- Keep the SAME class name: TradeDirect_buyTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

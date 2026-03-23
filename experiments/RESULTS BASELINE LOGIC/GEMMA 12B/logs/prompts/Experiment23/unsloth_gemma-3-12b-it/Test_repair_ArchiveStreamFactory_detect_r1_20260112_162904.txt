@@ -1,0 +1,159 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.compress.archivers;
+Class name (MUST be exactly): ArchiveStreamFactory_detectTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.utils.IOUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class ArchiveStreamFactory_detectTestGenerated {
+    private InputStream mockInputStream;
+    @BeforeEach
+    public void setUp() {
+        mockInputStream = Mockito.mock(InputStream.class);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(mockInputStream);
+    }
+
+
+    @Test
+        void testDetectZip() throws ArchiveException, IOException {
+            byte[] zipSignature = new byte[] {(byte)0x50, (byte)0x4b, (byte)0x03, (byte)0x04};
+            when(mockInputStream.read(Mockito.any(byte[].class), Mockito.anyInt(), Mockito.anyInt())).thenReturn(4);
+            String detectedType = ArchiveStreamFactory.detect(mockInputStream);
+            assertEquals("ZIP", detectedType);
+        }
+
+    @Test
+        void testDetectJar() throws ArchiveException, IOException {
+            byte[] jarSignature = new byte[] {(byte)0x50, (byte)0x4b, (byte)0x03, (byte)0x04};
+            when(mockInputStream.read(Mockito.any(byte[].class), Mockito.anyInt(), Mockito.anyInt())).thenReturn(4);
+            String detectedType = ArchiveStreamFactory.detect(mockInputStream);
+            assertEquals("JAR", detectedType);
+        }
+
+    @Test
+        void testDetectAr() throws ArchiveException, IOException {
+            byte[] arSignature = new byte[] {(byte)0x07, (byte)0x07, (byte)0x00, (byte)0x00};
+            when(mockInputStream.read(Mockito.any(byte[].class), Mockito.anyInt(), Mockito.anyInt())).thenReturn(4);
+            String detectedType = ArchiveStreamFactory.detect(mockInputStream);
+            assertEquals("AR", detectedType);
+        }
+
+    @Test
+        void testDetectCpio() throws ArchiveException, IOException {
+            byte[] cpioSignature = new byte[] {(byte)0x07, (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07};
+            when(mockInputStream.read(Mockito.any(byte[].class), Mockito.anyInt(), Mockito.anyInt())).thenReturn(8);
+            String detectedType = ArchiveStreamFactory.detect(mockInputStream);
+            assertEquals("CPIO", detectedType);
+        }
+
+    @Test
+        void testDetectArj() throws ArchiveException, IOException {
+            byte[] arjSignature = new byte[] {(byte)0x4f, (byte)0x4b, (byte)0x0a};
+            when(mockInputStream.read(Mockito.any(byte[].class), Mockito.anyInt(), Mockito.anyInt())).thenReturn(3);
+            String detectedType = ArchiveStreamFactory.detect(mockInputStream);
+            assertEquals("ARJ", detectedType);
+        }
+
+    @Test
+        void testDetectSevenZ() throws ArchiveException, IOException {
+            byte[] sevenZSignature = new byte[] {(byte)0x52, (byte)0x7A, (byte)0x00};
+            when(mockInputStream.read(Mockito.any(byte[].class), Mockito.anyInt(), Mockito.anyInt())).thenReturn(3);
+            String detectedType = ArchiveStreamFactory.detect(mockInputStream);
+            assertEquals("SEVEN_Z", detectedType);
+        }
+
+    @Test
+        void testDetectDump() throws ArchiveException, IOException {
+            byte[] dumpSignature = new byte[] {(byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00};
+            when(mockInputStream.read(Mockito.any(byte[].class), Mockito.anyInt(), Mockito.anyInt())).thenReturn(4);
+            String detectedType = ArchiveStreamFactory.detect(mockInputStream);
+            assertEquals("DUMP", detectedType);
+        }
+
+    @Test
+        void testDetectTar() throws ArchiveException, IOException {
+            byte[] tarSignature = new byte[] {(byte)0x1f, (byte)0x9d, (byte)0x93, (byte)0x0a};
+            when(mockInputStream.read(Mockito.any(byte[].class), Mockito.anyInt(), Mockito.anyInt())).thenReturn(4);
+            String detectedType = ArchiveStreamFactory.detect(mockInputStream);
+            assertEquals("TAR", detectedType);
+        }
+
+    @Test
+        void testDetectTarWithSparseHeader() throws ArchiveException, IOException {
+            byte[] tarSignature = new byte[] {(byte)0x1f, (byte)0x9d, (byte)0x93, (byte)0x0a};
+            when(mockInputStream.read(Mockito.any(byte[].class), Mockito.anyInt(), Mockito.anyInt())).thenReturn(4);
+
+            InputStream in = mockInputStream;
+            TarArchiveInputStream tarStream = new TarArchiveInputStream(in);
+            TarArchiveEntry entry = tarStream.getNextEntry();
+
+            String detectedType = ArchiveStreamFactory.detect(mockInputStream);
+            assertEquals("TAR", detectedType);
+        }
+
+    @Test
+        void testDetectCpioNullStream() {
+            try {
+                ArchiveStreamFactory.detect(null);
+                fail("Expected IllegalArgumentException was not thrown");
+            } catch (IllegalArgumentException e) {
+                assertEquals("Stream must not be null.", e.getMessage());
+            }
+        }
+
+    @Test
+        void testDetectTarNoEntry() throws ArchiveException, IOException {
+            byte[] tarSignature = new byte[] {(byte)0x1f, (byte)0x9d, (byte)0x93, (byte)0x0a};
+            when(mockInputStream.read(Mockito.any(byte[].class), Mockito.anyInt(), Mockito.anyInt())).thenReturn(4);
+            String detectedType = ArchiveStreamFactory.detect(mockInputStream);
+            assertEquals("TAR", detectedType);
+        }
+    
+    @Test
+    void testDetectTarSparseHeader() throws ArchiveException, IOException {
+        byte[] tarSignature = new byte[] {(byte) 0x1f, (byte) 0x9d, (byte) 0x93, (byte) 0x0a};
+        when(mockInputStream.read(Mockito.any(byte[].class), Mockito.anyInt(), Mockito.anyInt())).thenReturn(4);
+        String detectedType = ArchiveStreamFactory.detect(mockInputStream);
+        assertEquals("TAR", detectedType);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[114] unreported exception org.apache.commons.compress.archivers.ArchiveException; must be caught or declared to be thrown
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: ArchiveStreamFactory_detectTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

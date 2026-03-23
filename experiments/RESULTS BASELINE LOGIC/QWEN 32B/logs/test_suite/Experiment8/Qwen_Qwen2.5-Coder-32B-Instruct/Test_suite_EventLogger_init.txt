@@ -1,0 +1,87 @@
+package org.eclipse.cargotracker.interfaces.handling.mobile;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import jakarta.faces.model.SelectItem;
+import jakarta.faces.context.FacesContext;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.domain.model.cargo.Cargo;
+import org.eclipse.cargotracker.domain.model.cargo.CargoRepository;
+import org.eclipse.cargotracker.domain.model.cargo.Itinerary;
+import org.eclipse.cargotracker.domain.model.cargo.RouteSpecification;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.cargo.TransportStatus;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class EventLogger_initTestGenerated {
+
+    @Mock
+    private CargoRepository cargoRepository;
+
+    @Mock
+    private LocationRepository locationRepository;
+
+    @Mock
+    private VoyageRepository voyageRepository;
+
+    @Mock
+    private ApplicationEvents applicationEvents;
+
+    @Mock
+    private FacesContext context;
+
+    @InjectMocks
+    private EventLogger eventLogger;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void testInitWithNoCargos() {
+        when(cargoRepository.findAll()).thenReturn(new ArrayList<>());
+        when(locationRepository.findAll()).thenReturn(new ArrayList<>());
+        when(voyageRepository.findAll()).thenReturn(new ArrayList<>());
+
+        eventLogger.init();
+
+        assertTrue(eventLogger.getTrackingIds().isEmpty());
+        assertTrue(eventLogger.getLocations().isEmpty());
+        assertTrue(eventLogger.getVoyages().isEmpty());
+    }
+
+    @Test
+    void testInitWithNoRoutedCargos() {
+        Cargo cargo = mock(Cargo.class);
+        when(cargo.getItinerary()).thenReturn(new Itinerary());
+        when(cargoRepository.findAll()).thenReturn(List.of(cargo));
+        when(locationRepository.findAll()).thenReturn(new ArrayList<>());
+        when(voyageRepository.findAll()).thenReturn(new ArrayList<>());
+
+        eventLogger.init();
+
+        assertTrue(eventLogger.getTrackingIds().isEmpty());
+        assertTrue(eventLogger.getLocations().isEmpty());
+        assertTrue(eventLogger.getVoyages().isEmpty());
+    }
+}

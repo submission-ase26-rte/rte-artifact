@@ -1,0 +1,149 @@
+```java
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArchiveStreamFactory_detectTestGenerated {
+
+    @Mock
+    private InputStream mockInputStream;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void testDetectWithNullInputStream() {
+        assertThrows(IllegalArgumentException.class, () -> ArchiveStreamFactory.detect(null));
+    }
+
+    @Test
+    void testDetectWithInputStreamThatDoesNotSupportMark() {
+        InputStream in = new ByteArrayInputStream(new byte[0]) {
+            @Override
+            public boolean markSupported() {
+                return false;
+            }
+        };
+        assertThrows(IllegalArgumentException.class, () -> ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectWithIOExceptionWhileReadingSignature() throws IOException {
+        when(mockInputStream.markSupported()).thenReturn(true);
+        when(mockInputStream.mark(anyInt())).thenReturn(mockInputStream);
+        when(mockInputStream.read(any(byte[].class))).thenThrow(new IOException("Mocked IOException"));
+
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(mockInputStream));
+    }
+
+    @Test
+    void testDetectWithIOExceptionWhileReadingDumpSignature() throws IOException {
+        when(mockInputStream.markSupported()).thenReturn(true);
+        when(mockInputStream.mark(anyInt())).thenReturn(mockInputStream);
+        when(mockInputStream.read(any(byte[].class))).thenReturn(10);
+        when(mockInputStream.reset()).thenReturn(mockInputStream);
+        when(mockInputStream.read(any(byte[].class), eq(10), anyInt())).thenThrow(new IOException("Mocked IOException"));
+
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(mockInputStream));
+    }
+
+    @Test
+    void testDetectWithIOExceptionWhileReadingTarSignature() throws IOException {
+        when(mockInputStream.markSupported()).thenReturn(true);
+        when(mockInputStream.mark(anyInt())).thenReturn(mockInputStream);
+        when(mockInputStream.read(any(byte[].class))).thenReturn(10);
+        when(mockInputStream.reset()).thenReturn(mockInputStream);
+        when(mockInputStream.read(any(byte[].class), eq(10), anyInt())).thenReturn(10);
+        when(mockInputStream.read(any(byte[].class), eq(10), anyInt())).thenThrow(new IOException("Mocked IOException"));
+
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(mockInputStream));
+    }
+
+    @Test
+    void testDetectZipArchive() throws ArchiveException {
+        byte[] zipSignature = new byte[]{80, 75, 3, 4};
+        InputStream in = new ByteArrayInputStream(zipSignature);
+        assertEquals(ArchiveStreamFactory.ZIP, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectJarArchive() throws ArchiveException {
+        byte[] jarSignature = new byte[]{80, 75, 3, 4};
+        InputStream in = new ByteArrayInputStream(jarSignature);
+        assertEquals(ArchiveStreamFactory.JAR, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectArArchive() throws ArchiveException {
+        byte[] arSignature = new byte[]{33, 100, 101, 98, 105, 97, 110};
+        InputStream in = new ByteArrayInputStream(arSignature);
+        assertEquals(ArchiveStreamFactory.AR, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectCpioArchive() throws ArchiveException {
+        byte[] cpioSignature = new byte[]{99, 112, 105, 111, 32, 110, 111, 99, 114, 99, 32};
+        InputStream in = new ByteArrayInputStream(cpioSignature);
+        assertEquals(ArchiveStreamFactory.CPIO, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectArjArchive() throws ArchiveException {
+        byte[] arjSignature = new byte[]{10, 22, 4, 20};
+        InputStream in = new ByteArrayInputStream(arjSignature);
+        assertEquals(ArchiveStreamFactory.ARJ, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectSevenZArchive() throws ArchiveException {
+        byte[] sevenZSignature = new byte[]{55, 122, 101, 114, 0, 0, 73, 68, 80, 66, 255, 66, 66, 65, 23, 11};
+        InputStream in = new ByteArrayInputStream(sevenZSignature);
+        assertEquals(ArchiveStreamFactory.SEVEN_Z, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectDumpArchive() throws ArchiveException {
+        byte[] dumpSignature = new byte[32];
+        dumpSignature[0] = 116;
+        dumpSignature[1] = 97;
+        dumpSignature[2] = 112;
+        dumpSignature[3] = 101;
+        InputStream in = new ByteArrayInputStream(dumpSignature);
+        assertEquals(ArchiveStreamFactory.DUMP, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectTarArchive() throws ArchiveException {
+        byte[] tarSignature = new byte[512];
+        tarSignature[257] = 117;
+        tarSignature[258] = 115;
+        tarSignature[259] = 116;
+        tarSignature[260] = 97;
+        tarSignature[261] = 114;
+        InputStream in = new ByteArrayInputStream(tarSignature);
+        assertEquals(ArchiveStreamFactory.TAR, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectNoArchiveFound() throws ArchiveException {
+        byte[] invalidSignature = new byte[10];
+        InputStream in = new ByteArrayInputStream(invalidSignature);
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(in));
+    }
+}
+```

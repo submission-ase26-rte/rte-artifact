@@ -1,0 +1,221 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.interfaces.handling.file;
+Class name (MUST be exactly): EventItemWriter_writeItemsTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.interfaces.handling.file;
+
+import jakarta.batch.api.chunk.AbstractItemWriter;
+import jakarta.batch.runtime.context.JobContext;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.transaction.Transactional;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class EventItemWriter_writeItemsTestGenerated {
+
+    @Mock
+    private JobContext jobContext;
+
+    @Mock
+    private ApplicationEvents applicationEvents;
+
+    private EventItemWriter eventItemWriter;
+
+    private AutoCloseable closeable;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        closeable = MockitoAnnotations.openMocks(this);
+        eventItemWriter = new EventItemWriter();
+        ReflectionTestUtils.setField(eventItemWriter, "jobContext", jobContext);
+        ReflectionTestUtils.setField(eventItemWriter, "applicationEvents", applicationEvents);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
+    }
+
+    @Test
+    void testWriteItemsWithValidData() throws Exception {
+        // Setup
+        HandlingEventRegistrationAttempt attempt = new HandlingEventRegistrationAttempt(
+                "trackingId", "voyageNumber", "unLocode", HandlingEvent.Type.LOAD, LocalDateTime.now(ZoneId.systemDefault()), LocalDateTime.now(ZoneId.systemDefault()));
+        List<Object> items = Collections.singletonList(attempt);
+
+        Properties properties = new Properties();
+        properties.setProperty("archive_directory", "test_directory");
+        when(jobContext.getProperties()).thenReturn(properties);
+        when(jobContext.getJobName()).thenReturn("testJob");
+        when(jobContext.getInstanceId()).thenReturn("123");
+
+        // Execute
+        eventItemWriter.writeItems(items);
+
+        // Verify
+        verify(applicationEvents).receivedHandlingEventRegistrationAttempt(attempt);
+        Path filePath = Path.of("test_directory/archive_testJob_123.csv");
+        assertTrue(Files.exists(filePath));
+        Files.deleteIfExists(filePath);
+    }
+
+    @Test
+    void testWriteItemsWithEmptyList() throws Exception {
+        // Setup
+        List<Object> items = Collections.emptyList();
+
+        Properties properties = new Properties();
+        properties.setProperty("archive_directory", "test_directory");
+        when(jobContext.getProperties()).thenReturn(properties);
+        when(jobContext.getJobName()).thenReturn("testJob");
+        when(jobContext.getInstanceId()).thenReturn("123");
+
+        // Execute
+        eventItemWriter.writeItems(items);
+
+        // Verify
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any());
+        Path filePath = Path.of("test_directory/archive_testJob_123.csv");
+        assertFalse(Files.exists(filePath));
+    }
+
+    @Test
+    void testWriteItemsWithNullList() throws Exception {
+        // Execute & Verify
+        assertThrows(Exception.class, () -> eventItemWriter.writeItems(null));
+    }
+
+    @Test
+    void testWriteItemsWithIOException() throws Exception {
+        // Setup
+        HandlingEventRegistrationAttempt attempt = new HandlingEventRegistrationAttempt(
+                "trackingId", "voyageNumber", "unLocode", HandlingEvent.Type.LOAD, LocalDateTime.now(ZoneId.systemDefault()), LocalDateTime.now(ZoneId.systemDefault()));
+        List<Object> items = Collections.singletonList(attempt);
+
+        Properties properties = new Properties();
+        properties.setProperty("archive_directory", "invalid_directory");
+        when(jobContext.getProperties()).thenReturn(properties);
+        when(jobContext.getJobName()).thenReturn("testJob");
+        when(jobContext.getInstanceId()).thenReturn("123");
+
+        // Execute & Verify
+        assertThrows(Exception.class, () -> eventItemWriter.writeItems(items));
+    }
+
+    @Test
+    void testWriteItemsWithNullAttemptInList() throws Exception {
+        // Setup
+        List<Object> items = Collections.singletonList(null);
+
+        Properties properties = new Properties();
+        properties.setProperty("archive_directory", "test_directory");
+        when(jobContext.getProperties()).thenReturn(properties);
+        when(jobContext.getJobName()).thenReturn("testJob");
+        when(jobContext.getInstanceId()).thenReturn("123");
+
+        // Execute & Verify
+        assertThrows(Exception.class, () -> eventItemWriter.writeItems(items));
+    }
+
+    @Test
+    void testWriteItemsWithMultipleItems() throws Exception {
+        // Setup
+        HandlingEventRegistrationAttempt attempt1 = new HandlingEventRegistrationAttempt(
+                "trackingId1", "voyageNumber1", "unLocode1", HandlingEvent.Type.LOAD, LocalDateTime.now(ZoneId.systemDefault()), LocalDateTime.now(ZoneId.systemDefault()));
+        HandlingEventRegistrationAttempt attempt2 = new HandlingEventRegistrationAttempt(
+                "trackingId2", "voyageNumber2", "unLocode2", HandlingEvent.Type.UNLOAD, LocalDateTime.now(ZoneId.systemDefault()), LocalDateTime.now(ZoneId.systemDefault()));
+        List<Object> items = List.of(attempt1, attempt2);
+
+        Properties properties = new Properties();
+        properties.setProperty("archive_directory", "test_directory");
+        when(jobContext.getProperties()).thenReturn(properties);
+        when(jobContext.getJobName()).thenReturn("testJob");
+        when(jobContext.getInstanceId()).thenReturn("123");
+
+        // Execute
+        eventItemWriter.writeItems(items);
+
+        // Verify
+        verify(applicationEvents, times(2)).receivedHandlingEventRegistrationAttempt(any());
+        Path filePath = Path.of("test_directory/archive_testJob_123.csv");
+        assertTrue(Files.exists(filePath));
+        Files.deleteIfExists(filePath);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[65] incompatible types: java.lang.String cannot be converted to java.time.LocalDateTime
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[72] no suitable method found for thenReturn(java.lang.String)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.lang.Long) is not applicable
+  (argument mismatch; java.lang.String cannot be converted to java.lang.Long)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.lang.Long,java.lang.Long...) is not applicable
+  (argument mismatch; java.lang.String cannot be converted to java.lang.Long)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[93] no suitable method found for thenReturn(java.lang.String)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.lang.Long) is not applicable
+  (argument mismatch; java.lang.String cannot be converted to java.lang.Long)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.lang.Long,java.lang.Long...) is not applicable
+  (argument mismatch; java.lang.String cannot be converted to java.lang.Long)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[114] incompatible types: java.lang.String cannot be converted to java.time.LocalDateTime
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[121] no suitable method found for thenReturn(java.lang.String)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.lang.Long) is not applicable
+  (argument mismatch; java.lang.String cannot be converted to java.lang.Long)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.lang.Long,java.lang.Long...) is not applicable
+  (argument mismatch; java.lang.String cannot be converted to java.lang.Long)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[136] no suitable method found for thenReturn(java.lang.String)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.lang.Long) is not applicable
+  (argument mismatch; java.lang.String cannot be converted to java.lang.Long)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.lang.Long,java.lang.Long...) is not applicable
+  (argument mismatch; java.lang.String cannot be converted to java.lang.Long)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[146] incompatible types: java.lang.String cannot be converted to java.time.LocalDateTime
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[148] incompatible types: java.lang.String cannot be converted to java.time.LocalDateTime
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[155] no suitable method found for thenReturn(java.lang.String)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.lang.Long) is not applicable
+  (argument mismatch; java.lang.String cannot be converted to java.lang.Long)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.lang.Long,java.lang.Long...) is not applicable
+  (argument mismatch; java.lang.String cannot be converted to java.lang.Long)
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: EventItemWriter_writeItemsTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

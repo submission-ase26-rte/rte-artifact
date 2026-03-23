@@ -1,0 +1,63 @@
+```java
+public Object convert(final Object object, final Class toType) {
+        if (object == null) {
+            return convertNullToPrimitive(toType);
+        }
+
+        if (toType == Object.class) {
+            return object;
+        }
+
+        if (object.getClass().isArray()) {
+            if (toType.isArray()) {
+                return Array.newInstance(toType.getComponentType(), Array.getLength(object));
+            } else {
+                return Array.get(object, 0);
+            }
+        }
+
+        if (Collection.class.isAssignableFrom(toType)) {
+            if (object instanceof Collection) {
+                return Collections.unmodifiableList((Collection) object);
+            } else {
+                return Collections.singleton(object);
+            }
+        }
+
+        if (Pointer.class.isAssignableFrom(toType)) {
+            return new ValuePointer(object);
+        }
+
+        if (object instanceof Pointer) {
+            return ((Pointer) object).getValue();
+        }
+
+        if (Number.class.isAssignableFrom(toType)) {
+            return NumberConverter.convertToNumber(object, toType);
+        }
+
+        if (Boolean.class.isAssignableFrom(toType) || boolean.class.isAssignableFrom(toType)) {
+            return BooleanConverter.convert(object);
+        }
+
+        if (String.class.isAssignableFrom(toType)) {
+            return StringConverter.convert(object);
+        }
+
+        if (toType.isPrimitive()) {
+            return convertStringToPrimitive(object, toType);
+        }
+
+        if (java.util.concurrent.atomic.AtomicBoolean.class.isAssignableFrom(toType)) {
+            return new java.util.concurrent.atomic.AtomicBoolean(Boolean.parseBoolean(String.valueOf(object)));
+        }
+
+        try {
+            return ConvertUtils.convert(object, toType);
+        } catch (JXPathTypeConversionException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new JXPathTypeConversionException(object, toType, ex);
+        }
+    }
+```

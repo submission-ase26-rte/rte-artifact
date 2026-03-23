@@ -1,0 +1,226 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests.
+
+TEST CLASS INFO:
+Package: package org.springframework.samples.petclinic.owner;
+Class name (MUST be exactly): OwnerController_processFindFormTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testProcessFindForm_MultipleOwnersFound --
+ERROR: Argument(s) are different! Wanted:
+model.addAttribute(
+"owners",
+Page 1 of 1 containing org.springframework.samples.petclinic.owner.Owner instances
+);
+-> at org.springframework.samples.petclinic.owner.OwnerController_processFindFormTestGenerated.testProcessFindForm_MultipleOwnersFound(OwnerController_processFindFormTestGenerated.java:121)
+Actual invocations have different arguments at positions [0, 1]:
+model.addAttribute(
+"currentPage",
+1
+);
+-> at org.springframework.samples.petclinic.owner.OwnerController.addPaginationModel(OwnerController.java:117)
+model.addAttribute(
+"totalPages",
+1
+);
+-> at org.springframework.samples.petclinic.owner.OwnerController.addPaginationModel(OwnerController.java:118)
+model.addAttribute(
+"totalItems",
+2L
+);
+-> at org.springframework.samples.petclinic.owner.OwnerController.addPaginationModel(OwnerController.java:119)
+model.addAttribute(
+"listOwners",
+[[Owner@5101f896 id = 1, new = false, lastName = 'Doe', firstName = [null], address = [null], city = [null], telephone = [null]], [Owner@3198be73 id = 2, new = false, lastName = 'Doe', firstName = [null], address = [null], city = [null], telephone = [null]]]
+);
+-> at org.springframework.samples.petclinic.owner.OwnerController.addPaginationModel(OwnerController.java:120)
+--------------------------------------------------
+TEST: testProcessFindForm_NoLastName --
+ERROR: java.lang.NullPointerException: Cannot invoke "org.springframework.data.domain.Page.isEmpty()" because "ownersResults" is null
+
+TEST CODE TO FIX:
+package org.springframework.samples.petclinic.owner;
+
+import java.util.Collections;
+import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.openMocks;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class OwnerController_processFindFormTestGenerated {
+    @Mock
+    private OwnerRepository ownerRepository;
+    @InjectMocks
+    private OwnerController ownerController;
+    private AutoCloseable closeable;
+    @BeforeEach
+    public void setUp() {
+        closeable = openMocks(this);
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        closeable.close();
+    }
+
+
+    @Test
+        public void testProcessFindForm_MultipleOwnersFound() {
+            Owner owner = new Owner();
+            owner.setLastName("Doe");
+            BindingResult result = mock(BindingResult.class);
+            Model model = mock(Model.class);
+    
+            Owner foundOwner1 = new Owner();
+            foundOwner1.setId(1);
+            foundOwner1.setLastName("Doe");
+    
+            Owner foundOwner2 = new Owner();
+            foundOwner2.setId(2);
+            foundOwner2.setLastName("Doe");
+    
+            Page<Owner> ownersResults = new PageImpl<>(List.of(foundOwner1, foundOwner2));
+    
+            when(ownerRepository.findByLastName(eq("Doe"), any(PageRequest.class)))
+                    .thenReturn(ownersResults);
+    
+            String viewName = ownerController.processFindForm(1, owner, result, model);
+    
+            assertEquals("owners/ownersList", viewName);
+            verify(result, never()).rejectValue(anyString(), anyString(), anyString());
+            verify(model).addAttribute("owners", ownersResults);
+            verify(model).addAttribute("currentPage", 1);
+            verify(model).addAttribute("totalPages", ownersResults.getTotalPages());
+            verify(model).addAttribute("totalItems", ownersResults.getTotalElements());
+        }
+
+    @Test
+        public void testProcessFindForm_NoLastName() {
+            Owner owner = new Owner();
+            BindingResult result = mock(BindingResult.class);
+            Model model = mock(Model.class);
+    
+            String viewName = ownerController.processFindForm(1, owner, result, model);
+    
+            assertEquals("owners/findOwners", viewName);
+            verify(result).rejectValue("lastName", "notFound", "not found");
+            verify(model, never()).addAttribute(anyString(), any());
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    public void testProcessFindForm_NoOwnersFound() {}
+    @Test
+    public void testProcessFindForm_OneOwnerFound() {}
+
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    public void setUp() {
+        closeable = openMocks(this);
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        closeable.close();
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+The following is the complete original method that needs to be tested. NOTE: The current test suite achieves 100% line coverage on this method:
+
+
+	@GetMapping("/owners")
+	public String processFindForm(@RequestParam(defaultValue = "1") int page, Owner owner, BindingResult result,
+			Model model) {
+		// allow parameterless GET request for /owners to return all records
+		if (owner.getLastName() == null) {
+			owner.setLastName(""); // empty string signifies broadest possible search
+		}
+
+		// find owners by last name
+		Page<Owner> ownersResults = findPaginatedForOwnersLastName(page, owner.getLastName());
+		if (ownersResults.isEmpty()) {
+			// no owners found
+			result.rejectValue("lastName", "notFound", "not found");
+			return "owners/findOwners";
+		}
+
+		if (ownersResults.getTotalElements() == 1) {
+			// 1 owner found
+			owner = ownersResults.iterator().next();
+			return "redirect:/owners/" + owner.getId();
+		}
+
+		// multiple owners found
+		return addPaginationModel(page, model, ownersResults);
+	}
+
+
+COVERAGE: 100% line coverage achieved.
+Focus on fixing failed tests, not adding new coverage tests.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

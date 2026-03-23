@@ -1,0 +1,73 @@
+{
+  "method_id": 3,
+  "tested_method": "toString",
+  "tested_class": "OptionGroup",
+  "project": "CLI",
+  "timestamp": "2026-02-03T13:04:16.439446",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\GPT-4 - ASTER\\CLI\\Run-1\\src\\test\\java\\org\\apache\\commons\\cli\\Metodo3_toString_OptionGroup_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 5,
+    "tests_total": 5,
+    "tests_failed": 0,
+    "line_coverage": 100.0,
+    "branch_coverage": 100.0,
+    "has_compilation_errors": false,
+    "compilation_errors": null,
+    "test_info": {
+      "valid_tests": [
+        "testToStringEmptyOptionGroup_YbEN0",
+        "testToStringSingleShortOption_nQvp1",
+        "testToStringSingleLongOption_Riwn2",
+        "testToStringMultipleOptions_YIYB3",
+        "testToStringOptionWithoutDescription_XqGs4"
+      ],
+      "invalid_tests": [],
+      "failed_assert_tests": [],
+      "runtime_error_tests": []
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 5,
+    "assertion_complexity": 0.2833,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.0,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.6544,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.5833,
+    "overall_naturalness_score": 0.8094
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.1813667336312921,
+    "string_similarity": 0.3028571428571429,
+    "token_similarity": 0.3888888888888889,
+    "ast_similarity": 0.59375,
+    "embedding_similarity": 0.9492770433425903,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.07547169811320754,
+      "similar_blocks": 2,
+      "total_blocks": 53
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.5817072166580698,
+    "passes_threshold": false
+  },
+  "original_method": "    public String toString() {\n        final StringBuilder buff = new StringBuilder();\n        final Iterator<Option> iter = getOptions().iterator();\n        buff.append(\"[\");\n        while (iter.hasNext()) {\n            final Option option = iter.next();\n            if (option.getOpt() != null) {\n                buff.append(\"-\");\n                buff.append(option.getOpt());\n            } else {\n                buff.append(\"--\");\n                buff.append(option.getLongOpt());\n            }\n\n            if (option.getDescription() != null) {\n                buff.append(Char.SP);\n                buff.append(option.getDescription());\n            }\n\n            if (iter.hasNext()) {\n                buff.append(\", \");\n            }\n        }\n        buff.append(\"]\");\n        return buff.toString();\n    }",
+  "regenerated_method": "public String toString() {\n    if (optionMap.isEmpty()) {\n        return \"[]\";\n    }\n    StringBuilder sb = new StringBuilder(\"[\");\n    boolean first = true;\n    for (Option option : optionMap.values()) {\n        if (!first) {\n            sb.append(\", \");\n        }\n        sb.append(option.getOpt() != null ? \"-\" + option.getOpt() : \"--\" + option.getLongOpt());\n        String description = option.getDescription();\n        if (description != null) {\n            sb.append(\" \").append(description);\n        }\n        first = false;\n    }\n    sb.append(\"]\");\n    return sb.toString();\n}",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6809894379144197,
+  "original_metrics": {
+    "loc": 26,
+    "sloc": 24,
+    "complexity": 5
+  }
+}

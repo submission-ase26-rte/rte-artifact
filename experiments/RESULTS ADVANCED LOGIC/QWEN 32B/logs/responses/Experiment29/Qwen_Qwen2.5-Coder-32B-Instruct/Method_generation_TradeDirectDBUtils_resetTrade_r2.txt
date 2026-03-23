@@ -1,0 +1,141 @@
+```java
+public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception {
+    Connection conn = null;
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
+    RunStatsDataBean runStatsData = new RunStatsDataBean();
+    try {
+        conn = datasource.getConnection();
+        conn.setAutoCommit(false);
+
+        if (deleteAll) {
+            String[] deleteSQLs = {
+                "DELETE FROM holdingejb",
+                "DELETE FROM orderejb",
+                "DELETE FROM accountprofileejb",
+                "DELETE FROM accountejb",
+                "DELETE FROM quoteejb"
+            };
+            for (String sql : deleteSQLs) {
+                stmt = getStatement(conn, sql);
+                stmt.executeUpdate();
+            }
+        } else {
+            String[] updateSQLs = {
+                "UPDATE holdingejb SET purchaseprice = 0.0",
+                "UPDATE orderejb SET quantity = 0.0",
+                "UPDATE accountprofileejb SET address = 'foo'",
+                "UPDATE accountejb SET balance = 0.0",
+                "UPDATE quoteejb SET low = 0.0, open1 = 0.0, high = 0.0, close = 0.0, volume = 0"
+            };
+            for (String sql : updateSQLs) {
+                stmt = getStatement(conn, sql);
+                stmt.executeUpdate();
+            }
+
+            String[] querySQLs = {
+                "SELECT count(*) FROM accountejb",
+                "SELECT count(*) FROM accountprofileejb",
+                "SELECT count(*) FROM holdingejb",
+                "SELECT count(*) FROM orderejb",
+                "SELECT count(*) FROM quoteejb"
+            };
+            int index = 0;
+            for (String sql : querySQLs) {
+                stmt = getStatement(conn, sql);
+                rs = stmt.executeQuery();
+                if (rs.next()) {
+                    int count = rs.getInt(1);
+                    switch (index) {
+                        case 0:
+                            runStatsData.setTradeUserCount(count);
+                            break;
+                        case 1:
+                            runStatsData.setNewUserCount(count);
+                            break;
+                        case 2:
+                            runStatsData.setHoldingCount(count);
+                            break;
+                        case 3:
+                            runStatsData.setOrderCount(count);
+                            break;
+                        case 4:
+                            runStatsData.setTradeStockCount(count);
+                            break;
+                    }
+                }
+                index++;
+            }
+
+            String[] orderTypeSQLs = {
+                "SELECT count(*) FROM orderejb WHERE ordertype = 'buy'",
+                "SELECT count(*) FROM orderejb WHERE ordertype = 'sell'",
+                "SELECT count(*) FROM orderejb WHERE ordertype = 'cancel'",
+                "SELECT count(*) FROM orderejb WHERE ordertype = 'open'",
+                "SELECT count(*) FROM orderejb WHERE ordertype = 'delete'"
+            };
+            index = 0;
+            for (String sql : orderTypeSQLs) {
+                stmt = getStatement(conn, sql);
+                rs = stmt.executeQuery();
+                if (rs.next()) {
+                    int count = rs.getInt(1);
+                    switch (index) {
+                        case 0:
+                            runStatsData.setBuyOrderCount(count);
+                            break;
+                        case 1:
+                            runStatsData.setSellOrderCount(count);
+                            break;
+                        case 2:
+                            runStatsData.setCancelledOrderCount(count);
+                            break;
+                        case 3:
+                            runStatsData.setOpenOrderCount(count);
+                            break;
+                        case 4:
+                            runStatsData.setDeletedOrderCount(count);
+                            break;
+                    }
+                }
+                index++;
+            }
+
+            String[] loginLogoutSQLs = {
+                "SELECT sum(logincount) FROM accountprofileejb",
+                "SELECT sum(logoutcount) FROM accountprofileejb"
+            };
+            index = 0;
+            for (String sql : loginLogoutSQLs) {
+                stmt = getStatement(conn, sql);
+                rs = stmt.executeQuery();
+                if (rs.next()) {
+                    int count = rs.getInt(1);
+                    switch (index) {
+                        case 0:
+                            runStatsData.setSumLoginCount(count);
+                            break;
+                        case 1:
+                            runStatsData.setSumLogoutCount(count);
+                            break;
+                    }
+                }
+                index++;
+            }
+        }
+
+        conn.commit();
+    } catch (SQLException e) {
+        if (conn != null) {
+            conn.rollback();
+        }
+        Log.error(e, "Failed to reset Trade");
+        throw new Exception("Failed to reset Trade", e);
+    } finally {
+        if (conn != null) {
+            conn.close();
+        }
+    }
+    return runStatsData;
+}
+```

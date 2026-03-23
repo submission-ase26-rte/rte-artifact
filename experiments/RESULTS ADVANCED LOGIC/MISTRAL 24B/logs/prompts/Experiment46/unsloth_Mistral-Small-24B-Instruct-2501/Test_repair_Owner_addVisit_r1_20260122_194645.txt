@@ -1,0 +1,104 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.springframework.samples.petclinic.owner;
+Class name (MUST be exactly): Owner_addVisitTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.springframework.samples.petclinic.owner;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.samples.petclinic.model.Person;
+import org.springframework.samples.petclinic.owner.Pet;
+import org.springframework.samples.petclinic.owner.PetType;
+import org.springframework.samples.petclinic.owner.Visit;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Owner_addVisitTestGenerated {
+
+    @Mock
+    private Pet pet;
+
+    @Mock
+    private Visit visit;
+
+    @InjectMocks
+    private Owner owner;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        owner = new Owner();
+        owner.setPets(new ArrayList<>());
+    }
+
+    @Test
+    public void testAddVisit_ValidInput() {
+        Integer petId = 1;
+        when(owner.getPet(petId)).thenReturn(pet);
+
+        owner.addVisit(petId, visit);
+
+        verify(pet, times(1)).addVisit(visit);
+    }
+
+    @Test
+    public void testAddVisit_NullPetId() {
+        Integer petId = null;
+        Visit visit = mock(Visit.class);
+
+        assertThrows(IllegalArgumentException.class, () -> owner.addVisit(petId, visit));
+    }
+
+    @Test
+    public void testAddVisit_NullVisit() {
+        Integer petId = 1;
+        Visit visit = null;
+
+        assertThrows(IllegalArgumentException.class, () -> owner.addVisit(petId, visit));
+    }
+
+    @Test
+    public void testAddVisit_InvalidPetId() {
+        Integer petId = 1;
+        when(owner.getPet(petId)).thenReturn(null);
+
+        assertThrows(IllegalArgumentException.class, () -> owner.addVisit(petId, visit));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/Owner_addVisitTestGenerated.java:[39] cannot find symbol
+  symbol:   method setPets(java.util.ArrayList<java.lang.Object>)
+  location: variable owner of type org.springframework.samples.petclinic.owner.Owner
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: Owner_addVisitTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

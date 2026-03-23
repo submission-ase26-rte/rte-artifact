@@ -1,0 +1,144 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.eclipse.cargotracker.domain.model.voyage;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.Validate;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import jakarta.validation.constraints.NotNull;
+import java.io.Serializable;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Voyage_equalsTestGenerated {
+
+    private Voyage voyage1;
+    private Voyage voyage2;
+
+    @BeforeEach
+    void setUp() {
+        voyage1 = mock(Voyage.class);
+        voyage2 = mock(Voyage.class);
+    }
+
+    @Test
+    void testEquals_sameObject() {
+        assertTrue(voyage1.equals(voyage1));
+    }
+
+    @Test
+    void testEquals_nullObject() {
+        assertFalse(voyage1.equals(null));
+    }
+
+    @Test
+    void testEquals_differentClass() {
+        Object notVoyage = new Object();
+        assertFalse(voyage1.equals(notVoyage));
+    }
+
+    @Test
+    void testEquals_sameIdentity() {
+        when(voyage2.sameIdentityAs(voyage1)).thenReturn(true);
+        assertTrue(voyage1.equals(voyage2));
+    }
+
+    @Test
+    void testEquals_differentIdentity() {
+        when(voyage2.sameIdentityAs(voyage1)).thenReturn(false);
+        assertFalse(voyage1.equals(voyage2));
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 0.00% | Branch: 0.00%
+- Tests: 4/5 passed
+
+TEST STATUS:
+- PASSED (4): testEquals_sameObject, testEquals_nullObject, testEquals_differentClass, testEquals_differentIdentity
+- FAILED (1): testEquals_sameIdentity
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   NotNull -> jakarta.validation.constraints.NotNull
+//   Serializable -> java.io.Serializable
+//   LocalDateTime -> java.time.LocalDateTime
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   Validate -> org.apache.commons.lang3.Validate
+//   Location -> org.eclipse.cargotracker.domain.model.location.Location
+
+// === Class: Voyage ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    public static final Voyage NONE;
+    private Long id;
+    private VoyageNumber voyageNumber;
+    private Schedule schedule;
+    private List carrierMovements;
+    private Location departureLocation;
+
+// Constructors:
+public Voyage();
+public Voyage(VoyageNumber voyageNumber, Schedule schedule);
+public Builder(VoyageNumber voyageNumber, Location departureLocation);
+
+// Getter/Setter Methods (for test assertions):
+public VoyageNumber getVoyageNumber();
+public Schedule getSchedule();
+
+// Internal Method Signatures (used by target method):
+public boolean sameIdentityAs(Voyage other);
+
+
+TASK:
+Regenerate ONLY the method "equals" OF CLASS "Voyage" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public boolean equals(Object o) {
+    // your implementation here
+}
+```
+
+
+- Package: org.eclipse.cargotracker.domain.model.voyage
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in Voyage
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

@@ -1,0 +1,57 @@
+```java
+package org.apache.commons.codec.digest;
+
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class UnixCrypt_cryptTestGenerated {
+    private UnixCrypt unixCrypt;
+    private SecureRandom mockSecureRandom;
+    @BeforeEach
+    void setUp() {
+        unixCrypt = new UnixCrypt();
+        mockSecureRandom = mock(SecureRandom.class);
+    }
+
+
+    @Test
+        void testCryptWithNullSalt() {
+            byte[] original = "test".getBytes(StandardCharsets.UTF_8);
+            String result = unixCrypt.crypt(original, null);
+            assertNotNull(result);
+            assertTrue(result.length() == 13);
+            assertTrue(result.startsWith("$"));
+        }
+
+    @Test
+        void testCryptWithInvalidSaltThrowsIllegalArgumentException() {
+            byte[] original = "test".getBytes(StandardCharsets.UTF_8);
+            String invalidSalt = "aa";
+            assertThrows(IllegalArgumentException.class, () -> unixCrypt.crypt(original, invalidSalt));
+        }
+
+    @Test
+        void testCryptWithInvalidSaltThrowsIllegalArgumentException2() {
+            byte[] original = "test".getBytes(StandardCharsets.UTF_8);
+            String invalidSalt = "a1";
+            assertThrows(IllegalArgumentException.class, () -> unixCrypt.crypt(original, invalidSalt));
+        }
+
+    @Test
+    void testInvalidSaltThrowsIllegalArgumentException3() {
+        byte[] original = "test".getBytes(StandardCharsets.UTF_8);
+        String invalidSalt = "a1.";
+        assertThrows(IllegalArgumentException.class, () -> unixCrypt.crypt(original, invalidSalt));
+    }
+}
+```

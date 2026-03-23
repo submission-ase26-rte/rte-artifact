@@ -1,0 +1,263 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Extracted tests for method: performTask(HttpServletRequest req, HttpServletResponse resp)
+ * Original class: TradeScenarioServlet
+ * Source: ASTER GPT-4
+ */
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+import static org.mockito.Mockito.*;
+
+public class Metodo30_performTask_TradeScenarioServlet_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPerformTaskWithActionN_lgqU0_GhoD0() throws ServletException, IOException {
+    HttpServletRequest req = mock(HttpServletRequest.class);
+    HttpServletResponse resp = mock(HttpServletResponse.class);
+    PrintWriter writer = mock(PrintWriter.class);
+    when(req.getParameter("action")).thenReturn("n");
+    when(resp.getWriter()).thenReturn(writer);
+    TradeScenarioServlet servlet = new TradeScenarioServlet();
+    servlet.performTask(req, resp);
+    verify(resp).setContentType("text/html");
+    verify(writer).println("<HTML><HEAD>TradeScenarioServlet</HEAD><BODY>Hello</BODY></HTML>");
+    verify(writer).close();
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 0/1 passed
+
+TEST STATUS:
+- PASSED (0): none
+- FAILED (0): none
+- ERRORS (1): testPerformTaskWithActionN_lgqU0_GhoD0
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   HoldingDataBean -> com.ibm.websphere.samples.daytrader.entities.HoldingDataBean
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   IOException -> java.io.IOException
+//   PrintWriter -> java.io.PrintWriter
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   ServletConfig -> javax.servlet.ServletConfig
+//   ServletContext -> javax.servlet.ServletContext
+//   ServletException -> javax.servlet.ServletException
+//   WebServlet -> javax.servlet.annotation.WebServlet
+//   HttpServlet -> javax.servlet.http.HttpServlet
+//   HttpServletRequest -> javax.servlet.http.HttpServletRequest
+//   HttpServletResponse -> javax.servlet.http.HttpServletResponse
+//   HttpSession -> javax.servlet.http.HttpSession
+//   TradeScenarioServlet -> com.ibm.websphere.samples.daytrader.web.servlet.TradeScenarioServlet
+
+// === Class: TradeScenarioServlet ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private static final String tasPathPrefix;
+
+// === External Class: Log ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.Log
+// Fields (with actual visibility):
+    private static final Logger log;
+// Method Signatures (used by target method):
+static public void error(String message);
+static public void trace(String message);
+
+// === External Class: TradeConfig ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.TradeConfig
+// Fields (with actual visibility):
+    private static String[] runTimeModeNames;
+    public static final int EJB3;
+    public static final int DIRECT;
+    public static final int SESSION_TO_DIRECT;
+    private static int runTimeMode;
+    private static String[] orderProcessingModeNames;
+    public static final int SYNCH;
+    public static final int ASYNCH;
+    public static final int ASYNCH_2PHASE;
+    private static int orderProcessingMode;
+    private static String[] accessModeNames;
+    public static final int STANDARD;
+    private static int accessMode;
+    private static String[] webInterfaceNames;
+    public static final int JSP;
+    public static final int JSP_Images;
+    public static final int JSP_Images_HTTP2;
+    private static int webInterface;
+    private static int MAX_USERS;
+    private static int MAX_QUOTES;
+    public static boolean JDBCDriverNeedsGlobalTransation;
+    public static String DATASOURCE;
+    public static int KEYBLOCKSIZE;
+    public static int QUOTES_PER_PAGE;
+    public static boolean RND_USER;
+    private static int MAX_HOLDINGS;
+    private static int count;
+    private static Object userID_count_semaphore;
+    private static int userID_count;
+    private static String hostName;
+    private static Random r0;
+    private static Random randomNumberGenerator;
+    public static final String newUserPrefix;
+    public static final int verifyPercent;
+    private static boolean updateQuotePrices;
+    private static int primIterations;
+    private static boolean longRun;
+    private static boolean publishQuotePriceChange;
+    private static int listQuotePriceChangeFrequency;
+    private static boolean displayOrderAlerts;
+    private static int marketSummaryInterval;
+    public static BigDecimal PENNY_STOCK_PRICE;
+    public static BigDecimal PENNY_STOCK_RECOVERY_MIRACLE_MULTIPLIER;
+    public static BigDecimal MAXIMUM_STOCK_PRICE;
+    public static BigDecimal MAXIMUM_STOCK_SPLIT_MULTIPLIER;
+    public static final int HOME_OP;
+    public static final int QUOTE_OP;
+    public static final int LOGIN_OP;
+    public static final int LOGOUT_OP;
+    public static final int REGISTER_OP;
+    public static final int ACCOUNT_OP;
+    public static final int PORTFOLIO_OP;
+    public static final int BUY_OP;
+    public static final int SELL_OP;
+    public static final int UPDATEACCOUNT_OP;
+    private static int[][] scenarioMixes;
+    private static char[] actions;
+    private static int sellDeficit;
+    public static final int WELCOME_PAGE;
+    public static final int REGISTER_PAGE;
+    public static final int PORTFOLIO_PAGE;
+    public static final int QUOTE_PAGE;
+    public static final int HOME_PAGE;
+    public static final int ACCOUNT_PAGE;
+    public static final int ORDER_PAGE;
+    public static final int CONFIG_PAGE;
+    public static final int STATS_PAGE;
+    public static final int MARKET_SUMMARY_PAGE;
+    public static String[][] webUI;
+    private static int scenarioCount;
+    private static final BigDecimal orderFee;
+    private static final BigDecimal cashFee;
+    private static final BigDecimal ONE;
+    private static ArrayList deck;
+    private static int card;
+// Method Signatures (used by target method):
+static public String rndEmail(String userID);
+static public String rndBalance();
+static public String rndAddress();
+static public String rndCreditCard();
+static public String rndSymbols();
+static synchronized public void incrementScenarioCount();
+static synchronized public void incrementSellDeficit();
+static public char getScenarioAction(boolean newUser);
+static public String rndFullName();
+static public String getUserID();
+static synchronized public String rndNewUserID();
+static public String rndSymbol();
+static public float rndQuantity();
+// Public Getter Methods (for test assertions):
+public static String getPage(int pageNumber);
+public static java getRunTimeModeNames();
+public static BigDecimal getOrderFee(String orderType);
+public static BigDecimal getRandomPriceChangeFactor();
+public static String getOrderProcessingModeNames();
+public static String getWebInterfaceNames();
+public static int getScenarioMixes();
+public static int getMAX_USERS();
+public static int getMAX_QUOTES();
+public static int getMAX_HOLDINGS();
+
+// === External Class: HoldingDataBean ===
+// Full import path: com.ibm.websphere.samples.daytrader.entities.HoldingDataBean
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private Integer holdingID;
+    private double quantity;
+    private BigDecimal purchasePrice;
+    private Date purchaseDate;
+    private String quoteID;
+    private AccountDataBean account;
+    private QuoteDataBean quote;
+// Constructors:
+public HoldingDataBean();
+public HoldingDataBean(Integer holdingID, double quantity, BigDecimal purchasePrice, Date purchaseDate, String quoteID);
+public HoldingDataBean(double quantity, BigDecimal purchasePrice, Date purchaseDate, AccountDataBean account, QuoteDataBean quote);
+// Method Signatures (used by target method):
+public Integer getHoldingID();
+public Date getPurchaseDate();
+// Public Getter Methods (for test assertions):
+public static HoldingDataBean getRandomInstance();
+public String toString();
+public String toHTML();
+public double getQuantity();
+public BigDecimal getPurchasePrice();
+public String getQuoteID();
+public AccountDataBean getAccount();
+public QuoteDataBean getQuote();
+
+
+TASK:
+Regenerate ONLY the method "performTask" OF CLASS "TradeScenarioServlet" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void performTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    // your implementation here
+}
+```
+
+- Package: com.ibm.websphere.samples.daytrader.web.servlet
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "performTask"
+- Allowed imports: exactly those already present in TradeScenarioServlet
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

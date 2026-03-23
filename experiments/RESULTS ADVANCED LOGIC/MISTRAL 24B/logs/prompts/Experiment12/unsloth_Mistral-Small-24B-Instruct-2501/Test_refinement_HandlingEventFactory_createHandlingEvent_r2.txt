@@ -1,0 +1,368 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.domain.model.handling;
+Class name (MUST be exactly): HandlingEventFactory_createHandlingEventTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testCreateHandlingEvent_UnknownVoyageException --
+ERROR: org.mockito.exceptions.base.MockitoException:
+Checked exception is invalid for this method!
+Invalid: org.eclipse.cargotracker.domain.model.handling.UnknownVoyageException: No voyage with number VN123 exists in the system.
+--------------------------------------------------
+TEST: testCreateHandlingEvent_SuccessWithoutVoyage --
+ERROR: org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException: java.lang.IllegalArgumentException: Voyage is required for event type UNLOAD
+Caused by: java.lang.IllegalArgumentException: Voyage is required for event type UNLOAD
+... 6 more
+--------------------------------------------------
+TEST: testCreateHandlingEvent_CannotCreateHandlingEventException --
+ERROR: org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException> but was: <java.lang.RuntimeException>
+Caused by: java.lang.RuntimeException: Cargo not found
+... 8 more
+--------------------------------------------------
+TEST: testCreateHandlingEvent_UnknownLocationException --
+ERROR: org.mockito.exceptions.base.MockitoException:
+Checked exception is invalid for this method!
+Invalid: org.eclipse.cargotracker.domain.model.handling.UnknownLocationException: No location with UN locode USNYC exists in the system.
+--------------------------------------------------
+TEST: testCreateHandlingEvent_SuccessWithVoyage --
+ERROR: org.opentest4j.AssertionFailedError: expected: <2026-01-22T13:35:26.931235700> but was: <2026-01-22T13:35:26>
+
+TEST CODE TO FIX:
+package org.eclipse.cargotracker.domain.model.handling;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import org.eclipse.cargotracker.domain.model.cargo.Cargo;
+import org.eclipse.cargotracker.domain.model.cargo.CargoRepository;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class HandlingEventFactory_createHandlingEventTestGenerated {
+    @Mock
+    private CargoRepository cargoRepository;
+    @Mock
+    private VoyageRepository voyageRepository;
+    @Mock
+    private LocationRepository locationRepository;
+    @InjectMocks
+    private HandlingEventFactory handlingEventFactory;
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+
+    @Test
+        public void testCreateHandlingEvent_SuccessWithVoyage() throws Exception {
+            TrackingId trackingId = new TrackingId("123456");
+            VoyageNumber voyageNumber = new VoyageNumber("VN123");
+            UnLocode unlocode = new UnLocode("USNYC");
+            LocalDateTime registrationTime = LocalDateTime.now();
+            LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+            HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+            Cargo cargo = new Cargo();
+            Voyage voyage = new Voyage();
+            Location location = new Location();
+            when(cargoRepository.find(trackingId)).thenReturn(cargo);
+            when(voyageRepository.find(voyageNumber)).thenReturn(voyage);
+            when(locationRepository.find(unlocode)).thenReturn(location);
+            HandlingEvent event = handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+            assertEquals(cargo, event.getCargo());
+            assertEquals(type, event.getType());
+            assertEquals(location, event.getLocation());
+            assertEquals(voyage, event.getVoyage());
+            assertEquals(completionTime, event.getCompletionTime());
+            assertEquals(registrationTime, event.getRegistrationTime());
+        }
+
+    @Test
+        public void testCreateHandlingEvent_CannotCreateHandlingEventException() {
+            TrackingId trackingId = new TrackingId("123456");
+            VoyageNumber voyageNumber = new VoyageNumber("VN123");
+            UnLocode unlocode = new UnLocode("USNYC");
+            LocalDateTime registrationTime = LocalDateTime.now();
+            LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+            HandlingEvent.Type type = HandlingEvent.Type.RECEIVE;
+            Cargo cargo = new Cargo();
+            when(cargoRepository.find(trackingId)).thenThrow(new RuntimeException("Cargo not found"));
+            assertThrows(CannotCreateHandlingEventException.class, () -> handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type));
+        }
+
+    @Test
+        public void testCreateHandlingEvent_UnknownVoyageException() {
+            TrackingId trackingId = new TrackingId("123456");
+            VoyageNumber voyageNumber = new VoyageNumber("VN123");
+            UnLocode unlocode = new UnLocode("USNYC");
+            LocalDateTime registrationTime = LocalDateTime.now();
+            LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+            HandlingEvent.Type type = HandlingEvent.Type.CLAIM;
+            Cargo cargo = new Cargo();
+            when(cargoRepository.find(trackingId)).thenReturn(cargo);
+            when(voyageRepository.find(voyageNumber)).thenThrow(new UnknownVoyageException(voyageNumber));
+            assertThrows(UnknownVoyageException.class, () -> handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type));
+        }
+
+    @Test
+        public void testCreateHandlingEvent_SuccessWithoutVoyage() throws Exception {
+            TrackingId trackingId = new TrackingId("123456");
+            VoyageNumber voyageNumber = null;
+            UnLocode unlocode = new UnLocode("USNYC");
+            LocalDateTime registrationTime = LocalDateTime.now();
+            LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+            HandlingEvent.Type type = HandlingEvent.Type.UNLOAD;
+            Cargo cargo = new Cargo();
+            Location location = new Location();
+            when(cargoRepository.find(trackingId)).thenReturn(cargo);
+            when(locationRepository.find(unlocode)).thenReturn(location);
+            HandlingEvent event = handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+            assertEquals(cargo, event.getCargo());
+            assertEquals(type, event.getType());
+            assertEquals(location, event.getLocation());
+            assertEquals(null, event.getVoyage());
+            assertEquals(completionTime, event.getCompletionTime());
+            assertEquals(registrationTime, event.getRegistrationTime());
+        }
+
+    @Test
+        public void testCreateHandlingEvent_UnknownLocationException() {
+            TrackingId trackingId = new TrackingId("123456");
+            VoyageNumber voyageNumber = new VoyageNumber("VN123");
+            UnLocode unlocode = new UnLocode("USNYC");
+            LocalDateTime registrationTime = LocalDateTime.now();
+            LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+            HandlingEvent.Type type = HandlingEvent.Type.CUSTOMS;
+            Cargo cargo = new Cargo();
+            when(cargoRepository.find(trackingId)).thenReturn(cargo);
+            when(locationRepository.find(unlocode)).thenThrow(new UnknownLocationException(unlocode));
+            assertThrows(UnknownLocationException.class, () -> handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type));
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    public void testCreateHandlingEvent_UnknownCargoException() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ApplicationScoped -> jakarta.enterprise.context.ApplicationScoped
+//   Inject -> jakarta.inject.Inject
+//   Serializable -> java.io.Serializable
+//   LocalDateTime -> java.time.LocalDateTime
+//   Cargo -> org.eclipse.cargotracker.domain.model.cargo.Cargo
+//   CargoRepository -> org.eclipse.cargotracker.domain.model.cargo.CargoRepository
+//   TrackingId -> org.eclipse.cargotracker.domain.model.cargo.TrackingId
+//   Location -> org.eclipse.cargotracker.domain.model.location.Location
+//   LocationRepository -> org.eclipse.cargotracker.domain.model.location.LocationRepository
+//   UnLocode -> org.eclipse.cargotracker.domain.model.location.UnLocode
+//   Voyage -> org.eclipse.cargotracker.domain.model.voyage.Voyage
+//   VoyageNumber -> org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+//   VoyageRepository -> org.eclipse.cargotracker.domain.model.voyage.VoyageRepository
+//   HandlingEventFactory -> org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+
+// === Class: HandlingEventFactory ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private CargoRepository cargoRepository;
+    private VoyageRepository voyageRepository;
+    private LocationRepository locationRepository;
+
+// Internal Methods (full implementation for context):
+  private Cargo findCargo(TrackingId trackingId) throws UnknownCargoException {
+    Cargo cargo = cargoRepository.find(trackingId);
+
+    if (cargo == null) {
+      throw new UnknownCargoException(trackingId);
+    }
+
+    return cargo;
+  }
+  private Location findLocation(UnLocode unlocode) throws UnknownLocationException {
+    Location location = locationRepository.find(unlocode);
+
+    if (location == null) {
+      throw new UnknownLocationException(unlocode);
+    }
+
+    return location;
+  }
+  private Voyage findVoyage(VoyageNumber voyageNumber) throws UnknownVoyageException {
+    if (voyageNumber == null) {
+      return null;
+    }
+
+    Voyage voyage = voyageRepository.find(voyageNumber);
+
+    if (voyage == null) {
+      throw new UnknownVoyageException(voyageNumber);
+    }
+
+    return voyage;
+  }
+
+// === External Class: HandlingEvent ===
+// Full import path: org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+// Import paths:
+//   Column -> jakarta.persistence.Column
+//   Entity -> jakarta.persistence.Entity
+//   EnumType -> jakarta.persistence.EnumType
+//   Enumerated -> jakarta.persistence.Enumerated
+//   GeneratedValue -> jakarta.persistence.GeneratedValue
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private Long id;
+    private Type type;
+    private Voyage voyage;
+    private Location location;
+    private LocalDateTime completionTime;
+    private LocalDateTime registrationTime;
+    private Cargo cargo;
+    private String summary;
+    private final boolean voyageRequired;
+
+// Enum Values (use ONLY these constants):
+//   Type: LOAD, UNLOAD, RECEIVE, CLAIM, CUSTOMS
+
+// Constructors:
+public HandlingEvent();
+public HandlingEvent(Cargo cargo, LocalDateTime completionTime, LocalDateTime registrationTime, Type type, Location location, Voyage voyage);
+public HandlingEvent(Cargo cargo, LocalDateTime completionTime, LocalDateTime registrationTime, Type type, Location location);
+private Type(boolean voyageRequired);
+
+
+// Public Getter Methods (for test assertions):
+public Type getType();
+public Voyage getVoyage();
+public LocalDateTime getCompletionTime();
+public LocalDateTime getRegistrationTime();
+public Location getLocation();
+public Cargo getCargo();
+public String getSummary();
+public String toString();
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+  /**
+   * @param registrationTime time when this event was received by the system
+   * @param completionTime when the event was completed, for example finished loading
+   * @param trackingId cargo tracking id
+   * @param voyageNumber voyage number
+   * @param unlocode United Nations Location Code for the location of the event
+   * @param type type of event
+   * @return A handling event.
+   * @throws UnknownVoyageException if there's no voyage with this number
+   * @throws UnknownCargoException if there's no cargo with this tracking id
+   * @throws UnknownLocationException if there's no location with this UN Locode
+   */
+  // TODO [Clean Code] Look at the exception handling more seriously.
+  public HandlingEvent createHandlingEvent(
+          LocalDateTime registrationTime,
+          LocalDateTime completionTime,
+          TrackingId trackingId,
+          VoyageNumber voyageNumber,
+          UnLocode unlocode,
+          HandlingEvent.Type type)
+          throws CannotCreateHandlingEventException {
+    Cargo cargo = findCargo(trackingId);
+    Voyage voyage = findVoyage(voyageNumber);
+    Location location = findLocation(unlocode);
+
+    try {
+      if (voyage == null) {
+        return new HandlingEvent(cargo, completionTime, registrationTime, type, location);
+      } else {
+        return new HandlingEvent(cargo, completionTime, registrationTime, type, location, voyage);
+      }
+    } catch (Exception e) {
+      throw new CannotCreateHandlingEventException(e);
+    }
+  }
+
+
+COVERAGE ISSUES:
+Current line coverage: 87.50%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

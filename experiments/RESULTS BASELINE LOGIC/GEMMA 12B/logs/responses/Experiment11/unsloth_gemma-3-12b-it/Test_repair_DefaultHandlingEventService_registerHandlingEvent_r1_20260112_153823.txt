@@ -1,0 +1,98 @@
+```java
+package org.eclipse.cargotracker.application.internal;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.logging.Logger;
+import jakarta.inject.Inject;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEventRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class DefaultHandlingEventService_registerHandlingEventTestGenerated {
+
+    @Inject
+    private ApplicationEvents applicationEvents;
+    @Inject
+    private HandlingEventRepository handlingEventRepository;
+    @Inject
+    private HandlingEventFactory handlingEventFactory;
+    @Inject
+    private Logger logger;
+
+    @BeforeEach
+    void setUp() {
+        applicationEvents = Mockito.mock(ApplicationEvents.class);
+        handlingEventRepository = Mockito.mock(HandlingEventRepository.class);
+        handlingEventFactory = Mockito.mock(HandlingEventFactory.class);
+        logger = Mockito.mock(Logger.class);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.resetMocks(applicationEvents, handlingEventRepository, handlingEventFactory, logger);
+    }
+
+    @Test
+    void testRegisterHandlingEventSuccess() throws CannotCreateHandlingEventException {
+        LocalDateTime completionTime = LocalDateTime.now();
+        TrackingId trackingId = new TrackingId("123");
+        VoyageNumber voyageNumber = new VoyageNumber("VOY123");
+        UnLocode unLocode = new UnLocode("UNLO123");
+        HandlingEvent.Type type = HandlingEvent.Type.LOADED;
+
+        HandlingEvent event = Mockito.mock(HandlingEvent.class);
+        LocalDateTime registrationTime = LocalDateTime.now();
+        when(handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unLocode, type))
+                .thenReturn(event);
+
+        DefaultHandlingEventService service = new DefaultHandlingEventService(applicationEvents, handlingEventRepository, handlingEventFactory, logger);
+        service.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type);
+
+        Mockito.verify(handlingEventRepository).store(event);
+        Mockito.verify(applicationEvents).cargoWasHandled(event);
+        Mockito.verify(logger).info("Registered handling event");
+    }
+
+    @Test
+    void testRegisterHandlingEventThrowsCannotCreateHandlingEventException() {
+        LocalDateTime completionTime = LocalDateTime.now();
+        TrackingId trackingId = new TrackingId("123");
+        VoyageNumber voyageNumber = new VoyageNumber("VOY123");
+        UnLocode unLocode = new UnLocode("UNLO123");
+        HandlingEvent.Type type = HandlingEvent.Type.LOADED;
+
+        when(handlingEventFactory.createHandlingEvent(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+                .thenThrow(CannotCreateHandlingEventException.class);
+
+        DefaultHandlingEventService service = new DefaultHandlingEventService(applicationEvents, handlingEventRepository, handlingEventFactory, logger);
+
+        assertThrows(CannotCreateHandlingEventException.class, () -> service.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type));
+    }
+
+    @Test
+    void testRegisterHandlingEventWithNullArguments() {
+        DefaultHandlingEventService service = new DefaultHandlingEventService(applicationEvents, handlingEventRepository, handlingEventFactory, logger);
+        LocalDateTime completionTime = null;
+        TrackingId trackingId = null;
+        VoyageNumber voyageNumber = null;
+        UnLocode unLocode = null;
+        HandlingEvent.Type type = null;
+
+        assertThrows(NullPointerException.class, () -> service.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type));
+    }
+}
+```

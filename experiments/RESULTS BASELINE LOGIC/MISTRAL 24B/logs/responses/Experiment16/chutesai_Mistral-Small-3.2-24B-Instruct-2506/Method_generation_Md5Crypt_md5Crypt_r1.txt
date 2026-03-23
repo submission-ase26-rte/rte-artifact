@@ -1,0 +1,63 @@
+```java
+public static String md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) {
+    if (keyBytes == null) {
+        throw new NullPointerException("keyBytes cannot be null");
+    }
+    if (prefix == null) {
+        throw new NullPointerException("prefix cannot be null");
+    }
+    if (random == null) {
+        throw new NullPointerException("random cannot be null");
+    }
+
+    if (salt == null) {
+        salt = B64.getRandomSalt(BLOCKSIZE - 1);
+    } else if (!salt.matches("^[./0-9A-Za-z]{8}$")) {
+        throw new IllegalArgumentException("Invalid salt pattern");
+    }
+
+    MessageDigest md5Digest = DigestUtils.getMd5Digest();
+    if (md5Digest == null) {
+        throw new IllegalArgumentException("MD5 algorithm not available");
+    }
+
+    StringBuilder finalPasswd = new StringBuilder(prefix + salt + "$");
+    byte[] key = Arrays.copyOf(keyBytes, keyBytes.length);
+    byte[] passwd = new byte[keyBytes.length];
+    System.arraycopy(key, 0, passwd, 0, keyBytes.length);
+    Arrays.fill(key, (byte) 0);
+
+    for (int i = passwd.length; i > 0; i -= BLOCKSIZE) {
+        i = i > BLOCKSIZE ? i - BLOCKSIZE : 0;
+        md5Digest.update(passwd, i, i < BLOCKSIZE ? passwd.length - i : BLOCKSIZE);
+    }
+
+    md5Digest.update(key);
+    byte[] magic = MD5_PREFIX.getBytes(StandardCharsets.UTF_8);
+    md5Digest.update(magic);
+
+    for (int j = key.length; j > 0; j -= BLOCKSIZE) {
+        j = j > BLOCKSIZE ? j - BLOCKSIZE : 0;
+        for (int i = 0; i < ROUNDS; i++) {
+            md5Digest.update(passwd, j, j < BLOCKSIZE ? passwd.length - j : BLOCKSIZE);
+        }
+    }
+
+    byte[] digest = md5Digest.digest();
+    B64.b64from24bit(digest[11], digest[4], digest[0], 11, finalPasswd);
+    B64.b64from24bit(digest[8], digest[1], digest[13], 11, finalPasswd);
+    B64.b64from24bit(digest[6], digest[9], digest[2], 11, finalPasswd);
+    B64.b64from24bit(digest[15], digest[12], digest[3], 11, finalPasswd);
+    B64.b64from24bit(digest[5], digest[14], digest[7], 11, finalPasswd);
+    B64.b64from24bit(digest[10], digest[3], digest[15], 11, finalPasswd);
+    B64.b64from24bit(digest[0], digest[7], digest[4], 11, finalPasswd);
+    B64.b64from24bit(digest[13], digest[11], digest[8], 11, finalPasswd);
+    B64.b64from24bit(digest[14], digest[15], digest[12], 11, finalPasswd);
+    B64.b64from24bit(digest[12], digest[5], digest[2], 11, finalPasswd);
+    B64.b64from24bit(digest[9], digest[3], digest[6], 11, finalPasswd);
+    B64.b64from24bit(digest[7], digest[10], digest[1], 11, finalPasswd);
+
+    finalPasswd.append('$');
+    return finalPasswd.toString();
+}
+```

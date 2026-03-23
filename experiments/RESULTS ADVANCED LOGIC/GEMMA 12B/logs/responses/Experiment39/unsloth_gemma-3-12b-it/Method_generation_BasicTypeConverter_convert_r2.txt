@@ -1,0 +1,152 @@
+```java
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.util.TypeUtils;
+
+public Object convert(final Object object, final Class toType) {
+    if (object == null) {
+        if (toType == Boolean.class) {
+            return null;
+        }
+        if (toType == String.class) {
+            return "";
+        }
+        if (toType == long.class) {
+            return 0L;
+        }
+        if (toType == double.class) {
+            return 0.0;
+        }
+        if (toType == float.class) {
+            return 0.0f;
+        }
+        if (toType == int.class) {
+            return 0;
+        }
+        if (toType == short.class) {
+            return (short) 0;
+        }
+        if (toType == byte.class) {
+            return (byte) 0;
+        }
+        if (toType == char.class) {
+            return '\0';
+        }
+        if (toType == Number.class) {
+            return 0;
+        }
+        if (toType == boolean.class) {
+            return false;
+        }
+        return null;
+    }
+
+    if (toType == String.class) {
+        return object.toString();
+    }
+
+    if (Number.class.isAssignableFrom(toType)) {
+        if (object instanceof Number) {
+            return object;
+        }
+        if (object instanceof Boolean) {
+            return ((Boolean) object) ? 1 : 0;
+        }
+        try {
+            return ConvertUtils.toNumber(object.toString(), toType);
+        } catch (Exception e) {
+            throw new JXPathTypeConversionException(
+                    "Cannot convert " + object + " to " + toType, e);
+        }
+    }
+
+    if (toType == Boolean.class) {
+        if (object instanceof Number) {
+            return ((Number) object).doubleValue() != 0.0;
+        }
+        try {
+            return ConvertUtils.convert(object.toString(), Boolean.class);
+        } catch (Exception e) {
+            throw new JXPathTypeConversionException(
+                    "Cannot convert " + object + " to " + toType, e);
+        }
+    }
+
+    if (Collection.class.isAssignableFrom(toType)) {
+        if (object instanceof Object[]) {
+            return new ArrayList<>(List.of((Object[]) object));
+        }
+        if (object instanceof int[]) {
+            return new ArrayList<>(List.of((int[]) object));
+        }
+        if (object instanceof Collection) {
+            return unmodifiableCollection((Collection) object);
+        }
+        throw new JXPathTypeConversionException(
+                "Cannot convert " + object + " to " + toType);
+    }
+
+    if (object instanceof Pointer) {
+        return convert(((Pointer) object).getValue(), toType);
+    }
+
+    if (object instanceof NodeSet) {
+        return convert(((NodeSet) object).getValues(), toType);
+    }
+    
+    if (toType.isArray()) {
+        Class componentType = toType.getComponentType();
+        if (object instanceof Collection) {
+            Collection collection = (Collection) object;
+            if (componentType == String.class) {
+                String[] array = new String[collection.size()];
+                int i = 0;
+                for (Object item : collection) {
+                    array[i++] = item.toString();
+                }
+                return array;
+            } else if (componentType == Integer.class) {
+                Integer[] array = new Integer[collection.size()];
+                int i = 0;
+                for (Object item : collection) {
+                    array[i++] = (Integer) item;
+                }
+                return array;
+            } else {
+                throw new JXPathTypeConversionException(
+                        "Cannot convert collection to array of type " + componentType);
+            }
+        }
+    }
+
+    throw new JXPathTypeConversionException(
+            "Cannot convert " + object + " to " + toType);
+}
+
+protected Collection unmodifiableCollection(final Collection collection) {
+        if (collection instanceof List) {
+            return Collections.unmodifiableList((List) collection);
+        }
+        if (collection instanceof SortedSet) {
+            return Collections.unmodifiableSortedSet((SortedSet) collection);
+        }
+        if (collection instanceof Set) {
+            return Collections.unmodifiableSet((Set) collection);
+        }
+        return Collections.unmodifiableCollection(collection);
+    }
+```

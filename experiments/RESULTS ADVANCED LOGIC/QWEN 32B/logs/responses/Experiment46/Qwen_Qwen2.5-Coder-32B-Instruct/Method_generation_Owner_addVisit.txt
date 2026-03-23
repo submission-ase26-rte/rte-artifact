@@ -1,0 +1,11 @@
+```java
+public void addVisit(Integer petId, Visit visit) {
+    Assert.notNull(petId, "Pet identifier must not be null!");
+    Assert.notNull(visit, "Visit must not be null!");
+    Pet pet = getPet(petId);
+    if (pet == null) {
+        throw new IllegalArgumentException("Invalid Pet identifier!");
+    }
+    pet.addVisit(visit);
+}
+```

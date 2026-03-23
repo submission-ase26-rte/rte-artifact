@@ -1,0 +1,128 @@
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.concurrent.Future;
+
+import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.enterprise.event.Event;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
+import javax.jms.JMSContext;
+import javax.jms.JMSException;
+import javax.jms.Queue;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.TextMessage;
+import javax.jms.Topic;
+import javax.jms.TopicConnectionFactory;
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
+import org.mockito.MockitoSession;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.MarketSummaryUpdate;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeEJB;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeDirect_sellTestGenerated {
+
+    @Mock
+    private DataSource datasource;
+
+    @Mock
+    private UserTransaction txn;
+
+    @Mock
+    private QueueConnectionFactory queueConnectionFactory;
+
+    @Mock
+    private TopicConnectionFactory topicConnectionFactory;
+
+    @Mock
+    private Topic tradeStreamerTopic;
+
+    @Mock
+    private Queue tradeBrokerQueue;
+
+    @Mock
+    private ManagedExecutorService mes;
+
+    @Mock
+    private Event<MarketSummaryUpdate> mkSummaryUpdateEvent;
+
+    @Mock
+    private AsyncOrderSubmitter asyncOrderSubmitter;
+
+    @InjectMocks
+    private TradeDirect tradeDirect;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(tradeDirect, "datasource", datasource);
+        ReflectionTestUtils.setField(tradeDirect, "txn", txn);
+        ReflectionTestUtils.setField(tradeDirect, "queueConnectionFactory", queueConnectionFactory);
+        ReflectionTestUtils.setField(tradeDirect, "topicConnectionFactory", topicConnectionFactory);
+        ReflectionTestUtils.setField(tradeDirect, "tradeStreamerTopic", tradeStreamerTopic);
+        ReflectionTestUtils.setField(tradeDirect, "tradeBrokerQueue", tradeBrokerQueue);
+        ReflectionTestUtils.setField(tradeDirect, "mes", mes);
+        ReflectionTestUtils.setField(tradeDirect, "mkSummaryUpdateEvent", mkSummaryUpdateEvent);
+        ReflectionTestUtils.setField(tradeDirect, "asyncOrderSubmitter", asyncOrderSubmitter);
+    }
+
+    @Test
+    public void testSell_NullUserID() {
+        Integer holdingID = 1;
+        int orderProcessingMode = TradeConfig.SYNCH;
+        assertThrows(Exception.class, () -> tradeDirect.sell(null, holdingID, orderProcessingMode));
+    }
+
+    @Test
+    public void testSell_NullHoldingID() {
+        String userID = "user1";
+        int orderProcessingMode = TradeConfig.SYNCH;
+        assertThrows(Exception.class, () -> tradeDirect.sell(userID, null, orderProcessingMode));
+    }
+
+    @Test
+    public void testSell_InvalidOrderProcessingMode() {
+        String userID = "user1";
+        Integer holdingID = 1;
+        int orderProcessingMode = 999;
+        assertThrows(Exception.class, () -> tradeDirect.sell(userID, holdingID, orderProcessingMode));
+    }
+
+    @Test
+    public void testSell_SQLException() throws Exception {
+        String userID = "user1";
+        Integer holdingID = 1;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        when(datasource.getConnection()).thenThrow(new SQLException("Database error"));
+
+        assertThrows(Exception.class, () -> tradeDirect.sell(userID, holdingID, orderProcessingMode));
+    }
+}

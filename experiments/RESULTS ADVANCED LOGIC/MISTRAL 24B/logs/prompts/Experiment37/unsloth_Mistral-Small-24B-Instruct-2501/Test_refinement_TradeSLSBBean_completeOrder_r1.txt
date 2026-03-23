@@ -1,0 +1,486 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.ejb3;
+Class name (MUST be exactly): TradeSLSBBean_completeOrderTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testCompleteOrder_SellOrderNoHolding --
+ERROR: org.opentest4j.AssertionFailedError: expected: <cancelled> but was: <null>
+--------------------------------------------------
+TEST: testCompleteOrder_BuyOrder --
+ERROR: java.lang.IllegalArgumentException: Could not find field 'createHolding(account, quote, quantity, price)' of type [null] on target object [com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean@71190dee] or target class [class com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean]
+--------------------------------------------------
+TEST: testCompleteOrder_SellOrder --
+ERROR: org.opentest4j.AssertionFailedError: expected: <closed> but was: <null>
+
+TEST CODE TO FIX:
+package com.ibm.websphere.samples.daytrader.impl.ejb3;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.RuntimeMode;
+import com.ibm.websphere.samples.daytrader.interfaces.Trace;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeEJB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.FinancialUtils;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.RecentQuotePriceChangeList;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Future;
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.ejb.EJBException;
+import javax.ejb.SessionContext;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
+import javax.jms.JMSContext;
+import javax.jms.Queue;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.TextMessage;
+import javax.jms.Topic;
+import javax.jms.TopicConnectionFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.transaction.RollbackException;
+import javax.validation.constraints.NotNull;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeSLSBBean_completeOrderTestGenerated {
+    private TradeSLSBBean tradeSLSBBean;
+    private EntityManager entityManager;
+    @BeforeEach
+    public void setUp() {
+        entityManager = mock(EntityManager.class);
+        tradeSLSBBean = new TradeSLSBBean();
+        ReflectionTestUtils.setField(tradeSLSBBean, "entityManager", entityManager);
+    }
+
+
+    @Test
+        public void testCompleteOrder_SellOrder() throws Exception {
+            OrderDataBean order = mock(OrderDataBean.class);
+            AccountDataBean account = mock(AccountDataBean.class);
+            QuoteDataBean quote = mock(QuoteDataBean.class);
+            HoldingDataBean holding = mock(HoldingDataBean.class);
+            BigDecimal price = BigDecimal.ONE;
+            double quantity = 10;
+    
+            when(order.getHolding()).thenReturn(holding);
+            when(order.getAccount()).thenReturn(account);
+            when(order.getQuote()).thenReturn(quote);
+            when(order.getPrice()).thenReturn(price);
+            when(order.getQuantity()).thenReturn(quantity);
+            when(order.isSell()).thenReturn(true);
+            when(order.getOrderID()).thenReturn(1);
+            when(order.isCompleted()).thenReturn(false);
+            when(entityManager.find(OrderDataBean.class, 1)).thenReturn(order);
+    
+            try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+                mockedTradeConfig.when(TradeConfig::getRandomPriceChangeFactor).thenReturn(BigDecimal.ONE);
+    
+                OrderDataBean result = tradeSLSBBean.completeOrder(1, false);
+    
+                assertNotNull(result);
+                assertEquals("closed", result.getOrderStatus());
+                assertNotNull(result.getCompletionDate());
+                verify(order).setHolding(null);
+                verify(order).setOrderStatus("closed");
+                verify(order).setCompletionDate(any(Timestamp.class));
+                verify(entityManager).remove(holding);
+                verify(entityManager).find(OrderDataBean.class, 1);
+            }
+        }
+
+    @Test
+        public void testCompleteOrder_SellOrderNoHolding() throws Exception {
+            OrderDataBean order = mock(OrderDataBean.class);
+            AccountDataBean account = mock(AccountDataBean.class);
+            QuoteDataBean quote = mock(QuoteDataBean.class);
+            BigDecimal price = BigDecimal.ONE;
+            double quantity = 10;
+    
+            when(order.getHolding()).thenReturn(null);
+            when(order.getAccount()).thenReturn(account);
+            when(order.getQuote()).thenReturn(quote);
+            when(order.getPrice()).thenReturn(price);
+            when(order.getQuantity()).thenReturn(quantity);
+            when(order.isSell()).thenReturn(true);
+            when(order.getOrderID()).thenReturn(1);
+            when(order.isCompleted()).thenReturn(false);
+            when(entityManager.find(OrderDataBean.class, 1)).thenReturn(order);
+    
+            try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+                mockedTradeConfig.when(TradeConfig::getRandomPriceChangeFactor).thenReturn(BigDecimal.ONE);
+    
+                OrderDataBean result = tradeSLSBBean.completeOrder(1, false);
+    
+                assertNotNull(result);
+                assertEquals("cancelled", result.getOrderStatus());
+                verify(order).cancel();
+                verify(entityManager).find(OrderDataBean.class, 1);
+            }
+        }
+
+    @Test
+        public void testCompleteOrder_BuyOrder() throws Exception {
+            OrderDataBean order = mock(OrderDataBean.class);
+            AccountDataBean account = mock(AccountDataBean.class);
+            QuoteDataBean quote = mock(QuoteDataBean.class);
+            HoldingDataBean holding = mock(HoldingDataBean.class);
+            BigDecimal price = BigDecimal.ONE;
+            double quantity = 10;
+    
+            when(order.getHolding()).thenReturn(null);
+            when(order.getAccount()).thenReturn(account);
+            when(order.getQuote()).thenReturn(quote);
+            when(order.getPrice()).thenReturn(price);
+            when(order.getQuantity()).thenReturn(quantity);
+            when(order.isBuy()).thenReturn(true);
+            when(order.getOrderID()).thenReturn(1);
+            when(order.isCompleted()).thenReturn(false);
+            when(entityManager.find(OrderDataBean.class, 1)).thenReturn(order);
+    
+            HoldingDataBean newHolding = mock(HoldingDataBean.class);
+            ReflectionTestUtils.setField(tradeSLSBBean, "createHolding(account, quote, quantity, price)", newHolding);
+    
+            try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+                mockedTradeConfig.when(TradeConfig::getRandomPriceChangeFactor).thenReturn(BigDecimal.ONE);
+    
+                OrderDataBean result = tradeSLSBBean.completeOrder(1, false);
+    
+                assertNotNull(result);
+                assertEquals("closed", result.getOrderStatus());
+                assertNotNull(result.getCompletionDate());
+                verify(order).setHolding(newHolding);
+                verify(order).setOrderStatus("closed");
+                verify(order).setCompletionDate(any(Timestamp.class));
+                verify(entityManager).find(OrderDataBean.class, 1);
+            }
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    public void testCompleteOrder_OrderAlreadyCompleted() {}
+    @Test
+    public void testCompleteOrder_NullOrder() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   MarketSummaryDataBean -> com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean
+//   RuntimeMode -> com.ibm.websphere.samples.daytrader.interfaces.RuntimeMode
+//   Trace -> com.ibm.websphere.samples.daytrader.interfaces.Trace
+//   TradeEJB -> com.ibm.websphere.samples.daytrader.interfaces.TradeEJB
+//   TradeServices -> com.ibm.websphere.samples.daytrader.interfaces.TradeServices
+//   FinancialUtils -> com.ibm.websphere.samples.daytrader.util.FinancialUtils
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   RecentQuotePriceChangeList -> com.ibm.websphere.samples.daytrader.util.RecentQuotePriceChangeList
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   BigDecimal -> java.math.BigDecimal
+//   Timestamp -> java.sql.Timestamp
+//   Collection -> java.util.Collection
+//   Comparator -> java.util.Comparator
+//   Iterator -> java.util.Iterator
+//   List -> java.util.List
+//   Future -> java.util.concurrent.Future
+//   Resource -> javax.annotation.Resource
+//   EJB -> javax.ejb.EJB
+//   EJBException -> javax.ejb.EJBException
+//   SessionContext -> javax.ejb.SessionContext
+//   Stateless -> javax.ejb.Stateless
+//   TransactionAttribute -> javax.ejb.TransactionAttribute
+//   TransactionAttributeType -> javax.ejb.TransactionAttributeType
+//   TransactionManagement -> javax.ejb.TransactionManagement
+//   TransactionManagementType -> javax.ejb.TransactionManagementType
+//   Inject -> javax.inject.Inject
+//   JMSContext -> javax.jms.JMSContext
+//   Queue -> javax.jms.Queue
+//   QueueConnectionFactory -> javax.jms.QueueConnectionFactory
+//   TextMessage -> javax.jms.TextMessage
+//   Topic -> javax.jms.Topic
+//   TopicConnectionFactory -> javax.jms.TopicConnectionFactory
+//   EntityManager -> javax.persistence.EntityManager
+//   PersistenceContext -> javax.persistence.PersistenceContext
+//   TypedQuery -> javax.persistence.TypedQuery
+//   CriteriaBuilder -> javax.persistence.criteria.CriteriaBuilder
+//   CriteriaQuery -> javax.persistence.criteria.CriteriaQuery
+//   Root -> javax.persistence.criteria.Root
+//   RollbackException -> javax.transaction.RollbackException
+//   NotNull -> javax.validation.constraints.NotNull
+//   AccountDataBean -> com.ibm.websphere.samples.daytrader.entities.AccountDataBean
+//   AccountProfileDataBean -> com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean
+//   HoldingDataBean -> com.ibm.websphere.samples.daytrader.entities.HoldingDataBean
+//   OrderDataBean -> com.ibm.websphere.samples.daytrader.entities.OrderDataBean
+//   QuoteDataBean -> com.ibm.websphere.samples.daytrader.entities.QuoteDataBean
+//   TradeSLSBBean -> com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean
+
+// === Class: TradeSLSBBean ===
+// Getter/Setter Methods (for test assertions):
+public MarketSummaryDataBean getMarketSummary();
+public Collection<OrderDataBean> getOrders(String userID);
+public Collection<OrderDataBean> getClosedOrders(String userID);
+public QuoteDataBean getQuote(String symbol);
+public Collection<QuoteDataBean> getAllQuotes();
+public HoldingDataBean getHolding(Integer holdingID);
+public AccountDataBean getAccountData(String userID);
+public AccountProfileDataBean getAccountProfileData(String userID);
+public int getImpl();
+public void setInSession(boolean inSession);
+
+// === External Class: QuoteDataBean ===
+// Full import path: com.ibm.websphere.samples.daytrader.entities.QuoteDataBean
+// Import paths:
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   Serializable -> java.io.Serializable
+//   BigDecimal -> java.math.BigDecimal
+//   NotBlank -> javax.validation.constraints.NotBlank
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private String symbol;
+    private String companyName;
+    private double volume;
+    private BigDecimal price;
+    private BigDecimal open1;
+    private BigDecimal low;
+    private BigDecimal high;
+    private double change1;
+
+// Constructors:
+public QuoteDataBean();
+public QuoteDataBean(String symbol, String companyName, double volume, BigDecimal price, BigDecimal open, BigDecimal low, BigDecimal high, double change);
+public QuoteDataBean(String symbol);
+
+// Method Signatures (used by target method):
+public String getSymbol();
+
+// Public Getter Methods (for test assertions):
+public static QuoteDataBean getRandomInstance();
+public String toString();
+public String toHTML();
+public String getCompanyName();
+public BigDecimal getPrice();
+public BigDecimal getOpen();
+public BigDecimal getLow();
+public BigDecimal getHigh();
+public double getChange();
+public double getVolume();
+
+// === External Class: TradeConfig ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.TradeConfig
+// Import paths:
+//   BigDecimal -> java.math.BigDecimal
+//   ArrayList -> java.util.ArrayList
+//   Random -> java.util.Random
+// Fields (with actual visibility):
+    private static String[] runTimeModeNames;
+    public static final int EJB3;
+    public static final int DIRECT;
+    public static final int SESSION_TO_DIRECT;
+    private static int runTimeMode;
+    private static String[] orderProcessingModeNames;
+    public static final int SYNCH;
+    public static final int ASYNCH;
+    public static final int ASYNCH_2PHASE;
+    private static int orderProcessingMode;
+    private static String[] accessModeNames;
+    public static final int STANDARD;
+    private static int accessMode;
+    private static String[] webInterfaceNames;
+    public static final int JSP;
+    public static final int JSP_Images;
+    public static final int JSP_Images_HTTP2;
+    private static int webInterface;
+    private static int MAX_USERS;
+    private static int MAX_QUOTES;
+    public static boolean JDBCDriverNeedsGlobalTransation;
+    public static String DATASOURCE;
+    public static int KEYBLOCKSIZE;
+    public static int QUOTES_PER_PAGE;
+    public static boolean RND_USER;
+    private static int MAX_HOLDINGS;
+    private static int count;
+    private static Object userID_count_semaphore;
+    private static int userID_count;
+    private static String hostName;
+    private static Random r0;
+    private static Random randomNumberGenerator;
+    public static final String newUserPrefix;
+    public static final int verifyPercent;
+    private static boolean updateQuotePrices;
+    private static int primIterations;
+    private static boolean longRun;
+    private static boolean publishQuotePriceChange;
+    private static int listQuotePriceChangeFrequency;
+    private static boolean displayOrderAlerts;
+    private static int marketSummaryInterval;
+    public static BigDecimal PENNY_STOCK_PRICE;
+    public static BigDecimal PENNY_STOCK_RECOVERY_MIRACLE_MULTIPLIER;
+    public static BigDecimal MAXIMUM_STOCK_PRICE;
+    public static BigDecimal MAXIMUM_STOCK_SPLIT_MULTIPLIER;
+    public static final int HOME_OP;
+    public static final int QUOTE_OP;
+    public static final int LOGIN_OP;
+    public static final int LOGOUT_OP;
+    public static final int REGISTER_OP;
+    public static final int ACCOUNT_OP;
+    public static final int PORTFOLIO_OP;
+    public static final int BUY_OP;
+    public static final int SELL_OP;
+    public static final int UPDATEACCOUNT_OP;
+    private static int[][] scenarioMixes;
+    private static char[] actions;
+    private static int sellDeficit;
+    public static final int WELCOME_PAGE;
+    public static final int REGISTER_PAGE;
+    public static final int PORTFOLIO_PAGE;
+    public static final int QUOTE_PAGE;
+    public static final int HOME_PAGE;
+    public static final int ACCOUNT_PAGE;
+    public static final int ORDER_PAGE;
+    public static final int CONFIG_PAGE;
+    public static final int STATS_PAGE;
+    public static final int MARKET_SUMMARY_PAGE;
+    public static String[][] webUI;
+    private static int scenarioCount;
+    private static final BigDecimal orderFee;
+    private static final BigDecimal cashFee;
+    private static final BigDecimal ONE;
+    private static ArrayList deck;
+    private static int card;
+
+// Method Signatures (used by target method):
+static public BigDecimal getRandomPriceChangeFactor();
+
+// Public Getter Methods (for test assertions):
+public static String getPage(int pageNumber);
+public static java getRunTimeModeNames();
+public static char getScenarioAction(boolean newUser);
+public static String getUserID();
+public static BigDecimal getOrderFee(String orderType);
+public static String getOrderProcessingModeNames();
+public static String getWebInterfaceNames();
+public static int getScenarioMixes();
+public static int getMAX_USERS();
+public static int getMAX_QUOTES();
+public static int getMAX_HOLDINGS();
+public static int getScenarioCount();
+public static boolean getJDBCDriverNeedsGlobalTransation();
+public static boolean getUpdateQuotePrices();
+public static int getPrimIterations();
+
+// === External Class: Log ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.Log
+// Import paths:
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   Level -> java.util.logging.Level
+//   Logger -> java.util.logging.Logger
+// Fields (with actual visibility):
+    private static final Logger log;
+
+// Method Signatures (used by target method):
+static public void trace(String message);
+static public void debug(String message);
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    public void setUp() {
+        entityManager = mock(EntityManager.class);
+        tradeSLSBBean = new TradeSLSBBean();
+        ReflectionTestUtils.setField(tradeSLSBBean, "entityManager", entityManager);
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+        completeOrder(orderID, false);
+
+
+COVERAGE ISSUES:
+Current line coverage: 82.76%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

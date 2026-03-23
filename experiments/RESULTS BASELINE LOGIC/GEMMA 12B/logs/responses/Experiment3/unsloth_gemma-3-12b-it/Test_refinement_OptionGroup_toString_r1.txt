@@ -1,0 +1,79 @@
+```java
+package org.apache.commons.cli;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class OptionGroup_toStringTestGenerated {
+    private OptionGroup optionGroup;
+    @BeforeEach
+    public void setUp() {
+        optionGroup = mock(OptionGroup.class);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        optionGroup = null;
+    }
+
+
+    @Test
+    public void testToString_emptyOptionGroup() {
+        when(optionGroup.getOptions()).thenReturn(new ArrayList<>());
+        assertEquals("[]", optionGroup.toString());
+    }
+
+    @Test
+    public void testToString_singleOptionWithOpt() {
+        Option option = mock(Option.class);
+        when(option.getOpt()).thenReturn("a");
+        when(option.getDescription()).thenReturn("description");
+        when(optionGroup.getOptions()).thenReturn(List.of(option));
+        assertEquals("[ -a description]", optionGroup.toString());
+    }
+
+    @Test
+    public void testToString_singleOptionWithLongOpt() {
+        Option option = mock(Option.class);
+        when(option.getLongOpt()).thenReturn("long-option");
+        when(option.getDescription()).thenReturn("description");
+        when(optionGroup.getOptions()).thenReturn(List.of(option));
+        assertEquals("[ --long-option description]", optionGroup.toString());
+    }
+
+    @Test
+    public void testToString_multipleOptions() {
+        Option option1 = mock(Option.class);
+        when(option1.getOpt()).thenReturn("a");
+        Option option2 = mock(Option.class);
+        when(option2.getLongOpt()).thenReturn("long-option");
+        when(optionGroup.getOptions()).thenReturn(List.of(option1, option2));
+        assertEquals("[ -a --long-option]", optionGroup.toString());
+    }
+
+    @Test
+    public void testToString_optionsWithAndWithoutDescription() {
+        Option option1 = mock(Option.class);
+        when(option1.getOpt()).thenReturn("a");
+        when(option1.getDescription()).thenReturn("description1");
+        Option option2 = mock(Option.class);
+        when(option2.getLongOpt()).thenReturn("long-option");
+        when(optionGroup.getOptions()).thenReturn(List.of(option1, option2));
+        assertEquals("[ -a description1 --long-option]", optionGroup.toString());
+    }
+}
+```

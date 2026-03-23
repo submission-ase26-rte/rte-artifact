@@ -1,0 +1,141 @@
+```java
+package com.ibm.websphere.samples.daytrader.web.jsf;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.logging.Logger;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.faces.context.ExternalContext;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.OngoingStubbing;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeConfigJSF_updateConfigTestGenerated {
+
+    @Mock
+    private TradeDirectDBUtils dbUtils;
+    @Mock
+    private RunStatsDataBean runStatsDataBean;
+    @Mock
+    private ExternalContext externalContext;
+    @Mock
+    private Logger log;
+
+    private TradeConfigJSF tradeConfigJSF;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        tradeConfigJSF = new TradeConfigJSF();
+        tradeConfigJSF.setDbUtils(dbUtils);
+        tradeConfigJSF.setContext(externalContext);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        tradeConfigJSF = null;
+    }
+
+    @Test
+    public void testUpdateConfig_validInputs() {
+        tradeConfigJSF.setRuntimeMode("RuntimeMode1");
+        tradeConfigJSF.setOrderProcessingMode("OrderProcessingMode2");
+        tradeConfigJSF.setWebInterface("WebInterface3");
+        tradeConfigJSF.setMaxUsers(10);
+        tradeConfigJSF.setMaxQuotes(20);
+        tradeConfigJSF.setMarketSummaryInterval(30);
+        tradeConfigJSF.setPrimIterations(40);
+        tradeConfigJSF.setPublishQuotePriceChange(true);
+        tradeConfigJSF.setListQuotePriceChangeFrequency(50);
+        tradeConfigJSF.setDisplayOrderAlerts(false);
+        tradeConfigJSF.setLongRun(true);
+
+        tradeConfigJSF.updateConfig();
+
+        assertTrue(TradeConfig.getRunTimeMode() == 0);
+        assertTrue(TradeConfig.getOrderProcessingMode() == 1);
+        assertTrue(TradeConfig.getWebInterface() == 2);
+        assertTrue(TradeConfig.getMAX_USERS() == 10);
+        assertTrue(TradeConfig.getMAX_QUOTES() == 20);
+        assertTrue(TradeConfig.getMarketSummaryInterval() == 30);
+        assertTrue(TradeConfig.getPrimIterations() == 40);
+        assertTrue(TradeConfig.getPublishQuotePriceChange());
+        assertTrue(TradeConfig.getListQuotePriceChangeFrequency() == 50);
+        assertTrue(TradeConfig.getDisplayOrderAlerts() == false);
+        assertTrue(TradeConfig.getLongRun());
+
+        assertEquals("DayTrader Configuration Updated", tradeConfigJSF.getResult());
+    }
+
+    @Test
+    public void testUpdateConfig_invalidOrderProcessingMode() {
+        tradeConfigJSF.setOrderProcessingMode("InvalidMode");
+        tradeConfigJSF.updateConfig();
+
+        verify(Log, times(1)).error(any(), anyString(), anyString(), anyString());
+        assertTrue(TradeConfig.getOrderProcessingMode() == TradeConfig.SYNCH);
+    }
+
+    @Test
+    public void testUpdateConfig_invalidWebInterface() {
+        tradeConfigJSF.setWebInterface("InvalidInterface");
+        tradeConfigJSF.updateConfig();
+
+        verify(Log, times(1)).error(any(), anyString(), anyString(), anyString());
+        assertTrue(TradeConfig.getWebInterface() == TradeConfig.STANDARD);
+    }
+
+    @Test
+    public void testUpdateConfig_nullOrderProcessingMode() {
+        tradeConfigJSF.setOrderProcessingMode(null);
+        tradeConfigJSF.updateConfig();
+
+        verify(Log, never()).error(any(), anyString(), anyString(), anyString());
+    }
+
+    @Test
+    public void testUpdateConfig_nullWebInterface() {
+        tradeConfigJSF.setWebInterface(null);
+        tradeConfigJSF.updateConfig();
+
+        verify(Log, never()).error(any(), anyString(), anyString(), anyString());
+    }
+
+    @Test
+    public void testUpdateConfig_staticFields() {
+        tradeConfigJSF.updateConfig();
+        String[] runtimeModeNames = TradeConfig.getRunTimeModeNames();
+        assertNotNull(runtimeModeNames);
+        assertTrue(runtimeModeNames.length > 0);
+    }
+
+    @Test
+    public void testUpdateConfig_marketSummaryInterval() {
+        tradeConfigJSF.setMarketSummaryInterval(60);
+        tradeConfigJSF.updateConfig();
+        assertEquals(60, TradeConfig.getMarketSummaryInterval());
+    }
+
+    @Test
+    public void testUpdateConfig_primIterations() {
+        tradeConfigJSF.setPrimIterations(50);
+        tradeConfigJSF.updateConfig();
+        assertEquals(50, TradeConfig.getPrimIterations());
+    }
+}
+```

@@ -1,0 +1,56 @@
+```java
+public void completeOrder(Integer orderID, boolean twoPhase) throws Exception {
+    OrderDataBean order = entityManager.find(OrderDataBean.class, orderID);
+    if (order == null) {
+        Log.error("TradeSLSBBean:completeOrder -- order not found for orderID: " + orderID);
+        throw new EJBException("Error: attempt to complete Order that is null\n" + order);
+    }
+
+    if (order.getOrderStatus().equals("completed")) {
+        Log.trace("TradeSLSBBean:completeOrder -- Order already completed");
+        return;
+    }
+
+    if (order.getOrderStatus().equals("cancelled")) {
+        Log.trace("TradeSLSBBean:completeOrder -- Order already cancelled");
+        return;
+    }
+
+    if (order.getOrderStatus().equals("open")) {
+        AccountDataBean account = order.getAccount();
+        QuoteDataBean quote = entityManager.find(QuoteDataBean.class, order.getSymbol());
+        BigDecimal orderFee = TradeConfig.getOrderFee(order.getOrderType());
+
+        if (order.getOrderType().equals("buy")) {
+            BigDecimal totalPrice = order.getPrice().multiply(new BigDecimal(order.getQuantity())).add(orderFee);
+            if (account.getBalance().compareTo(totalPrice) < 0) {
+                Log.error("TradeSLSBBean:completeOrder -- insufficient balance for orderID: " + orderID);
+                throw new EJBException("Error: insufficient balance for orderID: " + orderID);
+            }
+            account.setBalance(account.getBalance().subtract(totalPrice));
+            HoldingDataBean holding = new HoldingDataBean(account.getAccountID(), order.getQuantity(), order.getPrice(), new Timestamp(System.currentTimeMillis()), order.getSymbol(), quote);
+            entityManager.persist(holding);
+            order.setHolding(holding);
+        } else if (order.getOrderType().equals("sell")) {
+            HoldingDataBean holding = entityManager.find(HoldingDataBean.class, order.getHoldingID());
+            if (holding == null || holding.getQuantity() < order.getQuantity()) {
+                Log.error("TradeSLSBBean:completeOrder -- insufficient holding for orderID: " + orderID);
+                throw new EJBException("Error: insufficient holding for orderID: " + orderID);
+            }
+            BigDecimal totalPrice = order.getPrice().multiply(new BigDecimal(order.getQuantity())).subtract(orderFee);
+            account.setBalance(account.getBalance().add(totalPrice));
+            holding.setQuantity(holding.getQuantity() - order.getQuantity());
+            if (holding.getQuantity() == 0) {
+                entityManager.remove(holding);
+            } else {
+                entityManager.merge(holding);
+            }
+        }
+
+        order.setOrderStatus("completed");
+        order.setCompletionDate(new Timestamp(System.currentTimeMillis()));
+        entityManager.merge(order);
+        entityManager.merge(account);
+    }
+}
+```

@@ -1,0 +1,128 @@
+```java
+package org.springframework.samples.petclinic.owner;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.validation.Errors;
+
+import java.time.LocalDate;
+
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PetValidator_validateTestGenerated {
+
+    private PetValidator petValidator;
+
+    @Mock
+    private Errors errors;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        petValidator = new PetValidator();
+        ReflectionTestUtils.setField(petValidator, "REQUIRED", "required");
+    }
+
+    @Test
+    public void testValidate_NameEmpty() {
+        Pet pet = new Pet();
+        pet.setName("");
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verify(errors).rejectValue("name", "required", "required");
+    }
+
+    @Test
+    public void testValidate_NameNull() {
+        Pet pet = new Pet();
+        pet.setName(null);
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verify(errors).rejectValue("name", "required", "required");
+    }
+
+    @Test
+    public void testValidate_NameValid() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verify(errors, never()).rejectValue("name", "required", "required");
+    }
+
+    @Test
+    public void testValidate_TypeNull_NewPet() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(null);
+        pet.setBirthDate(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verify(errors).rejectValue("type", "required", "required");
+    }
+
+    @Test
+    public void testValidate_TypeValid_NewPet() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verify(errors, never()).rejectValue("type", "required", "required");
+    }
+
+    @Test
+    public void testValidate_TypeNull_ExistingPet() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(null);
+        pet.setBirthDate(LocalDate.now());
+        pet.setId(1);
+
+        petValidator.validate(pet, errors);
+
+        verify(errors, never()).rejectValue("type", "required", "required");
+    }
+
+    @Test
+    public void testValidate_BirthDateNull() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(null);
+
+        petValidator.validate(pet, errors);
+
+        verify(errors).rejectValue("birthDate", "required", "required");
+    }
+
+    @Test
+    public void testValidate_BirthDateValid() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verify(errors, never()).rejectValue("birthDate", "required", "required");
+    }
+}
+```

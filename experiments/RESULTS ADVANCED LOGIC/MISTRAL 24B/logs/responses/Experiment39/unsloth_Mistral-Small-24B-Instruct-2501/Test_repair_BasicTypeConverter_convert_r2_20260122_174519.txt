@@ -1,0 +1,208 @@
+```java
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.util.BasicTypeConverter;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class BasicTypeConverter_convertTestGenerated {
+    private BasicTypeConverter converter;
+
+    @BeforeEach
+    public void setUp() {
+        converter = new BasicTypeConverter();
+    }
+
+    @Test
+    public void testConvertUsingConverter() {
+        ConvertUtils.register(new Converter() {
+            @Override
+            public Object convert(Class type, Object value) {
+                return "converted";
+            }
+        }, String.class);
+        assertEquals("converted", converter.convert("test", String.class));
+    }
+
+    @Test
+    public void testConvertInvalidType() {
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert("test", Object.class));
+    }
+
+    @Test
+    public void testConvertStringToPrimitiveInvalid() {
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert("invalid", Integer.class));
+    }
+
+    @Test
+    public void testConvertNullToPrimitive() {
+        assertEquals(0, converter.convert(null, int.class));
+    }
+
+    @Test
+    public void testConvertObjectToObject() {
+        Object obj = new Object();
+        assertSame(obj, converter.convert(obj, Object.class));
+    }
+
+    @Test
+    public void testConvertArrayToArray() {
+        Integer[] array = {1, 2, 3};
+        Integer[] convertedArray = (Integer[]) converter.convert(array, Integer[].class);
+        assertArrayEquals(array, convertedArray);
+    }
+
+    @Test
+    public void testConvertArrayToCollection() {
+        Integer[] array = {1, 2, 3};
+        Collection<Integer> collection = (Collection<Integer>) converter.convert(array, List.class);
+        assertEquals(3, collection.size());
+        assertTrue(collection.contains(1));
+        assertTrue(collection.contains(2));
+        assertTrue(collection.contains(3));
+    }
+
+    @Test
+    public void testConvertCollectionToArray() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        Integer[] array = (Integer[]) converter.convert(list, Integer[].class);
+        assertArrayEquals(new Integer[]{1, 2, 3}, array);
+    }
+
+    @Test
+    public void testConvertCollectionToCollection() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        Collection<Integer> collection = (Collection<Integer>) converter.convert(list, List.class);
+        assertEquals(3, collection.size());
+        assertTrue(collection.contains(1));
+        assertTrue(collection.contains(2));
+        assertTrue(collection.contains(3));
+    }
+
+    @Test
+    public void testConvertObjectToString() {
+        Object obj = new Object();
+        assertEquals(obj.toString(), converter.convert(obj, String.class));
+    }
+
+    @Test
+    public void testConvertBooleanToNumber() {
+        assertEquals(1, converter.convert(true, Integer.class));
+        assertEquals(0, converter.convert(false, Integer.class));
+    }
+
+    @Test
+    public void testConvertNumberToBoolean() {
+        assertTrue((Boolean) converter.convert(1, Boolean.class));
+        assertFalse((Boolean) converter.convert(0, Boolean.class));
+    }
+
+    @Test
+    public void testConvertStringToPrimitive() {
+        assertEquals(123, converter.convert("123", Integer.class));
+    }
+
+    @Test
+    public void testConvertNodeSetToArray() {
+        List<Integer> values = new ArrayList<>();
+        values.add(1);
+        values.add(2);
+        values.add(3);
+        NodeSet nodeSet = new NodeSet(values) {
+            @Override
+            public Collection getValues() {
+                return values;
+            }
+
+            @Override
+            public Pointer asPath() {
+                return null;
+            }
+        };
+        Integer[] array = (Integer[]) converter.convert(nodeSet, Integer[].class);
+        assertArrayEquals(new Integer[]{1, 2, 3}, array);
+    }
+
+    @Test
+    public void testConvertPointerToObject() {
+        Pointer pointer = new Pointer() {
+            @Override
+            public Object getValue() {
+                return "test";
+            }
+
+            @Override
+            public Pointer asPath() {
+                return null;
+            }
+        };
+        assertEquals("test", converter.convert(pointer, String.class));
+    }
+
+    @Test
+    public void testConvertNodeSetToCollection() {
+        List<Integer> values = new ArrayList<>();
+        values.add(1);
+        values.add(2);
+        values.add(3);
+        NodeSet nodeSet = new NodeSet(values) {
+            @Override
+            public Collection getValues() {
+                return values;
+            }
+
+            @Override
+            public Pointer asPath() {
+                return null;
+            }
+        };
+        Collection<Integer> collection = (Collection<Integer>) converter.convert(nodeSet, List.class);
+        assertEquals(3, collection.size());
+        assertTrue(collection.contains(1));
+        assertTrue(collection.contains(2));
+        assertTrue(collection.contains(3));
+    }
+
+    @Test
+    public void testConvertNullToArray() {
+        assertArrayEquals(new String[]{}, (String[]) converter.convert(null, String[].class));
+    }
+
+    @Test
+    public void testConvertNullToCollection() {
+        assertEquals(0, ((List<?>) converter.convert(null, List.class)).size());
+    }
+
+    @Test
+    public void testConvertArrayToNull() {
+        Integer[] array = {};
+        assertNull(converter.convert(array, Void.class));
+    }
+
+    @Test
+    public void testConvertCollectionToNull() {
+        List<Integer> list = new ArrayList<>();
+        assertNull(converter.convert(list, Void.class));
+    }
+}
+```

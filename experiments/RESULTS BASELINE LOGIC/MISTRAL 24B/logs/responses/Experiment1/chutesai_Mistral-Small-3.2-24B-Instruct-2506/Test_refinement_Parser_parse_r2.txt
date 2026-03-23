@@ -1,0 +1,252 @@
+Here's the fixed test class with all failed tests corrected and new tests added to improve coverage:
+
+```java
+package org.apache.commons.cli;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Parser_parseTestGenerated {
+    private Parser parser;
+    @Mock
+    private Options options;
+    @Mock
+    private Option option;
+    @Mock
+    private Option option2;
+    @Mock
+    private OptionGroup optionGroup;
+    @Mock
+    private CommandLine cmd;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+        };
+    }
+
+    @AfterEach
+    void tearDown() {
+        parser = null;
+    }
+
+    @Test
+    void testParseWithValidOptionsAndArguments() throws ParseException {
+        String[] arguments = {"-a", "value1", "-b", "value2"};
+        Properties properties = new Properties();
+        boolean stopAtNonOption = false;
+        when(options.hasOption("-a")).thenReturn(true);
+        when(options.hasOption("-b")).thenReturn(true);
+        when(options.getOption("-a")).thenReturn(option);
+        when(options.getOption("-b")).thenReturn(option2);
+        when(option.isRequired()).thenReturn(false);
+        when(option2.isRequired()).thenReturn(false);
+        when(options.helpOptions()).thenReturn(Arrays.asList(option, option2));
+        when(options.getOptionGroups()).thenReturn(Arrays.asList(optionGroup));
+        CommandLine result = parser.parse(options, arguments, properties, stopAtNonOption);
+        assertNotNull(result);
+        verify(option, times(1)).clearValues();
+        verify(option2, times(1)).clearValues();
+        verify(optionGroup, times(1)).setSelected(null);
+    }
+
+    @Test
+    void testParseWithStopAtNonOptionTrue() throws ParseException {
+        String[] arguments = {"-a", "value1", "-c", "value2"};
+        Properties properties = new Properties();
+        boolean stopAtNonOption = true;
+        when(options.hasOption("-a")).thenReturn(true);
+        when(options.hasOption("-c")).thenReturn(false);
+        when(options.getOption("-a")).thenReturn(option);
+        when(option.isRequired()).thenReturn(false);
+        when(options.helpOptions()).thenReturn(Arrays.asList(option));
+        when(options.getOptionGroups()).thenReturn(Arrays.asList(optionGroup));
+        CommandLine result = parser.parse(options, arguments, properties, stopAtNonOption);
+        assertNotNull(result);
+        verify(option, times(1)).clearValues();
+        verify(optionGroup, times(1)).setSelected(null);
+    }
+
+    @Test
+    void testParseWithDoubleDash() throws ParseException {
+        String[] arguments = {"-a", "value1", "--", "arg1", "arg2"};
+        Properties properties = new Properties();
+        boolean stopAtNonOption = false;
+        when(options.hasOption("-a")).thenReturn(true);
+        when(options.getOption("-a")).thenReturn(option);
+        when(option.isRequired()).thenReturn(false);
+        when(options.helpOptions()).thenReturn(Arrays.asList(option));
+        when(options.getOptionGroups()).thenReturn(Arrays.asList(optionGroup));
+        CommandLine result = parser.parse(options, arguments, properties, stopAtNonOption);
+        assertNotNull(result);
+        verify(option, times(1)).clearValues();
+        verify(optionGroup, times(1)).setSelected(null);
+    }
+
+    @Test
+    void testParseWithSingleDash() throws ParseException {
+        String[] arguments = {"-a", "value1", "-", "arg1"};
+        Properties properties = new Properties();
+        boolean stopAtNonOption = false;
+        when(options.hasOption("-a")).thenReturn(true);
+        when(options.getOption("-a")).thenReturn(option);
+        when(option.isRequired()).thenReturn(false);
+        when(options.helpOptions()).thenReturn(Arrays.asList(option));
+        when(options.getOptionGroups()).thenReturn(Arrays.asList(optionGroup));
+        CommandLine result = parser.parse(options, arguments, properties, stopAtNonOption);
+        assertNotNull(result);
+        verify(option, times(1)).clearValues();
+        verify(optionGroup, times(1)).setSelected(null);
+    }
+
+    @Test
+    void testParseWithNullProperties() throws ParseException {
+        String[] arguments = {"-a", "value1"};
+        Properties properties = null;
+        boolean stopAtNonOption = false;
+        when(options.hasOption("-a")).thenReturn(true);
+        when(options.getOption("-a")).thenReturn(option);
+        when(option.isRequired()).thenReturn(false);
+        when(options.helpOptions()).thenReturn(Arrays.asList(option));
+        when(options.getOptionGroups()).thenReturn(Arrays.asList(optionGroup));
+        CommandLine result = parser.parse(options, arguments, properties, stopAtNonOption);
+        assertNotNull(result);
+        verify(option, times(1)).clearValues();
+        verify(optionGroup, times(1)).setSelected(null);
+    }
+
+    @Test
+    void testParseWithDoubleDashStopAtNonOption() throws ParseException {
+        String[] arguments = {"-a", "value1", "--", "arg1", "arg2"};
+        Properties properties = new Properties();
+        boolean stopAtNonOption = true;
+        when(options.hasOption("-a")).thenReturn(true);
+        when(options.getOption("-a")).thenReturn(option);
+        when(option.isRequired()).thenReturn(false);
+        when(options.helpOptions()).thenReturn(Arrays.asList(option));
+        when(options.getOptionGroups()).thenReturn(Arrays.asList(optionGroup));
+        CommandLine result = parser.parse(options, arguments, properties, stopAtNonOption);
+        assertNotNull(result);
+        verify(option, times(1)).clearValues();
+        verify(optionGroup, times(1)).setSelected(null);
+    }
+
+    @Test
+    void testParseWithSingleDashStopAtNonOption() throws ParseException {
+        String[] arguments = {"-a", "value1", "-", "arg1"};
+        Properties properties = new Properties();
+        boolean stopAtNonOption = true;
+        when(options.hasOption("-a")).thenReturn(true);
+        when(options.getOption("-a")).thenReturn(option);
+        when(option.isRequired()).thenReturn(false);
+        when(options.helpOptions()).thenReturn(Arrays.asList(option));
+        when(options.getOptionGroups()).thenReturn(Arrays.asList(optionGroup));
+        CommandLine result = parser.parse(options, arguments, properties, stopAtNonOption);
+        assertNotNull(result);
+        verify(option, times(1)).clearValues();
+        verify(optionGroup, times(1)).setSelected(null);
+    }
+
+    @Test
+    void testParseWithUnrecognizedOptionStopAtNonOption() throws ParseException {
+        String[] arguments = {"-a", "value1", "-x", "value2"};
+        Properties properties = new Properties();
+        boolean stopAtNonOption = true;
+        when(options.hasOption("-a")).thenReturn(true);
+        when(options.hasOption("-x")).thenReturn(false);
+        when(options.getOption("-a")).thenReturn(option);
+        when(option.isRequired()).thenReturn(false);
+        when(options.helpOptions()).thenReturn(Arrays.asList(option));
+        when(options.getOptionGroups()).thenReturn(Arrays.asList(optionGroup));
+        CommandLine result = parser.parse(options, arguments, properties, stopAtNonOption);
+        assertNotNull(result);
+        verify(option, times(1)).clearValues();
+        verify(optionGroup, times(1)).setSelected(null);
+    }
+
+    @Test
+    void testParseWithDoubleDashEatTheRest() throws ParseException {
+        String[] arguments = {"-a", "value1", "--", "arg1", "arg2"};
+        Properties properties = new Properties();
+        boolean stopAtNonOption = true;
+        when(options.hasOption("-a")).thenReturn(true);
+        when(options.getOption("-a")).thenReturn(option);
+        when(option.isRequired()).thenReturn(false);
+        when(options.helpOptions()).thenReturn(Arrays.asList(option));
+        when(options.getOptionGroups()).thenReturn(Arrays.asList(optionGroup));
+        CommandLine result = parser.parse(options, arguments, properties, stopAtNonOption);
+        assertNotNull(result);
+        verify(option, times(1)).clearValues();
+        verify(optionGroup, times(1)).setSelected(null);
+    }
+
+    @Test
+    void testParseWithSingleDashEatTheRest() throws ParseException {
+        String[] arguments = {"-a", "value1", "-", "arg1"};
+        Properties properties = new Properties();
+        boolean stopAtNonOption = true;
+        when(options.hasOption("-a")).thenReturn(true);
+        when(options.getOption("-a")).thenReturn(option);
+        when(option.isRequired()).thenReturn(false);
+        when(options.helpOptions()).thenReturn(Arrays.asList(option));
+        when(options.getOptionGroups()).thenReturn(Arrays.asList(optionGroup));
+        CommandLine result = parser.parse(options, arguments, properties, stopAtNonOption);
+        assertNotNull(result);
+        verify(option, times(1)).clearValues();
+        verify(optionGroup, times(1)).setSelected(null);
+    }
+
+    @Test
+    void testParseWithUnrecognizedOptionEatTheRest() throws ParseException {
+        String[] arguments = {"-a", "value1", "-x", "value2"};
+        Properties properties = new Properties();
+        boolean stopAtNonOption = true;
+        when(options.hasOption("-a")).thenReturn(true);
+        when(options.hasOption("-x")).thenReturn(false);
+        when(options.getOption("-a")).thenReturn(option);
+        when(option.isRequired()).thenReturn(false);
+        when(options.helpOptions()).thenReturn(Arrays.asList(option));
+        when(options.getOptionGroups()).thenReturn(Arrays.asList(optionGroup));
+        CommandLine result = parser.parse(options, arguments, properties, stopAtNonOption);
+        assertNotNull(result);
+        verify(option, times(1)).clearValues();
+        verify(optionGroup, times(1)).setSelected(null);
+    }
+
+    @Test
+    void testParseWithNullArguments() throws ParseException {
+        String[] arguments = null;
+        Properties properties = new Properties();
+        boolean stopAtNonOption = false;
+        when(options.helpOptions()).thenReturn(new ArrayList<>());
+        when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+        CommandLine result = parser.parse(options, arguments, properties, stopAtNonOption);
+        assertNotNull(result);
+    }
+
+    @Test
+    void testParseWithNullOptions() throws ParseException {
+        String[] arguments = {"-a", "value1"};
+        Properties properties = new Properties();
+        boolean stopAtNonOption = false;
+        assertThrows(ParseException.class, () -> parser.parse(null, arguments, properties, stopAtNonOption));
+    }
+}
+```

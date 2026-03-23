@@ -1,0 +1,45 @@
+```java
+public String nysiis(String str) {
+    if (str == null) {
+        return null;
+    }
+    str = SoundexUtils.clean(str);
+    if (str.length() == 0) {
+        return str;
+    }
+    StringBuilder nysiis = new StringBuilder();
+    nysiis.append(str.charAt(0));
+    char prev = str.charAt(0);
+    for (int i = 1; i < str.length(); i++) {
+        char curr = str.charAt(i);
+        char next = i < str.length() - 1 ? str.charAt(i + 1) : SPACE;
+        char aNext = i < str.length() - 2 ? str.charAt(i + 2) : SPACE;
+        char[] trans = transcodeRemaining(prev, curr, next, aNext);
+        if (trans.length > 0 && (nysiis.length() == 0 || nysiis.charAt(nysiis.length() - 1) != trans[0])) {
+            nysiis.append(trans[0]);
+        }
+        prev = curr;
+    }
+    if (nysiis.length() > TRUE_LENGTH) {
+        nysiis.setLength(TRUE_LENGTH);
+    }
+    if (nysiis.length() > 1 && nysiis.charAt(nysiis.length() - 1) == 'S') {
+        nysiis.setLength(nysiis.length() - 1);
+    }
+    if (nysiis.length() > 2 && nysiis.charAt(nysiis.length() - 2) == 'A' && nysiis.charAt(nysiis.length() - 1) == 'Y') {
+        nysiis.setLength(nysiis.length() - 2);
+        nysiis.append('Y');
+    }
+    if (nysiis.length() > 2 && nysiis.charAt(nysiis.length() - 2) == 'A' && nysiis.charAt(nysiis.length() - 1) == 'N') {
+        nysiis.setLength(nysiis.length() - 2);
+        nysiis.append('N');
+    }
+    if (nysiis.length() > 2 && nysiis.charAt(nysiis.length() - 2) == 'A' && nysiis.charAt(nysiis.length() - 1) == 'N') {
+        nysiis.setLength(nysiis.length() - 1);
+    }
+    if (nysiis.length() > 1 && nysiis.charAt(nysiis.length() - 1) == 'A') {
+        nysiis.setLength(nysiis.length() - 1);
+    }
+    return nysiis.toString();
+}
+```

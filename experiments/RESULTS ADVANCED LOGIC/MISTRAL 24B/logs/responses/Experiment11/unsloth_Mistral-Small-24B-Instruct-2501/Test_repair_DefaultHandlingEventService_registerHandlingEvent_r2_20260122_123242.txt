@@ -1,0 +1,119 @@
+```java
+package org.eclipse.cargotracker.application.internal;
+
+import jakarta.inject.Inject;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
+import java.util.logging.Logger;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+import org.springframework.test.util.ReflectionTestUtils;
+import org.eclipse.cargotracker.application.internal.ApplicationEvents;
+import org.eclipse.cargotracker.application.internal.HandlingEventRepository;
+import org.eclipse.cargotracker.application.internal.HandlingEventFactory;
+import org.eclipse.cargotracker.application.internal.TrackingId;
+import org.eclipse.cargotracker.application.internal.VoyageNumber;
+import org.eclipse.cargotracker.application.internal.UnLocode;
+import org.eclipse.cargotracker.application.internal.HandlingEvent;
+import org.eclipse.cargotracker.application.internal.CannotCreateHandlingEventException;
+
+@ExtendWith(MockitoExtension.class)
+public class DefaultHandlingEventService_registerHandlingEventTestGenerated {
+
+    @Mock
+    private ApplicationEvents applicationEvents;
+
+    @Mock
+    private HandlingEventRepository handlingEventRepository;
+
+    @Mock
+    private HandlingEventFactory handlingEventFactory;
+
+    @Mock
+    private Logger logger;
+
+    @InjectMocks
+    private DefaultHandlingEventService defaultHandlingEventService;
+
+    private LocalDateTime completionTime;
+    private TrackingId trackingId;
+    private VoyageNumber voyageNumber;
+    private UnLocode unlocode;
+    private HandlingEvent.Type type;
+
+    @BeforeEach
+    public void setUp() {
+        completionTime = LocalDateTime.now();
+        trackingId = new TrackingId("123456");
+        voyageNumber = new VoyageNumber("V1234");
+        unlocode = new UnLocode("USNYC");
+        type = HandlingEvent.Type.LOAD;
+    }
+
+    @AfterEach
+    public void tearDown() {
+        defaultHandlingEventService = null;
+    }
+
+    @Test
+    public void testRegisterHandlingEvent_Success() throws CannotCreateHandlingEventException {
+        HandlingEvent event = mock(HandlingEvent.class);
+        when(handlingEventFactory.createHandlingEvent(any(LocalDateTime.class), any(LocalDateTime.class), any(TrackingId.class), any(VoyageNumber.class), any(UnLocode.class), any(HandlingEvent.Type.class)))
+                .thenReturn(event);
+        when(event.getType()).thenReturn(HandlingEvent.Type.LOAD);
+
+        defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, voyageNumber, unlocode, type);
+
+        verify(handlingEventFactory, times(1)).createHandlingEvent(any(LocalDateTime.class), any(LocalDateTime.class), any(TrackingId.class), any(VoyageNumber.class), any(UnLocode.class), any(HandlingEvent.Type.class));
+        verify(handlingEventRepository, times(1)).store(event);
+        verify(applicationEvents, times(1)).cargoWasHandled(event);
+        verify(logger, times(1)).info("Registered handling event");
+    }
+
+    @Test
+    public void testRegisterHandlingEvent_InvalidTrackingId() {
+        TrackingId invalidTrackingId = null;
+
+        assertThrows(CannotCreateHandlingEventException.class, () -> {
+            defaultHandlingEventService.registerHandlingEvent(completionTime, invalidTrackingId, voyageNumber, unlocode, type);
+        });
+    }
+
+    @Test
+    public void testRegisterHandlingEvent_InvalidVoyageNumber() {
+        VoyageNumber invalidVoyageNumber = null;
+
+        assertThrows(CannotCreateHandlingEventException.class, () -> {
+            defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, invalidVoyageNumber, unlocode, type);
+        });
+    }
+
+    @Test
+    public void testRegisterHandlingEvent_InvalidUnLocode() {
+        UnLocode invalidUnLocode = null;
+
+        assertThrows(CannotCreateHandlingEventException.class, () -> {
+            defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, voyageNumber, invalidUnLocode, type);
+        });
+    }
+
+    @Test
+    public void testRegisterHandlingEvent_InvalidType() {
+        HandlingEvent.Type invalidType = null;
+
+        assertThrows(CannotCreateHandlingEventException.class, () -> {
+            defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, voyageNumber, unlocode, invalidType);
+        });
+    }
+}
+```

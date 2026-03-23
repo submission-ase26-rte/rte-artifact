@@ -1,0 +1,39 @@
+```java
+public String asPath() {
+    if (node == null) {
+        return "";
+    }
+    short type = node.getNodeType();
+    switch (type) {
+        case Node.ELEMENT_NODE: {
+            String localName = node.getLocalName();
+            if (localName != null && !localName.isEmpty()) {
+                String prefix = getNamespaceResolver() != null ? getNamespaceResolver().getPrefix(getNamespaceURI()) : null;
+                if (prefix != null && !prefix.isEmpty()) {
+                    return "/" + prefix + ":" + localName + "[1]";
+                } else if (getNamespaceURI() != null && !getNamespaceURI().isEmpty()) {
+                    return "/" + localName + "[1]";
+                } else {
+                    return "/" + localName + "[1]";
+                }
+            } else {
+                return "/" + node.getNodeName() + "[1]";
+            }
+        }
+        case Node.TEXT_NODE:
+            return "/text()[1]";
+        case Node.PROCESSING_INSTRUCTION_NODE: {
+            String target = ((ProcessingInstruction) node).getTarget();
+            if (target != null && !target.isEmpty()) {
+                return "/processing-instruction('" + target + "')[1]";
+            } else {
+                return "/processing-instruction()[1]";
+            }
+        }
+        case Node.DOCUMENT_NODE:
+            return "";
+        default:
+            return "";
+    }
+}
+```

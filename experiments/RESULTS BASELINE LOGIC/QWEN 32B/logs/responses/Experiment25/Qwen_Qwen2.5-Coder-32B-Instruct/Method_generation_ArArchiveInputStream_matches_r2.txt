@@ -1,0 +1,14 @@
+```java
+public static boolean matches(final byte[] signature, final int length) {
+    if (signature == null || length < 8) {
+        return false;
+    }
+    byte[] expected = new byte[]{0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0a};
+    for (int i = 0; i < 8; i++) {
+        if (signature[i] != expected[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+```

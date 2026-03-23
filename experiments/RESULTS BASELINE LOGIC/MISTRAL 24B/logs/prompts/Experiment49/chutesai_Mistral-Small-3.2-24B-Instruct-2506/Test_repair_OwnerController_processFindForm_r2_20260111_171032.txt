@@ -1,0 +1,161 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.springframework.samples.petclinic.owner;
+Class name (MUST be exactly): OwnerController_processFindFormTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.springframework.samples.petclinic.owner;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.MapBindingResult;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class OwnerController_processFindFormTestGenerated {
+
+    @Mock
+    private Model model;
+
+    @Mock
+    private BindingResult bindingResult;
+
+    @InjectMocks
+    private OwnerController ownerController;
+
+    private Owner owner;
+    private Page<Owner> ownersPage;
+
+    @BeforeEach
+    void setUp() {
+        owner = new Owner();
+        ownersPage = new PageImpl<>(new ArrayList<>(), PageRequest.of(0, 10), 0);
+    }
+
+    @Test
+    void testProcessFindForm_EmptyLastName_ReturnsAllRecords() {
+        when(ownerController.findPaginatedForOwnersLastName(anyInt(), anyString())).thenReturn(ownersPage);
+
+        String viewName = ownerController.processFindForm(1, owner, bindingResult, model);
+
+        assertEquals("owners/ownersList", viewName);
+        verify(ownerController).findPaginatedForOwnersLastName(eq(1), eq(""));
+    }
+
+    @Test
+    void testProcessFindForm_NoOwnersFound_ReturnsFindOwnersWithError() {
+        when(ownerController.findPaginatedForOwnersLastName(anyInt(), anyString())).thenReturn(new PageImpl<>(Collections.emptyList()));
+
+        String viewName = ownerController.processFindForm(1, owner, bindingResult, model);
+
+        assertEquals("owners/findOwners", viewName);
+        verify(bindingResult).rejectValue("lastName", "notFound", "not found");
+    }
+
+    @Test
+    void testProcessFindForm_SingleOwnerFound_RedirectsToOwnerDetails() {
+        Owner testOwner = new Owner();
+        testOwner.setId(1L);
+        testOwner.setLastName("Doe");
+        Page<Owner> singleOwnerPage = new PageImpl<>(Collections.singletonList(testOwner), PageRequest.of(0, 10), 1);
+
+        when(ownerController.findPaginatedForOwnersLastName(anyInt(), anyString())).thenReturn(singleOwnerPage);
+
+        String viewName = ownerController.processFindForm(1, owner, bindingResult, model);
+
+        assertEquals("redirect:/owners/1", viewName);
+    }
+
+    @Test
+    void testProcessFindForm_MultipleOwnersFound_ReturnsOwnersListWithPagination() {
+        Owner owner1 = new Owner();
+        owner1.setId(1L);
+        owner1.setLastName("Doe");
+        Owner owner2 = new Owner();
+        owner2.setId(2L);
+        owner2.setLastName("Doe");
+        Page<Owner> multipleOwnersPage = new PageImpl<>(List.of(owner1, owner2), PageRequest.of(0, 10), 2);
+
+        when(ownerController.findPaginatedForOwnersLastName(anyInt(), anyString())).thenReturn(multipleOwnersPage);
+
+        String viewName = ownerController.processFindForm(1, owner, bindingResult, model);
+
+        assertEquals("owners/ownersList", viewName);
+        verify(ownerController).addPaginationModel(eq(1), eq(model), eq(multipleOwnersPage));
+    }
+
+    @Test
+    void testProcessFindForm_NullOwner_HandlesGracefully() {
+        String viewName = ownerController.processFindForm(1, null, bindingResult, model);
+
+        assertEquals("owners/ownersList", viewName);
+    }
+
+    @Test
+    void testProcessFindForm_NullLastName_HandlesGracefully() {
+        owner.setLastName(null);
+        when(ownerController.findPaginatedForOwnersLastName(anyInt(), anyString())).thenReturn(ownersPage);
+
+        String viewName = ownerController.processFindForm(1, owner, bindingResult, model);
+
+        assertEquals("owners/ownersList", viewName);
+    }
+
+    @Test
+    void testProcessFindForm_EmptyLastName_HandlesGracefully() {
+        owner.setLastName("");
+        when(ownerController.findPaginatedForOwnersLastName(anyInt(), anyString())).thenReturn(ownersPage);
+
+        String viewName = ownerController.processFindForm(1, owner, bindingResult, model);
+
+        assertEquals("owners/ownersList", viewName);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[48] findPaginatedForOwnersLastName(int,java.lang.String) has private access in org.springframework.samples.petclinic.owner.OwnerController
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[53] findPaginatedForOwnersLastName(int,java.lang.String) has private access in org.springframework.samples.petclinic.owner.OwnerController
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[58] findPaginatedForOwnersLastName(int,java.lang.String) has private access in org.springframework.samples.petclinic.owner.OwnerController
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[69] incompatible types: long cannot be converted to java.lang.Integer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[73] findPaginatedForOwnersLastName(int,java.lang.String) has private access in org.springframework.samples.petclinic.owner.OwnerController
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[83] incompatible types: long cannot be converted to java.lang.Integer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[86] incompatible types: long cannot be converted to java.lang.Integer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[90] findPaginatedForOwnersLastName(int,java.lang.String) has private access in org.springframework.samples.petclinic.owner.OwnerController
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[95] addPaginationModel(int,org.springframework.ui.Model,org.springframework.data.domain.Page<org.springframework.samples.petclinic.owner.Owner>) has private access in org.springframework.samples.petclinic.owner.OwnerController
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[108] findPaginatedForOwnersLastName(int,java.lang.String) has private access in org.springframework.samples.petclinic.owner.OwnerController
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[118] findPaginatedForOwnersLastName(int,java.lang.String) has private access in org.springframework.samples.petclinic.owner.OwnerController
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: OwnerController_processFindFormTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

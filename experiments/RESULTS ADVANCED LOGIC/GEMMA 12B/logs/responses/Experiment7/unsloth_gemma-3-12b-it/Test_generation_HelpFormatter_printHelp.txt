@@ -1,0 +1,83 @@
+```java
+package org.apache.commons.cli;
+
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+public class HelpFormatter_printHelpTestGenerated {
+
+    @Test
+    void testPrintHelp_withHeaderAndFooter_autoUsageFalse() throws Exception {
+        HelpFormatter formatter = new HelpFormatter();
+        PrintWriter pw = new StringWriter();
+        Options options = new Options();
+        String cmdLineSyntax = "myApp -h";
+        String header = "My Application Header";
+        String footer = "My Application Footer";
+
+        formatter.printHelp(pw, 80, cmdLineSyntax, header, options, 0, 0, footer, false);
+
+        String output = pw.toString();
+        assertTrue(output.contains(cmdLineSyntax));
+        assertTrue(output.contains(header));
+        assertTrue(output.contains(footer));
+        assertFalse(output.contains("Usage:"));
+    }
+
+    @Test
+    void testPrintHelp_withAutoUsageTrue() throws Exception {
+        HelpFormatter formatter = new HelpFormatter();
+        PrintWriter pw = new StringWriter();
+        Options options = new Options();
+        String cmdLineSyntax = "myApp -h";
+
+        formatter.printHelp(pw, 80, cmdLineSyntax, null, options, 0, 0, null, true);
+
+        String output = pw.toString();
+        assertTrue(output.contains("Usage:"));
+        assertTrue(output.contains(cmdLineSyntax));
+    }
+
+    @Test
+    void testPrintHelp_withEmptyHeaderAndFooter_autoUsageFalse() throws Exception {
+        HelpFormatter formatter = new HelpFormatter();
+        PrintWriter pw = new StringWriter();
+        Options options = new Options();
+        String cmdLineSyntax = "myApp -h";
+
+        formatter.printHelp(pw, 80, cmdLineSyntax, null, options, 0, 0, null, false);
+
+        String output = pw.toString();
+        assertTrue(output.contains(cmdLineSyntax));
+        assertFalse(output.contains("Usage:"));
+    }
+
+    @Test
+    void testPrintHelp_withNullCmdLineSyntax_throwsIllegalArgumentException() throws Exception {
+        HelpFormatter formatter = new HelpFormatter();
+        PrintWriter pw = new StringWriter();
+        Options options = new Options();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            formatter.printHelp(pw, 80, null, null, options, 0, 0, null, false);
+        });
+    }
+
+    @Test
+    void testPrintHelp_withEmptyCmdLineSyntax_throwsIllegalArgumentException() throws Exception {
+        HelpFormatter formatter = new HelpFormatter();
+        PrintWriter pw = new StringWriter();
+        Options options = new Options();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            formatter.printHelp(pw, 80, "", null, options, 0, 0, null, false);
+        });
+    }
+}
+```

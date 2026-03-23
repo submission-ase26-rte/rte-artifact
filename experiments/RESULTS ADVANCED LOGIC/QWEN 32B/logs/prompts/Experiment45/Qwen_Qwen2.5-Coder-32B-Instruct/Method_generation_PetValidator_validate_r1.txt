@@ -1,0 +1,236 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.springframework.samples.petclinic.owner;
+
+import java.time.LocalDate;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.Errors;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PetValidator_validateTestGenerated {
+    private PetValidator petValidator;
+    @Mock
+    private Errors errors;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        petValidator = new PetValidator();
+    }
+
+    @Test
+    public void testValidate_NameEmpty() {
+        Pet pet = new Pet();
+        pet.setName("");
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(LocalDate.now());
+        petValidator.validate(pet, errors);
+        verify(errors).rejectValue("name", "required", "required");
+    }
+
+    @Test
+    public void testValidate_NameNull() {
+        Pet pet = new Pet();
+        pet.setName(null);
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(LocalDate.now());
+        petValidator.validate(pet, errors);
+        verify(errors).rejectValue("name", "required", "required");
+    }
+
+    @Test
+    public void testValidate_NameValid() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(LocalDate.now());
+        petValidator.validate(pet, errors);
+        verify(errors, never()).rejectValue("name", "required", "required");
+    }
+
+    @Test
+    public void testValidate_TypeNull_NewPet() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(null);
+        pet.setBirthDate(LocalDate.now());
+        petValidator.validate(pet, errors);
+        verify(errors).rejectValue("type", "required", "required");
+    }
+
+    @Test
+    public void testValidate_TypeValid_NewPet() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(LocalDate.now());
+        petValidator.validate(pet, errors);
+        verify(errors, never()).rejectValue("type", "required", "required");
+    }
+
+    @Test
+    public void testValidate_TypeNull_ExistingPet() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(null);
+        pet.setBirthDate(LocalDate.now());
+        pet.setId(1);
+        petValidator.validate(pet, errors);
+        verify(errors, never()).rejectValue("type", "required", "required");
+    }
+
+    @Test
+    public void testValidate_BirthDateNull() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(null);
+        petValidator.validate(pet, errors);
+        verify(errors).rejectValue("birthDate", "required", "required");
+    }
+
+    @Test
+    public void testValidate_BirthDateValid() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(LocalDate.now());
+        petValidator.validate(pet, errors);
+        verify(errors, never()).rejectValue("birthDate", "required", "required");
+    }
+
+    @Test
+    public void testValidate_NewPetWithoutName() {
+        Pet pet = new Pet();
+        pet.setName(null);
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(LocalDate.now());
+        petValidator.validate(pet, errors);
+        verify(errors).rejectValue("name", "required", "required");
+    }
+
+    @Test
+    public void testValidate_NewPetWithoutType() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(null);
+        pet.setBirthDate(LocalDate.now());
+        petValidator.validate(pet, errors);
+        verify(errors).rejectValue("type", "required", "required");
+    }
+
+    @Test
+    public void testValidate_NewPetWithoutBirthDate() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(mock(PetType.class));
+        pet.setBirthDate(null);
+        petValidator.validate(pet, errors);
+        verify(errors).rejectValue("birthDate", "required", "required");
+    }
+
+    @Test
+    public void testValidate_ExistingPetWithoutType() {
+        Pet pet = new Pet();
+        pet.setName("Buddy");
+        pet.setType(null);
+        pet.setBirthDate(LocalDate.now());
+        pet.setId(1);
+        petValidator.validate(pet, errors);
+        verify(errors, never()).rejectValue("type", "required", "required");
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 100.00%
+- Tests: 12/12 passed
+
+TEST STATUS:
+- PASSED (12): testValidate_NameEmpty, testValidate_NameNull, testValidate_NameValid, testValidate_TypeNull_NewPet, testValidate_TypeValid_NewPet, testValidate_TypeNull_ExistingPet, testValidate_BirthDateNull, testValidate_BirthDateValid, testValidate_NewPetWithoutName, testValidate_NewPetWithoutType, testValidate_NewPetWithoutBirthDate, testValidate_ExistingPetWithoutType
+- FAILED (0): none
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   StringUtils -> org.springframework.util.StringUtils
+//   Errors -> org.springframework.validation.Errors
+//   Validator -> org.springframework.validation.Validator
+//   PetValidator -> org.springframework.samples.petclinic.owner.PetValidator
+//   Pet -> org.springframework.samples.petclinic.owner.Pet
+
+// === Class: PetValidator ===
+// Fields (with actual visibility):
+    private static final String REQUIRED;
+
+// === External Class: Pet ===
+// Full import path: org.springframework.samples.petclinic.owner.Pet
+// Import paths:
+//   LocalDate -> java.time.LocalDate
+//   Collection -> java.util.Collection
+//   LinkedHashSet -> java.util.LinkedHashSet
+//   Set -> java.util.Set
+//   DateTimeFormat -> org.springframework.format.annotation.DateTimeFormat
+// Fields (with actual visibility):
+    private LocalDate birthDate;
+    private PetType type;
+    private Set visits;
+
+// Method Signatures (used by target method):
+public PetType getType();
+public LocalDate getBirthDate();
+
+// Public Getter Methods (for test assertions):
+public Collection<Visit> getVisits();
+
+
+TASK:
+Regenerate ONLY the method "validate" OF CLASS "PetValidator" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void validate(Object obj, Errors errors) {
+    // your implementation here
+}
+```
+
+
+- Package: org.springframework.samples.petclinic.owner
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "validate"
+– Allowed imports: exactly those already present in PetValidator
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

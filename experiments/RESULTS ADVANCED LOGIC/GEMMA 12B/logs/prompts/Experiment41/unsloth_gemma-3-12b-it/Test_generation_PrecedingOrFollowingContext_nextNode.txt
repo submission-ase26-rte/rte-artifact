@@ -1,0 +1,252 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package org.apache.commons.jxpath.ri.axes;
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Stack -> java.util.Stack
+//   EvalContext -> org.apache.commons.jxpath.ri.EvalContext
+//   NodeTest -> org.apache.commons.jxpath.ri.compiler.NodeTest
+//   NodeIterator -> org.apache.commons.jxpath.ri.model.NodeIterator
+//   NodePointer -> org.apache.commons.jxpath.ri.model.NodePointer
+//   PrecedingOrFollowingContext -> org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+
+// === Class: PrecedingOrFollowingContext ===
+// Fields (with actual visibility):
+    private final NodeTest nodeTest;
+    private boolean setStarted;
+    private Stack stack;
+    private NodePointer currentNodePointer;
+    private NodePointer currentRootLocation;
+    private final boolean reverse;
+
+// Constructors:
+public PrecedingOrFollowingContext(EvalContext parentContext, NodeTest nodeTest, boolean reverse);
+
+// Getter/Setter Methods (for test assertions):
+public NodePointer getCurrentNodePointer();
+public int getDocumentOrder();
+public boolean setPosition(final int position);
+
+// === Superclass: EvalContext (inherited members) ===
+// Inherited Fields:
+    protected EvalContext parentContext;
+    protected RootContext rootContext;
+    protected int position;
+
+// Inherited Method Signatures:
+public Pointer getContextNodePointer();
+public JXPathContext getJXPathContext();
+public int getPosition();
+public int getDocumentOrder();
+public boolean isChildOrderingRequired();
+public boolean hasNext();
+public Object next();
+public void remove();
+protected void sortPointers(final List l);
+public List getContextNodeList();
+public NodeSet getNodeSet();
+public Object getValue();
+public RootContext getRootContext();
+public void reset();
+public int getCurrentPosition();
+public Pointer getSingleNodePointer();
+abstract public NodePointer getCurrentNodePointer();
+public boolean nextSet();
+abstract public boolean nextNode();
+public boolean setPosition(final int position);
+
+// === External Class: NodePointer ===
+// Full import path: org.apache.commons.jxpath.ri.model.NodePointer
+// Type: ABSTRACT CLASS (cannot instantiate directly - use Mockito.mock() or anonymous subclass)
+// Import paths:
+//   HashSet -> java.util.HashSet
+//   Locale -> java.util.Locale
+//   AbstractFactory -> org.apache.commons.jxpath.AbstractFactory
+//   ExceptionHandler -> org.apache.commons.jxpath.ExceptionHandler
+//   JXPathContext -> org.apache.commons.jxpath.JXPathContext
+// Fields (with actual visibility):
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int WHOLE_COLLECTION;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final String UNKNOWN_NAMESPACE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    protected int index;
+    private boolean attribute;
+    private NamespaceResolver namespaceResolver;
+    private ExceptionHandler exceptionHandler;
+    private Object rootNode;
+    protected NodePointer parent;
+    protected Locale locale;
+
+// Constructors:
+protected NodePointer(NodePointer parent);
+protected NodePointer(NodePointer parent, Locale locale);
+
+// Method Signatures (used by target method):
+public NodePointer getParent();
+public NodeIterator childIterator(final NodeTest test, final boolean reverse, final NodePointer startWith);
+public boolean testNode(final NodeTest test);
+public boolean isRoot();
+abstract public boolean isLeaf();
+
+// Public Getter Methods (for test assertions):
+public NamespaceResolver getNamespaceResolver();
+public NodePointer getImmediateParentPointer();
+public boolean isAttribute();
+public boolean isNode();
+public boolean isContainer();
+public int getIndex();
+public boolean isCollection();
+public int getLength();
+public Object getValue();
+public NodePointer getValuePointer();
+public NodePointer getImmediateValuePointer();
+public boolean isActual();
+public QName getName();
+public Object getBaseValue();
+public Object getNodeValue();
+
+// === External Class: NodeIterator ===
+// Full import path: org.apache.commons.jxpath.ri.model.NodeIterator
+// Type: INTERFACE (cannot instantiate - use Mockito.mock(NodeIterator.class) instead)
+// Method Signatures (used by target method):
+boolean setPosition(int position);
+int getPosition();
+NodePointer getNodePointer();
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+    @Override
+    public boolean nextNode() {
+        if (!setStarted) {
+            setStarted = true;
+            if (stack == null) {
+                stack = new Stack();
+            }
+            else {
+                stack.clear();
+            }
+            currentRootLocation = parentContext.getCurrentNodePointer();
+            final NodePointer parent = currentRootLocation.getParent();
+            if (parent != null) {
+                // TBD: check type
+                stack.push(
+                    parent.childIterator(null, reverse, currentRootLocation));
+            }
+        }
+
+        while (true) {
+            if (stack.isEmpty()) {
+                currentRootLocation = currentRootLocation.getParent();
+
+                if (currentRootLocation == null
+                    || currentRootLocation.isRoot()) {
+                    break;
+                }
+
+                final NodePointer parent = currentRootLocation.getParent();
+                if (parent != null) {
+                    stack.push(
+                        parent.childIterator(
+                            null,
+                            reverse,
+                            currentRootLocation));
+                }
+            }
+
+            while (!stack.isEmpty()) {
+                if (!reverse) {
+                    final NodeIterator it = (NodeIterator) stack.peek();
+                    if (it.setPosition(it.getPosition() + 1)) {
+                        currentNodePointer = it.getNodePointer();
+                        if (!currentNodePointer.isLeaf()) {
+                            stack.push(
+                                currentNodePointer.childIterator(
+                                    null,
+                                    reverse,
+                                    null));
+                        }
+                        if (currentNodePointer.testNode(nodeTest)) {
+                            super.setPosition(getCurrentPosition() + 1);
+                            return true;
+                        }
+                    }
+                    else {
+                        // We get here only if the name test failed
+                        // and the iterator ended
+                        stack.pop();
+                    }
+                }
+                else {
+                    NodeIterator it = (NodeIterator) stack.peek();
+                    if (it.setPosition(it.getPosition() + 1)) {
+                        currentNodePointer = it.getNodePointer();
+                        if (!currentNodePointer.isLeaf()) {
+                            stack.push(
+                                currentNodePointer.childIterator(
+                                    null,
+                                    reverse,
+                                    null));
+                        }
+                        else if (currentNodePointer.testNode(nodeTest)) {
+                            super.setPosition(getCurrentPosition() + 1);
+                            return true;
+                        }
+                    }
+                    else {
+                        stack.pop();
+                        if (!stack.isEmpty()) {
+                            it = (NodeIterator) stack.peek();
+                            currentNodePointer = it.getNodePointer();
+                            if (currentNodePointer.testNode(nodeTest)) {
+                                super.setPosition(getCurrentPosition() + 1);
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "nextNode" of class "PrecedingOrFollowingContext".
+
+REQUIREMENTS:
+- Test class name: PrecedingOrFollowingContext_nextNodeTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths that are:
+  - deterministically reachable from the method’s public API
+  - independent from hidden, external, or runtime-loaded data
+- Test error scenarios by asserting the actual runtime behavior
+  when invalid or null inputs are provided.
+- Do not assume defensive checks unless they are explicitly present.
+- Cover expected exceptions declared in the method signature if present
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes or custom implementations.
+- Helper methods inside the test class are allowed if they do not reimplement production logic.
+- DO NOT use getter/setter methods that are not present in the provided class context
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing its actual behavior
+- You MAY mock DEPENDENCIES (constructor parameters, injected services) using @Mock, but NEVER the class under test
+- CRITICAL: DO NOT instantiate INTERFACES or ABSTRACT classes directly - use Mockito.mock(Interface.class) instead
+- DO NOT try to modify static final fields via ReflectionTestUtils - they are IMMUTABLE
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Use ONLY the import paths explicitly provided in the 'CORRECT IMPORT PATHS' section - do not guess or invent import paths.
+- Generate ONLY the test class without explanations or comments outside the code
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

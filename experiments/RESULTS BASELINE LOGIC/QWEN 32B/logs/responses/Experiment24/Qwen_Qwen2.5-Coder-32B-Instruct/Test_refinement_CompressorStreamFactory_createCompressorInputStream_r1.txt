@@ -1,0 +1,220 @@
+```java
+package org.apache.commons.compress.compressors;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.commons.compress.compressors.brotli.BrotliCompressorInputStream;
+import org.apache.commons.compress.compressors.brotli.BrotliUtils;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+import org.apache.commons.compress.compressors.deflate.DeflateCompressorInputStream;
+import org.apache.commons.compress.compressors.deflate64.Deflate64CompressorInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorInputStream;
+import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorInputStream;
+import org.apache.commons.compress.compressors.lzma.LZMACompressorInputStream;
+import org.apache.commons.compress.compressors.lzma.LZMAUtils;
+import org.apache.commons.compress.compressors.pack200.Pack200CompressorInputStream;
+import org.apache.commons.compress.compressors.snappy.FramedSnappyCompressorInputStream;
+import org.apache.commons.compress.compressors.snappy.SnappyCompressorInputStream;
+import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
+import org.apache.commons.compress.compressors.xz.XZUtils;
+import org.apache.commons.compress.compressors.z.ZCompressorInputStream;
+import org.apache.commons.compress.compressors.zstandard.ZstdCompressorInputStream;
+import org.apache.commons.compress.compressors.zstandard.ZstdUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class CompressorStreamFactory_createCompressorInputStreamTestGenerated {
+    private CompressorStreamFactory factory;
+    private InputStream mockInputStream;
+    private InputStream gzipInputStream;
+    private InputStream bzip2InputStream;
+    private InputStream brotliInputStream;
+    private InputStream xzInputStream;
+    private InputStream zstandardInputStream;
+    private InputStream lzmaInputStream;
+    private InputStream pack200InputStream;
+    private InputStream snappyFramedInputStream;
+    private InputStream zInputStream;
+    private InputStream lz4FramedInputStream;
+
+    @BeforeEach
+    public void setUp() {
+        factory = new CompressorStreamFactory();
+        mockInputStream = mock(InputStream.class);
+        gzipInputStream = new GzipCompressorInputStream(new ByteArrayInputStream(new byte[0]));
+        bzip2InputStream = new BZip2CompressorInputStream(new ByteArrayInputStream(new byte[0]));
+        brotliInputStream = new BrotliCompressorInputStream(new ByteArrayInputStream(new byte[0]));
+        xzInputStream = new XZCompressorInputStream(new ByteArrayInputStream(new byte[0]));
+        zstandardInputStream = new ZstdCompressorInputStream(new ByteArrayInputStream(new byte[0]));
+        lzmaInputStream = new LZMACompressorInputStream(new ByteArrayInputStream(new byte[0]));
+        pack200InputStream = new Pack200CompressorInputStream(new ByteArrayInputStream(new byte[0]));
+        snappyFramedInputStream = new FramedSnappyCompressorInputStream(new ByteArrayInputStream(new byte[0]));
+        zInputStream = new ZCompressorInputStream(new ByteArrayInputStream(new byte[0]));
+        lz4FramedInputStream = new FramedLZ4CompressorInputStream(new ByteArrayInputStream(new byte[0]));
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_UnknownCompressor() {
+        Exception exception = assertThrows(CompressorException.class, () -> {
+            factory.createCompressorInputStream("unknown", mockInputStream, false);
+        });
+        assertTrue(exception.getMessage().contains("Compressor: unknown not found."));
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_Gzip() throws Exception {
+        CompressorInputStream result = factory.createCompressorInputStream(CompressorStreamFactory.getGzip(), gzipInputStream, false);
+        assertTrue(result instanceof GzipCompressorInputStream);
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_Bzip2() throws Exception {
+        CompressorInputStream result = factory.createCompressorInputStream(CompressorStreamFactory.getBzip2(), bzip2InputStream, false);
+        assertTrue(result instanceof BZip2CompressorInputStream);
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_Brotli_Available() throws Exception {
+        when(BrotliUtils.isBrotliCompressionAvailable()).thenReturn(true);
+        CompressorInputStream result = factory.createCompressorInputStream(CompressorStreamFactory.getBrotli(), brotliInputStream);
+        assertTrue(result instanceof BrotliCompressorInputStream);
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_Brotli_NotAvailable() {
+        when(BrotliUtils.isBrotliCompressionAvailable()).thenReturn(false);
+        Exception exception = assertThrows(CompressorException.class, () -> {
+            factory.createCompressorInputStream(CompressorStreamFactory.getBrotli(), mockInputStream);
+        });
+        assertTrue(exception.getMessage().contains("Brotli compression is not available."));
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_XZ_Available() throws Exception {
+        when(XZUtils.isXZCompressionAvailable()).thenReturn(true);
+        CompressorInputStream result = factory.createCompressorInputStream(CompressorStreamFactory.getXz(), xzInputStream, false);
+        assertTrue(result instanceof XZCompressorInputStream);
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_XZ_NotAvailable() {
+        when(XZUtils.isXZCompressionAvailable()).thenReturn(false);
+        Exception exception = assertThrows(CompressorException.class, () -> {
+            factory.createCompressorInputStream(CompressorStreamFactory.getXz(), mockInputStream, false);
+        });
+        assertTrue(exception.getMessage().contains("XZ compression is not available."));
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_Zstandard_Available() throws Exception {
+        when(ZstdUtils.isZstdCompressionAvailable()).thenReturn(true);
+        CompressorInputStream result = factory.createCompressorInputStream(CompressorStreamFactory.getZstandard(), zstandardInputStream);
+        assertTrue(result instanceof ZstdCompressorInputStream);
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_Zstandard_NotAvailable() {
+        when(ZstdUtils.isZstdCompressionAvailable()).thenReturn(false);
+        Exception exception = assertThrows(CompressorException.class, () -> {
+            factory.createCompressorInputStream(CompressorStreamFactory.getZstandard(), mockInputStream);
+        });
+        assertTrue(exception.getMessage().contains("Zstandard compression is not available."));
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_LZMA_Available() throws Exception {
+        when(LZMAUtils.isLZMACompressionAvailable()).thenReturn(true);
+        CompressorInputStream result = factory.createCompressorInputStream(CompressorStreamFactory.getLzma(), lzmaInputStream, false);
+        assertTrue(result instanceof LZMACompressorInputStream);
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_LZMA_NotAvailable() {
+        when(LZMAUtils.isLZMACompressionAvailable()).thenReturn(false);
+        Exception exception = assertThrows(CompressorException.class, () -> {
+            factory.createCompressorInputStream(CompressorStreamFactory.getLzma(), mockInputStream, false);
+        });
+        assertTrue(exception.getMessage().contains("LZMA compression is not available"));
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_Pack200() throws Exception {
+        CompressorInputStream result = factory.createCompressorInputStream(CompressorStreamFactory.getPack200(), pack200InputStream);
+        assertTrue(result instanceof Pack200CompressorInputStream);
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_SnappyFramed() throws Exception {
+        CompressorInputStream result = factory.createCompressorInputStream(CompressorStreamFactory.getSnappyFramed(), snappyFramedInputStream);
+        assertTrue(result instanceof FramedSnappyCompressorInputStream);
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_Z() throws Exception {
+        CompressorInputStream result = factory.createCompressorInputStream(CompressorStreamFactory.getZ(), zInputStream, false);
+        assertTrue(result instanceof ZCompressorInputStream);
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_LZ4Framed() throws Exception {
+        CompressorInputStream result = factory.createCompressorInputStream(CompressorStreamFactory.getLZ4Framed(), lz4FramedInputStream, false);
+        assertTrue(result instanceof FramedLZ4CompressorInputStream);
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_Gzip_NotConcatenated() throws Exception {
+        CompressorInputStream result = factory.createCompressorInputStream(CompressorStreamFactory.getGzip(), gzipInputStream, false);
+        assertTrue(result instanceof GzipCompressorInputStream);
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_Bzip2_NotConcatenated() throws Exception {
+        CompressorInputStream result = factory.createCompressorInputStream(CompressorStreamFactory.getBzip2(), bzip2InputStream, false);
+        assertTrue(result instanceof BZip2CompressorInputStream);
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_XZ_NotConcatenated() throws Exception {
+        when(XZUtils.isXZCompressionAvailable()).thenReturn(true);
+        CompressorInputStream result = factory.createCompressorInputStream(CompressorStreamFactory.getXz(), xzInputStream, false);
+        assertTrue(result instanceof XZCompressorInputStream);
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_LZ4Framed_NotConcatenated() throws Exception {
+        CompressorInputStream result = factory.createCompressorInputStream(CompressorStreamFactory.getLZ4Framed(), lz4FramedInputStream, false);
+        assertTrue(result instanceof FramedLZ4CompressorInputStream);
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_ProviderNotFound() {
+        Exception exception = assertThrows(CompressorException.class, () -> {
+            factory.createCompressorInputStream("unknown", mockInputStream, false);
+        });
+        assertTrue(exception.getMessage().contains("Compressor: unknown not found."));
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_NullName() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            factory.createCompressorInputStream(null, mockInputStream, false);
+        });
+        assertTrue(exception.getMessage().contains("Compressor name and stream must not be null."));
+    }
+
+    @Test
+    public void testCreateCompressorInputStream_NullInputStream() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            factory.createCompressorInputStream(CompressorStreamFactory.getGzip(), null, false);
+        });
+        assertTrue(exception.getMessage().contains("Compressor name and stream must not be null."));
+    }
+}
+```

@@ -1,0 +1,164 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.compress.archivers.ar;
+Class name (MUST be exactly): ArArchiveInputStream_matchesTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.compress.archivers.ar;
+
+import java.io.InputStream;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArArchiveInputStream_matchesTestGenerated {
+
+    @BeforeEach
+    public void setUp() {
+        signature = new byte[8];
+    }
+
+    @Test
+    public void testMatchesValidSignature() {
+        signature[0] = 0x21;
+        signature[1] = 0x3c;
+        signature[2] = 0x61;
+        signature[3] = 0x72;
+        signature[4] = 0x63;
+        signature[5] = 0x68;
+        signature[6] = 0x3e;
+        signature[7] = 0x0a;
+        boolean result = ArArchiveInputStream.matches(signature, 8);
+        assertTrue(result);
+    }
+
+    @Test
+    public void testMatchesInvalidSignature() {
+        signature[0] = 0x22;
+        signature[1] = 0x3c;
+        signature[2] = 0x61;
+        signature[3] = 0x72;
+        signature[4] = 0x63;
+        signature[5] = 0x68;
+        signature[6] = 0x3e;
+        signature[7] = 0x0a;
+        boolean result = ArArchiveInputStream.matches(signature, 8);
+        assertFalse(result);
+    }
+
+    @Test
+    public void testMatchesLengthLessThanEight() {
+        boolean result = ArArchiveInputStream.matches(signature, 7);
+        assertFalse(result);
+    }
+
+    @Test
+    public void testMatchesSignatureLengthZero() {
+        signature = new byte[0];
+        boolean result = ArArchiveInputStream.matches(signature, 0);
+        assertFalse(result);
+    }
+
+    @Test
+    public void testMatchesNullSignature() {
+        try {
+            ArArchiveInputStream.matches(null, 8);
+            fail("Expected NullPointerException");
+        } catch (NullPointerException e) {
+            assertNull(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testMatchesSignatureLengthNegative() {
+        assertThrows(IllegalArgumentException.class, () -> ArArchiveInputStream.matches(signature, -1));
+    }
+
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[14] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[19] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[20] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[21] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[22] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[23] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[24] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[25] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[26] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[27] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[33] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[34] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[35] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[36] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[37] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[38] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[39] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[40] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[41] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[47] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[53] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[54] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[70] cannot find symbol
+  symbol:   variable signature
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: ArArchiveInputStream_matchesTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

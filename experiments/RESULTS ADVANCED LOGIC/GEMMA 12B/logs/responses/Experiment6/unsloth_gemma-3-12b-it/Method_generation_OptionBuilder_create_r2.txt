@@ -1,0 +1,17 @@
+```java
+public static Option create(final String opt) throws IllegalArgumentException {
+        if (opt == null || opt.length() == 0 || opt.length() > 1) {
+            throw new IllegalArgumentException("Option character must be a single character.");
+        }
+        Option option = new Option(opt);
+        option.setLongOpt(longOption);
+        option.setDescription(description);
+        option.setArgName(argName);
+        option.setRequired(required);
+        option.setArgs(argCount);
+        option.setType(type);
+        option.setOptionalArg(optionalArg);
+        option.setValueSeparator(valueSeparator);
+        return option;
+    }
+```

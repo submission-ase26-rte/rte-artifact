@@ -1,0 +1,54 @@
+```java
+public void printHelp(final PrintWriter pw, final int width, final String cmdLineSyntax, final String header, final Options options, final int leftPad, final int descPad, final String footer, final boolean autoUsage) {
+        if (cmdLineSyntax == null || cmdLineSyntax.isEmpty()) {
+            throw new IllegalArgumentException("cmdLineSyntax cannot be null or empty.");
+        }
+
+        printWriter.print(getHelpHeader(cmdLineSyntax, header, autoUsage));
+        printWriter.print(getOptionsHeader(options, width, leftPad, descPad));
+        printWriter.print(getOptions(options, width, leftPad, descPad));
+
+        if (footer != null) {
+            printWriter.print(footer);
+        }
+    }
+
+private String getHelpHeader(final String cmdLineSyntax, final String header, final boolean autoUsage) {
+        StringBuffer sb = new StringBuffer();
+        if (autoUsage) {
+            sb.append("Usage: ").append(cmdLineSyntax).append("\n");
+        }
+        if (header != null) {
+            sb.append(header).append("\n");
+        }
+        if (!autoUsage) {
+            sb.append("Options:").append("\n");
+        }
+        return sb.toString();
+    }
+
+private String getOptionsHeader(final Options options, final int width, final int leftPad, final int descPad) {
+        StringBuffer sb = new StringBuffer();
+        if (options.hasOptions()) {
+            sb.append(" ");
+            for (Option opt : options.getOptions()) {
+                sb.append("  -").append(opt.getShortOpt()).append(" ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+private String getOptions(final Options options, final int width, final int leftPad, final int descPad) {
+        StringBuffer sb = new StringBuffer();
+        if (options.hasOptions()) {
+            for (Option option : options.getOptions()) {
+                String description = option.getDescription();
+                if (description != null) {
+                    sb.append(String.format("%" + leftPad + "s %s\n", "-" + option.getShortOpt(), description));
+                }
+            }
+        }
+        return sb.toString();
+    }
+```

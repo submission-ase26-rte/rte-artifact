@@ -1,0 +1,215 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.interfaces.handling.mobile;
+Class name (MUST be exactly): EventLogger_initTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.interfaces.handling.mobile;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.model.SelectItem;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+import org.eclipse.cargotracker.domain.model.cargo.Cargo;
+import org.eclipse.cargotracker.domain.model.cargo.CargoRepository;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class EventLogger_initTestGenerated {
+
+    private EventLogger eventLogger;
+
+    @BeforeEach
+    public void setUp() {
+        CargoRepository cargoRepository = mock(CargoRepository.class);
+        LocationRepository locationRepository = mock(LocationRepository.class);
+        VoyageRepository voyageRepository = mock(VoyageRepository.class);
+        ApplicationEvents applicationEvents = mock(ApplicationEvents.class);
+
+        eventLogger = new EventLogger(cargoRepository, locationRepository, voyageRepository, applicationEvents);
+    }
+
+    @Test
+    public void init_initializesListsWithCargoTrackingIds() {
+        // Arrange
+        List<Cargo> cargos = new ArrayList<>();
+        Cargo cargo1 = mock(Cargo.class);
+        when(cargo1.getTrackingId()).thenReturn(new TrackingId("TRACKING_ID_1"));
+        when(cargo1.getDelivery()).thenReturn(null); // Simulate not claimed
+        when(cargo1.getItinerary()).thenReturn(new Itinerary());
+        cargos.add(cargo1);
+
+        Cargo cargo2 = mock(Cargo.class);
+        when(cargo2.getTrackingId()).thenReturn(new TrackingId("TRACKING_ID_2"));
+        when(cargo2.getDelivery()).thenReturn(mock(Delivery.class));
+        when(cargo2.getDelivery().getTransportStatus()).thenReturn(TransportStatus.CLAIMED);
+        when(cargo2.getItinerary()).thenReturn(new Itinerary());
+        cargos.add(cargo2);
+
+        when(eventLogger.cargoRepository.findAll()).thenReturn(cargos);
+
+        // Act
+        eventLogger.init();
+
+        // Assert
+        assertNotNull(eventLogger.trackingIds);
+        assertEquals(1, eventLogger.trackingIds.size());
+        assertEquals("TRACKING_ID_1", ((SelectItem) eventLogger.trackingIds.get(0)).getValue());
+    }
+
+    @Test
+    public void init_initializesListsWithLocationCodes() {
+        // Arrange
+        List<Location> locations = new ArrayList<>();
+        Location location1 = mock(Location.class);
+        when(location1.getUnLocode()).thenReturn(new UnLocode("UNL_1"));
+        when(location1.getName()).thenReturn("Location 1");
+        locations.add(location1);
+
+        when(eventLogger.locationRepository.findAll()).thenReturn(locations);
+
+        // Act
+        eventLogger.init();
+
+        // Assert
+        assertNotNull(eventLogger.locations);
+        assertEquals(1, eventLogger.locations.size());
+        assertEquals("Location 1 (UNL_1)", ((SelectItem) eventLogger.locations.get(0)).getLabel());
+    }
+
+    @Test
+    public void init_initializesListsWithVoyageNumbers() {
+        // Arrange
+        List<Voyage> voyages = new ArrayList<>();
+        Voyage voyage1 = mock(Voyage.class);
+        when(voyage1.getVoyageNumber()).thenReturn(new VoyageNumber("VOY_1"));
+        voyages.add(voyage1);
+
+        when(eventLogger.voyageRepository.findAll()).thenReturn(voyages);
+
+        // Act
+        eventLogger.init();
+
+        // Assert
+        assertNotNull(eventLogger.voyages);
+        assertEquals(1, eventLogger.voyages.size());
+        assertEquals("VOY_1", ((SelectItem) eventLogger.voyages.get(0)).getValue());
+    }
+
+    @Test
+    public void init_noCargoes() {
+        // Arrange
+        when(eventLogger.cargoRepository.findAll()).thenReturn(new ArrayList<>());
+
+        // Act
+        eventLogger.init();
+
+        // Assert
+        assertNotNull(eventLogger.trackingIds);
+        assertEquals(0, eventLogger.trackingIds.size());
+    }
+
+    @Test
+    public void init_noLocations() {
+        // Arrange
+        when(eventLogger.locationRepository.findAll()).thenReturn(new ArrayList<>());
+
+        // Act
+        eventLogger.init();
+
+        // Assert
+        assertNotNull(eventLogger.locations);
+        assertEquals(0, eventLogger.locations.size());
+    }
+
+    @Test
+    public void init_noVoyages() {
+        // Arrange
+        when(eventLogger.voyageRepository.findAll()).thenReturn(new ArrayList<>());
+
+        // Act
+        eventLogger.init();
+
+        // Assert
+        assertNotNull(eventLogger.voyages);
+        assertEquals(0, eventLogger.voyages.size());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[45] constructor EventLogger in class org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger cannot be applied to given types;
+  required: no arguments
+  found:    org.eclipse.cargotracker.domain.model.cargo.CargoRepository,org.eclipse.cargotracker.domain.model.location.LocationRepository,org.eclipse.cargotracker.domain.model.voyage.VoyageRepository,org.eclipse.cargotracker.application.ApplicationEvents
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[55] cannot find symbol
+  symbol:   class Itinerary
+  location: class org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger_initTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[60] cannot find symbol
+  symbol:   class Delivery
+  location: class org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger_initTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[61] cannot find symbol
+  symbol:   variable TransportStatus
+  location: class org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger_initTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[62] cannot find symbol
+  symbol:   class Itinerary
+  location: class org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger_initTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[65] cargoRepository has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[71] trackingIds has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[72] trackingIds has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[73] trackingIds has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[85] locationRepository has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[91] locations has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[92] locations has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[93] locations has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[104] voyageRepository has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[110] voyages has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[111] voyages has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[112] voyages has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[118] cargoRepository has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[124] trackingIds has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[125] trackingIds has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[131] locationRepository has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[137] locations has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[138] locations has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[144] voyageRepository has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[150] voyages has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[151] voyages has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: EventLogger_initTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

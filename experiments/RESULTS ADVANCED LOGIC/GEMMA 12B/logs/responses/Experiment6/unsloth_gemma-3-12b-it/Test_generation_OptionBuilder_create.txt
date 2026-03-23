@@ -1,0 +1,108 @@
+```java
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.apache.commons.cli.OptionBuilder.*;
+
+class OptionBuilder_createTestGenerated {
+
+    @BeforeEach
+    public void setUp() {
+        reset();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        reset();
+    }
+
+    @Test
+    void testCreateWithDefaults() {
+        longOption = "longOpt";
+        description = "Description";
+        argName = "argName";
+        required = true;
+        argCount = 1;
+        type = String.class;
+        optionalArg = false;
+        valueSeparator = ' ';
+
+        Option option = create("o");
+        assertEquals("o", option.getOpt());
+        assertEquals("longOpt", option.getLongOpt());
+        assertTrue(option.isRequired());
+        assertFalse(option.isOptionalArg());
+        assertEquals(1, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals(" ", option.getValueSeparator());
+        assertEquals("argName", option.getArgName());
+        assertEquals("Description", option.getDescription());
+    }
+
+    @Test
+    void testCreateWithOptionalArg() {
+        longOption = "longOpt";
+        description = "Description";
+        argName = "argName";
+        required = false;
+        argCount = Option.UNLIMITED_VALUES;
+        type = Integer.class;
+        optionalArg = true;
+        valueSeparator = ',';
+
+        Option option = create("o");
+        assertEquals("o", option.getOpt());
+        assertEquals("longOpt", option.getLongOpt());
+        assertFalse(option.isRequired());
+        assertTrue(option.isOptionalArg());
+        assertEquals(Option.UNLIMITED_VALUES, option.getArgs());
+        assertEquals(Integer.class, option.getType());
+        assertEquals(',', option.getValueSeparator());
+        assertEquals("argName", option.getArgName());
+        assertEquals("Description", option.getDescription());
+    }
+
+    @Test
+    void testCreateWithConverter() {
+        longOption = "longOpt";
+        description = "Description";
+        argName = "argName";
+        required = false;
+        argCount = 1;
+        type = Integer.class;
+        optionalArg = false;
+        valueSeparator = ' ';
+
+        Option option = create("o");
+        assertEquals("o", option.getOpt());
+        assertEquals("longOpt", option.getLongOpt());
+        assertFalse(option.isRequired());
+        assertFalse(option.isOptionalArg());
+        assertEquals(1, option.getArgs());
+        assertEquals(Integer.class, option.getType());
+        assertEquals(" ", option.getValueSeparator());
+        assertEquals("argName", option.getArgName());
+        assertEquals("Description", option.getDescription());
+
+    }
+
+    @Test
+    void testCreateWithInvalidOptionCharacter() {
+        longOption = "longOpt";
+        description = "Description";
+        argName = "argName";
+        required = false;
+        argCount = 1;
+        type = String.class;
+        optionalArg = false;
+        valueSeparator = ' ';
+
+        assertThrows(IllegalArgumentException.class, () -> create("\0"));
+    }
+}
+```

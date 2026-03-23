@@ -1,0 +1,75 @@
+{
+  "method_id": 10,
+  "tested_method": "fetchRoutesForSpecification",
+  "tested_class": "ExternalRoutingService",
+  "project": "Cargotracker",
+  "timestamp": "2026-01-27T18:29:45.004907",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\Cargotracker\\Run-1\\src\\test\\java\\org\\eclipse\\cargotracker\\infrastructure\\routing\\Metodo10_unit_fetchRoutesForSpecification_ExternalRoutingService_Test.java",
+  "test_results": {
+    "success": false,
+    "tests_passed": 0,
+    "tests_total": 3,
+    "tests_failed": 3,
+    "line_coverage": 0.0,
+    "branch_coverage": 0.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testFetchRoutesForSpecificationNullRouteSpecification_zFaI0 --\nERROR: java.lang.NullPointerException: Cannot invoke \"org.eclipse.cargotracker.domain.model.cargo.RouteSpecification.getOrigin()\" because \"routeSpecification\" is null\n--------------------------------------------------\nTEST: testFetchRoutesForSpecificationEmptyRouteSpecification_JJFF1 --\nERROR: java.lang.NullPointerException: Cannot invoke \"org.eclipse.cargotracker.domain.model.location.Location.getUnLocode()\" because the return value of \"org.eclipse.cargotracker.domain.model.cargo.RouteSpecification.getOrigin()\" is null\n--------------------------------------------------\nTEST: testFetchRoutesForSpecificationOriginAndDestinationNull_CvEz4_MxDI0 --\nERROR: java.lang.NullPointerException: Origin is required",
+    "test_info": {
+      "valid_tests": [],
+      "invalid_tests": [
+        "testFetchRoutesForSpecificationNullRouteSpecification_zFaI0",
+        "testFetchRoutesForSpecificationEmptyRouteSpecification_JJFF1",
+        "testFetchRoutesForSpecificationOriginAndDestinationNull_CvEz4_MxDI0"
+      ],
+      "failed_assert_tests": [],
+      "runtime_error_tests": [
+        "testFetchRoutesForSpecificationNullRouteSpecification_zFaI0",
+        "testFetchRoutesForSpecificationEmptyRouteSpecification_JJFF1",
+        "testFetchRoutesForSpecificationOriginAndDestinationNull_CvEz4_MxDI0"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 3,
+    "assertion_complexity": 0.25,
+    "pct_null_assertions": 0.3333,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.0,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.6855,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.0,
+    "overall_naturalness_score": 0.6464
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.15172428792870393,
+    "string_similarity": 0.18118869013271782,
+    "token_similarity": 0.2033898305084746,
+    "ast_similarity": 0.0,
+    "embedding_similarity": 0.8072996139526367,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.05970149253731343,
+      "similar_blocks": 2,
+      "total_blocks": 67
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.3579032922560523,
+    "passes_threshold": false
+  },
+  "original_method": "  public List<Itinerary> fetchRoutesForSpecification(RouteSpecification routeSpecification) {\n    // The RouteSpecification is picked apart and adapted to the external API.\n    String origin = routeSpecification.getOrigin().getUnLocode().getIdString();\n    String destination = routeSpecification.getDestination().getUnLocode().getIdString();\n\n    List<TransitPath> transitPaths =\n        graphTraversalResource\n            .queryParam(\"origin\", origin)\n            .queryParam(\"destination\", destination)\n            .request(MediaType.APPLICATION_JSON_TYPE)\n            .get(new GenericType<List<TransitPath>>() {});\n\n    // The returned result is then translated back into our domain model.\n    List<Itinerary> itineraries = new ArrayList<>();\n\n    // Use the specification to safe-guard against invalid itineraries\n    transitPaths\n        .stream()\n        .map(this::toItinerary)\n        .forEach(\n            itinerary -> {\n              if (routeSpecification.isSatisfiedBy(itinerary)) {\n                itineraries.add(itinerary);\n              } else {\n                logger.log(\n                    Level.FINE, \"Received itinerary that did not satisfy the route specification\");\n              }\n            });\n\n    return itineraries;\n  }",
+  "regenerated_method": "import java.util.List;\nimport org.eclipse.cargotracker.domain.model.cargo.Itinerary;\nimport org.eclipse.cargotracker.domain.model.cargo.RouteSpecification;\nimport java.util.ArrayList;\n\npublic List<Itinerary> fetchRoutesForSpecification(RouteSpecification routeSpecification) {\n    if (routeSpecification == null) {\n        return null;\n    }\n\n    if (routeSpecification.getOrigin() == null && routeSpecification.getDestination() == null && routeSpecification.getArrivalDeadline() == null) {\n        return new ArrayList<>();\n    }\n\n    if (routeSpecification.getOrigin() == null || routeSpecification.getDestination() == null) {\n        return new ArrayList<>();\n    }\n\n    return new ArrayList<>();\n}",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6809894379144197,
+  "original_metrics": {
+    "loc": 31,
+    "sloc": 24,
+    "complexity": 2
+  }
+}

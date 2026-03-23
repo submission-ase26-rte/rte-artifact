@@ -1,0 +1,138 @@
+```java
+package org.eclipse.cargotracker.interfaces.handling.file;
+
+import jakarta.batch.api.chunk.AbstractItemWriter;
+import jakarta.batch.runtime.context.JobContext;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.application.util.DateConverter;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+class EventItemWriter_writeItemsTestGenerated {
+
+    @Mock
+    private JobContext jobContext;
+
+    @Mock
+    private ApplicationEvents applicationEvents;
+
+    @InjectMocks
+    private EventItemWriter eventItemWriter;
+
+    private Path archiveFile;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(eventItemWriter, "ARCHIVE_DIRECTORY", "target/test-archives");
+        Files.createDirectories(Path.of("target/test-archives"));
+        archiveFile = Path.of("target/test-archives/archive_testJob_1.csv");
+        when(jobContext.getProperties().getProperty("target/test-archives")).thenReturn("target/test-archives");
+        when(jobContext.getJobName()).thenReturn("testJob");
+        when(jobContext.getInstanceId()).thenReturn(1L);
+    }
+
+    @AfterEach
+    void tearDown() throws IOException {
+        Files.deleteIfExists(archiveFile);
+        Files.deleteIfExists(Path.of("target/test-archives"));
+    }
+
+    @Test
+    void testWriteItemsWithValidData() throws Exception {
+        HandlingEventRegistrationAttempt attempt1 = new HandlingEventRegistrationAttempt(
+                LocalDateTime.now(ZoneId.of("UTC")), LocalDateTime.now(ZoneId.of("UTC")), "trackingId1", "voyageNumber1", "unLocode1", "type1");
+        HandlingEventRegistrationAttempt attempt2 = new HandlingEventRegistrationAttempt(
+                LocalDateTime.now(ZoneId.of("UTC")), LocalDateTime.now(ZoneId.of("UTC")), "trackingId2", "voyageNumber2", "unLocode2", "type2");
+        List<Object> items = Arrays.asList(attempt1, attempt2);
+
+        eventItemWriter.writeItems(items);
+
+        assertTrue(Files.exists(archiveFile));
+        List<String> lines = Files.readAllLines(archiveFile);
+        assertEquals(2, lines.size());
+        verify(applicationEvents, times(2)).receivedHandlingEventRegistrationAttempt(any());
+    }
+
+    @Test
+    void testWriteItemsWithEmptyList() throws Exception {
+        List<Object> items = Collections.emptyList();
+
+        eventItemWriter.writeItems(items);
+
+        assertTrue(Files.exists(archiveFile));
+        List<String> lines = Files.readAllLines(archiveFile);
+        assertEquals(0, lines.size());
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any());
+    }
+
+    @Test
+    void testWriteItemsWithNullList() throws Exception {
+        List<Object> items = null;
+
+        Exception exception = assertThrows(NullPointerException.class, () -> {
+            eventItemWriter.writeItems(items);
+        });
+
+        assertNotNull(exception);
+        assertFalse(Files.exists(archiveFile));
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any());
+    }
+
+    @Test
+    void testWriteItemsWithNullItems() throws Exception {
+        HandlingEventRegistrationAttempt attempt1 = new HandlingEventRegistrationAttempt(
+                LocalDateTime.now(ZoneId.of("UTC")), LocalDateTime.now(ZoneId.of("UTC")), "trackingId1", "voyageNumber1", "unLocode1", "type1");
+        HandlingEventRegistrationAttempt attempt2 = null;
+        List<Object> items = Arrays.asList(attempt1, attempt2);
+
+        Exception exception = assertThrows(NullPointerException.class, () -> {
+            eventItemWriter.writeItems(items);
+        });
+
+        assertNotNull(exception);
+        assertFalse(Files.exists(archiveFile));
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any());
+    }
+
+    @Test
+    void testWriteItemsWithIOException() throws Exception {
+        HandlingEventRegistrationAttempt attempt = new HandlingEventRegistrationAttempt(
+                LocalDateTime.now(ZoneId.of("UTC")), LocalDateTime.now(ZoneId.of("UTC")), "trackingId", "voyageNumber", "unLocode", "type");
+        List<Object> items = Collections.singletonList(attempt);
+
+        doThrow(new IOException("Mocked IOException")).when(jobContext).getProperties().getProperty("target/test-archives");
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            eventItemWriter.writeItems(items);
+        });
+
+        assertNotNull(exception);
+        assertFalse(Files.exists(archiveFile));
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any());
+    }
+}
+```

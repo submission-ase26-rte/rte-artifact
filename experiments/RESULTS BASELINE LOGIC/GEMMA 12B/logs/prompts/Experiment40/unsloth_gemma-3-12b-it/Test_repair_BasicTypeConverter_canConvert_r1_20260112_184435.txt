@@ -1,0 +1,187 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.util;
+Class name (MUST be exactly): BasicTypeConverter_canConvertTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class BasicTypeConverter_canConvertTestGenerated {
+    private BasicTypeConverter converter;
+    @BeforeEach
+    void setUp() {
+        converter = new BasicTypeConverter();
+    }
+
+
+    @Test
+    void testCanConvert_emptyCollectionToPrimitiveArray() {
+        Collection<Integer> emptyList = Collections.emptyList();
+        assertFalse(converter.canConvert(emptyList, int[].class));
+    }
+
+    @Test
+    void testCanConvert_unsupportedType() {
+        assertFalse(converter.canConvert(new Object(), String.class));
+    }
+
+    @Test
+    void testCanConvert_arrayWithDifferentTypes() {
+        Object[] mixedArray = {1, "hello", 2.5};
+        assertFalse(converter.canConvert(mixedArray, Integer[].class));
+    }
+
+    @Test
+    void testCanConvert_booleanToNumber() {}
+    @Test
+    void testCanConvert_atomicBooleanToNumber() {}
+    @Test
+    void testCanConvert_numberToBoolean() {}
+    @Test
+    void testCanConvert_stringToBoolean() {}
+    @Test
+    void testCanConvert_stringToNumeric() {}
+    @Test
+    void testCanConvert_numberToString() {}
+    @Test
+    void testCanConvert_arrayToCollection() {}
+    @Test
+    void testCanConvert_arrayToPrimitiveArray() {}
+    @Test
+    void testCanConvert_collectionToArray() {}
+    @Test
+    void testCanConvert_collectionToCollection() {}
+    @Test
+    void testCanConvert_emptyCollectionToCollection() {}
+    @Test
+    void testCanConvert_NodeSet() {}
+    @Test
+    void testCanConvert_Pointer() {}
+    @Test
+    void testCanConvert_arrayWithSingleElementToSingleType() {}
+    @Test
+    void testCanConvert_emptyArrayToString() {}
+    @Test
+    void testCanConvert_collectionWithSingleElementToSingleType() {}
+    @Test
+    void testCanConvert_emptyCollectionToString() {}
+    @Test
+    void testCanConvert_arrayToBoolean() {}
+    @Test
+    void testCanConvert_arrayToCharacter() {}
+    @Test
+    void testCanConvert_arrayToByte() {}
+    @Test
+    void testCanConvert_arrayToShort() {}
+    @Test
+    void testCanConvert_nullObject() {}
+    @Test
+    void testCanConvert_primitiveWrapper() {}
+
+    @Test
+    void testCanConvert_booleanToAtomicBoolean() {
+        assertTrue(converter.canConvert(true, java.util.concurrent.atomic.AtomicBoolean.class));
+    }
+
+    @Test
+    void testCanConvert_numberToAtomicBoolean() {
+        assertTrue(converter.canConvert(1, java.util.concurrent.atomic.AtomicBoolean.class));
+    }
+
+    @Test
+    void testCanConvert_stringToBooleanFromEmptyArray() {
+        assertFalse(converter.canConvert(new String[0], Boolean.class));
+    }
+
+    @Test
+    void testCanConvert_emptyCollectionToStringFromEmptyArray() {
+        assertFalse(converter.canConvert(new String[0], Collection.class));
+    }
+
+    @Test
+    void testCanConvert_arrayToStringWhenEmpty() {
+        assertTrue(converter.canConvert(new int[0], String.class));
+    }
+
+    @Test
+    void testCanConvert_collectionToStringWhenEmpty() {
+        assertTrue(converter.canConvert(Collections.emptyList(), String.class));
+    }
+
+    @Test
+    void testCanConvert_arrayToPrimitiveWhenEmpty() {
+        assertTrue(converter.canConvert(new int[0], int.class));
+    }
+
+    @Test
+    void testCanConvert_collectionToPrimitiveWhenEmpty() {
+        assertFalse(converter.canConvert(Collections.emptyList(), int.class));
+    }
+
+    @Test
+    void testCanConvert_arrayWithSingleElementToSingleType() {
+        Object[] array = {1};
+        assertTrue(converter.canConvert(array, Integer.class));
+    }
+
+    @Test
+    void testCanConvert_arrayWithSingleElementToSingleType_string() {
+        Object[] array = {"test"};
+        assertTrue(converter.canConvert(array, String.class));
+    }
+
+    @Test
+    void testCanConvert_emptyCollectionToCollection_emptyCollection() {
+        Collection<Integer> emptyList = Collections.emptyList();
+        assertFalse(converter.canConvert(emptyList, List.class));
+    }
+
+    @Test
+    void testCanConvert_arrayToPrimitive_emptyArray() {
+        assertFalse(converter.canConvert(new int[0], double[].class));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_canConvertTestGenerated.java:[143] method testCanConvert_arrayWithSingleElementToSingleType() is already defined in class org.apache.commons.jxpath.util.BasicTypeConverter_canConvertTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: BasicTypeConverter_canConvertTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

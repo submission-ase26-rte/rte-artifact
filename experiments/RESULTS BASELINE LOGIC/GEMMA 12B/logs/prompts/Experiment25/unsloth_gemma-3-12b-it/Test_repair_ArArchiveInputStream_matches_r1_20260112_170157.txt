@@ -1,0 +1,125 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.compress.archivers.ar;
+Class name (MUST be exactly): ArArchiveInputStream_matchesTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.compress.archivers.ar;
+
+import org.junit.jupiter.api.Test;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.utils.ArchiveUtils;
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.compress.utils.ParsingUtils;
+import org.mockito.Mockito;
+import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.junit.jupiter.MockitoJUnit5Extension;
+import org.mockito.Mockito;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArArchiveInputStream_matchesTestGenerated {
+
+    @Test
+    void testMatches_validSignature() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0a};
+        assertTrue(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_validSignature_shorter() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e};
+        assertFalse(ArArchiveInputStream.matches(signature, 7));
+    }
+
+    @Test
+    void testMatches_invalidSignature_wrongFirstByte() throws IOException {
+        byte[] signature = {0x22, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_invalidSignature_wrongSecondByte() throws IOException {
+        byte[] signature = {0x21, 0x3d, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_invalidSignature_wrongThirdByte() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x62, 0x72, 0x63, 0x68, 0x3e, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_invalidSignature_wrongFourthByte() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x61, 0x73, 0x63, 0x68, 0x3e, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_invalidSignature_wrongFifthByte() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x61, 0x72, 0x64, 0x68, 0x3e, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_invalidSignature_wrongSixthByte() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x61, 0x72, 0x63, 0x69, 0x3e, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_invalidSignature_wrongSeventhByte() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3f, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_invalidSignature_wrongEighthByte() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0b};
+        assertFalse(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_emptySignature() throws IOException {
+        byte[] signature = {};
+        assertFalse(ArArchiveInputStream.matches(signature, 0));
+    }
+
+    @Test
+    void testMatches_nullSignature() throws IOException {
+        assertFalse(ArArchiveInputStream.matches(null, 8));
+    }
+
+    @Test
+    void testMatches_lengthZero() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(signature, 0));
+    }
+
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[16] cannot find symbol
+  symbol:   class MockitoJUnit5Extension
+  location: package org.mockito.junit.jupiter
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: ArArchiveInputStream_matchesTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

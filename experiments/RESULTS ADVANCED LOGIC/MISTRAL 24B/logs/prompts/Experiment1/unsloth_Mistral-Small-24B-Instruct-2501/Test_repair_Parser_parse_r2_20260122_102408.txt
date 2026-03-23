@@ -1,0 +1,158 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): Parser_parseTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.cli;
+
+import java.util.Properties;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Parser_parseTestGenerated {
+    private Parser parser;
+    private Options options;
+    private Properties properties;
+
+    @BeforeEach
+    void setUp() {
+        parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+        };
+        options = new Options();
+        properties = new Properties();
+    }
+
+    @Test
+    void testParseWithValidOptions() throws ParseException {
+        Option option = new Option("a", "optionA").hasArg();
+        options.addOption(option);
+        String[] arguments = {"-a", "value"};
+        CommandLine result = parser.parse(options, arguments, properties, true);
+        assertNotNull(result);
+        assertEquals("value", result.getOptionValue("a"));
+    }
+
+    @Test
+    void testParseWithStopAtNonOption() throws ParseException {
+        String[] arguments = {"--", "nonOption"};
+        CommandLine result = parser.parse(options, arguments, properties, true);
+        assertNotNull(result);
+        assertEquals("[nonOption]", result.getArgList().toString());
+    }
+
+    @Test
+    void testParseWithNullProperties() throws ParseException {
+        Option option = new Option("a", "optionA").hasArg();
+        options.addOption(option);
+        String[] arguments = {"-a", "value"};
+        CommandLine result = parser.parse(options, arguments, null, true);
+        assertNotNull(result);
+        assertEquals("value", result.getOptionValue("a"));
+    }
+
+    @Test
+    void testParseWithProperties() throws ParseException {
+        properties.setProperty("a", "value");
+        Option option = new Option("a", "optionA").hasArg();
+        options.addOption(option);
+        CommandLine result = parser.parse(options, new String[]{}, properties, true);
+        assertNotNull(result);
+        assertEquals("value", result.getOptionValue("a"));
+    }
+
+    @Test
+    void testParseWithDoubleDash() throws ParseException {
+        String[] arguments = {"--", "extraArg"};
+        CommandLine result = parser.parse(options, arguments, properties, true);
+        assertNotNull(result);
+        assertEquals("[extraArg]", result.getArgList().toString());
+    }
+
+    @Test
+    void testParseWithSingleDash() throws ParseException {
+        String[] arguments = {"-", "extraArg"};
+        CommandLine result = parser.parse(options, arguments, properties, true);
+        assertNotNull(result);
+        assertEquals("[extraArg]", result.getArgList().toString());
+    }
+
+    @Test
+    void testParseWithDoubleDashStopAtNonOption() throws ParseException {
+        String[] arguments = {"--", "extraArg"};
+        CommandLine result = parser.parse(options, arguments, properties, false);
+        assertNotNull(result);
+        assertEquals("[extraArg]", result.getArgList().toString());
+    }
+
+    @Test
+    void testParseWithSingleDashStopAtNonOption() throws ParseException {
+        String[] arguments = {"-", "extraArg"};
+        CommandLine result = parser.parse(options, arguments, properties, false);
+        assertNotNull(result);
+        assertEquals("[-]", result.getArgList().toString());
+    }
+
+    @Test
+    void testParseWithOptionGroup() throws ParseException {
+        OptionGroup group = new OptionGroup();
+        Option option1 = new Option("a", "optionA").hasArg();
+        Option option2 = new Option("b", "optionB").hasArg();
+        group.addOption(option1);
+        group.addOption(option2);
+        options.addOptionGroup(group);
+        properties.setProperty("a", "value");
+        CommandLine result = parser.parse(options, new String[]{}, properties, true);
+        assertNotNull(result);
+        assertEquals("value", result.getOptionValue("a"));
+    }
+
+    @Test
+    void testParseWithUnrecognizedOption() {
+        String[] arguments = {"-z", "value"};
+        assertThrows(ParseException.class, () -> parser.parse(options, arguments, properties, true));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[30] incompatible types: boolean cannot be converted to org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[48] incompatible types: boolean cannot be converted to org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[59] incompatible types: boolean cannot be converted to org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[101] incompatible types: boolean cannot be converted to org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[102] incompatible types: boolean cannot be converted to org.apache.commons.cli.Option
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: Parser_parseTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations
+
+IMPORTANT: The target class "Parser" is ABSTRACT and cannot be instantiated directly.
+- DO NOT use Mockito to mock the class itself (unless you need a partial mock).
+- INSTANTIATE using this REAL ANONYMOUS SUBCLASS template (copy exactly):
+```java
+new Parser() {
+    @Override
+    public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+        return arguments;
+    }
+
+}
+```
+- DO NOT create custom concrete subclasses files.
+- DO NOT invent classes that do not exist in the codebase.

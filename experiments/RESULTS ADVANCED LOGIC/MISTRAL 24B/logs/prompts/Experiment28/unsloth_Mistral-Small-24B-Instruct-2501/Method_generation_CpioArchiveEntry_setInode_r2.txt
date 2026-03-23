@@ -1,0 +1,204 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.compress.archivers.cpio;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class CpioArchiveEntry_setInodeTestGenerated {
+    private CpioArchiveEntry cpioArchiveEntry;
+
+    @BeforeEach
+    public void setUp() {
+        cpioArchiveEntry = new CpioArchiveEntry((short) 0, "testName");
+    }
+
+    @Test
+    public void testSetInode_ValidInode() {
+        long inodeValue = 12345L;
+        cpioArchiveEntry.setInode(inodeValue);
+        assertEquals(inodeValue, cpioArchiveEntry.getInode());
+    }
+
+    @Test
+    public void testSetInode_NegativeInode() {
+        long inodeValue = -12345L;
+        cpioArchiveEntry.setInode(inodeValue);
+        assertEquals(inodeValue, cpioArchiveEntry.getInode());
+    }
+
+    @Test
+    public void testSetInode_ZeroInode() {
+        long inodeValue = 0L;
+        cpioArchiveEntry.setInode(inodeValue);
+        assertEquals(inodeValue, cpioArchiveEntry.getInode());
+    }
+
+    @Test
+    public void testSetInode_NullInode() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            cpioArchiveEntry.setInode(-1);
+        });
+        assertEquals("Unknown header type 0", exception.getMessage());
+    }
+
+    @Test
+    public void testSetInode_NonNegativeInode() {
+        long inodeValue = 12345L;
+        cpioArchiveEntry.setInode(inodeValue);
+        assertEquals(inodeValue, cpioArchiveEntry.getInode());
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 0.00% | Branch: 0.00%
+- Tests: 0/5 passed
+
+TEST STATUS:
+- PASSED (0): none
+- FAILED (0): none
+- ERRORS (5): testSetInode_ValidInode, testSetInode_NegativeInode, testSetInode_ZeroInode, testSetInode_NullInode, testSetInode_NonNegativeInode
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   File -> java.io.File
+//   IOException -> java.io.IOException
+//   Charset -> java.nio.charset.Charset
+//   Files -> java.nio.file.Files
+//   LinkOption -> java.nio.file.LinkOption
+//   Path -> java.nio.file.Path
+//   FileTime -> java.nio.file.attribute.FileTime
+//   Date -> java.util.Date
+//   Objects -> java.util.Objects
+//   ArchiveEntry -> org.apache.commons.compress.archivers.ArchiveEntry
+//   ExactMath -> org.apache.commons.compress.utils.ExactMath
+//   TimeUtils -> org.apache.commons.compress.utils.TimeUtils
+//   CpioArchiveEntry -> org.apache.commons.compress.archivers.cpio.CpioArchiveEntry
+
+// === Class: CpioArchiveEntry ===
+// Fields (with actual visibility):
+    private final short fileFormat;
+    private final int headerSize;
+    private final int alignmentBoundary;
+    private long chksum;
+    private long filesize;
+    private long gid;
+    private long inode;
+    private long maj;
+    private long min;
+    private long mode;
+    private long mtime;
+    private String name;
+    private long nlink;
+    private long rmaj;
+    private long rmin;
+    private long uid;
+
+// Constructors:
+public CpioArchiveEntry(File inputFile, String entryName);
+public CpioArchiveEntry(Path inputPath, String entryName, LinkOption options);
+public CpioArchiveEntry(short format);
+public CpioArchiveEntry(short format, File inputFile, String entryName);
+public CpioArchiveEntry(short format, Path inputPath, String entryName, LinkOption options);
+public CpioArchiveEntry(short format, String name);
+public CpioArchiveEntry(short format, String name, long size);
+public CpioArchiveEntry(String name);
+public CpioArchiveEntry(String name, long size);
+
+// Getter/Setter Methods (for test assertions):
+public int getAlignmentBoundary();
+public long getChksum();
+public int getDataPadCount();
+public long getDevice();
+public long getDeviceMaj();
+public long getDeviceMin();
+public short getFormat();
+public long getGID();
+public int getHeaderPadCount();
+public int getHeaderPadCount(final Charset charset);
+public int getHeaderPadCount(final long nameSize);
+public int getHeaderSize();
+public long getInode();
+public Date getLastModifiedDate();
+public long getMode();
+public String getName();
+public long getNumberOfLinks();
+public long getRemoteDevice();
+public long getRemoteDeviceMaj();
+public long getRemoteDeviceMin();
+public long getSize();
+public long getTime();
+public long getUID();
+public boolean isBlockDevice();
+public boolean isCharacterDevice();
+public boolean isDirectory();
+public boolean isNetwork();
+public boolean isPipe();
+public boolean isRegularFile();
+public boolean isSocket();
+public boolean isSymbolicLink();
+public void setChksum(final long chksum);
+public void setDevice(final long device);
+public void setDeviceMaj(final long maj);
+public void setDeviceMin(final long min);
+public void setGID(final long gid);
+public void setInode(final long inode);
+public void setMode(final long mode);
+public void setName(final String name);
+public void setNumberOfLinks(final long nlink);
+public void setRemoteDevice(final long device);
+public void setRemoteDeviceMaj(final long rmaj);
+public void setRemoteDeviceMin(final long rmin);
+public void setSize(final long size);
+public void setTime(final FileTime time);
+public void setTime(final long time);
+public void setUID(final long uid);
+
+
+TASK:
+Regenerate ONLY the method "setInode" OF CLASS "CpioArchiveEntry" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void setInode(final long inode) {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.compress.archivers.cpio
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "setInode"
+– Allowed imports: exactly those already present in CpioArchiveEntry
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

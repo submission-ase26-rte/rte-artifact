@@ -1,0 +1,53 @@
+experiment:
+  name: "Experiment9"
+  description: "Test writeItems(List<Object> items) - Qwen/Qwen2.5-Coder-32B-Instruct"
+
+mode: "dependencies"
+
+class_to_test: "../../data/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/main/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter.java"
+max_dependencies: 10
+
+dependencies:
+  selection: "structural"     
+  top_k: 5             
+  use_dependencies_second_phase: true
+
+smart_retry:
+  enable: true                       
+  max_retries_repair: 2                    
+  max_retries_refinement: -1
+  min_weighted_pass_rate_threshold: 0.7  # 70% minimum weighted pass rate to regenerate
+  min_coverage_threshold: 0.3            # 30% minimum coverage to regenerate
+
+generation_phases:
+  run_first_phase: true
+  run_second_phase: true
+  test_file_for_second_phase: ""
+  previous_generated_method: ""
+  include_previous_method: false
+
+metrics:
+  similarity_threshold: 0.7
+  crystalbleu_stopwords: true
+  use_dynamic_threshold: true  # If true, computes threshold based on method SLOC
+
+test_generation:
+  mode: "single_method"
+  method_to_test: "writeItems"
+  method_signature: "writeItems(List<Object> items)"
+
+provider:
+  name: "chutes"
+  model: "Qwen/Qwen2.5-Coder-32B-Instruct"
+
+prompt:
+  test_generation_prompt: |
+    None
+  method_regeneration_prompt: "None"
+  use_special_instructions: true  # Enables conditional instructions for Servlet/Spring/EJB
+
+paths:
+  base_dir: "./"
+  java_projects_dir: "../../data/aster-main/java/aster/GPT-4/Cargotracker/Run-1"
+  output_dir: "results/outputs"
+  logs_dir: "results/logs"

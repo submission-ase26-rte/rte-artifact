@@ -1,0 +1,21 @@
+```java
+public Pet getPet(String name, boolean ignoreNew) {
+    if (name == null) {
+        throw new NullPointerException("Pet name must not be null");
+    }
+
+    if (name.isEmpty()) {
+        return null;
+    }
+
+    for (Pet pet : this.pets) {
+        if (name.equalsIgnoreCase(pet.getName())) {
+            if (ignoreNew && pet.getNew()) {
+                return null;
+            }
+            return pet;
+        }
+    }
+    return null;
+}
+```

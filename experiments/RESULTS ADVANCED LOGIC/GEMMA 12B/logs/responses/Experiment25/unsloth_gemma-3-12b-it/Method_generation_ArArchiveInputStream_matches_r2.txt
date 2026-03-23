@@ -1,0 +1,21 @@
+```java
+public static boolean matches(final byte[] signature, final int length) {
+        if (signature == null) {
+            return false;
+        }
+        if (length == 0) {
+            return false;
+        }
+        if (signature.length < length) {
+            return false;
+        }
+        for (int i = 0; i < length; i++) {
+            if (signature[i] != AR_SIGNATURE[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static final byte[] AR_SIGNATURE = {0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0a};
+```

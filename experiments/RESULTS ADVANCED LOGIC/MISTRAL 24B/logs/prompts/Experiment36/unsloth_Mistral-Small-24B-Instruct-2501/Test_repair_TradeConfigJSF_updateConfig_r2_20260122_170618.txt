@@ -1,0 +1,182 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.web.jsf;
+Class name (MUST be exactly): TradeConfigJSF_updateConfigTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.web.jsf;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import javax.enterprise.context.RequestScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.servlet.http.HttpSession;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeConfigJSF_updateConfigTestGenerated {
+    private TradeConfigJSF tradeConfigJSF;
+    private ExternalContext context;
+    private String[] orderProcessingModeList;
+    private String[] webInterfaceList;
+
+    @BeforeEach
+    void setUp() {
+        tradeConfigJSF = new TradeConfigJSF();
+        context = mock(ExternalContext.class);
+        ReflectionTestUtils.setField(tradeConfigJSF, "context", context);
+        orderProcessingModeList = new String[]{"SYNCH", "ASYNCH", "ASYNCH_2PHASE"};
+        webInterfaceList = new String[]{"JSP", "JSP_Images", "JSP_Images_HTTP2"};
+        ReflectionTestUtils.setField(tradeConfigJSF, "orderProcessingModeList", orderProcessingModeList);
+        ReflectionTestUtils.setField(tradeConfigJSF, "webInterfaceList", webInterfaceList);
+    }
+
+    @AfterEach
+    void tearDown() {
+        tradeConfigJSF = null;
+    }
+
+    @Test
+    void testUpdateConfigWithInvalidOrderProcessingMode() {
+        ReflectionTestUtils.setField(tradeConfigJSF, "orderProcessingMode", "INVALID_MODE");
+        ReflectionTestUtils.setField(tradeConfigJSF, "webInterface", "JSP_Images");
+        ReflectionTestUtils.setField(tradeConfigJSF, "maxUsers", 100);
+        ReflectionTestUtils.setField(tradeConfigJSF, "maxQuotes", 50);
+        ReflectionTestUtils.setField(tradeConfigJSF, "marketSummaryInterval", 60);
+        ReflectionTestUtils.setField(tradeConfigJSF, "primIterations", 10);
+        ReflectionTestUtils.setField(tradeConfigJSF, "listQuotePriceChangeFrequency", 5);
+        ReflectionTestUtils.setField(tradeConfigJSF, "publishQuotePriceChange", true);
+        ReflectionTestUtils.setField(tradeConfigJSF, "longRun", false);
+        ReflectionTestUtils.setField(tradeConfigJSF, "displayOrderAlerts", true);
+
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getRunTimeModeNames).thenReturn(new String[]{"EJB3", "DIRECT", "SESSION_TO_DIRECT"});
+            mockedTradeConfig.when(TradeConfig::getOrderProcessingModeNames).thenReturn(new String[]{"SYNCH", "ASYNCH", "ASYNCH_2PHASE"});
+            mockedTradeConfig.when(TradeConfig::getWebInterfaceNames).thenReturn(new String[]{"JSP", "JSP_Images", "JSP_Images_HTTP2"});
+
+            tradeConfigJSF.updateConfig();
+
+            assertEquals("DayTrader Configuration Updated", tradeConfigJSF.getResult());
+            mockedTradeConfig.verify(() -> TradeConfig.setWebInterface(1), times(1));
+        }
+    }
+
+    @Test
+    void testUpdateConfigWithInvalidWebInterface() {
+        ReflectionTestUtils.setField(tradeConfigJSF, "orderProcessingMode", "ASYNCH");
+        ReflectionTestUtils.setField(tradeConfigJSF, "webInterface", "INVALID_INTERFACE");
+        ReflectionTestUtils.setField(tradeConfigJSF, "maxUsers", 100);
+        ReflectionTestUtils.setField(tradeConfigJSF, "maxQuotes", 50);
+        ReflectionTestUtils.setField(tradeConfigJSF, "marketSummaryInterval", 60);
+        ReflectionTestUtils.setField(tradeConfigJSF, "primIterations", 10);
+        ReflectionTestUtils.setField(tradeConfigJSF, "listQuotePriceChangeFrequency", 5);
+        ReflectionTestUtils.setField(tradeConfigJSF, "publishQuotePriceChange", true);
+        ReflectionTestUtils.setField(tradeConfigJSF, "longRun", false);
+        ReflectionTestUtils.setField(tradeConfigJSF, "displayOrderAlerts", true);
+
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getRunTimeModeNames).thenReturn(new String[]{"EJB3", "DIRECT", "SESSION_TO_DIRECT"});
+            mockedTradeConfig.when(TradeConfig::getOrderProcessingModeNames).thenReturn(new String[]{"SYNCH", "ASYNCH", "ASYNCH_2PHASE"});
+            mockedTradeConfig.when(TradeConfig::getWebInterfaceNames).thenReturn(new String[]{"JSP", "JSP_Images", "JSP_Images_HTTP2"});
+
+            tradeConfigJSF.updateConfig();
+
+            assertEquals("DayTrader Configuration Updated", tradeConfigJSF.getResult());
+            mockedTradeConfig.verify(() -> TradeConfig.setOrderProcessingMode(1), times(1));
+        }
+    }
+
+    @Test
+    void testUpdateConfigWithExceptionInOrderProcessingMode() {
+        ReflectionTestUtils.setField(tradeConfigJSF, "orderProcessingMode", "INVALID_MODE");
+        ReflectionTestUtils.setField(tradeConfigJSF, "webInterface", "JSP_Images");
+        ReflectionTestUtils.setField(tradeConfigJSF, "maxUsers", 100);
+        ReflectionTestUtils.setField(tradeConfigJSF, "maxQuotes", 50);
+        ReflectionTestUtils.setField(tradeConfigJSF, "marketSummaryInterval", 60);
+        ReflectionTestUtils.setField(tradeConfigJSF, "primIterations", 10);
+        ReflectionTestUtils.setField(tradeConfigJSF, "listQuotePriceChangeFrequency", 5);
+        ReflectionTestUtils.setField(tradeConfigJSF, "publishQuotePriceChange", true);
+        ReflectionTestUtils.setField(tradeConfigJSF, "longRun", false);
+        ReflectionTestUtils.setField(tradeConfigJSF, "displayOrderAlerts", true);
+
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getRunTimeModeNames).thenReturn(new String[]{"EJB3", "DIRECT", "SESSION_TO_DIRECT"});
+            mockedTradeConfig.when(TradeConfig::getOrderProcessingModeNames).thenReturn(new String[]{"SYNCH", "ASYNCH", "ASYNCH_2PHASE"});
+            mockedTradeConfig.when(TradeConfig::getWebInterfaceNames).thenReturn(new String[]{"JSP", "JSP_Images", "JSP_Images_HTTP2"});
+
+            doThrow(new RuntimeException("Test Exception")).when(mockedTradeConfig).setOrderProcessingMode(anyInt());
+
+            tradeConfigJSF.updateConfig();
+
+            assertEquals("DayTrader Configuration Updated", tradeConfigJSF.getResult());
+            mockedTradeConfig.verify(() -> TradeConfig.setWebInterface(1), times(1));
+        }
+    }
+
+    @Test
+    void testUpdateConfigWithExceptionInWebInterface() {
+        ReflectionTestUtils.setField(tradeConfigJSF, "orderProcessingMode", "ASYNCH");
+        ReflectionTestUtils.setField(tradeConfigJSF, "webInterface", "INVALID_INTERFACE");
+        ReflectionTestUtils.setField(tradeConfigJSF, "maxUsers", 100);
+        ReflectionTestUtils.setField(tradeConfigJSF, "maxQuotes", 50);
+        ReflectionTestUtils.setField(tradeConfigJSF, "marketSummaryInterval", 60);
+        ReflectionTestUtils.setField(tradeConfigJSF, "primIterations", 10);
+        ReflectionTestUtils.setField(tradeConfigJSF, "listQuotePriceChangeFrequency", 5);
+        ReflectionTestUtils.setField(tradeConfigJSF, "publishQuotePriceChange", true);
+        ReflectionTestUtils.setField(tradeConfigJSF, "longRun", false);
+        ReflectionTestUtils.setField(tradeConfigJSF, "displayOrderAlerts", true);
+
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getRunTimeModeNames).thenReturn(new String[]{"EJB3", "DIRECT", "SESSION_TO_DIRECT"});
+            mockedTradeConfig.when(TradeConfig::getOrderProcessingModeNames).thenReturn(new String[]{"SYNCH", "ASYNCH", "ASYNCH_2PHASE"});
+            mockedTradeConfig.when(TradeConfig::getWebInterfaceNames).thenReturn(new String[]{"JSP", "JSP_Images", "JSP_Images_HTTP2"});
+
+            doThrow(new RuntimeException("Test Exception")).when(mockedTradeConfig).setWebInterface(anyInt());
+
+            tradeConfigJSF.updateConfig();
+
+            assertEquals("DayTrader Configuration Updated", tradeConfigJSF.getResult());
+            mockedTradeConfig.verify(() -> TradeConfig.setOrderProcessingMode(1), times(1));
+        }
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/jsf/TradeConfigJSF_updateConfigTestGenerated.java:[113] cannot find symbol
+  symbol:   method setOrderProcessingMode(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/jsf/TradeConfigJSF_updateConfigTestGenerated.java:[140] cannot find symbol
+  symbol:   method setWebInterface(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- DO NOT mock javax.servlet classes directly (ServletOutputStream, etc.) - use MockHttpServletRequest/Response from spring-test instead
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- For static method calls, ensure mockStatic is properly closed (use try-with-resources)
+- Keep the SAME class name: TradeConfigJSF_updateConfigTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

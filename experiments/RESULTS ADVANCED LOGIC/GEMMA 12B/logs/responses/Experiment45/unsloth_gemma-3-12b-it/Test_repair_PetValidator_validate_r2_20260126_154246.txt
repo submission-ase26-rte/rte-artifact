@@ -1,0 +1,125 @@
+```java
+package org.springframework.samples.petclinic.owner;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.Errors;
+import org.springframework.samples.petclinic.owner.Pet;
+import org.springframework.samples.petclinic.owner.PetType;
+
+import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PetValidator_validateTestGenerated {
+
+    private PetValidator petValidator;
+
+    @BeforeEach
+    public void setUp() {
+        petValidator = new PetValidator();
+    }
+
+    @Test
+    public void validate_nameMissing() {
+        Pet pet = new Pet();
+        pet.setType(PetType.DOG);
+        pet.setBirthDate(LocalDate.now());
+        Errors errors = new MockErrors();
+        petValidator.validate(pet, errors);
+        assertThrows(IllegalStateException.class, () -> errors.getAllErrors().get(0).getDefaultMessage());
+    }
+
+    @Test
+    public void validate_typeMissingAndNew() {
+        Pet pet = new Pet();
+        pet.setBirthDate(LocalDate.now());
+        Errors errors = new MockErrors();
+        petValidator.validate(pet, errors);
+        assertThrows(IllegalStateException.class, () -> errors.getAllErrors().get(0).getDefaultMessage());
+    }
+
+    @Test
+    public void validate_birthDateMissing() {
+        Pet pet = new Pet();
+        pet.setName("Fido");
+        pet.setType(PetType.DOG);
+        Errors errors = new MockErrors();
+        petValidator.validate(pet, errors);
+        assertThrows(IllegalStateException.class, () -> errors.getAllErrors().get(0).getDefaultMessage());
+    }
+
+    @Test
+    public void validate_allFieldsValid() {
+        Pet pet = new Pet();
+        pet.setName("Fido");
+        pet.setType(PetType.DOG);
+        pet.setBirthDate(LocalDate.now());
+        Errors errors = new MockErrors();
+        petValidator.validate(pet, errors);
+    }
+
+    private static class MockErrors implements Errors {
+        @Override
+        public boolean hasErrors() {
+            return false;
+        }
+
+        @Override
+        public boolean hasFieldErrors() {
+            return false;
+        }
+
+        @Override
+        public boolean hasRejectedValues() {
+            return false;
+        }
+
+        @Override
+        public void rejectValue(String field, String code, String argument0, String... argument1) {
+
+        }
+
+        @Override
+        public List<ObjectError> getAllErrors() {
+            return new LinkedList<>();
+        }
+
+        @Override
+        public void addError(String field, String code, String argument0, String... argument1) {
+
+        }
+
+        @Override
+        public List<ObjectError> getFieldErrors() {
+            return new LinkedList<>();
+        }
+
+        @Override
+        public List<ObjectError> getGlobalErrors() {
+            return new LinkedList<>();
+        }
+
+        @Override
+        public ObjectError getError(String field) {
+            return null;
+        }
+
+        @Override
+        public ObjectError getFieldError(String field) {
+            return null;
+        }
+
+        @Override
+        public String getObjectName() {
+            return null;
+        }
+    }
+}
+```

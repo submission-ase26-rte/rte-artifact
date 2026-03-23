@@ -1,0 +1,140 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.direct;
+Class name (MUST be exactly): TradeDirectDBUtils_buildDBTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.io.InputStream;
+import java.io.PrintWriter;
+
+import javax.sql.DataSource;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeDB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.MDBStats;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class TradeDirectDBUtils_buildDBTestGenerated {
+
+    private TradeDirectDBUtils tradeDirectDBUtils;
+    private DataSource dataSource;
+    private TradeServices tradeServices;
+    private PrintWriter printWriter;
+
+    @BeforeEach
+    void setUp() {
+        dataSource = Mockito.mock(DataSource.class);
+        tradeServices = Mockito.mock(TradeServices.class);
+        printWriter = new PrintWriter(System.out);
+        tradeDirectDBUtils = new TradeDirectDBUtils(dataSource, tradeServices);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.reset(dataSource, tradeServices);
+    }
+
+    @Test
+    void testBuildDBWithDDLFile() throws Exception {
+        InputStream ddlFile = Mockito.mock(InputStream.class);
+        when(ddlFile.read()).thenReturn(-1);
+        tradeDirectDBUtils.buildDB(printWriter, ddlFile);
+
+        verify(tradeServices).createQuote(anyString(), anyString(), any());
+        verify(tradeServices).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
+        verify(tradeServices).buy(anyString(), anyString(), anyDouble(), anyInt());
+    }
+
+    @Test
+    void testBuildDBWithoutDDLFile() throws Exception {
+        tradeDirectDBUtils.buildDB(printWriter, null);
+
+        verify(tradeServices).createQuote(anyString(), anyString(), any());
+        verify(tradeServices).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
+        verify(tradeServices).buy(anyString(), anyString(), anyDouble(), anyInt());
+    }
+
+    @Test
+    void testBuildDBErrorDuringDDLFileParsing() throws Exception {
+        InputStream ddlFile = Mockito.mock(InputStream.class);
+        when(ddlFile.read()).thenThrow(new Exception("Simulated DDL parsing error"));
+
+        assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(printWriter, ddlFile));
+    }
+
+    @Test
+    void testBuildDBErrorDuringTableRecreation() throws Exception {
+        InputStream ddlFile = Mockito.mock(InputStream.class);
+        when(ddlFile.read()).thenReturn(-1);
+        doThrow(new Exception("Simulated table recreation error")).when(tradeDirectDBUtils).recreateDBTables(any(), any());
+
+        assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(printWriter, ddlFile));
+    }
+
+    @Test
+    void testBuildDBErrorDuringQuoteCreation() throws Exception {
+        InputStream ddlFile = Mockito.mock(InputStream.class);
+        when(ddlFile.read()).thenReturn(-1);
+        doThrow(new Exception("Simulated quote creation error")).when(tradeServices).createQuote(anyString(), anyString(), any());
+
+        tradeDirectDBUtils.buildDB(printWriter, ddlFile);
+    }
+
+    @Test
+    void testBuildDBErrorDuringUserRegistration() throws Exception {
+        InputStream ddlFile = Mockito.mock(InputStream.class);
+        when(ddlFile.read()).thenReturn(-1);
+        doThrow(new Exception("Simulated user registration error")).when(tradeServices).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
+
+        tradeDirectDBUtils.buildDB(printWriter, ddlFile);
+    }
+
+    @Test
+    void testBuildDBErrorDuringOrderPlacement() throws Exception {
+        InputStream ddlFile = Mockito.mock(InputStream.class);
+        when(ddlFile.read()).thenReturn(-1);
+        doThrow(new Exception("Simulated order placement error")).when(tradeServices).buy(anyString(), anyString(), anyDouble(), anyInt());
+
+        tradeDirectDBUtils.buildDB(printWriter, ddlFile);
+    }
+
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirectDBUtils_buildDBTestGenerated.java:[38] constructor TradeDirectDBUtils in class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils cannot be applied to given types;
+  required: no arguments
+  found:    javax.sql.DataSource,com.ibm.websphere.samples.daytrader.interfaces.TradeServices
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirectDBUtils_buildDBTestGenerated.java:[78] recreateDBTables(java.lang.Object[],java.io.PrintWriter) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: TradeDirectDBUtils_buildDBTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

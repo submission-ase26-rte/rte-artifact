@@ -1,0 +1,311 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.springframework.samples.petclinic.owner;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.core.style.ToStringCreator;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Owner_toStringTestGenerated {
+
+    @Test
+    void testToStringWithAllFieldsSet() {
+        Owner owner = new Owner();
+        ReflectionTestUtils.setField(owner, "id", 1L);
+        ReflectionTestUtils.setField(owner, "new", false);
+        owner.setLastName("Smith");
+        owner.setFirstName("John");
+        owner.setAddress("123 Main St");
+        owner.setCity("Springfield");
+        owner.setTelephone("555-1234");
+
+        List<Pet> pets = mock(ArrayList.class);
+        ReflectionTestUtils.setField(owner, "pets", pets);
+
+        String expected = new ToStringCreator(owner)
+                .append("id", 1L)
+                .append("new", false)
+                .append("lastName", "Smith")
+                .append("firstName", "John")
+                .append("address", "123 Main St")
+                .append("city", "Springfield")
+                .append("telephone", "555-1234")
+                .toString();
+
+        assertEquals(expected, owner.toString());
+    }
+
+    @Test
+    void testToStringWithNullAddress() {
+        Owner owner = new Owner();
+        ReflectionTestUtils.setField(owner, "id", 1L);
+        ReflectionTestUtils.setField(owner, "new", false);
+        owner.setLastName("Smith");
+        owner.setFirstName("John");
+        owner.setAddress(null);
+        owner.setCity("Springfield");
+        owner.setTelephone("555-1234");
+
+        String expected = new ToStringCreator(owner)
+                .append("id", 1L)
+                .append("new", false)
+                .append("lastName", "Smith")
+                .append("firstName", "John")
+                .append("address", null)
+                .append("city", "Springfield")
+                .append("telephone", "555-1234")
+                .toString();
+
+        assertEquals(expected, owner.toString());
+    }
+
+    @Test
+    void testToStringWithEmptyCity() {
+        Owner owner = new Owner();
+        ReflectionTestUtils.setField(owner, "id", 1L);
+        ReflectionTestUtils.setField(owner, "new", false);
+        owner.setLastName("Smith");
+        owner.setFirstName("John");
+        owner.setAddress("123 Main St");
+        owner.setCity("");
+        owner.setTelephone("555-1234");
+
+        String expected = new ToStringCreator(owner)
+                .append("id", 1L)
+                .append("new", false)
+                .append("lastName", "Smith")
+                .append("firstName", "John")
+                .append("address", "123 Main St")
+                .append("city", "")
+                .append("telephone", "555-1234")
+                .toString();
+
+        assertEquals(expected, owner.toString());
+    }
+
+    @Test
+    void testToStringWithNullTelephone() {
+        Owner owner = new Owner();
+        ReflectionTestUtils.setField(owner, "id", 1L);
+        ReflectionTestUtils.setField(owner, "new", false);
+        owner.setLastName("Smith");
+        owner.setFirstName("John");
+        owner.setAddress("123 Main St");
+        owner.setCity("Springfield");
+        owner.setTelephone(null);
+
+        String expected = new ToStringCreator(owner)
+                .append("id", 1L)
+                .append("new", false)
+                .append("lastName", "Smith")
+                .append("firstName", "John")
+                .append("address", "123 Main St")
+                .append("city", "Springfield")
+                .append("telephone", null)
+                .toString();
+
+        assertEquals(expected, owner.toString());
+    }
+
+    @Test
+    void testToStringWithNewOwner() {
+        Owner owner = new Owner();
+        ReflectionTestUtils.setField(owner, "new", true);
+        ReflectionTestUtils.setField(owner, "id", null);
+        owner.setLastName("Smith");
+        owner.setFirstName("John");
+        owner.setAddress("123 Main St");
+        owner.setCity("Springfield");
+        owner.setTelephone("555-1234");
+
+        String expected = new ToStringCreator(owner)
+                .append("id", null)
+                .append("new", true)
+                .append("lastName", "Smith")
+                .append("firstName", "John")
+                .append("address", "123 Main St")
+                .append("city", "Springfield")
+                .append("telephone", "555-1234")
+                .toString();
+
+        assertEquals(expected, owner.toString());
+    }
+
+    @Test
+    void testToStringWithEmptyPetsList() {
+        Owner owner = new Owner();
+        ReflectionTestUtils.setField(owner, "id", 1L);
+        ReflectionTestUtils.setField(owner, "new", false);
+        owner.setLastName("Smith");
+        owner.setFirstName("John");
+        owner.setAddress("123 Main St");
+        owner.setCity("Springfield");
+        owner.setTelephone("555-1234");
+
+        List<Pet> pets = new ArrayList<>();
+        ReflectionTestUtils.setField(owner, "pets", pets);
+
+        String expected = new ToStringCreator(owner)
+                .append("id", 1L)
+                .append("new", false)
+                .append("lastName", "Smith")
+                .append("firstName", "John")
+                .append("address", "123 Main St")
+                .append("city", "Springfield")
+                .append("telephone", "555-1234")
+                .toString();
+
+        assertEquals(expected, owner.toString());
+    }
+
+    @Test
+    void testToStringWithNullPetsList() {
+        Owner owner = new Owner();
+        ReflectionTestUtils.setField(owner, "id", 1L);
+        ReflectionTestUtils.setField(owner, "new", false);
+        owner.setLastName("Smith");
+        owner.setFirstName("John");
+        owner.setAddress("123 Main St");
+        owner.setCity("Springfield");
+        owner.setTelephone("555-1234");
+
+        ReflectionTestUtils.setField(owner, "pets", null);
+
+        String expected = new ToStringCreator(owner)
+                .append("id", 1L)
+                .append("new", false)
+                .append("lastName", "Smith")
+                .append("firstName", "John")
+                .append("address", "123 Main St")
+                .append("city", "Springfield")
+                .append("telephone", "555-1234")
+                .toString();
+
+        assertEquals(expected, owner.toString());
+    }
+
+    @Test
+    void testToStringWithMinimalFieldsSet() {
+        Owner owner = new Owner();
+        ReflectionTestUtils.setField(owner, "id", 1L);
+        ReflectionTestUtils.setField(owner, "new", false);
+
+        String expected = new ToStringCreator(owner)
+                .append("id", 1L)
+                .append("new", false)
+                .append("lastName", null)
+                .append("firstName", null)
+                .append("address", null)
+                .append("city", null)
+                .append("telephone", null)
+                .toString();
+
+        assertEquals(expected, owner.toString());
+    }
+
+    @Test
+    void testToStringNotNull() {
+        Owner owner = new Owner();
+        assertNotNull(owner.toString());
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 0.00%
+- Tests: 1/9 passed
+
+TEST STATUS:
+- PASSED (1): testToStringNotNull
+- FAILED (0): none
+- ERRORS (8): testToStringWithAllFieldsSet, testToStringWithNullAddress, testToStringWithEmptyCity, testToStringWithNullTelephone, testToStringWithNewOwner, testToStringWithEmptyPetsList, testToStringWithNullPetsList, testToStringWithMinimalFieldsSet
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   ToStringCreator -> org.springframework.core.style.ToStringCreator
+//   Person -> org.springframework.samples.petclinic.model.Person
+//   Assert -> org.springframework.util.Assert
+//   CascadeType -> jakarta.persistence.CascadeType
+//   Column -> jakarta.persistence.Column
+//   Entity -> jakarta.persistence.Entity
+//   FetchType -> jakarta.persistence.FetchType
+//   JoinColumn -> jakarta.persistence.JoinColumn
+//   OneToMany -> jakarta.persistence.OneToMany
+//   OrderBy -> jakarta.persistence.OrderBy
+//   Table -> jakarta.persistence.Table
+//   Pattern -> jakarta.validation.constraints.Pattern
+//   NotBlank -> jakarta.validation.constraints.NotBlank
+
+// === Class: Owner ===
+// Fields (with actual visibility):
+    private String address;
+    private String city;
+    private String telephone;
+    private List pets;
+
+// Getter/Setter Methods (for test assertions):
+public String getAddress();
+public void setAddress(String address);
+public String getCity();
+public void setCity(String city);
+public String getTelephone();
+public void setTelephone(String telephone);
+public List<Pet> getPets();
+public Pet getPet(String name);
+public Pet getPet(Integer id);
+public Pet getPet(String name, boolean ignoreNew);
+
+
+TASK:
+Regenerate ONLY the method "toString" OF CLASS "Owner" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public String toString() {
+    // your implementation here
+}
+```
+
+
+- Package: org.springframework.samples.petclinic.owner
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in Owner
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

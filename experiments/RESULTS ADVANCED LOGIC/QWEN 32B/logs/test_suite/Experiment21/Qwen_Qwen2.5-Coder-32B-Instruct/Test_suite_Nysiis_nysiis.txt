@@ -1,0 +1,129 @@
+package org.apache.commons.codec.language;
+
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.StringEncoder;
+import org.apache.commons.codec.language.SoundexUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.regex.Pattern;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Nysiis_nysiisTestGenerated {
+
+    private Nysiis nysiis;
+
+    @BeforeEach
+    void setUp() {
+        nysiis = new Nysiis();
+    }
+
+    @Test
+    void testNysiisWithNullInput() {
+        assertNull(nysiis.nysiis(null));
+    }
+
+    @Test
+    void testNysiisWithEmptyString() {
+        assertEquals("", nysiis.nysiis(""));
+    }
+
+    @Test
+    void testNysiisWithSingleCharacter() {
+        assertEquals("A", nysiis.nysiis("A"));
+    }
+
+    @Test
+    void testNysiisWithMACPattern() {
+        assertEquals("MCCAR", nysiis.nysiis("MACAR"));
+    }
+
+    @Test
+    void testNysiisWithKNPattern() {
+        assertEquals("NNEL", nysiis.nysiis("KNEL"));
+    }
+
+    @Test
+    void testNysiisWithKPattern() {
+        assertEquals("CAL", nysiis.nysiis("KAL"));
+    }
+
+    @Test
+    void testNysiisWithPHPattern() {
+        assertEquals("FFL", nysiis.nysiis("PHIL"));
+    }
+
+    @Test
+    void testNysiisWithSCHPattern() {
+        assertEquals("SSSSON", nysiis.nysiis("SCHASON"));
+    }
+
+    @Test
+    void testNysiisWithEIPattern() {
+        assertEquals("MY", nysiis.nysiis("MIE"));
+    }
+
+    @Test
+    void testNysiisWithDTETCPattern() {
+        assertEquals("DAT", nysiis.nysiis("DAT"));
+    }
+
+    @Test
+    void testNysiisWithTrailingSPattern() {
+        assertEquals("MCC", nysiis.nysiis("MCCS"));
+    }
+
+    @Test
+    void testNysiisWithTrailingAYPattern() {
+        assertEquals("MCC", nysiis.nysiis("MCCAY"));
+    }
+
+    @Test
+    void testNysiisWithTrailingAPattern() {
+        assertEquals("MCC", nysiis.nysiis("MCCA"));
+    }
+
+    @Test
+    void testNysiisWithVowelReplacement() {
+        assertEquals("MCC", nysiis.nysiis("MAC"));
+    }
+
+    @Test
+    void testNysiisWithQPattern() {
+        assertEquals("GOT", nysiis.nysiis("QOT"));
+    }
+
+    @Test
+    void testNysiisWithZPattern() {
+        assertEquals("SOT", nysiis.nysiis("ZOT"));
+    }
+
+    @Test
+    void testNysiisWithMPattern() {
+        assertEquals("NAT", nysiis.nysiis("MAT"));
+    }
+
+    @Test
+    void testNysiisWithHPattern() {
+        assertEquals("PAT", nysiis.nysiis("HAPT"));
+    }
+
+    @Test
+    void testNysiisWithWPattern() {
+        assertEquals("EAL", nysiis.nysiis("WEAL"));
+    }
+
+    @Test
+    void testNysiisWithStrictMode() {
+        Nysiis strictNysiis = new Nysiis(true);
+        assertEquals("MCC", strictNysiis.nysiis("MACAR"));
+    }
+
+    @Test
+    void testNysiisWithNonStrictMode() {
+        assertEquals("MCCAR", nysiis.nysiis("MACAR"));
+    }
+}

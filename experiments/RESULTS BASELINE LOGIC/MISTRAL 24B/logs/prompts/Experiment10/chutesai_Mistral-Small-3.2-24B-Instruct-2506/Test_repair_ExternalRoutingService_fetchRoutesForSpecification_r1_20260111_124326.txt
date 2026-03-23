@@ -1,0 +1,196 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.infrastructure.routing;
+Class name (MUST be exactly): ExternalRoutingService_fetchRoutesForSpecificationTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.infrastructure.routing;
+
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import org.eclipse.cargotracker.domain.model.cargo.Itinerary;
+import org.eclipse.cargotracker.domain.model.cargo.RouteSpecification;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.eclipse.pathfinder.api.TransitPath;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class ExternalRoutingService_fetchRoutesForSpecificationTestGenerated {
+
+    @Mock
+    private Logger logger;
+
+    @Mock
+    private WebTarget graphTraversalResource;
+
+    @Mock
+    private LocationRepository locationRepository;
+
+    @Mock
+    private VoyageRepository voyageRepository;
+
+    @Mock
+    private Location origin;
+
+    @Mock
+    private Location destination;
+
+    @Mock
+    private UnLocode unLocode;
+
+    @Mock
+    private TransitPath transitPath;
+
+    private ExternalRoutingService service;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        service = new ExternalRoutingService();
+        ReflectionTestUtils.setField(service, "logger", logger);
+        ReflectionTestUtils.setField(service, "graphTraversalResource", graphTraversalResource);
+        ReflectionTestUtils.setField(service, "locationRepository", locationRepository);
+        ReflectionTestUtils.setField(service, "voyageRepository", voyageRepository);
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithValidInput() {
+        when(origin.getUnLocode()).thenReturn(unLocode);
+        when(unLocode.getIdString()).thenReturn("USNYC");
+        when(destination.getUnLocode()).thenReturn(unLocode);
+        when(unLocode.getIdString()).thenReturn("SESTO");
+
+        List<TransitPath> transitPaths = new ArrayList<>();
+        transitPaths.add(transitPath);
+        when(graphTraversalResource.queryParam(anyString(), anyString())).thenReturn(graphTraversalResource);
+        when(graphTraversalResource.request(MediaType.APPLICATION_JSON_TYPE)).thenReturn(graphTraversalResource);
+        when(graphTraversalResource.get(any(GenericType.class))).thenReturn(transitPaths);
+
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(7));
+        when(routeSpecification.isSatisfiedBy(any(Itinerary.class))).thenReturn(true);
+
+        List<Itinerary> result = service.fetchRoutesForSpecification(routeSpecification);
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithNoSatisfiedItineraries() {
+        when(origin.getUnLocode()).thenReturn(unLocode);
+        when(unLocode.getIdString()).thenReturn("USNYC");
+        when(destination.getUnLocode()).thenReturn(unLocode);
+        when(unLocode.getIdString()).thenReturn("SESTO");
+
+        List<TransitPath> transitPaths = new ArrayList<>();
+        transitPaths.add(transitPath);
+        when(graphTraversalResource.queryParam(anyString(), anyString())).thenReturn(graphTraversalResource);
+        when(graphTraversalResource.request(MediaType.APPLICATION_JSON_TYPE)).thenReturn(graphTraversalResource);
+        when(graphTraversalResource.get(any(GenericType.class))).thenReturn(transitPaths);
+
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(7));
+        when(routeSpecification.isSatisfiedBy(any(Itinerary.class))).thenReturn(false);
+
+        List<Itinerary> result = service.fetchRoutesForSpecification(routeSpecification);
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(logger).log(Level.FINE, "Received itinerary that did not satisfy the route specification");
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithEmptyTransitPaths() {
+        when(origin.getUnLocode()).thenReturn(unLocode);
+        when(unLocode.getIdString()).thenReturn("USNYC");
+        when(destination.getUnLocode()).thenReturn(unLocode);
+        when(unLocode.getIdString()).thenReturn("SESTO");
+
+        List<TransitPath> transitPaths = new ArrayList<>();
+        when(graphTraversalResource.queryParam(anyString(), anyString())).thenReturn(graphTraversalResource);
+        when(graphTraversalResource.request(MediaType.APPLICATION_JSON_TYPE)).thenReturn(graphTraversalResource);
+        when(graphTraversalResource.get(any(GenericType.class))).thenReturn(transitPaths);
+
+        RouteSpecification routeSpecification = new RouteSpecification(origin, destination, LocalDate.now().plusDays(7));
+        List<Itinerary> result = service.fetchRoutesForSpecification(routeSpecification);
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithNullRouteSpecification() {
+        assertThrows(NullPointerException.class, () -> service.fetchRoutesForSpecification(null));
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithNullOrigin() {
+        RouteSpecification routeSpecification = new RouteSpecification(null, destination, LocalDate.now().plusDays(7));
+        assertThrows(NullPointerException.class, () -> service.fetchRoutesForSpecification(routeSpecification));
+    }
+
+    @Test
+    void testFetchRoutesForSpecificationWithNullDestination() {
+        RouteSpecification routeSpecification = new RouteSpecification(origin, null, LocalDate.now().plusDays(7));
+        assertThrows(NullPointerException.class, () -> service.fetchRoutesForSpecification(routeSpecification));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/infrastructure/routing/ExternalRoutingService_fetchRoutesForSpecificationTestGenerated.java:[79] no suitable method found for thenReturn(jakarta.ws.rs.client.WebTarget)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(jakarta.ws.rs.client.Invocation.Builder) is not applicable
+  (argument mismatch; jakarta.ws.rs.client.WebTarget cannot be converted to jakarta.ws.rs.client.Invocation.Builder)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(jakarta.ws.rs.client.Invocation.Builder,jakarta.ws.rs.client.Invocation.Builder...) is not applicable
+  (argument mismatch; jakarta.ws.rs.client.WebTarget cannot be converted to jakarta.ws.rs.client.Invocation.Builder)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/infrastructure/routing/ExternalRoutingService_fetchRoutesForSpecificationTestGenerated.java:[80] cannot find symbol
+  symbol:   method get(jakarta.ws.rs.core.GenericType)
+  location: variable graphTraversalResource of type jakarta.ws.rs.client.WebTarget
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/infrastructure/routing/ExternalRoutingService_fetchRoutesForSpecificationTestGenerated.java:[100] no suitable method found for thenReturn(jakarta.ws.rs.client.WebTarget)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(jakarta.ws.rs.client.Invocation.Builder) is not applicable
+  (argument mismatch; jakarta.ws.rs.client.WebTarget cannot be converted to jakarta.ws.rs.client.Invocation.Builder)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(jakarta.ws.rs.client.Invocation.Builder,jakarta.ws.rs.client.Invocation.Builder...) is not applicable
+  (argument mismatch; jakarta.ws.rs.client.WebTarget cannot be converted to jakarta.ws.rs.client.Invocation.Builder)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/infrastructure/routing/ExternalRoutingService_fetchRoutesForSpecificationTestGenerated.java:[101] cannot find symbol
+  symbol:   method get(jakarta.ws.rs.core.GenericType)
+  location: variable graphTraversalResource of type jakarta.ws.rs.client.WebTarget
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/infrastructure/routing/ExternalRoutingService_fetchRoutesForSpecificationTestGenerated.java:[121] no suitable method found for thenReturn(jakarta.ws.rs.client.WebTarget)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(jakarta.ws.rs.client.Invocation.Builder) is not applicable
+  (argument mismatch; jakarta.ws.rs.client.WebTarget cannot be converted to jakarta.ws.rs.client.Invocation.Builder)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(jakarta.ws.rs.client.Invocation.Builder,jakarta.ws.rs.client.Invocation.Builder...) is not applicable
+  (argument mismatch; jakarta.ws.rs.client.WebTarget cannot be converted to jakarta.ws.rs.client.Invocation.Builder)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/infrastructure/routing/ExternalRoutingService_fetchRoutesForSpecificationTestGenerated.java:[122] cannot find symbol
+  symbol:   method get(jakarta.ws.rs.core.GenericType)
+  location: variable graphTraversalResource of type jakarta.ws.rs.client.WebTarget
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: ExternalRoutingService_fetchRoutesForSpecificationTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

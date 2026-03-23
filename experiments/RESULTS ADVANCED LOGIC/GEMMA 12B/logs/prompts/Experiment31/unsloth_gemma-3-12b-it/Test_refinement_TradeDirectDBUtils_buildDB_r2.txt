@@ -1,0 +1,809 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.direct;
+Class name (MUST be exactly): TradeDirectDBUtils_buildDBTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testBuildDBWithoutDDLFile_multipleUsers --
+ERROR: java.lang.NullPointerException: Cannot invoke "com.ibm.websphere.samples.daytrader.interfaces.TradeServices.createQuote(String, String, java.math.BigDecimal)" because "this.ts" is null
+--------------------------------------------------
+TEST: testBuildDBErrorDuringDDLFileParsing --
+ERROR: org.mockito.exceptions.base.MockitoException:
+Checked exception is invalid for this method!
+Invalid: java.lang.Exception: Simulated DDL parsing error
+--------------------------------------------------
+TEST: testBuildDBWithDDLFile --
+ERROR: Wanted but not invoked:
+tradeServices.createQuote(
+<any string>,
+<any string>,
+<any>
+);
+-> at com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils_buildDBTestGenerated.testBuildDBWithDDLFile(TradeDirectDBUtils_buildDBTestGenerated.java:70)
+Actually, there were zero interactions with this mock.
+--------------------------------------------------
+TEST: testBuildDBWithoutDDLFile --
+ERROR: java.lang.NullPointerException: Cannot invoke "com.ibm.websphere.samples.daytrader.interfaces.TradeServices.createQuote(String, String, java.math.BigDecimal)" because "this.ts" is null
+
+TEST CODE TO FIX:
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeDB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.MDBStats;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class TradeDirectDBUtils_buildDBTestGenerated {
+    private TradeDirectDBUtils tradeDirectDBUtils;
+    private DataSource dataSource;
+    private TradeServices tradeServices;
+    private PrintWriter printWriter;
+    @BeforeEach
+    void setUp() {
+        dataSource = Mockito.mock(DataSource.class);
+        tradeServices = Mockito.mock(TradeServices.class);
+        printWriter = new PrintWriter(System.out);
+        tradeDirectDBUtils = new TradeDirectDBUtils();
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.reset(dataSource, tradeServices);
+    }
+
+
+    @Test
+        void testBuildDBWithDDLFile() throws Exception {
+            InputStream ddlFile = Mockito.mock(InputStream.class);
+            when(ddlFile.read()).thenReturn(-1);
+            tradeDirectDBUtils.buildDB(printWriter, ddlFile);
+            verify(tradeServices).createQuote(anyString(), anyString(), any());
+            verify(tradeServices).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
+            verify(tradeServices).buy(anyString(), anyString(), anyDouble(), anyInt());
+        }
+
+    @Test
+        void testBuildDBWithoutDDLFile() throws Exception {
+            tradeDirectDBUtils.buildDB(printWriter, null);
+            verify(tradeServices).createQuote(anyString(), anyString(), any());
+            verify(tradeServices).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
+            verify(tradeServices).buy(anyString(), anyString(), anyDouble(), anyInt());
+        }
+
+    @Test
+        void testBuildDBErrorDuringDDLFileParsing() throws Exception {
+            InputStream ddlFile = Mockito.mock(InputStream.class);
+            when(ddlFile.read()).thenThrow(new Exception("Simulated DDL parsing error"));
+            assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(printWriter, ddlFile));
+        }
+
+    @Test
+        void testBuildDBWithoutDDLFile_multipleUsers() throws Exception {
+          // Mock TradeServices
+          when(tradeServices.createQuote(anyString(), anyString(), any())).thenReturn(null);
+          when(tradeServices.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(null);
+          when(tradeServices.buy(anyString(), anyString(), anyDouble(), anyInt())).thenReturn(null);
+          // Set the number of users
+          TradeConfig.setMAX_USERS(5);
+          // Call the method
+          tradeDirectDBUtils.buildDB(printWriter, null);
+          // Verify interactions
+          verify(tradeServices, times(5)).createQuote(anyString(), anyString(), any());
+          verify(tradeServices, times(5)).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
+          verify(tradeServices, times(5)).buy(anyString(), anyString(), anyDouble(), anyInt());
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    void testBuildDBErrorDuringQuoteCreation() {}
+    @Test
+    void testBuildDBErrorDuringUserRegistration() {}
+    @Test
+    void testBuildDBErrorDuringOrderPlacement() {}
+    @Test
+    void testBuildDBWithDDLFile_errorDuringQuoteCreation() {}
+    @Test
+    void testBuildDBWithDDLFile_errorDuringUserRegistration() {}
+    @Test
+    void testBuildDBWithDDLFile_errorDuringOrderPlacement() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   RunStatsDataBean -> com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean
+//   AccountDataBean -> com.ibm.websphere.samples.daytrader.entities.AccountDataBean
+//   TradeDB -> com.ibm.websphere.samples.daytrader.interfaces.TradeDB
+//   TradeJDBC -> com.ibm.websphere.samples.daytrader.interfaces.TradeJDBC
+//   TradeServices -> com.ibm.websphere.samples.daytrader.interfaces.TradeServices
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   MDBStats -> com.ibm.websphere.samples.daytrader.util.MDBStats
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   BufferedReader -> java.io.BufferedReader
+//   IOException -> java.io.IOException
+//   InputStream -> java.io.InputStream
+//   InputStreamReader -> java.io.InputStreamReader
+//   BigDecimal -> java.math.BigDecimal
+//   Connection -> java.sql.Connection
+//   DatabaseMetaData -> java.sql.DatabaseMetaData
+//   PreparedStatement -> java.sql.PreparedStatement
+//   ResultSet -> java.sql.ResultSet
+//   SQLException -> java.sql.SQLException
+//   Statement -> java.sql.Statement
+//   ArrayList -> java.util.ArrayList
+//   Resource -> javax.annotation.Resource
+//   ApplicationScoped -> javax.enterprise.context.ApplicationScoped
+//   Inject -> javax.inject.Inject
+//   DataSource -> javax.sql.DataSource
+//   TradeDirectDBUtils -> com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils
+
+// === Class: TradeDirectDBUtils ===
+// Fields (with actual visibility):
+    private DataSource datasource;
+    package-private TradeServices ts;
+
+// Getter/Setter Methods (for test assertions):
+private PreparedStatement getStatement(Connection conn, String sql) throws Exception;
+
+// Internal Methods (full implementation for context):
+  public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception {
+    // Clear MDB Statistics
+    MDBStats.getInstance().reset();
+    // Reset Trade
+
+    RunStatsDataBean runStatsData = new RunStatsDataBean();
+    Connection conn = null;
+    try {
+
+      conn = datasource.getConnection();
+      conn.setAutoCommit(false);
+      PreparedStatement stmt = null;
+      ResultSet rs = null;
+
+      if (deleteAll) {
+        try {
+          stmt = getStatement(conn, "delete from quoteejb");
+          stmt.executeUpdate();
+          stmt.close();
+          stmt = getStatement(conn, "delete from accountejb");
+          stmt.executeUpdate();
+          stmt.close();
+          stmt = getStatement(conn, "delete from accountprofileejb");
+          stmt.executeUpdate();
+          stmt.close();
+          stmt = getStatement(conn, "delete from holdingejb");
+          stmt.executeUpdate();
+          stmt.close();
+          stmt = getStatement(conn, "delete from orderejb");
+          stmt.executeUpdate();
+          stmt.close();
+          // FUTURE: - DuplicateKeyException - For now, don't start at
+          // zero as KeySequenceDirect and KeySequenceBean will still
+          // give out
+          // the cached Block and then notice this change. Better
+          // solution is
+          // to signal both classes to drop their cached blocks
+          // stmt = getStatement(conn, "delete from keygenejb");
+          // stmt.executeUpdate();
+          // stmt.close();
+          conn.commit();
+        } catch (Exception e) {
+          Log.error(e, "TradeDirect:resetTrade(deleteAll) -- Error deleting Trade users and stock from the Trade database");
+        }
+        return runStatsData;
+      }
+
+      stmt = getStatement(conn, "delete from holdingejb where holdingejb.account_accountid is null");
+      stmt.executeUpdate();
+      stmt.close();
+
+      // Count and Delete newly registered users (users w/ id that start
+      // "ru:%":
+      stmt = getStatement(conn, "delete from accountprofileejb where userid like 'ru:%'");
+      stmt.executeUpdate();
+      stmt.close();
+
+      stmt = getStatement(conn, "delete from orderejb where account_accountid in (select accountid from accountejb a where a.profile_userid like 'ru:%')");
+      stmt.executeUpdate();
+      stmt.close();
+
+      stmt = getStatement(conn,
+          "delete from holdingejb where account_accountid in (select accountid from accountejb a where a.profile_userid like 'ru:%')");
+      stmt.executeUpdate();
+      stmt.close();
+
+      stmt = getStatement(conn, "delete from accountejb where profile_userid like 'ru:%'");
+      int newUserCount = stmt.executeUpdate();
+      runStatsData.setNewUserCount(newUserCount);
+      stmt.close();
+
+      // Count of trade users
+      stmt = getStatement(conn, "select count(accountid) as \"tradeUserCount\" from accountejb a where a.profile_userid like 'uid:%'");
+      rs = stmt.executeQuery();
+      rs.next();
+      int tradeUserCount = rs.getInt("tradeUserCount");
+      runStatsData.setTradeUserCount(tradeUserCount);
+      stmt.close();
+
+      rs.close();
+      // Count of trade stocks
+      stmt = getStatement(conn, "select count(symbol) as \"tradeStockCount\" from quoteejb a where a.symbol like 's:%'");
+      rs = stmt.executeQuery();
+      rs.next();
+      int tradeStockCount = rs.getInt("tradeStockCount");
+      runStatsData.setTradeStockCount(tradeStockCount);
+      stmt.close();
+
+      // Count of trade users login, logout
+      stmt = getStatement(conn,
+          "select sum(loginCount) as \"sumLoginCount\", sum(logoutCount) as \"sumLogoutCount\" from accountejb a where  a.profile_userID like 'uid:%'");
+      rs = stmt.executeQuery();
+      rs.next();
+      int sumLoginCount = rs.getInt("sumLoginCount");
+      int sumLogoutCount = rs.getInt("sumLogoutCount");
+      runStatsData.setSumLoginCount(sumLoginCount);
+      runStatsData.setSumLogoutCount(sumLogoutCount);
+      stmt.close();
+
+      rs.close();
+      // Update logoutcount and loginCount back to zero
+
+      stmt = getStatement(conn, "update accountejb set logoutCount=0,loginCount=0 where profile_userID like 'uid:%'");
+      stmt.executeUpdate();
+      stmt.close();
+
+      // count holdings for trade users
+      stmt = getStatement(conn, "select count(holdingid) as \"holdingCount\" from holdingejb h where h.account_accountid in "
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')");
+
+      rs = stmt.executeQuery();
+      rs.next();
+      int holdingCount = rs.getInt("holdingCount");
+      runStatsData.setHoldingCount(holdingCount);
+      stmt.close();
+      rs.close();
+
+      // count orders for trade users
+      stmt = getStatement(conn, "select count(orderid) as \"orderCount\" from orderejb o where o.account_accountid in "
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')");
+
+      rs = stmt.executeQuery();
+      rs.next();
+      int orderCount = rs.getInt("orderCount");
+      runStatsData.setOrderCount(orderCount);
+      stmt.close();
+      rs.close();
+
+      // count orders by type for trade users
+      stmt = getStatement(conn, "select count(orderid) \"buyOrderCount\"from orderejb o where (o.account_accountid in "
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')) AND " + " (o.orderType='buy')");
+
+      rs = stmt.executeQuery();
+      rs.next();
+      int buyOrderCount = rs.getInt("buyOrderCount");
+      runStatsData.setBuyOrderCount(buyOrderCount);
+      stmt.close();
+      rs.close();
+
+      // count orders by type for trade users
+      stmt = getStatement(conn, "select count(orderid) \"sellOrderCount\"from orderejb o where (o.account_accountid in "
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')) AND " + " (o.orderType='sell')");
+
+      rs = stmt.executeQuery();
+      rs.next();
+      int sellOrderCount = rs.getInt("sellOrderCount");
+      runStatsData.setSellOrderCount(sellOrderCount);
+      stmt.close();
+      rs.close();
+
+      // Delete cancelled orders
+      stmt = getStatement(conn, "delete from orderejb where orderStatus='cancelled'");
+      int cancelledOrderCount = stmt.executeUpdate();
+      runStatsData.setCancelledOrderCount(cancelledOrderCount);
+      stmt.close();
+      rs.close();
+
+      // count open orders by type for trade users
+      stmt = getStatement(conn, "select count(orderid) \"openOrderCount\"from orderejb o where (o.account_accountid in "
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')) AND " + " (o.orderStatus='open')");
+
+      rs = stmt.executeQuery();
+      rs.next();
+      int openOrderCount = rs.getInt("openOrderCount");
+      runStatsData.setOpenOrderCount(openOrderCount);
+
+      stmt.close();
+      rs.close();
+      // Delete orders for holding which have been purchased and sold
+      stmt = getStatement(conn, "delete from orderejb where holding_holdingid is null");
+      int deletedOrderCount = stmt.executeUpdate();
+      runStatsData.setDeletedOrderCount(deletedOrderCount);
+      stmt.close();
+      rs.close();
+
+      conn.commit();
+
+      System.out.println("TradeDirect:reset Run stats data\n\n" + runStatsData);
+    } catch (Exception e) {
+      Log.error(e, "Failed to reset Trade");
+      conn.rollback();
+      throw e;
+    } finally {
+      conn.close();
+    }
+    return runStatsData;
+
+  }
+  public Object[] parseDDLToBuffer(InputStream ddlFile) throws Exception {
+    BufferedReader br = null;
+    ArrayList<String> sqlBuffer = new ArrayList<String>(30); //initial capacity 30 assuming we have 30 ddl-sql statements to read
+
+    try {
+      br = new BufferedReader(new InputStreamReader(ddlFile));
+      String s;
+      String sql = new String();
+      while ((s = br.readLine()) != null) {
+        s = s.trim();
+        if ((s.length() != 0) && (s.charAt(0) != '#')) // Empty lines or lines starting with "#" are ignored
+          {
+            sql = sql + " " + s;
+            if (s.endsWith(";")) { // reached end of sql statement
+              sql = sql.replace(';', ' '); //remove the semicolon
+              sqlBuffer.add(sql);
+              sql = "";
+            }
+          }
+      }
+    } catch (IOException ex) {
+      Log.error("TradeBuildDB:parseDDLToBuffer Exeception during open/read of File: " + ddlFile, ex);
+      throw ex;
+    } finally {
+      if (br != null) {
+        try {
+          br.close();
+        } catch (IOException ex) {
+          Log.error("TradeBuildDB:parseDDLToBuffer Failed to close BufferedReader", ex);
+        }
+      }
+    }
+    return sqlBuffer.toArray();
+  }
+  private boolean recreateDBTables(Object[] sqlBuffer, java.io.PrintWriter out) throws Exception {
+    // Clear MDB Statistics
+    MDBStats.getInstance().reset();
+
+    Connection conn = null;
+    boolean success = false;
+    try {
+      conn = datasource.getConnection();
+      Statement stmt = conn.createStatement();
+      int bufferLength = sqlBuffer.length;
+      for (int i = 0; i < bufferLength; i++) {
+        try {
+          stmt.executeUpdate((String) sqlBuffer[i]);
+          // commit(conn);
+        } catch (SQLException ex) {
+          // Ignore DROP statements as tables won't always exist.
+          if (((String) sqlBuffer[i]).indexOf("DROP ") < 0) {
+            Log.error("TradeDirect:recreateDBTables SQL Exception thrown on executing the foll sql command: " + sqlBuffer[i], ex);
+            out.println("<BR>SQL Exception thrown on executing the foll sql command: <I>" + sqlBuffer[i] + "</I> . Check log for details.</BR>");
+          }
+        }
+      }
+      stmt.close();
+      conn.commit();
+      success = true;
+    } catch (Exception e) {
+      Log.error(e, "TradeDirect:recreateDBTables() -- Error dropping and recreating the database tables");
+    } finally {
+      conn.close();
+    }
+    return success;
+  }
+
+// === External Class: Log ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.Log
+// Import paths:
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   Level -> java.util.logging.Level
+//   Logger -> java.util.logging.Logger
+// Fields (with actual visibility):
+    private static final Logger log;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+
+// Method Signatures (used by target method):
+public static void error(String message);
+
+// === External Class: TradeConfig ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.TradeConfig
+// Import paths:
+//   BigDecimal -> java.math.BigDecimal
+//   ArrayList -> java.util.ArrayList
+//   Random -> java.util.Random
+// Fields (with actual visibility):
+    private static String[] runTimeModeNames;
+    public static final int EJB3;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int DIRECT;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int SESSION_TO_DIRECT;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int runTimeMode;
+    private static String[] orderProcessingModeNames;
+    public static final int SYNCH;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ASYNCH;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ASYNCH_2PHASE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int orderProcessingMode;
+    private static String[] accessModeNames;
+    public static final int STANDARD;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int accessMode;
+    private static String[] webInterfaceNames;
+    public static final int JSP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int JSP_Images;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int JSP_Images_HTTP2;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int webInterface;
+    private static int MAX_USERS;
+    private static int MAX_QUOTES;
+    public static boolean JDBCDriverNeedsGlobalTransation;
+    public static String DATASOURCE;
+    public static int KEYBLOCKSIZE;
+    public static int QUOTES_PER_PAGE;
+    public static boolean RND_USER;
+    private static int MAX_HOLDINGS;
+    private static int count;
+    private static Object userID_count_semaphore;
+    private static int userID_count;
+    private static String hostName;
+    private static Random r0;
+    private static Random randomNumberGenerator;
+    public static final String newUserPrefix;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int verifyPercent;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static boolean updateQuotePrices;
+    private static int primIterations;
+    private static boolean longRun;
+    private static boolean publishQuotePriceChange;
+    private static int listQuotePriceChangeFrequency;
+    private static boolean displayOrderAlerts;
+    private static int marketSummaryInterval;
+    public static BigDecimal PENNY_STOCK_PRICE;
+    public static BigDecimal PENNY_STOCK_RECOVERY_MIRACLE_MULTIPLIER;
+    public static BigDecimal MAXIMUM_STOCK_PRICE;
+    public static BigDecimal MAXIMUM_STOCK_SPLIT_MULTIPLIER;
+    public static final int HOME_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int QUOTE_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int LOGIN_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int LOGOUT_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int REGISTER_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ACCOUNT_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int PORTFOLIO_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int BUY_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int SELL_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int UPDATEACCOUNT_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int[][] scenarioMixes;
+    private static char[] actions;
+    private static int sellDeficit;
+    public static final int WELCOME_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int REGISTER_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int PORTFOLIO_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int QUOTE_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int HOME_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ACCOUNT_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ORDER_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int CONFIG_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int STATS_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int MARKET_SUMMARY_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static String[][] webUI;
+    private static int scenarioCount;
+    private static final BigDecimal orderFee;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final BigDecimal cashFee;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final BigDecimal ONE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static ArrayList deck;
+    private static int card;
+
+// Method Signatures (used by target method):
+public static String rndAddress();
+public static String rndCreditCard();
+public static int getOrderProcessingMode();
+public static String rndFullName();
+public static int getMAX_USERS();
+public static String rndSymbol();
+public static float rndQuantity();
+public static String rndEmail(String userID);
+public static int getMAX_QUOTES();
+public static int rndInt(int i);
+public static int getMAX_HOLDINGS();
+public static float rndPrice();
+
+// Public Getter Methods (for test assertions):
+public static String getPage(int pageNumber);
+public static java getRunTimeModeNames();
+public static char getScenarioAction(boolean newUser);
+public static String getUserID();
+public static BigDecimal getOrderFee(String orderType);
+public static BigDecimal getRandomPriceChangeFactor();
+public static String getOrderProcessingModeNames();
+public static String getWebInterfaceNames();
+public static int getScenarioMixes();
+public static int getScenarioCount();
+public static boolean getJDBCDriverNeedsGlobalTransation();
+public static boolean getUpdateQuotePrices();
+public static int getPrimIterations();
+public static boolean getLongRun();
+public static boolean getPublishQuotePriceChange();
+
+// === External Class: TradeServices ===
+// Full import path: com.ibm.websphere.samples.daytrader.interfaces.TradeServices
+// Type: INTERFACE (cannot instantiate - use Mockito.mock(TradeServices.class) instead)
+// Import paths:
+//   MarketSummaryDataBean -> com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean
+//   BigDecimal -> java.math.BigDecimal
+//   Collection -> java.util.Collection
+//   Future -> java.util.concurrent.Future
+//   AccountDataBean -> com.ibm.websphere.samples.daytrader.entities.AccountDataBean
+// Method Signatures (used by target method):
+OrderDataBean buy(String userID, String symbol, double quantity, int orderProcessingMode);
+AccountDataBean register(String userID, String password, String fullname, String address, String email, String creditcard, BigDecimal openBalance);
+QuoteDataBean createQuote(String symbol, String companyName, BigDecimal price);
+
+// === External Class: AccountDataBean ===
+// Full import path: com.ibm.websphere.samples.daytrader.entities.AccountDataBean
+// Import paths:
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   Serializable -> java.io.Serializable
+//   BigDecimal -> java.math.BigDecimal
+//   Timestamp -> java.sql.Timestamp
+// Fields (with actual visibility):
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private Integer accountID;
+    private int loginCount;
+    private int logoutCount;
+    private Date lastLogin;
+    private Date creationDate;
+    private BigDecimal balance;
+    private BigDecimal openBalance;
+    private Collection orders;
+    private Collection holdings;
+    private AccountProfileDataBean profile;
+    private String profileID;
+
+// Constructors:
+public AccountDataBean();
+public AccountDataBean(Integer accountID, int loginCount, int logoutCount, Date lastLogin, Date creationDate, BigDecimal balance, BigDecimal openBalance, String profileID);
+public AccountDataBean(int loginCount, int logoutCount, Date lastLogin, Date creationDate, BigDecimal balance, BigDecimal openBalance, String profileID);
+
+// Method Signatures (used by target method):
+public Integer getAccountID();
+
+// Public Getter Methods (for test assertions):
+public static AccountDataBean getRandomInstance();
+public String toString();
+public String toHTML();
+public int getLoginCount();
+public int getLogoutCount();
+public Date getLastLogin();
+public Date getCreationDate();
+public BigDecimal getBalance();
+public BigDecimal getOpenBalance();
+public String getProfileID();
+public Collection<OrderDataBean> getOrders();
+public Collection<HoldingDataBean> getHoldings();
+public AccountProfileDataBean getProfile();
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() {
+        dataSource = Mockito.mock(DataSource.class);
+        tradeServices = Mockito.mock(TradeServices.class);
+        printWriter = new PrintWriter(System.out);
+        tradeDirectDBUtils = new TradeDirectDBUtils();
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.reset(dataSource, tradeServices);
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+  /**
+   * Re-create the DayTrader db tables and populate them OR just populate a DayTrader DB, logging to the provided output stream
+   */
+  public void buildDB(java.io.PrintWriter out, InputStream ddlFile) throws Exception {
+    String symbol, companyName;
+    int errorCount = 0; // Give up gracefully after 10 errors
+
+    //  TradeStatistics.statisticsEnabled=false;  // disable statistics
+    out.println("<HEAD><BR><EM> TradeBuildDB: Building DayTrader Database...</EM><BR> This operation will take several minutes. Please wait...</HEAD>");
+    out.println("<BODY>");
+
+    if (ddlFile != null) {
+      //out.println("<BR>TradeBuildDB: **** warPath= "+warPath+" ****</BR></BODY>");
+
+      boolean success = false;
+
+      Object[] sqlBuffer = null;
+
+      //parse the DDL file and fill the SQL commands into a buffer
+      try {
+        sqlBuffer = parseDDLToBuffer(ddlFile);
+      } catch (Exception e) {
+        Log.error(e, "TradeBuildDB: Unable to parse DDL file");
+        out.println("<BR>TradeBuildDB: **** Unable to parse DDL file for the specified database ****</BR></BODY>");
+        return;
+      }
+      if ((sqlBuffer == null) || (sqlBuffer.length == 0)) {
+        out.println("<BR>TradeBuildDB: **** Parsing DDL file returned empty buffer, please check that a valid DB specific DDL file is available and retry ****</BR></BODY>");
+        return;
+      }
+
+      // send the sql commands buffer to drop and recreate the Daytrader tables
+      out.println("<BR>TradeBuildDB: **** Dropping and Recreating the DayTrader tables... ****</BR>");
+      try {
+        success = recreateDBTables(sqlBuffer, out);
+      } catch (Exception e) {
+        Log.error(e, "TradeBuildDB: Unable to drop and recreate DayTrader Db Tables, please check for database consistency before continuing");
+        out.println("TradeBuildDB: Unable to drop and recreate DayTrader Db Tables, please check for database consistency before continuing");
+        return;
+      }
+      if (!success) {
+        out.println("<BR>TradeBuildDB: **** Unable to drop and recreate DayTrader Db Tables, please check for database consistency before continuing ****</BR></BODY>");
+        return;
+      }
+      out.println("<BR>TradeBuildDB: **** DayTrader tables successfully created! ****</BR><BR><b> Please Stop and Re-start your Daytrader application (or your application server) and then use the \"Repopulate Daytrader Database\" link to populate your database.</b></BR><BR><BR></BODY>");
+      return;
+    } // end of createDBTables
+
+    out.println("<BR>TradeBuildDB: **** Creating " + TradeConfig.getMAX_QUOTES() + " Quotes ****</BR>");
+    //Attempt to delete all of the Trade users and Trade Quotes first
+    try {
+      resetTrade(true);
+    } catch (Exception e) {
+      Log.error(e, "TradeBuildDB: Unable to delete Trade users (uid:0, uid:1, ...) and Trade Quotes (s:0, s:1, ...)");
+    }
+    for (int i = 0; i < TradeConfig.getMAX_QUOTES(); i++) {
+      symbol = "s:" + i;
+      companyName = "S" + i + " Incorporated";
+      try {
+        ts.createQuote(symbol, companyName, new java.math.BigDecimal(TradeConfig.rndPrice()));
+        if (i % 10 == 0) {
+          out.print("....." + symbol);
+          if (i % 100 == 0) {
+            out.println(" -<BR>");
+            out.flush();
+          }
+        } // NOT COVERED BY TESTS
+      } catch (Exception e) { // NOT COVERED BY TESTS
+        if (errorCount++ >= 10) {
+          String error = "Populate Trade DB aborting after 10 create quote errors. Check the EJB datasource configuration. Check the log for details <BR><BR> Exception is: <BR> "
+              + e.toString();
+          Log.error(e, error); // NOT COVERED BY TESTS
+          throw e; // NOT COVERED BY TESTS
+        } // NOT COVERED BY TESTS
+      } // NOT COVERED BY TESTS
+    } // NOT COVERED BY TESTS
+    out.println("<BR>");
+    out.println("<BR>**** Registering " + TradeConfig.getMAX_USERS() + " Users **** "); // NOT COVERED BY TESTS
+    errorCount = 0; //reset for user registrations
+
+    // Registration is a formal operation in Trade 2.
+    for (int i = 0; i < TradeConfig.getMAX_USERS(); i++) {
+      String userID = "uid:" + i;
+      String fullname = TradeConfig.rndFullName();
+      String email = TradeConfig.rndEmail(userID);
+      String address = TradeConfig.rndAddress();
+      String creditcard = TradeConfig.rndCreditCard();
+      double initialBalance = (double) (TradeConfig.rndInt(100000)) + 200000;
+      if (i == 0) {
+        initialBalance = 1000000; // uid:0 starts with a cool million.
+      }
+      try {
+        AccountDataBean accountData = ts.register(userID, "xxx", fullname, address, email, creditcard, new BigDecimal(initialBalance));
+
+        if (accountData != null) {
+          if (i % 50 == 0) {
+            out.print("<BR>Account# " + accountData.getAccountID() + " userID=" + userID);
+          } // end-if
+
+          int holdings = TradeConfig.rndInt(TradeConfig.getMAX_HOLDINGS() + 1); // 0-MAX_HOLDING (inclusive), avg holdings per user = (MAX-0)/2
+          double quantity = 0;
+
+          for (int j = 0; j < holdings; j++) {
+            symbol = TradeConfig.rndSymbol(); // NOT COVERED BY TESTS
+            quantity = TradeConfig.rndQuantity();
+            ts.buy(userID, symbol, quantity, TradeConfig.getOrderProcessingMode());
+          } // end-for
+          if (i % 50 == 0) {
+            out.println(" has " + holdings + " holdings.");
+            out.flush(); // NOT COVERED BY TESTS
+          } // NOT COVERED BY TESTS // end-if
+        } else { // NOT COVERED BY TESTS
+          out.println("<BR>UID " + userID + " already registered.</BR>");
+          out.flush();
+        } // end-if
+
+      } catch (Exception e) {
+        if (errorCount++ >= 10) { // NOT COVERED BY TESTS
+          String error = "Populate Trade DB aborting after 10 user registration errors. Check the log for details. <BR><BR> Exception is: <BR>" // NOT COVERED BY TESTS
+              + e.toString(); // NOT COVERED BY TESTS
+          Log.error(e, error); // NOT COVERED BY TESTS
+          throw e; // NOT COVERED BY TESTS
+        }
+      } // NOT COVERED BY TESTS
+    } // NOT COVERED BY TESTS // end-for
+    out.println("</BODY>"); // NOT COVERED BY TESTS
+  }
+
+
+COVERAGE ISSUES:
+Current line coverage: 25.88%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

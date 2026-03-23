@@ -1,0 +1,189 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.ejb3;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.RuntimeMode;
+import com.ibm.websphere.samples.daytrader.interfaces.Trace;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeEJB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.FinancialUtils;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.RecentQuotePriceChangeList;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Future;
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.ejb.EJBException;
+import javax.ejb.SessionContext;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
+import javax.jms.JMSContext;
+import javax.jms.Queue;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.TextMessage;
+import javax.jms.Topic;
+import javax.jms.TopicConnectionFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.transaction.RollbackException;
+import javax.validation.constraints.NotNull;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeSLSBBean_completeOrderTestGenerated {
+    private TradeSLSBBean tradeSLSBBean;
+    private EntityManager entityManager;
+
+    @BeforeEach
+    public void setUp() {
+        entityManager = mock(EntityManager.class);
+        tradeSLSBBean = new TradeSLSBBean();
+        ReflectionTestUtils.setField(tradeSLSBBean, "entityManager", entityManager);
+    }
+
+    @Test
+    public void testCompleteOrder_SellOrder() throws Exception {
+        OrderDataBean order = mock(OrderDataBean.class);
+        AccountDataBean account = mock(AccountDataBean.class);
+        QuoteDataBean quote = mock(QuoteDataBean.class);
+        HoldingDataBean holding = mock(HoldingDataBean.class);
+        BigDecimal price = BigDecimal.ONE;
+        double quantity = 10;
+        when(order.getHolding()).thenReturn(holding);
+        when(order.getAccount()).thenReturn(account);
+        when(order.getQuote()).thenReturn(quote);
+        when(order.getPrice()).thenReturn(price);
+        when(order.getQuantity()).thenReturn(quantity);
+        when(order.isSell()).thenReturn(true);
+        when(order.getOrderID()).thenReturn(1);
+        when(order.isCompleted()).thenReturn(false);
+        when(entityManager.find(OrderDataBean.class, 1)).thenReturn(order);
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getRandomPriceChangeFactor).thenReturn(BigDecimal.ONE);
+            OrderDataBean result = tradeSLSBBean.completeOrder(1, false);
+            assertNotNull(result);
+            assertNotNull(result.getOrderStatus());
+            assertNotNull(result.getCompletionDate());
+            verify(order).setHolding(null);
+            verify(order).setOrderStatus(any(String.class));
+            verify(order).setCompletionDate(any(Timestamp.class));
+            verify(entityManager).remove(holding);
+            verify(entityManager).find(OrderDataBean.class, 1);
+        }
+    }
+
+    @Test
+    public void testCompleteOrder_SellOrderWithNegativeQuantity() throws Exception {
+        OrderDataBean order = mock(OrderDataBean.class);
+        AccountDataBean account = mock(AccountDataBean.class);
+        QuoteDataBean quote = mock(QuoteDataBean.class);
+        HoldingDataBean holding = mock(HoldingDataBean.class);
+        BigDecimal price = BigDecimal.ONE;
+        double quantity = -10;
+        when(order.getHolding()).thenReturn(holding);
+        when(order.getAccount()).thenReturn(account);
+        when(order.getQuote()).thenReturn(quote);
+        when(order.getPrice()).thenReturn(price);
+        when(order.getQuantity()).thenReturn(quantity);
+        when(order.isSell()).thenReturn(true);
+        when(order.getOrderID()).thenReturn(1);
+        when(order.isCompleted()).thenReturn(false);
+        when(entityManager.find(OrderDataBean.class, 1)).thenReturn(order);
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getRandomPriceChangeFactor).thenReturn(BigDecimal.ONE);
+            OrderDataBean result = tradeSLSBBean.completeOrder(1, false);
+            assertNotNull(result);
+            assertNotNull(result.getOrderStatus());
+            assertNotNull(result.getCompletionDate());
+            verify(order).setHolding(null);
+            verify(order).setOrderStatus(any(String.class));
+            verify(order).setCompletionDate(any(Timestamp.class));
+            verify(entityManager).remove(holding);
+            verify(entityManager).find(OrderDataBean.class, 1);
+        }
+    }
+
+    @Test
+    public void testCompleteOrder_BuyOrder() throws Exception {
+        OrderDataBean order = mock(OrderDataBean.class);
+        AccountDataBean account = mock(AccountDataBean.class);
+        QuoteDataBean quote = mock(QuoteDataBean.class);
+        BigDecimal price = BigDecimal.ONE;
+        double quantity = 10;
+        when(order.getHolding()).thenReturn(null);
+        when(order.getAccount()).thenReturn(account);
+        when(order.getQuote()).thenReturn(quote);
+        when(order.getPrice()).thenReturn(price);
+        when(order.getQuantity()).thenReturn(quantity);
+        when(order.isBuy()).thenReturn(true);
+        when(order.getOrderID()).thenReturn(1);
+        when(order.isCompleted()).thenReturn(false);
+        when(entityManager.find(OrderDataBean.class, 1)).thenReturn(order);
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getRandomPriceChangeFactor).thenReturn(BigDecimal.ONE);
+            OrderDataBean result = tradeSLSBBean.completeOrder(1, false);
+            assertNotNull(result);
+            assertNotNull(result.getOrderStatus());
+            assertNotNull(result.getCompletionDate());
+            verify(order).setOrderStatus(any(String.class));
+            verify(order).setCompletionDate(any(Timestamp.class));
+            verify(entityManager).find(OrderDataBean.class, 1);
+        }
+    }
+
+    @Test
+    public void testCompleteOrder_BuyOrderWithZeroQuantity() throws Exception {
+        OrderDataBean order = mock(OrderDataBean.class);
+        AccountDataBean account = mock(AccountDataBean.class);
+        QuoteDataBean quote = mock(QuoteDataBean.class);
+        BigDecimal price = BigDecimal.ONE;
+        double quantity = 0;
+        when(order.getHolding()).thenReturn(null);
+        when(order.getAccount()).thenReturn(account);
+        when(order.getQuote()).thenReturn(quote);
+        when(order.getPrice()).thenReturn(price);
+        when(order.getQuantity()).thenReturn(quantity);
+        when(order.isBuy()).thenReturn(true);
+        when(order.getOrderID()).thenReturn(1);
+        when(order.isCompleted()).thenReturn(false);
+        when(entityManager.find(OrderDataBean.class, 1)).thenReturn(order);
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getRandomPriceChangeFactor).thenReturn(BigDecimal.ONE);
+            OrderDataBean result = tradeSLSBBean.completeOrder(1, false);
+            assertNotNull(result);
+            assertNotNull(result.getOrderStatus());
+            assertNotNull(result.getCompletionDate());
+            verify(order).setOrderStatus(any(String.class));
+            verify(order).setCompletionDate(any(Timestamp.class));
+            verify(entityManager).find(OrderDataBean.class, 1);
+        }
+    }
+}
+```

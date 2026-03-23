@@ -1,0 +1,236 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.ejb3;
+Class name (MUST be exactly): TradeSLSBBean_completeOrderTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.impl.ejb3;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.RuntimeMode;
+import com.ibm.websphere.samples.daytrader.interfaces.Trace;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeEJB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.FinancialUtils;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import javax.ejb.EJBException;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeSLSBBean_completeOrderTestGenerated {
+
+    @Mock
+    private EntityManager entityManager;
+
+    @InjectMocks
+    private TradeSLSBBean tradeSLSBBean;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testCompleteOrder_BuyOrder_Success() throws Exception {
+        // Arrange
+        Integer orderID = 1;
+        BigDecimal price = new BigDecimal("100.00");
+        double quantity = 10.0;
+        OrderDataBean order = new OrderDataBean(orderID, "user1", "IBM", quantity, price, "open", false, false, null, null);
+        order.setBuy(true);
+
+        AccountDataBean account = new AccountDataBean("user1", "password", "full name", "address", "email", new BigDecimal("10000.00"));
+        QuoteDataBean quote = new QuoteDataBean("IBM", "IBM Corp", 1000000, price, price, price, price, 0.0);
+        HoldingDataBean holding = null;
+
+        order.setAccount(account);
+        order.setQuote(quote);
+        order.setHolding(holding);
+
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(order);
+        when(entityManager.merge(any(OrderDataBean.class))).thenReturn(order);
+
+        // Act
+        OrderDataBean result = tradeSLSBBean.completeOrder(orderID, false);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("closed", result.getOrderStatus());
+        assertNotNull(result.getCompletionDate());
+        assertNotNull(result.getHolding());
+    }
+
+    @Test
+    public void testCompleteOrder_SellOrder_Success() throws Exception {
+        // Arrange
+        Integer orderID = 1;
+        BigDecimal price = new BigDecimal("100.00");
+        double quantity = 10.0;
+        OrderDataBean order = new OrderDataBean(orderID, "user1", "IBM", quantity, price, "open", false, true, null, null);
+        order.setSell(true);
+
+        AccountDataBean account = new AccountDataBean("user1", "password", "full name", "address", "email", new BigDecimal("10000.00"));
+        QuoteDataBean quote = new QuoteDataBean("IBM", "IBM Corp", 1000000, price, price, price, price, 0.0);
+        HoldingDataBean holding = new HoldingDataBean(account, quote, quantity, price, new Timestamp(System.currentTimeMillis()));
+
+        order.setAccount(account);
+        order.setQuote(quote);
+        order.setHolding(holding);
+
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(order);
+        when(entityManager.merge(any(OrderDataBean.class))).thenReturn(order);
+
+        // Act
+        OrderDataBean result = tradeSLSBBean.completeOrder(orderID, false);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("closed", result.getOrderStatus());
+        assertNotNull(result.getCompletionDate());
+        assertNull(result.getHolding());
+    }
+
+    @Test
+    public void testCompleteOrder_SellOrder_HoldingAlreadySold() throws Exception {
+        // Arrange
+        Integer orderID = 1;
+        BigDecimal price = new BigDecimal("100.00");
+        double quantity = 10.0;
+        OrderDataBean order = new OrderDataBean(orderID, "user1", "IBM", quantity, price, "open", false, true, null, null);
+        order.setSell(true);
+
+        AccountDataBean account = new AccountDataBean("user1", "password", "full name", "address", "email", new BigDecimal("10000.00"));
+        QuoteDataBean quote = new QuoteDataBean("IBM", "IBM Corp", 1000000, price, price, price, price, 0.0);
+        HoldingDataBean holding = null;
+
+        order.setAccount(account);
+        order.setQuote(quote);
+        order.setHolding(holding);
+
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(order);
+        when(entityManager.merge(any(OrderDataBean.class))).thenReturn(order);
+
+        // Act
+        OrderDataBean result = tradeSLSBBean.completeOrder(orderID, false);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("cancelled", result.getOrderStatus());
+    }
+
+    @Test
+    public void testCompleteOrder_OrderAlreadyCompleted() throws Exception {
+        // Arrange
+        Integer orderID = 1;
+        BigDecimal price = new BigDecimal("100.00");
+        double quantity = 10.0;
+        OrderDataBean order = new OrderDataBean(orderID, "user1", "IBM", quantity, price, "closed", false, false, null, null);
+        order.setBuy(true);
+
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(order);
+
+        // Act & Assert
+        Exception exception = assertThrows(EJBException.class, () -> {
+            tradeSLSBBean.completeOrder(orderID, false);
+        });
+
+        assertEquals("Error: attempt to complete Order that is already completed\n" + order, exception.getMessage());
+    }
+
+    @Test
+    public void testCompleteOrder_OrderNotFound() throws Exception {
+        // Arrange
+        Integer orderID = 1;
+
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(null);
+
+        // Act & Assert
+        Exception exception = assertThrows(EJBException.class, () -> {
+            tradeSLSBBean.completeOrder(orderID, false);
+        });
+
+        assertEquals("Error: attempt to complete Order that is null\nnull", exception.getMessage());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[53] incompatible types: java.lang.Integer cannot be converted to java.lang.String
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[54] cannot find symbol
+  symbol:   method setBuy(boolean)
+  location: variable order of type com.ibm.websphere.samples.daytrader.entities.OrderDataBean
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[56] no suitable constructor found for AccountDataBean(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.math.BigDecimal)
+  constructor com.ibm.websphere.samples.daytrader.entities.AccountDataBean.AccountDataBean() is not applicable
+  (actual and formal argument lists differ in length)
+  constructor com.ibm.websphere.samples.daytrader.entities.AccountDataBean.AccountDataBean(java.lang.Integer,int,int,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  constructor com.ibm.websphere.samples.daytrader.entities.AccountDataBean.AccountDataBean(int,int,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[83] incompatible types: java.lang.Integer cannot be converted to java.lang.String
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[84] cannot find symbol
+  symbol:   method setSell(boolean)
+  location: variable order of type com.ibm.websphere.samples.daytrader.entities.OrderDataBean
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[86] no suitable constructor found for AccountDataBean(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.math.BigDecimal)
+  constructor com.ibm.websphere.samples.daytrader.entities.AccountDataBean.AccountDataBean() is not applicable
+  (actual and formal argument lists differ in length)
+  constructor com.ibm.websphere.samples.daytrader.entities.AccountDataBean.AccountDataBean(java.lang.Integer,int,int,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  constructor com.ibm.websphere.samples.daytrader.entities.AccountDataBean.AccountDataBean(int,int,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[88] no suitable constructor found for HoldingDataBean(com.ibm.websphere.samples.daytrader.entities.AccountDataBean,com.ibm.websphere.samples.daytrader.entities.QuoteDataBean,double,java.math.BigDecimal,java.sql.Timestamp)
+  constructor com.ibm.websphere.samples.daytrader.entities.HoldingDataBean.HoldingDataBean(java.lang.Integer,double,java.math.BigDecimal,java.util.Date,java.lang.String) is not applicable
+  (argument mismatch; com.ibm.websphere.samples.daytrader.entities.AccountDataBean cannot be converted to java.lang.Integer)
+  constructor com.ibm.websphere.samples.daytrader.entities.HoldingDataBean.HoldingDataBean(double,java.math.BigDecimal,java.util.Date,com.ibm.websphere.samples.daytrader.entities.AccountDataBean,com.ibm.websphere.samples.daytrader.entities.QuoteDataBean) is not applicable
+  (argument mismatch; com.ibm.websphere.samples.daytrader.entities.AccountDataBean cannot be converted to double)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[113] incompatible types: java.lang.Integer cannot be converted to java.lang.String
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[114] cannot find symbol
+  symbol:   method setSell(boolean)
+  location: variable order of type com.ibm.websphere.samples.daytrader.entities.OrderDataBean
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[116] no suitable constructor found for AccountDataBean(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.math.BigDecimal)
+  constructor com.ibm.websphere.samples.daytrader.entities.AccountDataBean.AccountDataBean() is not applicable
+  (actual and formal argument lists differ in length)
+  constructor com.ibm.websphere.samples.daytrader.entities.AccountDataBean.AccountDataBean(java.lang.Integer,int,int,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  constructor com.ibm.websphere.samples.daytrader.entities.AccountDataBean.AccountDataBean(int,int,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[141] incompatible types: java.lang.Integer cannot be converted to java.lang.String
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[142] cannot find symbol
+  symbol:   method setBuy(boolean)
+  location: variable order of type com.ibm.websphere.samples.daytrader.entities.OrderDataBean
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: TradeSLSBBean_completeOrderTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

@@ -1,0 +1,67 @@
+```java
+public String nysiis(String str) {
+    if (str == null) {
+        return null;
+    }
+    str = SoundexUtils.clean(str);
+    if (str.length() == 0) {
+        return "";
+    }
+    if (str.length() == 1) {
+        return str.toUpperCase();
+    }
+
+    str = str.toUpperCase();
+    StringBuilder nysiis = new StringBuilder();
+
+    // Handle MAC, KN, K, PH, PF, SCH
+    if (str.startsWith("MAC")) {
+        str = "MCC" + str.substring(3);
+    } else if (str.startsWith("KN")) {
+        str = "NN" + str.substring(2);
+    } else if (str.startsWith("K")) {
+        str = "C" + str.substring(1);
+    } else if (str.startsWith("PH") || str.startsWith("PF")) {
+        str = "FF" + str.substring(2);
+    } else if (str.startsWith("SCH")) {
+        str = "SSS" + str.substring(3);
+    }
+
+    // Handle EE, IE
+    str = str.replaceAll("EE", "Y");
+    str = str.replaceAll("IE", "Y");
+
+    // Handle DT, RT, RD, NT, ND
+    str = str.replaceAll("(DT|RT|RD|NT|ND)$", "D");
+
+    // Handle trailing S, AY, A
+    str = str.replaceAll("(S|AY|A)$", "");
+
+    nysiis.append(str.charAt(0));
+    for (int i = 1; i < str.length(); i++) {
+        char curr = str.charAt(i);
+        char prev = str.charAt(i - 1);
+        if (curr != prev && isVowel(curr) && isVowel(prev)) {
+            continue;
+        }
+        if (curr != 'Y' || prev != 'S') {
+            nysiis.append(curr);
+        }
+    }
+
+    // Handle final S
+    if (nysiis.length() > 1 && nysiis.charAt(nysiis.length() - 1) == 'S') {
+        nysiis.setLength(nysiis.length() - 1);
+    }
+
+    // Ensure length is 6
+    while (nysiis.length() < TRUE_LENGTH) {
+        nysiis.append('A');
+    }
+    if (nysiis.length() > TRUE_LENGTH) {
+        nysiis.setLength(TRUE_LENGTH);
+    }
+
+    return nysiis.toString();
+}
+```

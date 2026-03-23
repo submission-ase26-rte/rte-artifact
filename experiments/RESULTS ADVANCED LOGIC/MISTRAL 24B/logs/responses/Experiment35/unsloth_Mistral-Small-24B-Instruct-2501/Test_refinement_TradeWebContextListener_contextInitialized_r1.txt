@@ -1,0 +1,203 @@
+```java
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.io.InputStream;
+import java.util.Properties;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeWebContextListener_contextInitializedTestGenerated {
+    @Mock
+    private ServletContextEvent event;
+    @Mock
+    private ServletContext servletContext;
+    @Mock
+    private InputStream inputStream;
+    @Mock
+    private Properties properties;
+    private TradeWebContextListener listener;
+
+    @BeforeEach
+    public void setUp() {
+        listener = new TradeWebContextListener();
+        MockitoAnnotations.openMocks(this);
+        when(event.getServletContext()).thenReturn(servletContext);
+        when(servletContext.getResourceAsStream("/properties/daytrader.properties")).thenReturn(inputStream);
+    }
+
+    @Test
+    public void testContextInitializedWithValidProperties() throws Exception {
+        when(properties.getProperty("runtimeMode")).thenReturn("1");
+        when(properties.getProperty("orderProcessingMode")).thenReturn("2");
+        when(properties.getProperty("maxUsers")).thenReturn("100");
+        when(properties.getProperty("maxQuotes")).thenReturn("500");
+        when(properties.getProperty("publishQuotePriceChange")).thenReturn("true");
+        when(properties.getProperty("displayOrderAlerts")).thenReturn("false");
+        when(properties.getProperty("webInterface")).thenReturn("3");
+        when(properties.getProperty("listQuotePriceChangeFrequency")).thenReturn("60");
+        when(properties.getProperty("primIterations")).thenReturn("10");
+        when(properties.getProperty("marketSummaryInterval")).thenReturn("300");
+        when(properties.getProperty("longRun")).thenReturn("true");
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+
+            doNothing().when(mockedLog).trace(anyString());
+            when(inputStream).thenReturn(null);
+
+            mockedTradeConfig.when(TradeConfig::getRunTimeModeNames).thenReturn(new String[]{"Mode1"});
+            mockedTradeConfig.when(TradeConfig::getOrderProcessingModeNames).thenReturn(new String[]{"OrderMode1"});
+
+            listener.contextInitialized(event);
+
+            mockedTradeConfig.verify(() -> TradeConfig.setRunTimeMode(1), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setOrderProcessingMode(2), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setMAX_USERS(100), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setMAX_QUOTES(500), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setPublishQuotePriceChange(true), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setDisplayOrderAlerts(false), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setWebInterface(3), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setListQuotePriceChangeFrequency(60), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setPrimIterations(10), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setMarketSummaryInterval(300), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setLongRun(true), times(1));
+        }
+    }
+
+    @Test
+    public void testContextInitializedWithMissingPropertiesFile() {
+        when(inputStream).thenThrow(new Exception("File not found"));
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            doNothing().when(mockedLog).trace(anyString());
+
+            listener.contextInitialized(event);
+
+            verify(servletContext, times(1)).getResourceAsStream("/properties/daytrader.properties");
+            verify(servletContext, times(1)).getResourceAsStream("/properties/daytrader.properties");
+        }
+    }
+
+    @Test
+    public void testContextInitializedWithEnvironmentVariables() {
+        when(System.getenv("RUNTIME_MODE")).thenReturn("1");
+        when(System.getenv("ORDER_PROCESSING_MODE")).thenReturn("2");
+        when(System.getenv("MAX_USERS")).thenReturn("100");
+        when(System.getenv("MAX_QUOTES")).thenReturn("500");
+        when(System.getenv("PUBLISH_QUOTES")).thenReturn("true");
+        when(System.getenv("DISPLAY_ORDER_ALERTS")).thenReturn("false");
+        when(System.getenv("WEB_INTERFACE")).thenReturn("3");
+        when(System.getenv("LIST_QUOTE_PRICE_CHANGE_FREQUENCY")).thenReturn("60");
+        when(properties.getProperty("primIterations")).thenReturn("10");
+        when(properties.getProperty("marketSummaryInterval")).thenReturn("300");
+        when(properties.getProperty("longRun")).thenReturn("true");
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+
+            doNothing().when(mockedLog).trace(anyString());
+            when(inputStream).thenReturn(null);
+
+            mockedTradeConfig.when(TradeConfig::getRunTimeModeNames).thenReturn(new String[]{"Mode1"});
+            mockedTradeConfig.when(TradeConfig::getOrderProcessingModeNames).thenReturn(new String[]{"OrderMode1"});
+
+            listener.contextInitialized(event);
+
+            mockedTradeConfig.verify(() -> TradeConfig.setRunTimeMode(1), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setOrderProcessingMode(2), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setMAX_USERS(100), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setMAX_QUOTES(500), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setPublishQuotePriceChange(true), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setDisplayOrderAlerts(false), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setWebInterface(3), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setListQuotePriceChangeFrequency(60), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setPrimIterations(10), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setMarketSummaryInterval(300), times(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setLongRun(true), times(1));
+        }
+    }
+
+    @Test
+    public void testContextInitializedWithNoPropertiesFileAndNoEnvironmentVariables() {
+        when(inputStream).thenReturn(null);
+
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getRunTimeModeNames).thenReturn(new String[]{"Mode1"});
+            mockedTradeConfig.when(TradeConfig::getOrderProcessingModeNames).thenReturn(new String[]{"OrderMode1"});
+
+            listener.contextInitialized(event);
+
+            mockedTradeConfig.verify(() -> TradeConfig.setRunTimeMode(1), times(0));
+            mockedTradeConfig.verify(() -> TradeConfig.setOrderProcessingMode(1), times(0));
+        }
+    }
+
+    @Test
+    public void testContextInitializedWithPropertiesFileButMissingKeys() {
+        when(properties.getProperty("runtimeMode")).thenReturn(null);
+        when(properties.getProperty("orderProcessingMode")).thenReturn(null);
+        when(properties.getProperty("maxUsers")).thenReturn(null);
+        when(properties.getProperty("maxQuotes")).thenReturn(null);
+        when(properties.getProperty("publishQuotePriceChange")).thenReturn(null);
+        when(properties.getProperty("displayOrderAlerts")).thenReturn(null);
+        when(properties.getProperty("webInterface")).thenReturn(null);
+        when(properties.getProperty("listQuotePriceChangeFrequency")).thenReturn(null);
+        when(properties.getProperty("primIterations")).thenReturn(null);
+        when(properties.getProperty("marketSummaryInterval")).thenReturn(null);
+        when(properties.getProperty("longRun")).thenReturn(null);
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+
+            doNothing().when(mockedLog).trace(anyString());
+            when(inputStream).thenReturn(null);
+
+            mockedTradeConfig.when(TradeConfig::getRunTimeModeNames).thenReturn(new String[]{"Mode1"});
+            mockedTradeConfig.when(TradeConfig::getOrderProcessingModeNames).thenReturn(new String[]{"OrderMode1"});
+
+            listener.contextInitialized(event);
+
+            mockedTradeConfig.verify(() -> TradeConfig.setRunTimeMode(1), times(0));
+            mockedTradeConfig.verify(() -> TradeConfig.setOrderProcessingMode(1), times(0));
+        }
+    }
+
+    @Test
+    public void testContextInitializedWithExceptionInPropertiesFile() {
+        when(inputStream).thenReturn(new InputStream() {
+            @Override
+            public int read() throws IOException {
+                throw new IOException("Simulated IO Exception");
+            }
+        });
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            doNothing().when(mockedLog).trace(anyString());
+
+            listener.contextInitialized(event);
+
+            verify(servletContext, times(1)).getResourceAsStream("/properties/daytrader.properties");
+        }
+    }
+
+    @Test
+    public void testContextInitializedWithLogging() {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            doNothing().when(mockedLog).trace(anyString());
+
+            listener.contextInitialized(event);
+
+            mockedLog.verify(() -> Log.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect"), times(1));
+        }
+    }
+}
+```

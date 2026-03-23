@@ -1,0 +1,468 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language;
+Class name (MUST be exactly): Metaphone_metaphoneTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testMetaphone_church --
+ERROR: org.opentest4j.AssertionFailedError: expected: <CHRCH> but was: <KRX>
+--------------------------------------------------
+TEST: testMetaphone_gibson --
+ERROR: org.opentest4j.AssertionFailedError: expected: <GSN> but was: <JBSN>
+--------------------------------------------------
+TEST: testMetaphone_gh --
+ERROR: org.opentest4j.AssertionFailedError: expected: <K> but was: <>
+--------------------------------------------------
+TEST: testMetaphone_wh --
+ERROR: org.opentest4j.AssertionFailedError: expected: <W> but was: <>
+--------------------------------------------------
+TEST: testMetaphone_x --
+ERROR: org.opentest4j.AssertionFailedError: expected: <S> but was: <X>
+--------------------------------------------------
+TEST: testMetaphone_smith --
+ERROR: org.opentest4j.AssertionFailedError: expected: <SMT> but was: <SM0>
+--------------------------------------------------
+TEST: testMetaphone_maxCodeLen --
+ERROR: org.opentest4j.AssertionFailedError: expected: <SMT> but was: <SM0>
+
+TEST CODE TO FIX:
+package org.apache.commons.codec.language;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Metaphone_metaphoneTestGenerated {
+    private Metaphone metaphone;
+    @BeforeEach
+    public void setUp() {
+        metaphone = new Metaphone();
+    }
+
+
+    @Test
+        public void testMetaphone_wh() {
+            Assertions.assertEquals("W", metaphone.metaphone("WH").toUpperCase());
+        }
+
+    @Test
+        public void testMetaphone_x() {
+            Assertions.assertEquals("S", metaphone.metaphone("X").toUpperCase());
+        }
+
+    @Test
+        public void testMetaphone_smith() {
+            Assertions.assertEquals("SMT", metaphone.metaphone("SMITH").toUpperCase());
+        }
+
+    @Test
+        public void testMetaphone_church() {
+            Assertions.assertEquals("CHRCH", metaphone.metaphone("CHURCH").toUpperCase());
+        }
+
+    @Test
+        public void testMetaphone_gibson() {
+            Assertions.assertEquals("GSN", metaphone.metaphone("GIBSON").toUpperCase());
+        }
+
+    @Test
+        public void testMetaphone_gh() {
+            Assertions.assertEquals("K", metaphone.metaphone("GH").toUpperCase());
+        }
+
+    @Test
+        public void testMetaphone_maxCodeLen() {
+            metaphone.setMaxCodeLen(5);
+            Assertions.assertEquals(5, metaphone.getMaxCodeLen());
+            Assertions.assertEquals("SMT", metaphone.metaphone("SMITH").toUpperCase());
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    public void testMetaphone_nullInput() {}
+    @Test
+    public void testMetaphone_emptyInput() {}
+    @Test
+    public void testMetaphone_singleCharacter() {}
+    @Test
+    public void testMetaphone_simpleWord() {}
+    @Test
+    public void testMetaphone_kn() {}
+    @Test
+    public void testMetaphone_ae() {}
+    @Test
+    public void testMetaphone_wr() {}
+    @Test
+    public void testMetaphone_johnson() {}
+    @Test
+    public void testMetaphone_sch() {}
+    @Test
+    public void testMetaphone_th() {}
+    @Test
+    public void testMetaphone_ph() {}
+    @Test
+    public void testMetaphone_cia() {}
+    @Test
+    public void testMetaphone_gn() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   EncoderException -> org.apache.commons.codec.EncoderException
+//   StringEncoder -> org.apache.commons.codec.StringEncoder
+//   Metaphone -> org.apache.commons.codec.language.Metaphone
+
+// === Class: Metaphone ===
+// Fields (with actual visibility):
+    private static final String VOWELS;
+    private static final String FRONTV;
+    private static final String VARSON;
+    private int maxCodeLen;
+
+// Getter/Setter Methods (for test assertions):
+public int getMaxCodeLen();
+private boolean isLastChar(final int wdsz, final int n);
+public boolean isMetaphoneEqual(final String str1, final String str2);
+private boolean isNextChar(final StringBuilder string, final int index, final char c);
+private boolean isPreviousChar(final StringBuilder string, final int index, final char c);
+private boolean isVowel(final StringBuilder string, final int index);
+public void setMaxCodeLen(final int maxCodeLen);
+
+// Internal Methods (full implementation for context):
+    private boolean isPreviousChar(final StringBuilder string, final int index, final char c) {
+        boolean matches = false;
+        if (index > 0 && index < string.length()) {
+            matches = string.charAt(index - 1) == c;
+        }
+        return matches;
+    }
+    private boolean isLastChar(final int wdsz, final int n) {
+        return n + 1 == wdsz;
+    }
+    private boolean isVowel(final StringBuilder string, final int index) {
+        return VOWELS.indexOf(string.charAt(index)) >= 0;
+    }
+    private boolean isNextChar(final StringBuilder string, final int index, final char c) {
+        boolean matches = false;
+        if (index >= 0 && index < string.length() - 1) {
+            matches = string.charAt(index + 1) == c;
+        }
+        return matches;
+    }
+    public int getMaxCodeLen() { return this.maxCodeLen; }
+    private boolean regionMatch(final StringBuilder string, final int index, final String test) {
+        boolean matches = false;
+        if (index >= 0 && index + test.length() - 1 < string.length()) {
+            final String substring = string.substring(index, index + test.length());
+            matches = substring.equals(test);
+        }
+        return matches;
+    }
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    public void setUp() {
+        metaphone = new Metaphone();
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+    /**
+     * Find the metaphone value of a String. This is similar to the
+     * soundex algorithm, but better at finding similar sounding words.
+     * All input is converted to upper case.
+     * Limitations: Input format is expected to be a single ASCII word
+     * with only characters in the A - Z range, no punctuation or numbers.
+     *
+     * @param txt String to find the metaphone code for
+     * @return A metaphone code corresponding to the String supplied
+     */
+    public String metaphone(final String txt) {
+        boolean hard = false;
+        final int txtLength;
+        if (txt == null || (txtLength = txt.length()) == 0) {
+            return "";
+        }
+        // single character is itself
+        if (txtLength == 1) {
+            return txt.toUpperCase(java.util.Locale.ENGLISH);
+        }
+
+        final char[] inwd = txt.toUpperCase(java.util.Locale.ENGLISH).toCharArray();
+
+        final StringBuilder local = new StringBuilder(40); // manipulate
+        final StringBuilder code = new StringBuilder(10); // output
+        // handle initial 2 characters exceptions
+        switch (inwd[0]) { // NOT COVERED BY TESTS
+        case 'K':
+        case 'G':
+        case 'P': /* looking for KN, etc */
+            if (inwd[1] == 'N') {
+                local.append(inwd, 1, inwd.length - 1);
+            } else {
+                local.append(inwd);
+            }
+            break;
+        case 'A': /* looking for AE */
+            if (inwd[1] == 'E') { // NOT COVERED BY TESTS
+                local.append(inwd, 1, inwd.length - 1);
+            } else {
+                local.append(inwd); // NOT COVERED BY TESTS
+            }
+            break; // NOT COVERED BY TESTS
+        case 'W': /* looking for WR or WH */
+            if (inwd[1] == 'R') { // WR -> R
+                local.append(inwd, 1, inwd.length - 1);
+                break;
+            }
+            if (inwd[1] == 'H') { // NOT COVERED BY TESTS
+                local.append(inwd, 1, inwd.length - 1);
+                local.setCharAt(0, 'W'); // WH -> W
+            } else {
+                local.append(inwd); // NOT COVERED BY TESTS
+            }
+            break; // NOT COVERED BY TESTS
+        case 'X': /* initial X becomes S */
+            inwd[0] = 'S'; // NOT COVERED BY TESTS
+            local.append(inwd); // NOT COVERED BY TESTS
+            break; // NOT COVERED BY TESTS
+        default:
+            local.append(inwd);
+        } // now local has working string with initials fixed
+
+        final int wdsz = local.length();
+        int n = 0;
+
+        while (code.length() < this.getMaxCodeLen() && n < wdsz) { // max code size of 4 works well
+            final char symb = local.charAt(n);
+            // remove duplicate letters except C
+            if (symb != 'C' && isPreviousChar(local, n, symb)) { // NOT COVERED BY TESTS
+                n++; // NOT COVERED BY TESTS
+            } else { // not dup
+                switch (symb) { // NOT COVERED BY TESTS
+                case 'A':
+                case 'E':
+                case 'I':
+                case 'O':
+                case 'U':
+                    if (n == 0) {
+                        code.append(symb);
+                    }
+                    break; // only use vowel if leading char
+                case 'B':
+                    if (isPreviousChar(local, n, 'M') && isLastChar(wdsz, n)) { // NOT COVERED BY TESTS // B is silent if word ends in MB
+                        break; // NOT COVERED BY TESTS
+                    }
+                    code.append(symb);
+                    break;
+                case 'C': // lots of C special cases
+                    /* discard if SCI, SCE or SCY */
+                    if (isPreviousChar(local, n, 'S') && !isLastChar(wdsz, n) && FRONTV.indexOf(local.charAt(n + 1)) >= 0) { // NOT COVERED BY TESTS
+                        break; // NOT COVERED BY TESTS
+                    }
+                    if (regionMatch(local, n, "CIA")) { // "CIA" -> X
+                        code.append('X');
+                        break;
+                    }
+                    if (!isLastChar(wdsz, n) && FRONTV.indexOf(local.charAt(n + 1)) >= 0) { // NOT COVERED BY TESTS
+                        code.append('S'); // NOT COVERED BY TESTS
+                        break; // NOT COVERED BY TESTS // CI,CE,CY -> S
+                    }
+                    if (isPreviousChar(local, n, 'S') && isNextChar(local, n, 'H')) { // NOT COVERED BY TESTS // SCH->sk
+                        code.append('K');
+                        break;
+                    }
+                    if (isNextChar(local, n, 'H')) { // NOT COVERED BY TESTS // detect CH
+                        if (n == 0 && wdsz >= 3 && isVowel(local, 2)) { // NOT COVERED BY TESTS // CH consonant -> K consonant
+                            code.append('K');
+                        } else {
+                            code.append('X'); // CHvowel -> X
+                        }
+                    } else {
+                        code.append('K'); // NOT COVERED BY TESTS
+                    }
+                    break; // NOT COVERED BY TESTS
+                case 'D':
+                    if (!isLastChar(wdsz, n + 1) && isNextChar(local, n, 'G') && FRONTV.indexOf(local.charAt(n + 2)) >= 0) { // NOT COVERED BY TESTS // DGE DGI DGY -> J
+                        code.append('J'); // NOT COVERED BY TESTS
+                        n += 2; // NOT COVERED BY TESTS
+                    } else {
+                        code.append('T'); // NOT COVERED BY TESTS
+                    }
+                    break; // NOT COVERED BY TESTS
+                case 'G': // GH silent at end or before consonant
+                    if (isLastChar(wdsz, n + 1) && isNextChar(local, n, 'H')) { // NOT COVERED BY TESTS
+                        break;
+                    }
+                    if (!isLastChar(wdsz, n + 1) && isNextChar(local, n, 'H') && !isVowel(local, n + 2)) { // NOT COVERED BY TESTS
+                        break; // NOT COVERED BY TESTS
+                    }
+                    if (n > 0 && (regionMatch(local, n, "GN") || regionMatch(local, n, "GNED"))) { // NOT COVERED BY TESTS
+                        break; // NOT COVERED BY TESTS // silent G
+                    }
+                    // NOTE: Given that duplicated chars are removed, I don't see how this can ever be true
+                    hard = isPreviousChar(local, n, 'G');
+                    if (!isLastChar(wdsz, n) && FRONTV.indexOf(local.charAt(n + 1)) >= 0 && !hard) { // NOT COVERED BY TESTS
+                        code.append('J');
+                    } else {
+                        code.append('K'); // NOT COVERED BY TESTS
+                    }
+                    break; // NOT COVERED BY TESTS
+                case 'H':
+                    if (isLastChar(wdsz, n)) {
+                        break; // terminal H
+                    }
+                    if (n > 0 && VARSON.indexOf(local.charAt(n - 1)) >= 0) { // NOT COVERED BY TESTS
+                        break;
+                    }
+                    if (isVowel(local, n + 1)) { // NOT COVERED BY TESTS
+                        code.append('H'); // NOT COVERED BY TESTS // Hvowel
+                    }
+                    break;
+                case 'F':
+                case 'J':
+                case 'L':
+                case 'M':
+                case 'N':
+                case 'R':
+                    code.append(symb);
+                    break;
+                case 'K':
+                    if (n > 0) { // NOT COVERED BY TESTS // not initial
+                        if (!isPreviousChar(local, n, 'C')) { // NOT COVERED BY TESTS
+                            code.append(symb); // NOT COVERED BY TESTS
+                        }
+                    } else {
+                        code.append(symb); // NOT COVERED BY TESTS // initial K
+                    }
+                    break; // NOT COVERED BY TESTS
+                case 'P':
+                    if (isNextChar(local, n, 'H')) { // NOT COVERED BY TESTS
+                        // PH -> F
+                        code.append('F');
+                    } else {
+                        code.append(symb); // NOT COVERED BY TESTS
+                    }
+                    break; // NOT COVERED BY TESTS
+                case 'Q':
+                    code.append('K'); // NOT COVERED BY TESTS
+                    break; // NOT COVERED BY TESTS
+                case 'S':
+                    if (regionMatch(local, n, "SH") || regionMatch(local, n, "SIO") || regionMatch(local, n, "SIA")) { // NOT COVERED BY TESTS
+                        code.append('X'); // NOT COVERED BY TESTS
+                    } else {
+                        code.append('S');
+                    }
+                    break;
+                case 'T':
+                    if (regionMatch(local, n, "TIA") || regionMatch(local, n, "TIO")) { // NOT COVERED BY TESTS
+                        code.append('X'); // NOT COVERED BY TESTS
+                        break; // NOT COVERED BY TESTS
+                    }
+                    if (regionMatch(local, n, "TCH")) { // NOT COVERED BY TESTS
+                        // Silent if in "TCH"
+                        break; // NOT COVERED BY TESTS
+                    }
+                    // substitute numeral 0 for TH (resembles theta after all)
+                    if (regionMatch(local, n, "TH")) { // NOT COVERED BY TESTS
+                        code.append('0');
+                    } else {
+                        code.append('T'); // NOT COVERED BY TESTS
+                    }
+                    break; // NOT COVERED BY TESTS
+                case 'V':
+                    code.append('F'); // NOT COVERED BY TESTS
+                    break; // NOT COVERED BY TESTS
+                case 'W':
+                case 'Y': // silent if not followed by vowel
+                    if (!isLastChar(wdsz, n) && isVowel(local, n + 1)) { // NOT COVERED BY TESTS
+                        code.append(symb); // NOT COVERED BY TESTS
+                    }
+                    break;
+                case 'X':
+                    code.append('K'); // NOT COVERED BY TESTS
+                    code.append('S'); // NOT COVERED BY TESTS
+                    break; // NOT COVERED BY TESTS
+                case 'Z':
+                    code.append('S'); // NOT COVERED BY TESTS
+                    break; // NOT COVERED BY TESTS
+                default:
+                    // do nothing
+                    break;
+                } // end switch
+                n++;
+            } // end else from symb != 'C'
+            if (code.length() > this.getMaxCodeLen()) { // NOT COVERED BY TESTS
+                code.setLength(this.getMaxCodeLen()); // NOT COVERED BY TESTS
+            }
+        }
+        return code.toString();
+    }
+
+
+COVERAGE ISSUES:
+Current line coverage: 60.33%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

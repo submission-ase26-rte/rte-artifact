@@ -1,0 +1,62 @@
+```java
+public boolean canConvert(final Object object, final Class toType) {
+    if (object == null) {
+        return true;
+    }
+
+    if (toType.isAssignableFrom(object.getClass())) {
+        return true;
+    }
+
+    if (object instanceof String && toType == Integer.class) {
+        try {
+            Integer.parseInt((String) object);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    if (object instanceof Boolean && toType == Number.class) {
+        return true;
+    }
+
+    if (object instanceof Number && toType == Boolean.class) {
+        return true;
+    }
+
+    if (object instanceof String && toType == Boolean.class) {
+        return "true".equalsIgnoreCase((String) object) || "false".equalsIgnoreCase((String) object);
+    }
+
+    if (object.getClass().isArray() && toType.isArray()) {
+        return true;
+    }
+
+    if (object.getClass().isArray() && Collection.class.isAssignableFrom(toType)) {
+        return true;
+    }
+
+    if (object.getClass().isArray() && toType.getComponentType().isPrimitive()) {
+        return true;
+    }
+
+    if (object instanceof Collection && toType.isArray()) {
+        return true;
+    }
+
+    if (object instanceof Collection && Collection.class.isAssignableFrom(toType)) {
+        return true;
+    }
+
+    if (object instanceof Collection && toType.getComponentType().isPrimitive()) {
+        return true;
+    }
+
+    if (ConvertUtils.lookup(object.getClass()) != null) {
+        return true;
+    }
+
+    return false;
+}
+```

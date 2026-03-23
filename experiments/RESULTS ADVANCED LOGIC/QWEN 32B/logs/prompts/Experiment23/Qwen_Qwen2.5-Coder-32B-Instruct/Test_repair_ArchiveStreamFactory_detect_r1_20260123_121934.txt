@@ -1,0 +1,213 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.compress.archivers;
+Class name (MUST be exactly): ArchiveStreamFactory_detectTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import org.apache.commons.compress.archivers.ar.ArArchiveInputStream;
+import org.apache.commons.compress.archivers.arj.ArjArchiveInputStream;
+import org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;
+import org.apache.commons.compress.archivers.dump.DumpArchiveInputStream;
+import org.apache.commons.compress.archivers.jar.JarArchiveInputStream;
+import org.apache.commons.compress.archivers.sevenz.SevenZFile;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.utils.IOUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArchiveStreamFactory_detectTestGenerated {
+
+    @Mock
+    private InputStream mockInputStream;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void testDetectWithNullInputStream() {
+        assertThrows(IllegalArgumentException.class, () -> ArchiveStreamFactory.detect(null));
+    }
+
+    @Test
+    void testDetectWithInputStreamThatDoesNotSupportMark() {
+        InputStream in = new ByteArrayInputStream(new byte[0]) {
+            @Override
+            public boolean markSupported() {
+                return false;
+            }
+        };
+        assertThrows(IllegalArgumentException.class, () -> ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectWithIOExceptionWhileReadingSignature() throws IOException {
+        when(mockInputStream.markSupported()).thenReturn(true);
+        when(mockInputStream.mark(anyInt())).thenReturn(mockInputStream);
+        when(mockInputStream.read(any(byte[].class))).thenThrow(new IOException("Mocked IOException"));
+
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(mockInputStream));
+    }
+
+    @Test
+    void testDetectWithIOExceptionWhileReadingDumpSignature() throws IOException {
+        when(mockInputStream.markSupported()).thenReturn(true);
+        when(mockInputStream.mark(anyInt())).thenReturn(mockInputStream);
+        when(mockInputStream.read(any(byte[].class))).thenReturn(ArchiveStreamFactory.SIGNATURE_SIZE);
+        when(mockInputStream.reset()).thenReturn(mockInputStream);
+        when(mockInputStream.read(any(byte[].class), eq(ArchiveStreamFactory.SIGNATURE_SIZE), anyInt())).thenThrow(new IOException("Mocked IOException"));
+
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(mockInputStream));
+    }
+
+    @Test
+    void testDetectWithIOExceptionWhileReadingTarSignature() throws IOException {
+        when(mockInputStream.markSupported()).thenReturn(true);
+        when(mockInputStream.mark(anyInt())).thenReturn(mockInputStream);
+        when(mockInputStream.read(any(byte[].class))).thenReturn(ArchiveStreamFactory.SIGNATURE_SIZE);
+        when(mockInputStream.reset()).thenReturn(mockInputStream);
+        when(mockInputStream.read(any(byte[].class), eq(ArchiveStreamFactory.SIGNATURE_SIZE), anyInt())).thenReturn(ArchiveStreamFactory.DUMP_SIGNATURE_SIZE);
+        when(mockInputStream.read(any(byte[].class), eq(ArchiveStreamFactory.DUMP_SIGNATURE_SIZE), anyInt())).thenThrow(new IOException("Mocked IOException"));
+
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(mockInputStream));
+    }
+
+    @Test
+    void testDetectZipArchive() throws ArchiveException {
+        byte[] zipSignature = new byte[]{80, 75, 3, 4};
+        InputStream in = new ByteArrayInputStream(zipSignature);
+        assertEquals(ArchiveStreamFactory.ZIP, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectJarArchive() throws ArchiveException {
+        byte[] jarSignature = new byte[]{80, 75, 3, 4};
+        InputStream in = new ByteArrayInputStream(jarSignature);
+        assertEquals(ArchiveStreamFactory.JAR, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectArArchive() throws ArchiveException {
+        byte[] arSignature = new byte[]{33, 100, 101, 98, 105, 97, 110};
+        InputStream in = new ByteArrayInputStream(arSignature);
+        assertEquals(ArchiveStreamFactory.AR, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectCpioArchive() throws ArchiveException {
+        byte[] cpioSignature = new byte[]{99, 112, 105, 111, 32, 110, 111, 99, 114, 99, 32};
+        InputStream in = new ByteArrayInputStream(cpioSignature);
+        assertEquals(ArchiveStreamFactory.CPIO, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectArjArchive() throws ArchiveException {
+        byte[] arjSignature = new byte[]{10, 22, 4, 20};
+        InputStream in = new ByteArrayInputStream(arjSignature);
+        assertEquals(ArchiveStreamFactory.ARJ, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectSevenZArchive() throws ArchiveException {
+        byte[] sevenZSignature = new byte[]{55, 122, 101, 114, 0, 0, 73, 68, 80, 66, 255, 66, 66, 65, 23, 11};
+        InputStream in = new ByteArrayInputStream(sevenZSignature);
+        assertEquals(ArchiveStreamFactory.SEVEN_Z, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectDumpArchive() throws ArchiveException {
+        byte[] dumpSignature = new byte[ArchiveStreamFactory.DUMP_SIGNATURE_SIZE];
+        dumpSignature[0] = 116;
+        dumpSignature[1] = 97;
+        dumpSignature[2] = 112;
+        dumpSignature[3] = 101;
+        InputStream in = new ByteArrayInputStream(dumpSignature);
+        assertEquals(ArchiveStreamFactory.DUMP, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectTarArchive() throws ArchiveException {
+        byte[] tarSignature = new byte[ArchiveStreamFactory.TAR_HEADER_SIZE];
+        tarSignature[257] = 117;
+        tarSignature[258] = 115;
+        tarSignature[259] = 116;
+        tarSignature[260] = 97;
+        tarSignature[261] = 114;
+        InputStream in = new ByteArrayInputStream(tarSignature);
+        assertEquals(ArchiveStreamFactory.TAR, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectTarArchiveWithInvalidEntries() throws ArchiveException {
+        byte[] tarSignature = new byte[ArchiveStreamFactory.TAR_HEADER_SIZE];
+        tarSignature[257] = 117;
+        tarSignature[258] = 115;
+        tarSignature[259] = 116;
+        tarSignature[260] = 97;
+        tarSignature[261] = 114;
+        InputStream in = new ByteArrayInputStream(tarSignature);
+        assertEquals(ArchiveStreamFactory.TAR, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectNoArchiveFound() throws ArchiveException {
+        byte[] invalidSignature = new byte[ArchiveStreamFactory.SIGNATURE_SIZE];
+        InputStream in = new ByteArrayInputStream(invalidSignature);
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(in));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[59] 'void' type not allowed here
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[68] 'void' type not allowed here
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[69] SIGNATURE_SIZE has private access in org.apache.commons.compress.archivers.ArchiveStreamFactory
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[70] 'void' type not allowed here
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[71] SIGNATURE_SIZE has private access in org.apache.commons.compress.archivers.ArchiveStreamFactory
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[79] 'void' type not allowed here
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[80] SIGNATURE_SIZE has private access in org.apache.commons.compress.archivers.ArchiveStreamFactory
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[81] 'void' type not allowed here
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[82] DUMP_SIGNATURE_SIZE has private access in org.apache.commons.compress.archivers.ArchiveStreamFactory
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[82] SIGNATURE_SIZE has private access in org.apache.commons.compress.archivers.ArchiveStreamFactory
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[83] DUMP_SIGNATURE_SIZE has private access in org.apache.commons.compress.archivers.ArchiveStreamFactory
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[125] incompatible types: possible lossy conversion from int to byte
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[132] DUMP_SIGNATURE_SIZE has private access in org.apache.commons.compress.archivers.ArchiveStreamFactory
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[143] TAR_HEADER_SIZE has private access in org.apache.commons.compress.archivers.ArchiveStreamFactory
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[155] TAR_HEADER_SIZE has private access in org.apache.commons.compress.archivers.ArchiveStreamFactory
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[167] SIGNATURE_SIZE has private access in org.apache.commons.compress.archivers.ArchiveStreamFactory
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: ArchiveStreamFactory_detectTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

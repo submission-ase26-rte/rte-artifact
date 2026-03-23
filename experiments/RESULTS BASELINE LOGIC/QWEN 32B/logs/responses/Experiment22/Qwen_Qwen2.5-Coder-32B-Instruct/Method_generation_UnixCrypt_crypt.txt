@@ -1,0 +1,57 @@
+```java
+public static String crypt(final byte[] original, String salt) {
+    if (original == null) {
+        throw new NullPointerException("Cannot invoke \"byte.length\" because \"original\" is null");
+    }
+
+    if (salt == null) {
+        salt = generateSalt();
+    } else if (!CRYPT_SALT_PATTERN.matcher(salt).matches()) {
+        throw new IllegalArgumentException("Invalid salt value: " + salt);
+    }
+
+    salt = salt.substring(0, 2);
+
+    byte[] keyBytes = new byte[8];
+    for (int i = 0; i < original.length; i++) {
+        keyBytes[i % 8] ^= original[i];
+    }
+
+    int[] keySchedule = new int[32];
+    desSetKey(keyBytes);
+
+    int eSwap0 = 0;
+    int eSwap1 = 0;
+
+    for (int i = 0; i < 25; i++) {
+        int e = body(keySchedule, eSwap0, eSwap1);
+        eSwap0 = eSwap1;
+        eSwap1 = e;
+    }
+
+    byte[] resultBytes = new byte[8];
+    intToFourBytes(eSwap0, resultBytes, 0);
+    intToFourBytes(eSwap1, resultBytes, 4);
+
+    StringBuilder result = new StringBuilder(salt);
+    for (byte b : resultBytes) {
+        result.append(SALT_CHARS.charAt((b >> 0) & 0x3f));
+        result.append(SALT_CHARS.charAt((b >> 6) & 0x3f));
+        result.append(SALT_CHARS.charAt((b >> 12) & 0x3f));
+        result.append(SALT_CHARS.charAt((b >> 18) & 0x3f));
+    }
+
+    return result.substring(0, 13);
+}
+
+private static String generateSalt() {
+    byte[] saltBytes = new byte[2];
+    new SecureRandom().nextBytes(saltBytes);
+    StringBuilder salt = new StringBuilder();
+    for (byte b : saltBytes) {
+        salt.append(SALT_CHARS.charAt((b >> 0) & 0x3f));
+        salt.append(SALT_CHARS.charAt((b >> 6) & 0x3f));
+    }
+    return salt.substring(0, 2);
+}
+```

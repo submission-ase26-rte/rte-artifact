@@ -1,0 +1,59 @@
+```java
+public CompressorInputStream createCompressorInputStream(final String name, final InputStream in, final boolean actualDecompressConcatenated) throws CompressorException {
+    if (name == null) {
+        throw new IllegalArgumentException("Compressor name must not be null.");
+    }
+    if (in == null) {
+        throw new IllegalArgumentException("InputStream must not be null.");
+    }
+    final String normalizedName = toKey(name);
+    final CompressorStreamProvider provider = getCompressorInputStreamProviders().get(normalizedName);
+    if (provider != null) {
+        return provider.createCompressorInputStream(normalizedName, in, actualDecompressConcatenated);
+    }
+    switch (normalizedName) {
+        case DEFLATE:
+            return new DeflateCompressorInputStream(in);
+        case DEFLATE64:
+            return new Deflate64CompressorInputStream(in);
+        case GZIP:
+            return new GzipCompressorInputStream(in, actualDecompressConcatenated);
+        case BZIP2:
+            return new BZip2CompressorInputStream(in, actualDecompressConcatenated);
+        case BROTLI:
+            if (!BrotliUtils.isBrotliCompressionAvailable()) {
+                throw new CompressorException(YOU_NEED_BROTLI_DEC);
+            }
+            return new BrotliCompressorInputStream(in);
+        case XZ:
+            if (!XZUtils.isXZCompressionAvailable()) {
+                throw new CompressorException(YOU_NEED_XZ_JAVA);
+            }
+            return new XZCompressorInputStream(in);
+        case ZSTANDARD:
+            if (!ZstdUtils.isZstdCompressionAvailable()) {
+                throw new CompressorException(YOU_NEED_ZSTD_JNI);
+            }
+            return new ZstdCompressorInputStream(in);
+        case LZMA:
+            if (!LZMAUtils.isLZMACompressionAvailable()) {
+                throw new CompressorException("LZMA compression is not available.");
+            }
+            return new LZMACompressorInputStream(in);
+        case PACK200:
+            return new Pack200CompressorInputStream(in);
+        case SNAPPY_RAW:
+            return new SnappyCompressorInputStream(in);
+        case SNAPPY_FRAMED:
+            return new FramedSnappyCompressorInputStream(in);
+        case Z:
+            return new ZCompressorInputStream(in);
+        case LZ4_BLOCK:
+            return new BlockLZ4CompressorInputStream(in);
+        case LZ4_FRAMED:
+            return new FramedLZ4CompressorInputStream(in);
+        default:
+            throw new ServiceConfigurationError("No CompressorStreamProvider found for " + name);
+    }
+}
+```

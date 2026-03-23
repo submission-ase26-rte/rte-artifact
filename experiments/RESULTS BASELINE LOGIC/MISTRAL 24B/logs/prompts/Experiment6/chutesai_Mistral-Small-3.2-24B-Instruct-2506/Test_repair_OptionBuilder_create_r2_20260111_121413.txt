@@ -1,0 +1,163 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): OptionBuilder_createTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class OptionBuilder_createTestGenerated {
+
+    @Test
+    void createWithNullOpt() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Option.builder((String) null).build();
+        });
+    }
+
+    @Test
+    void createWithMultiCharOpt() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Option.builder("ab").build();
+        });
+    }
+
+    @Test
+    void createWithAllPropertiesSet() {
+        Option option = Option.builder("o")
+                .longOpt("longOpt")
+                .required()
+                .optionalArg(false)
+                .numberOfArgs(1)
+                .type(String.class)
+                .argName("argName")
+                .valueSeparator('=')
+                .hasArg()
+                .description("description")
+                .build();
+
+        assertEquals("longOpt", option.getLongOpt());
+        assertTrue(option.isRequired());
+        assertFalse(option.hasOptionalArg());
+        assertEquals(1, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals("argName", option.getArgName());
+        assertEquals('=', option.getValueSeparator());
+        assertEquals("description", option.getDescription());
+    }
+
+    @Test
+    void createWithDefaultProperties() {
+        Option option = Option.builder("o").build();
+
+        assertNull(option.getLongOpt());
+        assertFalse(option.isRequired());
+        assertFalse(option.hasOptionalArg());
+        assertEquals(0, option.getArgs());
+        assertNull(option.getType());
+        assertNull(option.getArgName());
+        assertEquals(' ', option.getValueSeparator());
+        assertNull(option.getDescription());
+    }
+
+    @Test
+    void createWithDescriptionOnly() {
+        Option option = Option.builder("o")
+                .description("test description")
+                .build();
+
+        assertEquals("test description", option.getDescription());
+        assertNull(option.getLongOpt());
+    }
+
+    @Test
+    void createWithLongOption() {
+        Option option = Option.builder("o")
+                .longOpt("longOptValue")
+                .build();
+
+        assertEquals("longOptValue", option.getLongOpt());
+    }
+
+    @Test
+    void createWithRequired() {
+        Option option = Option.builder("o")
+                .required()
+                .build();
+
+        assertTrue(option.isRequired());
+    }
+
+    @Test
+    void createWithOptionalArg() {
+        Option option = Option.builder("o")
+                .optionalArg(true)
+                .build();
+
+        assertTrue(option.hasOptionalArg());
+    }
+
+    @Test
+    void createWithArgsCount() {
+        Option option = Option.builder("o")
+                .numberOfArgs(2)
+                .build();
+
+        assertEquals(2, option.getArgs());
+    }
+
+    @Test
+    void createWithType() {
+        Option option = Option.builder("o")
+                .type(Integer.class)
+                .build();
+
+        assertEquals(Integer.class, option.getType());
+    }
+
+    @Test
+    void createWithArgName() {
+        Option option = Option.builder("o")
+                .argName("testArg")
+                .build();
+
+        assertEquals("testArg", option.getArgName());
+    }
+
+    @Test
+    void createWithValueSeparator() {
+        Option option = Option.builder("o")
+                .valueSeparator(':')
+                .build();
+
+        assertEquals(':', option.getValueSeparator());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[36] cannot find symbol
+  symbol:   method description(java.lang.String)
+  location: class org.apache.commons.cli.Option.Builder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[66] cannot find symbol
+  symbol:   method description(java.lang.String)
+  location: class org.apache.commons.cli.Option.Builder
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: OptionBuilder_createTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

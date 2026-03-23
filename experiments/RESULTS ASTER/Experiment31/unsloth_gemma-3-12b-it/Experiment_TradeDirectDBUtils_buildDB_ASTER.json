@@ -1,0 +1,71 @@
+{
+  "method_id": 31,
+  "tested_method": "buildDB",
+  "tested_class": "TradeDirectDBUtils",
+  "project": "Daytrader",
+  "timestamp": "2026-01-27T18:52:47.880019",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\Daytrader\\Run-1\\src\\test\\java\\com\\ibm\\websphere\\samples\\daytrader\\impl\\direct\\Metodo31_unit_buildDB_TradeDirectDBUtils_Test.java",
+  "test_results": {
+    "success": false,
+    "tests_passed": 0,
+    "tests_total": 1,
+    "tests_failed": 1,
+    "line_coverage": 0.0,
+    "branch_coverage": 0.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testbuildDB --\nERROR: java.util.concurrent.TimeoutException: testbuildDB() timed out after 1 second\nCaused by: org.junit.jupiter.api.AssertTimeoutPreemptively$ExecutionTimeoutException: Execution timed out in thread junit-timeout-thread-1",
+    "test_info": {
+      "valid_tests": [],
+      "invalid_tests": [
+        "testbuildDB"
+      ],
+      "failed_assert_tests": [],
+      "runtime_error_tests": [
+        "testbuildDB"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 1,
+    "assertion_complexity": 0.25,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.0,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.5,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.6,
+    "overall_naturalness_score": 0.775
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.1044987833573896,
+    "string_similarity": 0.05749191519942508,
+    "token_similarity": 0.2190082644628099,
+    "ast_similarity": 0.0,
+    "embedding_similarity": 0.7737213373184204,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.054380664652567974,
+      "similar_blocks": 9,
+      "total_blocks": 331
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.32915281761830056,
+    "passes_threshold": false
+  },
+  "original_method": "  public void buildDB(java.io.PrintWriter out, InputStream ddlFile) throws Exception {\n    String symbol, companyName;\n    int errorCount = 0; // Give up gracefully after 10 errors\n\n    //  TradeStatistics.statisticsEnabled=false;  // disable statistics\n    out.println(\"<HEAD><BR><EM> TradeBuildDB: Building DayTrader Database...</EM><BR> This operation will take several minutes. Please wait...</HEAD>\");\n    out.println(\"<BODY>\");\n\n    if (ddlFile != null) {\n      //out.println(\"<BR>TradeBuildDB: **** warPath= \"+warPath+\" ****</BR></BODY>\");\n\n      boolean success = false;\n\n      Object[] sqlBuffer = null;\n\n      //parse the DDL file and fill the SQL commands into a buffer\n      try {\n        sqlBuffer = parseDDLToBuffer(ddlFile);\n      } catch (Exception e) {\n        Log.error(e, \"TradeBuildDB: Unable to parse DDL file\");\n        out.println(\"<BR>TradeBuildDB: **** Unable to parse DDL file for the specified database ****</BR></BODY>\");\n        return;\n      }\n      if ((sqlBuffer == null) || (sqlBuffer.length == 0)) {\n        out.println(\"<BR>TradeBuildDB: **** Parsing DDL file returned empty buffer, please check that a valid DB specific DDL file is available and retry ****</BR></BODY>\");\n        return;\n      }\n\n      // send the sql commands buffer to drop and recreate the Daytrader tables\n      out.println(\"<BR>TradeBuildDB: **** Dropping and Recreating the DayTrader tables... ****</BR>\");\n      try {\n        success = recreateDBTables(sqlBuffer, out);\n      } catch (Exception e) {\n        Log.error(e, \"TradeBuildDB: Unable to drop and recreate DayTrader Db Tables, please check for database consistency before continuing\");\n        out.println(\"TradeBuildDB: Unable to drop and recreate DayTrader Db Tables, please check for database consistency before continuing\");\n        return;\n      }\n      if (!success) {\n        out.println(\"<BR>TradeBuildDB: **** Unable to drop and recreate DayTrader Db Tables, please check for database consistency before continuing ****</BR></BODY>\");\n        return;\n      }\n      out.println(\"<BR>TradeBuildDB: **** DayTrader tables successfully created! ****</BR><BR><b> Please Stop and Re-start your Daytrader application (or your application server) and then use the \\\"Repopulate Daytrader Database\\\" link to populate your database.</b></BR><BR><BR></BODY>\");\n      return;\n    } // end of createDBTables\n\n    out.println(\"<BR>TradeBuildDB: **** Creating \" + TradeConfig.getMAX_QUOTES() + \" Quotes ****</BR>\");\n    //Attempt to delete all of the Trade users and Trade Quotes first\n    try {\n      resetTrade(true);\n    } catch (Exception e) {\n      Log.error(e, \"TradeBuildDB: Unable to delete Trade users (uid:0, uid:1, ...) and Trade Quotes (s:0, s:1, ...)\");\n    }\n    for (int i = 0; i < TradeConfig.getMAX_QUOTES(); i++) {\n      symbol = \"s:\" + i;\n      companyName = \"S\" + i + \" Incorporated\";\n      try {\n        ts.createQuote(symbol, companyName, new java.math.BigDecimal(TradeConfig.rndPrice()));\n        if (i % 10 == 0) {\n          out.print(\".....\" + symbol);\n          if (i % 100 == 0) {\n            out.println(\" -<BR>\");\n            out.flush();\n          }\n        }\n      } catch (Exception e) {\n        if (errorCount++ >= 10) {\n          String error = \"Populate Trade DB aborting after 10 create quote errors. Check the EJB datasource configuration. Check the log for details <BR><BR> Exception is: <BR> \"\n              + e.toString();\n          Log.error(e, error);\n          throw e;\n        }\n      }\n    }\n    out.println(\"<BR>\");\n    out.println(\"<BR>**** Registering \" + TradeConfig.getMAX_USERS() + \" Users **** \");\n    errorCount = 0; //reset for user registrations\n\n    // Registration is a formal operation in Trade 2.\n    for (int i = 0; i < TradeConfig.getMAX_USERS(); i++) {\n      String userID = \"uid:\" + i;\n      String fullname = TradeConfig.rndFullName();\n      String email = TradeConfig.rndEmail(userID);\n      String address = TradeConfig.rndAddress();\n      String creditcard = TradeConfig.rndCreditCard();\n      double initialBalance = (double) (TradeConfig.rndInt(100000)) + 200000;\n      if (i == 0) {\n        initialBalance = 1000000; // uid:0 starts with a cool million.\n      }\n      try {\n        AccountDataBean accountData = ts.register(userID, \"xxx\", fullname, address, email, creditcard, new BigDecimal(initialBalance));\n\n        if (accountData != null) {\n          if (i % 50 == 0) {\n            out.print(\"<BR>Account# \" + accountData.getAccountID() + \" userID=\" + userID);\n          } // end-if\n\n          int holdings = TradeConfig.rndInt(TradeConfig.getMAX_HOLDINGS() + 1); // 0-MAX_HOLDING (inclusive), avg holdings per user = (MAX-0)/2\n          double quantity = 0;\n\n          for (int j = 0; j < holdings; j++) {\n            symbol = TradeConfig.rndSymbol();\n            quantity = TradeConfig.rndQuantity();\n            ts.buy(userID, symbol, quantity, TradeConfig.getOrderProcessingMode());\n          } // end-for\n          if (i % 50 == 0) {\n            out.println(\" has \" + holdings + \" holdings.\");\n            out.flush();\n          } // end-if\n        } else {\n          out.println(\"<BR>UID \" + userID + \" already registered.</BR>\");\n          out.flush();\n        } // end-if\n\n      } catch (Exception e) {\n        if (errorCount++ >= 10) {\n          String error = \"Populate Trade DB aborting after 10 user registration errors. Check the log for details. <BR><BR> Exception is: <BR>\"\n              + e.toString();\n          Log.error(e, error);\n          throw e;\n        }\n      }\n    } // end-for\n    out.println(\"</BODY>\");\n  }",
+  "regenerated_method": "import java.io.PrintWriter;\nimport java.io.InputStream;\nimport java.sql.DataSource;\nimport java.sql.Connection;\nimport java.sql.PreparedStatement;\nimport java.sql.ResultSet;\nimport java.sql.SQLException;\nimport java.util.concurrent.TimeUnit;\nimport javax.sql.DataSource;\nimport org.junit.jupiter.api.Timeout;\nimport org.junit.jupiter.api.Timeout.ThreadMode;\nimport com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;\nimport com.ibm.websphere.samples.daytrader.util.TradeConfig;\nimport com.ibm.websphere.samples.daytrader.util.Log;\nimport com.ibm.websphere.samples.daytrader.util.MDBStats;\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.util.ArrayList;\nimport java.util.Arrays;\n\n@Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = ThreadMode.SEPARATE_THREAD)\npublic void buildDB(java.io.PrintWriter out, InputStream ddlFile) throws Exception {\n    DataSource datasource = this.datasource;\n    Object[] sqlBuffer = parseDDLToBuffer(ddlFile);\n    recreateDBTables(sqlBuffer, out);\n    out.println(\"TradeBuildDB: Building DayTrader Database...\");\n    out.println(\"TradeBuildDB: **** Creating 100 Quotes ****\");\n    out.println(\"TradeBuildDB: **** Registering 100 Users **** \");\n    out.println(\"</BODY>\");\n}\n\nprivate boolean recreateDBTables(Object[] sqlBuffer, java.io.PrintWriter out) throws Exception {\n    // Clear MDB Statistics\n    MDBStats.getInstance().reset();\n\n    Connection conn = null;\n    boolean success = false;\n    try {\n      conn = datasource.getConnection();\n      java.sql.Statement stmt = conn.createStatement();\n      int bufferLength = sqlBuffer.length;\n      for (int i = 0; i < bufferLength; i++) {\n        try {\n          stmt.executeUpdate((String) sqlBuffer[i]);\n          // commit(conn);\n        } catch (SQLException ex) {\n          // Ignore DROP statements as tables won't always exist.\n          if (((String) sqlBuffer[i]).indexOf(\"DROP \") < 0) {\n            Log.error(\"TradeDirect:recreateDBTables SQL Exception thrown on executing the foll sql command: \" + sqlBuffer[i], ex);\n            out.println(\"<BR>SQL Exception thrown on executing the foll sql command: <I>\" + sqlBuffer[i] + \"</I> . Check log for details.</BR>\");\n          }\n        }\n      }\n      stmt.close();\n      conn.commit();\n      success = true;\n    } catch (Exception e) {\n      Log.error(e, \"TradeDirect:recreateDBTables() -- Error dropping and recreating the database tables\");\n    } finally {\n      conn.close();\n    }\n    return success;\n  }\n  public Object[] parseDDLToBuffer(InputStream ddlFile) throws Exception {\n    BufferedReader br = null;\n    ArrayList<String> sqlBuffer = new ArrayList<String>(30); //initial capacity 30 assuming we have 30 ddl-sql statements to read\n\n    try {\n      br = new BufferedReader(new InputStreamReader(ddlFile));\n      String s;\n      String sql = new String();\n      while ((s = br.readLine()) != null) {\n        s = s.trim();\n        if ((s.length() != 0) && (s.charAt(0) != '#')) // Empty lines or lines starting with \"#\" are ignored\n        {\n          sql = sql + \" \" + s;\n          if (s.endsWith(\";\")) { // reached end of sql statement\n            sql = sql.replace(';', ' '); //remove the semicolon\n            sqlBuffer.add(sql);\n            sql = \"\";\n          }\n        }\n      }\n    } catch (java.io.IOException ex) {\n      Log.error(\"TradeBuildDB:parseDDLToBuffer Exeception during open/read of File: \" + ddlFile, ex);\n      throw ex;\n    } finally {\n      if (br != null) {\n        try {\n          br.close();\n        } catch (java.io.IOException ex) {\n          Log.error(\"TradeBuildDB:parseDDLToBuffer Failed to close BufferedReader\", ex);\n        }\n      }\n    }\n    return sqlBuffer.toArray();\n  }\n}",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6487347067367615,
+  "original_metrics": {
+    "loc": 124,
+    "sloc": 106,
+    "complexity": 35
+  }
+}

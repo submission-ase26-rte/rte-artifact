@@ -1,0 +1,297 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.direct;
+Class name (MUST be exactly): TradeDirect_sellTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import javax.annotation.Resource;
+import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.jms.JMSContext;
+import javax.jms.Queue;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.TextMessage;
+import javax.jms.Topic;
+import javax.jms.TopicConnectionFactory;
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeDirect_sellTestGenerated {
+    @Mock
+    private QueueConnectionFactory queueConnectionFactory;
+    @Mock
+    private TopicConnectionFactory topicConnectionFactory;
+    @Mock
+    private Topic tradeStreamerTopic;
+    @Mock
+    private Queue tradeBrokerQueue;
+    @Mock
+    private DataSource datasource;
+    @Mock
+    private UserTransaction txn;
+    @Mock
+    private ManagedExecutorService mes;
+    @Spy
+    @InjectMocks
+    private TradeDirect tradeDirect;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        verifyNoMoreInteractions(queueConnectionFactory, topicConnectionFactory, tradeStreamerTopic, tradeBrokerQueue, datasource, txn, mes);
+    }
+
+    @Test
+    public void testSell_Exception_DuringConnection() throws Exception {
+        // Arrange
+        String userID = "user1";
+        int holdingID = 1;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        when(datasource.getConnection()).thenThrow(new SQLException("Test Exception"));
+
+        // Act & Assert
+        assertThrows(Exception.class, () -> tradeDirect.sell(userID, holdingID, orderProcessingMode));
+    }
+
+    @Test
+    public void testSell_Asynch_2Phase() throws Exception {
+        // Arrange
+        String userID = "user1";
+        int holdingID = 1;
+        int orderProcessingMode = TradeConfig.ASYNCH_2PHASE;
+
+        Connection mockConn = mock(Connection.class);
+        AccountDataBean mockAccountData = mock(AccountDataBean.class);
+        HoldingDataBean mockHoldingData = mock(HoldingDataBean.class);
+        QuoteDataBean mockQuoteData = mock(QuoteDataBean.class);
+        OrderDataBean mockOrderData = mock(OrderDataBean.class);
+
+        when(datasource.getConnection()).thenReturn(mockConn);
+        when(tradeDirect.getAccountData(mockConn, userID)).thenReturn(mockAccountData);
+        when(tradeDirect.getHoldingData(mockConn, holdingID)).thenReturn(mockHoldingData);
+        when(mockHoldingData.getQuoteID()).thenReturn("symbol");
+        when(tradeDirect.getQuoteData(mockConn, "symbol")).thenReturn(mockQuoteData);
+        when(tradeDirect.createOrder(mockAccountData, mockQuoteData, mockHoldingData, "sell", anyDouble())).thenReturn(mockOrderData);
+        when(mockQuoteData.getPrice()).thenReturn(BigDecimal.TEN);
+        when(mockOrderData.getOrderFee()).thenReturn(BigDecimal.ONE);
+        when(tradeDirect.getOrderData(mockConn, anyInt())).thenReturn(mockOrderData);
+
+        // Act
+        OrderDataBean result = tradeDirect.sell(userID, holdingID, orderProcessingMode);
+
+        // Assert
+        verify(txn).begin();
+        verify(txn).commit();
+        assertEquals(mockOrderData, result);
+    }
+
+    @Test
+    public void testSell_Synch() throws Exception {
+        // Arrange
+        String userID = "user1";
+        int holdingID = 1;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        Connection mockConn = mock(Connection.class);
+        AccountDataBean mockAccountData = mock(AccountDataBean.class);
+        HoldingDataBean mockHoldingData = mock(HoldingDataBean.class);
+        QuoteDataBean mockQuoteData = mock(QuoteDataBean.class);
+        OrderDataBean mockOrderData = mock(OrderDataBean.class);
+
+        when(datasource.getConnection()).thenReturn(mockConn);
+        when(tradeDirect.getAccountData(mockConn, userID)).thenReturn(mockAccountData);
+        when(tradeDirect.getHoldingData(mockConn, holdingID)).thenReturn(mockHoldingData);
+        when(mockHoldingData.getQuoteID()).thenReturn("symbol");
+        when(tradeDirect.getQuoteData(mockConn, "symbol")).thenReturn(mockQuoteData);
+        when(tradeDirect.createOrder(mockAccountData, mockQuoteData, mockHoldingData, "sell", anyDouble())).thenReturn(mockOrderData);
+        when(mockQuoteData.getPrice()).thenReturn(BigDecimal.TEN);
+        when(mockOrderData.getOrderFee()).thenReturn(BigDecimal.ONE);
+        when(tradeDirect.getOrderData(mockConn, anyInt())).thenReturn(mockOrderData);
+
+        // Act
+        OrderDataBean result = tradeDirect.sell(userID, holdingID, orderProcessingMode);
+
+        // Assert
+        verify(txn, never()).begin();
+        verify(txn, never()).commit();
+        assertEquals(mockOrderData, result);
+    }
+
+    @Test
+    public void testSell_Asynch() throws Exception {
+        // Arrange
+        String userID = "user1";
+        int holdingID = 1;
+        int orderProcessingMode = TradeConfig.ASYNCH;
+
+        Connection mockConn = mock(Connection.class);
+        AccountDataBean mockAccountData = mock(AccountDataBean.class);
+        HoldingDataBean mockHoldingData = mock(HoldingDataBean.class);
+        QuoteDataBean mockQuoteData = mock(QuoteDataBean.class);
+        OrderDataBean mockOrderData = mock(OrderDataBean.class);
+
+        when(datasource.getConnection()).thenReturn(mockConn);
+        when(tradeDirect.getAccountData(mockConn, userID)).thenReturn(mockAccountData);
+        when(tradeDirect.getHoldingData(mockConn, holdingID)).thenReturn(mockHoldingData);
+        when(mockHoldingData.getQuoteID()).thenReturn("symbol");
+        when(tradeDirect.getQuoteData(mockConn, "symbol")).thenReturn(mockQuoteData);
+        when(tradeDirect.createOrder(mockAccountData, mockQuoteData, mockHoldingData, "sell", anyDouble())).thenReturn(mockOrderData);
+        when(mockQuoteData.getPrice()).thenReturn(BigDecimal.TEN);
+        when(mockOrderData.getOrderFee()).thenReturn(BigDecimal.ONE);
+        when(tradeDirect.getOrderData(mockConn, anyInt())).thenReturn(mockOrderData);
+
+        // Act
+        OrderDataBean result = tradeDirect.sell(userID, holdingID, orderProcessingMode);
+
+        // Assert
+        verify(txn, never()).begin();
+        verify(txn, never()).commit();
+        assertEquals(mockOrderData, result);
+    }
+
+    @Test
+    public void testSell_MissingData() throws Exception {
+        // Arrange
+        String userID = "user1";
+        int holdingID = 1;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        Connection mockConn = mock(Connection.class);
+
+        when(datasource.getConnection()).thenReturn(mockConn);
+        when(tradeDirect.getAccountData(mockConn, userID)).thenReturn(null);
+
+        // Act
+        OrderDataBean result = tradeDirect.sell(userID, holdingID, orderProcessingMode);
+
+        // Assert
+        verify(txn, never()).begin();
+        verify(txn, never()).commit();
+        assertEquals("cancelled", result.getOrderStatus());
+    }
+
+    @Test
+    public void testSell_ExceptionDuringOrderProcessing() throws Exception {
+        // Arrange
+        String userID = "user1";
+        int holdingID = 1;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        Connection mockConn = mock(Connection.class);
+        AccountDataBean mockAccountData = mock(AccountDataBean.class);
+        HoldingDataBean mockHoldingData = mock(HoldingDataBean.class);
+        QuoteDataBean mockQuoteData = mock(QuoteDataBean.class);
+        OrderDataBean mockOrderData = mock(OrderDataBean.class);
+
+        when(datasource.getConnection()).thenReturn(mockConn);
+        when(tradeDirect.getAccountData(mockConn, userID)).thenReturn(mockAccountData);
+        when(tradeDirect.getHoldingData(mockConn, holdingID)).thenReturn(mockHoldingData);
+        when(mockHoldingData.getQuoteID()).thenReturn("symbol");
+        when(tradeDirect.getQuoteData(mockConn, "symbol")).thenReturn(mockQuoteData);
+        when(tradeDirect.createOrder(mockAccountData, mockQuoteData, mockHoldingData, "sell", anyDouble())).thenReturn(mockOrderData);
+        when(mockQuoteData.getPrice()).thenReturn(BigDecimal.TEN);
+        when(mockOrderData.getOrderFee()).thenReturn(BigDecimal.ONE);
+        when(tradeDirect.getOrderData(mockConn, anyInt())).thenReturn(mockOrderData);
+        doThrow(new Exception("Test Exception")).when(mockOrderData).getOrderID();
+
+        // Act & Assert
+        assertThrows(Exception.class, () -> tradeDirect.sell(userID, holdingID, orderProcessingMode));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[96] no suitable method found for getAccountData(java.sql.Connection,java.lang.String)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.getAccountData(java.sql.Connection,java.lang.String) is not applicable
+  (getAccountData(java.sql.Connection,java.lang.String) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.getAccountData(int,java.sql.Connection) is not applicable
+  (argument mismatch; java.sql.Connection cannot be converted to int)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[97] method getHoldingData in class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect cannot be applied to given types;
+  required: java.sql.Connection,int
+  found:    java.sql.Connection,int
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[99] getQuoteData(java.sql.Connection,java.lang.String) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[103] getOrderData(java.sql.Connection,int) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[128] no suitable method found for getAccountData(java.sql.Connection,java.lang.String)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.getAccountData(java.sql.Connection,java.lang.String) is not applicable
+  (getAccountData(java.sql.Connection,java.lang.String) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.getAccountData(int,java.sql.Connection) is not applicable
+  (argument mismatch; java.sql.Connection cannot be converted to int)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[129] method getHoldingData in class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect cannot be applied to given types;
+  required: java.sql.Connection,int
+  found:    java.sql.Connection,int
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[131] getQuoteData(java.sql.Connection,java.lang.String) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[135] getOrderData(java.sql.Connection,int) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[160] no suitable method found for getAccountData(java.sql.Connection,java.lang.String)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.getAccountData(java.sql.Connection,java.lang.String) is not applicable
+  (getAccountData(java.sql.Connection,java.lang.String) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.getAccountData(int,java.sql.Connection) is not applicable
+  (argument mismatch; java.sql.Connection cannot be converted to int)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[161] method getHoldingData in class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect cannot be applied to given types;
+  required: java.sql.Connection,int
+  found:    java.sql.Connection,int
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[163] getQuoteData(java.sql.Connection,java.lang.String) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[167] getOrderData(java.sql.Connection,int) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[188] no suitable method found for getAccountData(java.sql.Connection,java.lang.String)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.getAccountData(java.sql.Connection,java.lang.String) is not applicable
+  (getAccountData(java.sql.Connection,java.lang.String) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.getAccountData(int,java.sql.Connection) is not applicable
+  (argument mismatch; java.sql.Connection cannot be converted to int)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[213] no suitable method found for getAccountData(java.sql.Connection,java.lang.String)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.getAccountData(java.sql.Connection,java.lang.String) is not applicable
+  (getAccountData(java.sql.Connection,java.lang.String) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect)
+  method com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect.getAccountData(int,java.sql.Connection) is not applicable
+  (argument mismatch; java.sql.Connection cannot be converted to int)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[214] method getHoldingData in class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect cannot be applied to given types;
+  required: java.sql.Connection,int
+  found:    java.sql.Connection,int
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[216] getQuoteData(java.sql.Connection,java.lang.String) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_sellTestGenerated.java:[220] getOrderData(java.sql.Connection,int) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: TradeDirect_sellTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

@@ -1,0 +1,164 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.interfaces.handling.mobile;
+Class name (MUST be exactly): EventLogger_submitTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.interfaces.handling.mobile;
+
+import static org.mockito.Mockito.mock;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import java.time.LocalDateTime;
+import java.util.List;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.domain.model.cargo.Cargo;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class EventLogger_submitTestGenerated {
+
+  private EventLogger eventLogger;
+  private ApplicationEvents applicationEvents;
+
+  @BeforeEach
+  public void setUp() {
+    applicationEvents = mock(ApplicationEvents.class);
+    eventLogger = new EventLogger(applicationEvents);
+  }
+
+  @AfterEach
+  public void tearDown() {
+    Mockito.resetMocks(applicationEvents);
+  }
+
+  @Test
+  public void testSubmitWithVoyage() {
+    eventLogger.setTrackingId("12345");
+    eventLogger.setLocation("loc1");
+    eventLogger.setEventType(HandlingEvent.Type.LOAD);
+    eventLogger.setVoyageNumber("voyage1");
+    eventLogger.setCompletionTime(LocalDateTime.now());
+
+    eventLogger.submit();
+
+    Mockito.verify(applicationEvents).receivedHandlingEventRegistrationAttempt(
+        Mockito.argThat(attempt ->
+            attempt.getTrackingId().getValue().equals("12345")
+            && attempt.getVoyage().getValue().equals("voyage1")
+            && attempt.getEventType().equals(HandlingEvent.Type.LOAD)
+            && attempt.getLocation().getValue().equals("loc1")
+        ));
+  }
+
+  @Test
+  public void testSubmitWithoutVoyage() {
+    eventLogger.setTrackingId("12345");
+    eventLogger.setLocation("loc1");
+    eventLogger.setEventType(HandlingEvent.Type.CLAIM);
+    eventLogger.setVoyageNumber(null);
+    eventLogger.setCompletionTime(LocalDateTime.now());
+
+    eventLogger.submit();
+
+    Mockito.verify(applicationEvents).receivedHandlingEventRegistrationAttempt(
+        Mockito.argThat(attempt ->
+            attempt.getTrackingId().getValue().equals("12345")
+            && attempt.getVoyage() == null
+            && attempt.getEventType().equals(HandlingEvent.Type.CLAIM)
+            && attempt.getLocation().getValue().equals("loc1")
+        ));
+  }
+
+  @Test
+  public void testSubmitWithNullValues() {
+    eventLogger.setTrackingId(null);
+    eventLogger.setLocation(null);
+    eventLogger.setEventType(HandlingEvent.Type.UNLOAD);
+    eventLogger.setVoyageNumber("voyage1");
+    eventLogger.setCompletionTime(LocalDateTime.now());
+
+    eventLogger.submit();
+
+    Mockito.verify(applicationEvents).receivedHandlingEventRegistrationAttempt(
+        Mockito.argThat(attempt ->
+            attempt.getTrackingId().getValue() == null
+            && attempt.getVoyage().getValue().equals("voyage1")
+            && attempt.getEventType().equals(HandlingEvent.Type.UNLOAD)
+            && attempt.getLocation().getValue() == null
+        ));
+  }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[36] constructor EventLogger in class org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger cannot be applied to given types;
+  required: no arguments
+  found:    org.eclipse.cargotracker.application.ApplicationEvents
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[41] cannot find symbol
+  symbol:   method resetMocks(org.eclipse.cargotracker.application.ApplicationEvents)
+  location: class org.mockito.Mockito
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[56] cannot find symbol
+  symbol:   method getValue()
+  location: class org.eclipse.cargotracker.domain.model.cargo.TrackingId
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[57] cannot find symbol
+  symbol:   method getVoyage()
+  location: variable attempt of type org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[58] cannot find symbol
+  symbol:   method getEventType()
+  location: variable attempt of type org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[59] cannot find symbol
+  symbol:   method getLocation()
+  location: variable attempt of type org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[75] cannot find symbol
+  symbol:   method getValue()
+  location: class org.eclipse.cargotracker.domain.model.cargo.TrackingId
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[76] cannot find symbol
+  symbol:   method getVoyage()
+  location: variable attempt of type org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[77] cannot find symbol
+  symbol:   method getEventType()
+  location: variable attempt of type org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[78] cannot find symbol
+  symbol:   method getLocation()
+  location: variable attempt of type org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[94] cannot find symbol
+  symbol:   method getValue()
+  location: class org.eclipse.cargotracker.domain.model.cargo.TrackingId
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[95] cannot find symbol
+  symbol:   method getVoyage()
+  location: variable attempt of type org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[96] cannot find symbol
+  symbol:   method getEventType()
+  location: variable attempt of type org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[97] cannot find symbol
+  symbol:   method getLocation()
+  location: variable attempt of type org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: EventLogger_submitTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

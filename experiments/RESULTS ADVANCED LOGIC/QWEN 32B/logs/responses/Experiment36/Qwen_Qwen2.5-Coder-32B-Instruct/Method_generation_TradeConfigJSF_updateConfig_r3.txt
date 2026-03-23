@@ -1,0 +1,39 @@
+```java
+public void updateConfig() {
+    try {
+        if (orderProcessingMode != null) {
+            int modeIndex = java.util.Arrays.asList(orderProcessingModeList).indexOf(orderProcessingMode);
+            if (modeIndex != -1) {
+                TradeConfig.setOrderProcessingMode(modeIndex);
+            } else {
+                Log.error("TradeConfigJSF.updateConfig(..): minor exception caught", "trying to set orderProcessing to " + orderProcessingMode, "reverting to current value");
+            }
+        }
+        if (webInterface != null) {
+            int interfaceIndex = java.util.Arrays.asList(webInterfaceList).indexOf(webInterface);
+            if (interfaceIndex != -1) {
+                TradeConfig.setWebInterface(interfaceIndex);
+            } else {
+                Log.error("TradeConfigJSF.updateConfig(..): minor exception caught", "trying to set WebInterface to " + webInterface, "reverting to current value");
+            }
+        }
+        if (maxUsers > 0) {
+            TradeConfig.setMAX_USERS(maxUsers);
+        }
+        if (marketSummaryInterval > 0) {
+            TradeConfig.setMarketSummaryInterval(marketSummaryInterval);
+        }
+        if (primIterations > 0) {
+            TradeConfig.setPrimIterations(primIterations);
+        }
+        TradeConfig.setPublishQuotePriceChange(publishQuotePriceChange);
+        if (listQuotePriceChangeFrequency > 0) {
+            TradeConfig.setListQuotePriceChangeFrequency(listQuotePriceChangeFrequency);
+        }
+        TradeConfig.setLongRun(longRun);
+        TradeConfig.setDisplayOrderAlerts(displayOrderAlerts);
+    } catch (Exception e) {
+        Log.error(e, "TradeConfigJSF.updateConfig(..): minor exception caught", "reverting to current value");
+    }
+}
+```

@@ -1,0 +1,46 @@
+```java
+public boolean canConvert(final Object object, final Class toType) {
+    if (object == null) {
+        return toType == Object.class;
+    }
+    if (toType.isInstance(object)) {
+        return true;
+    }
+    if (Number.class.isAssignableFrom(toType) && object instanceof String) {
+        try {
+            new BigDecimal((String) object);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+    if (Boolean.class.isAssignableFrom(toType)) {
+        if (object instanceof Number) {
+            return ((Number) object).intValue() != 0;
+        } else if (object instanceof String) {
+            return "true".equalsIgnoreCase((String) object);
+        }
+    }
+    if (toType.isArray()) {
+        if (object.getClass().isArray()) {
+            return toType.getComponentType().isInstance(Array.get(object, 0));
+        } else if (object instanceof Collection) {
+            return toType.getComponentType().isInstance(((Collection<?>) object).iterator().next());
+        }
+    }
+    if (Collection.class.isAssignableFrom(toType)) {
+        if (object.getClass().isArray()) {
+            return true;
+        } else if (object instanceof Collection) {
+            return true;
+        }
+    }
+    if (toType.isPrimitive() && object.getClass().isArray()) {
+        return toType.getComponentType().isInstance(Array.get(object, 0));
+    }
+    if (toType.isPrimitive() && object instanceof Collection) {
+        return toType.getComponentType().isInstance(((Collection<?>) object).iterator().next());
+    }
+    return TypeUtils.canConvert(object, toType);
+}
+```

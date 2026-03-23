@@ -1,0 +1,158 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.io.Serializable;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class OptionGroup_toStringTestGenerated {
+
+    private OptionGroup optionGroup;
+
+    @BeforeEach
+    public void setUp() {
+        optionGroup = mock(OptionGroup.class);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        optionGroup = null;
+    }
+
+    @Test
+    public void testToString_emptyOptionGroup() {
+        when(optionGroup.getOptions()).thenReturn(new ArrayList<>());
+        assertEquals("[]", optionGroup.toString());
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 0.00% | Branch: 0.00%
+- Tests: 0/1 passed
+
+TEST STATUS:
+- PASSED (0): none
+- FAILED (1): testToString_emptyOptionGroup
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Serializable -> java.io.Serializable
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   LinkedHashMap -> java.util.LinkedHashMap
+//   Map -> java.util.Map
+
+// === Class: OptionGroup ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final Map optionMap;
+    private String selected;
+    private boolean required;
+
+// Getter/Setter Methods (for test assertions):
+public Collection<String> getNames();
+public Collection<Option> getOptions();
+public String getSelected();
+public boolean isRequired();
+public void setRequired(final boolean required);
+public void setSelected(final Option option) throws AlreadySelectedException;
+
+// Internal Method Signatures (used by target method):
+public Collection getOptions();
+
+// === External Class: Option ===
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   Objects -> java.util.Objects
+// Fields (with actual visibility):
+    private static final Class DEFAULT_TYPE;
+    private int argCount;
+    private String argName;
+    private Converter converter;
+    private final DeprecatedAttributes deprecated;
+    private String description;
+    private String longOption;
+    private final String option;
+    private boolean optionalArg;
+    private boolean required;
+    private Class type;
+    private char valueSeparator;
+    package-private static final Option[] EMPTY_ARRAY;
+    private static final long serialVersionUID;
+    public static final int UNINITIALIZED;
+    public static final int UNLIMITED_VALUES;
+    private List values;
+    private char valuesep;
+
+// Constructors:
+private Builder(String option);
+private Option(Builder builder);
+public Option(String option, boolean hasArg, String description);
+public Option(String option, String description);
+public Option(String option, String longOption, boolean hasArg, String description);
+
+// Method Signatures (used by target method):
+public String getLongOpt();
+public String getOpt();
+public String getDescription();
+
+
+TASK:
+Regenerate ONLY the method "toString" OF CLASS "OptionGroup" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public String toString() {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.cli
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in OptionGroup
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

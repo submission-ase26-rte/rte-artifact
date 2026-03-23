@@ -1,0 +1,389 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package com.ibm.websphere.samples.daytrader.web.jsf;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.*;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import javax.enterprise.context.RequestScoped;
+import javax.faces.context.ExternalContext;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.servlet.http.HttpSession;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeConfigJSF_updateConfigTestGenerated {
+
+    private TradeConfigJSF tradeConfigJSF;
+    private ExternalContext context;
+    private String[] orderProcessingModeList;
+    private String[] webInterfaceList;
+
+    @BeforeEach
+    void setUp() {
+        tradeConfigJSF = new TradeConfigJSF();
+        context = mock(ExternalContext.class);
+        ReflectionTestUtils.setField(tradeConfigJSF, "context", context);
+        orderProcessingModeList = new String[]{"SYNCH", "ASYNCH", "ASYNCH_2PHASE"};
+        webInterfaceList = new String[]{"JSP", "JSP_Images", "JSP_Images_HTTP2"};
+        ReflectionTestUtils.setField(tradeConfigJSF, "orderProcessingModeList", orderProcessingModeList);
+        ReflectionTestUtils.setField(tradeConfigJSF, "webInterfaceList", webInterfaceList);
+    }
+
+    @AfterEach
+    void tearDown() {
+        tradeConfigJSF = null;
+    }
+
+    @Test
+    void testUpdateConfigWithValidInputs() {
+        ReflectionTestUtils.setField(tradeConfigJSF, "orderProcessingMode", "ASYNCH");
+        ReflectionTestUtils.setField(tradeConfigJSF, "webInterface", "JSP_Images");
+        ReflectionTestUtils.setField(tradeConfigJSF, "maxUsers", 100);
+        ReflectionTestUtils.setField(tradeConfigJSF, "maxQuotes", 50);
+        ReflectionTestUtils.setField(tradeConfigJSF, "marketSummaryInterval", 60);
+        ReflectionTestUtils.setField(tradeConfigJSF, "primIterations", 10);
+        ReflectionTestUtils.setField(tradeConfigJSF, "listQuotePriceChangeFrequency", 5);
+        ReflectionTestUtils.setField(tradeConfigJSF, "publishQuotePriceChange", true);
+        ReflectionTestUtils.setField(tradeConfigJSF, "longRun", false);
+        ReflectionTestUtils.setField(tradeConfigJSF, "displayOrderAlerts", true);
+
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getRunTimeModeNames).thenReturn(new String[]{"EJB3", "DIRECT", "SESSION_TO_DIRECT"});
+            mockedTradeConfig.when(TradeConfig::getOrderProcessingModeNames).thenReturn(new String[]{"SYNCH", "ASYNCH", "ASYNCH_2PHASE"});
+            mockedTradeConfig.when(TradeConfig::getWebInterfaceNames).thenReturn(new String[]{"JSP", "JSP_Images", "JSP_Images_HTTP2"});
+
+            tradeConfigJSF.updateConfig();
+
+            assertEquals("DayTrader Configuration Updated", tradeConfigJSF.getResult());
+            mockedTradeConfig.verify(() -> TradeConfig.setOrderProcessingMode(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setWebInterface(1));
+            mockedTradeConfig.verify(() -> TradeConfig.setMAX_USERS(100));
+            mockedTradeConfig.verify(() -> TradeConfig.setMAX_QUOTES(50));
+            mockedTradeConfig.verify(() -> TradeConfig.setMarketSummaryInterval(60));
+            mockedTradeConfig.verify(() -> TradeConfig.setPrimIterations(10));
+            mockedTradeConfig.verify(() -> TradeConfig.setPublishQuotePriceChange(true));
+            mockedTradeConfig.verify(() -> TradeConfig.setListQuotePriceChangeFrequency(5));
+            mockedTradeConfig.verify(() -> TradeConfig.setLongRun(false));
+            mockedTradeConfig.verify(() -> TradeConfig.setDisplayOrderAlerts(true));
+        }
+    }
+
+    @Test
+    void testUpdateConfigWithInvalidOrderProcessingMode() {
+        ReflectionTestUtils.setField(tradeConfigJSF, "orderProcessingMode", "INVALID_MODE");
+        ReflectionTestUtils.setField(tradeConfigJSF, "webInterface", "JSP_Images");
+        ReflectionTestUtils.setField(tradeConfigJSF, "maxUsers", 100);
+        ReflectionTestUtils.setField(tradeConfigJSF, "maxQuotes", 50);
+        ReflectionTestUtils.setField(tradeConfigJSF, "marketSummaryInterval", 60);
+        ReflectionTestUtils.setField(tradeConfigJSF, "primIterations", 10);
+        ReflectionTestUtils.setField(tradeConfigJSF, "listQuotePriceChangeFrequency", 5);
+        ReflectionTestUtils.setField(tradeConfigJSF, "publishQuotePriceChange", true);
+        ReflectionTestUtils.setField(tradeConfigJSF, "longRun", false);
+        ReflectionTestUtils.setField(tradeConfigJSF, "displayOrderAlerts", true);
+
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getRunTimeModeNames).thenReturn(new String[]{"EJB3", "DIRECT", "SESSION_TO_DIRECT"});
+            mockedTradeConfig.when(TradeConfig::getOrderProcessingModeNames).thenReturn(new String[]{"SYNCH", "ASYNCH", "ASYNCH_2PHASE"});
+            mockedTradeConfig.when(TradeConfig::getWebInterfaceNames).thenReturn(new String[]{"JSP", "JSP_Images", "JSP_Images_HTTP2"});
+
+            tradeConfigJSF.updateConfig();
+
+            assertEquals("DayTrader Configuration Updated", tradeConfigJSF.getResult());
+            mockedTradeConfig.verify(() -> TradeConfig.setOrderProcessingMode(1));
+        }
+    }
+
+    @Test
+    void testUpdateConfigWithInvalidWebInterface() {
+        ReflectionTestUtils.setField(tradeConfigJSF, "orderProcessingMode", "ASYNCH");
+        ReflectionTestUtils.setField(tradeConfigJSF, "webInterface", "INVALID_INTERFACE");
+        ReflectionTestUtils.setField(tradeConfigJSF, "maxUsers", 100);
+        ReflectionTestUtils.setField(tradeConfigJSF, "maxQuotes", 50);
+        ReflectionTestUtils.setField(tradeConfigJSF, "marketSummaryInterval", 60);
+        ReflectionTestUtils.setField(tradeConfigJSF, "primIterations", 10);
+        ReflectionTestUtils.setField(tradeConfigJSF, "listQuotePriceChangeFrequency", 5);
+        ReflectionTestUtils.setField(tradeConfigJSF, "publishQuotePriceChange", true);
+        ReflectionTestUtils.setField(tradeConfigJSF, "longRun", false);
+        ReflectionTestUtils.setField(tradeConfigJSF, "displayOrderAlerts", true);
+
+        try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(TradeConfig::getRunTimeModeNames).thenReturn(new String[]{"EJB3", "DIRECT", "SESSION_TO_DIRECT"});
+            mockedTradeConfig.when(TradeConfig::getOrderProcessingModeNames).thenReturn(new String[]{"SYNCH", "ASYNCH", "ASYNCH_2PHASE"});
+            mockedTradeConfig.when(TradeConfig::getWebInterfaceNames).thenReturn(new String[]{"JSP", "JSP_Images", "JSP_Images_HTTP2"});
+
+            tradeConfigJSF.updateConfig();
+
+            assertEquals("DayTrader Configuration Updated", tradeConfigJSF.getResult());
+            mockedTradeConfig.verify(() -> TradeConfig.setWebInterface(1));
+        }
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 89.74% | Branch: 83.33%
+- Tests: 1/3 passed
+
+TEST STATUS:
+- PASSED (1): testUpdateConfigWithValidInputs
+- FAILED (2): testUpdateConfigWithInvalidOrderProcessingMode, testUpdateConfigWithInvalidWebInterface
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   RunStatsDataBean -> com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean
+//   TradeDirectDBUtils -> com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   RequestScoped -> javax.enterprise.context.RequestScoped
+//   ExternalContext -> javax.faces.context.ExternalContext
+//   Inject -> javax.inject.Inject
+//   Named -> javax.inject.Named
+//   HttpSession -> javax.servlet.http.HttpSession
+//   TradeConfigJSF -> com.ibm.websphere.samples.daytrader.web.jsf.TradeConfigJSF
+
+// === Class: TradeConfigJSF ===
+// Fields (with actual visibility):
+    private ExternalContext context;
+    package-private TradeDirectDBUtils dbUtils;
+    private String runtimeMode;
+    private String orderProcessingMode;
+    private int maxUsers;
+    private int maxQuotes;
+    private int marketSummaryInterval;
+    private String webInterface;
+    private int primIterations;
+    private int listQuotePriceChangeFrequency;
+    private boolean publishQuotePriceChange;
+    private boolean longRun;
+    private boolean displayOrderAlerts;
+    private String[] runtimeModeList;
+    private String[] orderProcessingModeList;
+    private String[] webInterfaceList;
+    private String result;
+
+// Getter/Setter Methods (for test assertions):
+public String getRuntimeMode();
+public void setRuntimeMode(String runtimeMode);
+public void setOrderProcessingMode(String orderProcessingMode);
+public String getOrderProcessingMode();
+public void setMaxUsers(int maxUsers);
+public int getMaxUsers();
+public int getMaxQuotes();
+public void setMarketSummaryInterval(int marketSummaryInterval);
+public int getMarketSummaryInterval();
+public void setPrimIterations(int primIterations);
+public int getPrimIterations();
+public void setPublishQuotePriceChange(boolean publishQuotePriceChange);
+public boolean isPublishQuotePriceChange();
+public void setListQuotePriceChangeFrequency(int listQuotePriceChangeFrequency);
+public int getListQuotePriceChangeFrequency();
+public void setDisplayOrderAlerts(boolean displayOrderAlerts);
+public boolean isDisplayOrderAlerts();
+public void setLongRun(boolean longRun);
+public boolean isLongRun();
+public String[] getRuntimeModeList();
+public void setRuntimeModeList(String[] runtimeModeList);
+public void setOrderProcessingModeList(String[] orderProcessingModeList);
+public String[] getOrderProcessingModeList();
+public void setWebInterface(String webInterface);
+public String getWebInterface();
+public void setWebInterfaceList(String[] webInterfaceList);
+public String[] getWebInterfaceList();
+public void setResult(String result);
+public String getResult();
+
+// Internal Methods (full implementation for context):
+  public void setResult(String result) {
+    this.result = result;
+  }
+
+// === External Class: TradeConfig ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.TradeConfig
+// Import paths:
+//   BigDecimal -> java.math.BigDecimal
+//   ArrayList -> java.util.ArrayList
+//   Random -> java.util.Random
+// Fields (with actual visibility):
+    private static String[] runTimeModeNames;
+    public static final int EJB3;
+    public static final int DIRECT;
+    public static final int SESSION_TO_DIRECT;
+    private static int runTimeMode;
+    private static String[] orderProcessingModeNames;
+    public static final int SYNCH;
+    public static final int ASYNCH;
+    public static final int ASYNCH_2PHASE;
+    private static int orderProcessingMode;
+    private static String[] accessModeNames;
+    public static final int STANDARD;
+    private static int accessMode;
+    private static String[] webInterfaceNames;
+    public static final int JSP;
+    public static final int JSP_Images;
+    public static final int JSP_Images_HTTP2;
+    private static int webInterface;
+    private static int MAX_USERS;
+    private static int MAX_QUOTES;
+    public static boolean JDBCDriverNeedsGlobalTransation;
+    public static String DATASOURCE;
+    public static int KEYBLOCKSIZE;
+    public static int QUOTES_PER_PAGE;
+    public static boolean RND_USER;
+    private static int MAX_HOLDINGS;
+    private static int count;
+    private static Object userID_count_semaphore;
+    private static int userID_count;
+    private static String hostName;
+    private static Random r0;
+    private static Random randomNumberGenerator;
+    public static final String newUserPrefix;
+    public static final int verifyPercent;
+    private static boolean updateQuotePrices;
+    private static int primIterations;
+    private static boolean longRun;
+    private static boolean publishQuotePriceChange;
+    private static int listQuotePriceChangeFrequency;
+    private static boolean displayOrderAlerts;
+    private static int marketSummaryInterval;
+    public static BigDecimal PENNY_STOCK_PRICE;
+    public static BigDecimal PENNY_STOCK_RECOVERY_MIRACLE_MULTIPLIER;
+    public static BigDecimal MAXIMUM_STOCK_PRICE;
+    public static BigDecimal MAXIMUM_STOCK_SPLIT_MULTIPLIER;
+    public static final int HOME_OP;
+    public static final int QUOTE_OP;
+    public static final int LOGIN_OP;
+    public static final int LOGOUT_OP;
+    public static final int REGISTER_OP;
+    public static final int ACCOUNT_OP;
+    public static final int PORTFOLIO_OP;
+    public static final int BUY_OP;
+    public static final int SELL_OP;
+    public static final int UPDATEACCOUNT_OP;
+    private static int[][] scenarioMixes;
+    private static char[] actions;
+    private static int sellDeficit;
+    public static final int WELCOME_PAGE;
+    public static final int REGISTER_PAGE;
+    public static final int PORTFOLIO_PAGE;
+    public static final int QUOTE_PAGE;
+    public static final int HOME_PAGE;
+    public static final int ACCOUNT_PAGE;
+    public static final int ORDER_PAGE;
+    public static final int CONFIG_PAGE;
+    public static final int STATS_PAGE;
+    public static final int MARKET_SUMMARY_PAGE;
+    public static String[][] webUI;
+    private static int scenarioCount;
+    private static final BigDecimal orderFee;
+    private static final BigDecimal cashFee;
+    private static final BigDecimal ONE;
+    private static ArrayList deck;
+    private static int card;
+
+// Method Signatures (used by target method):
+static public void setListQuotePriceChangeFrequency(int value);
+static public java getRunTimeModeNames();
+static public void setOrderProcessingMode(int value);
+static public void setMAX_QUOTES(int mAX_QUOTES);
+static public void setPublishQuotePriceChange(boolean publishQuotePriceChange);
+static public boolean getPublishQuotePriceChange();
+static public boolean getLongRun();
+static public boolean getDisplayOrderAlerts();
+static public int getMarketSummaryInterval();
+static public int getMAX_USERS();
+static public void setDisplayOrderAlerts(boolean value);
+static public void setMAX_USERS(int mAX_USERS);
+static public int getRunTimeMode();
+static public int getOrderProcessingMode();
+static public void setWebInterface(int value);
+static public String getWebInterfaceNames();
+static public void setPrimIterations(int iter);
+static public int getWebInterface();
+static public void setMarketSummaryInterval(int seconds);
+static public void setLongRun(boolean longRun);
+static public int getPrimIterations();
+static public int getListQuotePriceChangeFrequency();
+static public String getOrderProcessingModeNames();
+static public int getMAX_QUOTES();
+
+// Public Getter Methods (for test assertions):
+public static String getPage(int pageNumber);
+public static char getScenarioAction(boolean newUser);
+public static String getUserID();
+public static BigDecimal getOrderFee(String orderType);
+public static BigDecimal getRandomPriceChangeFactor();
+public static int getScenarioMixes();
+public static int getMAX_HOLDINGS();
+public static int getScenarioCount();
+public static boolean getJDBCDriverNeedsGlobalTransation();
+public static boolean getUpdateQuotePrices();
+public static int getAccessMode();
+
+// === External Class: Log ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.Log
+// Import paths:
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   Level -> java.util.logging.Level
+//   Logger -> java.util.logging.Logger
+// Fields (with actual visibility):
+    private static final Logger log;
+
+// Method Signatures (used by target method):
+static public void error(String message);
+
+
+TASK:
+Regenerate ONLY the method "updateConfig" OF CLASS "TradeConfigJSF" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void updateConfig() {
+    // your implementation here
+}
+```
+
+
+- Package: com.ibm.websphere.samples.daytrader.web.jsf
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "updateConfig"
+– Allowed imports: exactly those already present in TradeConfigJSF
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

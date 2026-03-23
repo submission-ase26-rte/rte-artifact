@@ -1,0 +1,44 @@
+```java
+public static String md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) {
+    if (keyBytes == null) {
+        throw new IllegalArgumentException("source cannot be null");
+    }
+    if (random == null) {
+        throw new NullPointerException("random cannot be null");
+    }
+
+    if (salt == null) {
+        salt = generateSalt(random);
+    } else if (!isValidSalt(salt, prefix)) {
+        throw new IllegalArgumentException("Invalid salt value: " + salt);
+    }
+
+    final MessageDigest md5Digest = DigestUtils.getMd5Digest();
+
+    final byte[] saltBytes = salt.getBytes(StandardCharsets.UTF_8);
+
+    final StringBuilder finalResult = new StringBuilder(prefix);
+
+    final String key = new String(keyBytes, StandardCharsets.UTF_8);
+    final String saltedKey = key + "$" + salt.substring(3);
+
+    final String digest1 = md5(saltedKey, md5Digest);
+
+
+    return finalResult.toString();
+}
+
+private static String generateSalt(Random random) {
+    return B64.getRandomSalt(8);
+}
+
+private static boolean isValidSalt(String salt, String prefix) {
+    return salt.startsWith(prefix) && salt.length() == prefix.length() + 8;
+}
+
+private static String md5(String input, MessageDigest md5Digest) {
+    md5Digest.reset();
+    md5Digest.update(input.getBytes(StandardCharsets.UTF_8));
+    return B64.encodeBase64String(md5Digest.digest());
+}
+```

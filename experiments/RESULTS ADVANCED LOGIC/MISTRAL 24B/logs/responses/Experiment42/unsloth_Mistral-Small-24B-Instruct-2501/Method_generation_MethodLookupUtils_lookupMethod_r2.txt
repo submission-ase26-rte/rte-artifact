@@ -1,0 +1,18 @@
+```java
+public static Method lookupMethod(Class targetClass, final String name, final Object[] parameters) {
+    if (name == null || targetClass == null) {
+        return null;
+    }
+
+    Method[] methods = targetClass.getMethods();
+    for (Method method : methods) {
+        if (method.getName().equals(name)) {
+            Class<?>[] parameterTypes = method.getParameterTypes();
+            if (matchParameterTypes(parameterTypes, parameters) != NO_MATCH) {
+                return method;
+            }
+        }
+    }
+    return null;
+}
+```

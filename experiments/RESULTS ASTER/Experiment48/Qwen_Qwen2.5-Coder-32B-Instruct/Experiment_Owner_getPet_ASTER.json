@@ -1,0 +1,100 @@
+{
+  "method_id": 48,
+  "tested_method": "getPet",
+  "tested_class": "Owner",
+  "project": "Petclinic",
+  "timestamp": "2026-02-03T13:34:35.102272",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\GPT-4 - ASTER\\Petclinic\\Run-1\\src\\test\\java\\org\\springframework\\samples\\petclinic\\owner\\Metodo48_getPet_Owner_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 21,
+    "tests_total": 25,
+    "tests_failed": 4,
+    "line_coverage": 100.0,
+    "branch_coverage": 80.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testGetPet_WithNameMatchingAndNotIgnoringNew_oIav1_1 --\nERROR: java.util.concurrent.TimeoutException: testGetPet_WithNameMatchingAndNotIgnoringNew_oIav1_1() timed out after 1 second\nCaused by: org.junit.jupiter.api.AssertTimeoutPreemptively$ExecutionTimeoutException: Execution timed out in thread junit-timeout-thread-2\n--------------------------------------------------\nTEST: testGetPet_WithNameMatchingAndNotIgnoringNew_oIav1_2 --\nERROR: java.util.concurrent.TimeoutException: testGetPet_WithNameMatchingAndNotIgnoringNew_oIav1_2() timed out after 1 second\nCaused by: org.junit.jupiter.api.AssertTimeoutPreemptively$ExecutionTimeoutException: Execution timed out in thread junit-timeout-thread-3\n--------------------------------------------------\nTEST: testGetPetWithValidIdReturnsPet_ndaA0_YMjQ0_1 --\nERROR: org.opentest4j.AssertionFailedError: expected: not <null>\n--------------------------------------------------\nTEST: testGetPetWithValidIdReturnsPet_ndaA0_YMjQ0_2 --\nERROR: org.opentest4j.AssertionFailedError: expected: org.springframework.samples.petclinic.owner.Pet@2b8737f4<null> but was: <null>",
+    "test_info": {
+      "valid_tests": [
+        "testGetPet_WithNameMatchingAndIgnoringNew_bgZD0",
+        "testGetPet_WithEmptyPetList_YjvV0",
+        "testGetPet_WithNewPetOnly_ZQNs1",
+        "testGetPet_WithNonMatchingId_izbz2",
+        "testGetPet_WithMatchingId_tMny3_1",
+        "testGetPet_WithMatchingId_tMny3_2",
+        "testGetPet_WithMultiplePetsNoneMatching_LCSa4",
+        "testGetPet_WithMultiplePetsOneMatching_UxoC5_1",
+        "testGetPet_WithMultiplePetsOneMatching_UxoC5_2",
+        "testGetPetReturnsNullForUnknownPet_Hhdp0",
+        "testGetPet_ExistingPetIgnoreCaseSensitive_VUin0_1",
+        "testGetPet_ExistingPetIgnoreCaseSensitive_VUin0_2",
+        "testGetPet_ExistingPetCaseSensitive_vYLK1_1",
+        "testGetPet_ExistingPetCaseSensitive_vYLK1_2",
+        "testGetPet_NonExistingPet_njLN2",
+        "testGetPet_PetNameWithDifferentCase_rXtf5_1",
+        "testGetPet_PetNameWithDifferentCase_rXtf5_2",
+        "testGetPetWithInvalidIdReturnsNull_aWTx1_Nrpl0",
+        "testGetPet_ExistingPetIgnoreCaseSensitive_VUin0",
+        "testGetPet_ExistingPetCaseSensitive_vYLK1",
+        "testGetPet_PetNameWithDifferentCase_rXtf5"
+      ],
+      "invalid_tests": [
+        "testGetPetWithValidIdReturnsPet_ndaA0_YMjQ0_1",
+        "testGetPetWithValidIdReturnsPet_ndaA0_YMjQ0_2",
+        "testGetPet_WithNameMatchingAndNotIgnoringNew_oIav1_1",
+        "testGetPet_WithNameMatchingAndNotIgnoringNew_oIav1_2"
+      ],
+      "failed_assert_tests": [
+        "testGetPetWithValidIdReturnsPet_ndaA0_YMjQ0_1",
+        "testGetPetWithValidIdReturnsPet_ndaA0_YMjQ0_2"
+      ],
+      "runtime_error_tests": [
+        "testGetPet_WithNameMatchingAndNotIgnoringNew_oIav1_1",
+        "testGetPet_WithNameMatchingAndNotIgnoringNew_oIav1_2"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 25,
+    "assertion_complexity": 0.1689,
+    "pct_null_assertions": 0.6429,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.0,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.6254,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.6,
+    "overall_naturalness_score": 0.7581
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.4886886305338956,
+    "string_similarity": 0.42447418738049714,
+    "token_similarity": 0.8888888888888888,
+    "ast_similarity": 0.6923076923076923,
+    "embedding_similarity": 0.9065085053443909,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.1111111111111111,
+      "similar_blocks": 1,
+      "total_blocks": 18
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.7346146636087814,
+    "passes_threshold": true
+  },
+  "original_method": "\tpublic Pet getPet(String name, boolean ignoreNew) {\n\t\tname = name.toLowerCase();\n\t\tfor (Pet pet : getPets()) {\n\t\t\tString compName = pet.getName();\n\t\t\tif (compName != null && compName.equalsIgnoreCase(name)) {\n\t\t\t\tif (!ignoreNew || !pet.isNew()) {\n\t\t\t\t\treturn pet;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\treturn null;\n\t}",
+  "regenerated_method": "public Pet getPet(String name, boolean ignoreNew) {\n    for (Pet pet : getPets()) {\n        if (pet.getName().equalsIgnoreCase(name) && (!ignoreNew || !pet.isNew())) {\n            return pet;\n        }\n    }\n    return null;\n}",
+  "passes_evaluation": true,
+  "similarity_threshold": 0.6960409376976188,
+  "original_metrics": {
+    "loc": 12,
+    "sloc": 12,
+    "complexity": 6
+  }
+}

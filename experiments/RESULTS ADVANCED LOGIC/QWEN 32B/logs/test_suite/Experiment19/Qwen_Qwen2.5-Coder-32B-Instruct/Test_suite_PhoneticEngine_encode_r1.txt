@@ -1,0 +1,198 @@
+package org.apache.commons.codec.language.bm;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.TreeMap;
+import org.apache.commons.codec.language.bm.Languages.LanguageSet;
+import org.apache.commons.codec.language.bm.Languages;
+import org.apache.commons.codec.language.bm.NameType;
+import org.apache.commons.codec.language.bm.Rule.Phoneme;
+import org.apache.commons.codec.language.bm.Rule;
+import org.apache.commons.codec.language.bm.RuleType;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PhoneticEngine_encodeTestGenerated {
+    private PhoneticEngine phoneticEngine;
+    @Mock
+    private Map<String, List<Rule>> rulesMock;
+    @Mock
+    private Map<String, List<Rule>> finalRules1Mock;
+    @Mock
+    private Map<String, List<Rule>> finalRules2Mock;
+    @Mock
+    private Languages.LanguageSet languageSetMock;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, true);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.framework().clearInlineMocks();
+    }
+
+    @Test
+    public void testEncodeWithNullInput() {
+        assertThrows(NullPointerException.class, () -> phoneticEngine.encode(null, languageSetMock));
+    }
+
+    @Test
+    public void testEncodeWithNullLanguageSet() {
+        assertThrows(NullPointerException.class, () -> phoneticEngine.encode("input", null));
+    }
+
+    @Test
+    public void testEncodeWithEmptyInput() {
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(rulesMock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, "common")).thenReturn(finalRules1Mock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(finalRules2Mock);
+        String result = phoneticEngine.encode("", languageSetMock);
+        assertEquals("", result);
+    }
+
+    @Test
+    public void testEncodeWithGenericNameTypeAndDPrefix() {
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(rulesMock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, "common")).thenReturn(finalRules1Mock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(finalRules2Mock);
+        String result = phoneticEngine.encode("d'example", languageSetMock);
+        assertEquals("(x-mpl)-((d) x-mpl)", result);
+    }
+
+    @Test
+    public void testEncodeWithGenericNameTypeAndPrefix() {
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(rulesMock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, "common")).thenReturn(finalRules1Mock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(finalRules2Mock);
+        String result = phoneticEngine.encode("van example", languageSetMock);
+        assertEquals("(x-mpl)-((van) x-mpl)", result);
+    }
+
+    @Test
+    public void testEncodeWithSephardicNameTypeAndPrefix() {
+        when(Rule.getInstanceMap(NameType.SEPHARDIC, RuleType.APPROX, languageSetMock)).thenReturn(rulesMock);
+        when(Rule.getInstanceMap(NameType.SEPHARDIC, RuleType.APPROX, "common")).thenReturn(finalRules1Mock);
+        when(Rule.getInstanceMap(NameType.SEPHARDIC, RuleType.APPROX, languageSetMock)).thenReturn(finalRules2Mock);
+        String result = phoneticEngine.encode("ben example", languageSetMock);
+        assertEquals("x-mpl", result);
+    }
+
+    @Test
+    public void testEncodeWithAshkenaziNameTypeAndPrefix() {
+        when(Rule.getInstanceMap(NameType.ASHKENAZI, RuleType.APPROX, languageSetMock)).thenReturn(rulesMock);
+        when(Rule.getInstanceMap(NameType.ASHKENAZI, RuleType.APPROX, "common")).thenReturn(finalRules1Mock);
+        when(Rule.getInstanceMap(NameType.ASHKENAZI, RuleType.APPROX, languageSetMock)).thenReturn(finalRules2Mock);
+        String result = phoneticEngine.encode("ben example", languageSetMock);
+        assertEquals("b-n x-mpl", result);
+    }
+
+    @Test
+    public void testEncodeWithConcatMode() {
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(rulesMock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, "common")).thenReturn(finalRules1Mock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(finalRules2Mock);
+        String result = phoneticEngine.encode("ben example", languageSetMock);
+        assertEquals("b-n x-mpl", result);
+    }
+
+    @Test
+    public void testEncodeWithoutConcatModeSingleWord() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.APPROX, false);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(rulesMock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, "common")).thenReturn(finalRules1Mock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(finalRules2Mock);
+        String result = phoneticEngine.encode("example", languageSetMock);
+        assertEquals("x-mpl", result);
+    }
+
+    @Test
+    public void testEncodeWithoutConcatModeMultiWord() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.APPROX, false);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(rulesMock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, "common")).thenReturn(finalRules1Mock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(finalRules2Mock);
+        String result = phoneticEngine.encode("ben example", languageSetMock);
+        assertEquals("b-n-x-mpl", result);
+    }
+
+    @Test
+    public void testEncodeWithUnreachableCase() {
+        phoneticEngine = new PhoneticEngine(NameType.values()[NameType.values().length], RuleType.APPROX, true);
+        when(Rule.getInstanceMap(phoneticEngine.getNameType(), RuleType.APPROX, languageSetMock)).thenReturn(rulesMock);
+        when(Rule.getInstanceMap(phoneticEngine.getNameType(), phoneticEngine.getRuleType(), "common")).thenReturn(finalRules1Mock);
+        when(Rule.getInstanceMap(phoneticEngine.getNameType(), phoneticEngine.getRuleType(), languageSetMock)).thenReturn(finalRules2Mock);
+        assertThrows(IllegalStateException.class, () -> phoneticEngine.encode("example", languageSetMock));
+    }
+
+    @Test
+    public void testEncodeWithApproxRuleType() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.APPROX, true);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(rulesMock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, "common")).thenReturn(finalRules1Mock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(finalRules2Mock);
+        String result = phoneticEngine.encode("example", languageSetMock);
+        assertEquals("x-mpl", result);
+    }
+
+    @Test
+    public void testEncodeWithExactRuleType() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.EXACT, languageSetMock)).thenReturn(rulesMock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.EXACT, "common")).thenReturn(finalRules1Mock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.EXACT, languageSetMock)).thenReturn(finalRules2Mock);
+        String result = phoneticEngine.encode("example", languageSetMock);
+        assertEquals("x-mpl", result);
+    }
+
+    @Test
+    public void testEncodeWithCommonFinalRules() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.APPROX, true);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(rulesMock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, "common")).thenReturn(finalRules1Mock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(finalRules2Mock);
+        String result = phoneticEngine.encode("example", languageSetMock);
+        assertEquals("x-mpl", result);
+    }
+
+    @Test
+    public void testEncodeWithLanguageSpecificFinalRules() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.APPROX, true);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(rulesMock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, "common")).thenReturn(finalRules1Mock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(finalRules2Mock);
+        String result = phoneticEngine.encode("example", languageSetMock);
+        assertEquals("x-mpl", result);
+    }
+
+    @Test
+    public void testEncodeWithMakeString() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.APPROX, true);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(rulesMock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, "common")).thenReturn(finalRules1Mock);
+        when(Rule.getInstanceMap(NameType.GENERIC, RuleType.APPROX, languageSetMock)).thenReturn(finalRules2Mock);
+        String result = phoneticEngine.encode("example", languageSetMock);
+        assertEquals("x-mpl", result);
+    }
+
+}

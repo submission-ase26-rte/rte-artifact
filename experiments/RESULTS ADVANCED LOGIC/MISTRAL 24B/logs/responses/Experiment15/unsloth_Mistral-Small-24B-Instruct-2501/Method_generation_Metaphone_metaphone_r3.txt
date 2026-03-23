@@ -1,0 +1,273 @@
+```java
+public String metaphone(final String txt) {
+    if (txt == null || txt.isEmpty()) {
+        return "";
+    }
+
+    StringBuilder metaphone = new StringBuilder();
+    int txtLen = txt.length();
+    int metCodeLen = 0;
+
+    for (int i = 0; i < txtLen; i++) {
+        char c = txt.charAt(i);
+
+        // Handle silent 'B'
+        if (c == 'B' && (i == 0 || isVowel(txt, i))) {
+            continue;
+        }
+
+        // Handle silent 'D'
+        if (c == 'D' && (i == txtLen - 1 || isVowel(txt, i + 1))) {
+            continue;
+        }
+
+        // Handle silent 'G'
+        if (c == 'G' && (i == txtLen - 1 || isVowel(txt, i + 1))) {
+            continue;
+        }
+
+        // Handle silent 'H'
+        if (c == 'H' && !isVowel(txt, i) && !isLastChar(txtLen, i)) {
+            continue;
+        }
+
+        // Handle silent 'K'
+        if (c == 'K' && !isLastChar(txtLen, i) && (i > 0 && txt.charAt(i - 1) == 'C')) {
+            continue;
+        }
+
+        // Handle silent 'P'
+        if (c == 'P' && !isLastChar(txtLen, i) && (i > 0 && txt.charAt(i - 1) == 'C')) {
+            continue;
+        }
+
+        // Handle silent 'S'
+        if (c == 'S' && (i == txtLen - 1 || isVowel(txt, i + 1))) {
+            continue;
+        }
+
+        // Handle silent 'T'
+        if (c == 'T' && (i == txtLen - 1 || isVowel(txt, i + 1))) {
+            continue;
+        }
+
+        // Handle silent 'W'
+        if (c == 'W' && isVowel(txt, i)) {
+            continue;
+        }
+
+        // Handle silent 'Y'
+        if (c == 'Y' && isVowel(txt, i)) {
+            continue;
+        }
+
+        // Handle 'C'
+        if (c == 'C') {
+            if (i == 0 && isPreviousChar(txt, i + 1, 'I') || isPreviousChar(txt, i + 1, 'E') || isPreviousChar(txt, i + 1, 'Y')) {
+                metaphone.append('S');
+            } else if (i == txtLen - 1 || isVowel(txt, i + 1)) {
+                metaphone.append('K');
+            } else {
+                metaphone.append('K');
+            }
+        }
+
+        // Handle 'G'
+        else if (c == 'G') {
+            if (i == 0 && isVowel(txt, i + 1)) {
+                metaphone.append('K');
+            } else if (i == txtLen - 1 || isVowel(txt, i + 1)) {
+                metaphone.append('K');
+            } else {
+                metaphone.append('K');
+            }
+        }
+
+        // Handle 'P'
+        else if (c == 'P') {
+            if (i == 0) {
+                metaphone.append('P');
+            } else if (i == txtLen - 1 || isVowel(txt, i + 1)) {
+                metaphone.append('T');
+            } else {
+                metaphone.append('P');
+            }
+        }
+
+        // Handle 'T'
+        else if (c == 'T') {
+            if (i == 0) {
+                metaphone.append('T');
+            } else if (i == txtLen - 1 || isVowel(txt, i + 1)) {
+                metaphone.append('T');
+            } else {
+                metaphone.append('T');
+            }
+        }
+
+        // Handle 'V'
+        else if (c == 'V') {
+            metaphone.append('F');
+        }
+
+        // Handle 'F'
+        else if (c == 'F') {
+            metaphone.append('F');
+        }
+
+        // Handle 'J'
+        else if (c == 'J') {
+            metaphone.append('J');
+        }
+
+        // Handle 'L'
+        else if (c == 'L') {
+            metaphone.append('L');
+        }
+
+        // Handle 'M'
+        else if (c == 'M') {
+            metaphone.append('M');
+        }
+
+        // Handle 'N'
+        else if (c == 'N') {
+            metaphone.append('N');
+        }
+
+        // Handle 'R'
+        else if (c == 'R') {
+            metaphone.append('R');
+        }
+
+        // Handle 'S'
+        else if (c == 'S') {
+            if (i == 0 && !isVowel(txt, i + 1)) {
+                metaphone.append('S');
+            } else if (i == txtLen - 1 || isVowel(txt, i + 1)) {
+                metaphone.append('S');
+            } else {
+                metaphone.append('S');
+            }
+        }
+
+        // Handle 'X'
+        else if (c == 'X') {
+            if (i == 0) {
+                metaphone.append('S');
+            } else if (i == txtLen - 1 || isVowel(txt, i + 1)) {
+                metaphone.append('K');
+            } else {
+                metaphone.append('K');
+            }
+        }
+
+        // Handle 'Z'
+        else if (c == 'Z') {
+            if (i == 0 || isVowel(txt, i + 1)) {
+                metaphone.append('S');
+            } else if (i == txtLen - 1 || isVowel(txt, i + 1)) {
+                metaphone.append('S');
+            } else {
+                metaphone.append('S');
+            }
+        }
+
+        // Handle 'Q'
+        else if (c == 'Q') {
+            metaphone.append('K');
+        }
+
+        // Handle 'W'
+        else if (c == 'W') {
+            metaphone.append('W');
+        }
+
+        // Handle 'Y'
+        else if (c == 'Y') {
+            metaphone.append('Y');
+        }
+
+        // Handle 'H'
+        else if (c == 'H') {
+            metaphone.append('H');
+        }
+
+        // Handle 'K'
+        else if (c == 'K') {
+            metaphone.append('K');
+        }
+
+        // Handle vowels
+        else if (isVowel(txt, i)) {
+            metaphone.append('A');
+        }
+
+        // Handle 'TH'
+        else if (c == 'T' && isNextChar(txt, i, 'H')) {
+            metaphone.append('0');
+        }
+
+        // Handle 'TCH'
+        else if (c == 'T' && isNextChar(txt, i, 'C') && isNextChar(txt, i + 1, 'H')) {
+            metaphone.append('X');
+        }
+
+        // Handle 'PH'
+        else if (c == 'P' && isNextChar(txt, i, 'H')) {
+            metaphone.append('F');
+        }
+
+        // Handle 'SH'
+        else if (c == 'S' && isNextChar(txt, i, 'H')) {
+            metaphone.append('X');
+        }
+
+        // Handle 'CH'
+        else if (c == 'C' && isNextChar(txt, i, 'H')) {
+            metaphone.append('K');
+        }
+
+        // Handle 'NG'
+        else if (c == 'N' && isNextChar(txt, i, 'G')) {
+            metaphone.append('N');
+        }
+
+        // Handle 'GH'
+        else if (c == 'G' && isNextChar(txt, i, 'H')) {
+            metaphone.append('K');
+        }
+
+        // Handle 'KN'
+        else if (c == 'K' && isNextChar(txt, i, 'N')) {
+            metaphone.append('N');
+        }
+
+        // Handle 'WH'
+        else if (c == 'W' && isNextChar(txt, i, 'H')) {
+            metaphone.append('W');
+        }
+
+        // Handle 'WR'
+        else if (c == 'W' && isNextChar(txt, i, 'R')) {
+            metaphone.append('R');
+        }
+
+        // Handle 'AE'
+        else if (c == 'A' && isNextChar(txt, i, 'E')) {
+            metaphone.append('E');
+        }
+
+        else {
+            metaphone.append(c);
+        }
+
+        metCodeLen++;
+        if (metCodeLen >= maxCodeLen) {
+            break;
+        }
+    }
+
+    return metaphone.toString().toUpperCase();
+}
+```

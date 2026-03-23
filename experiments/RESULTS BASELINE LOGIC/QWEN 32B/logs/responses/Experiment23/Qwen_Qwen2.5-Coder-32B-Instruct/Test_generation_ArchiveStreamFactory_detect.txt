@@ -1,0 +1,158 @@
+```java
+package org.apache.commons.compress.archivers;
+
+import org.apache.commons.compress.utils.IOUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class ArchiveStreamFactory_detectTestGenerated {
+
+    private ArchiveStreamFactory factory;
+    private ByteArrayOutputStream byteArrayOutputStream;
+
+    @BeforeEach
+    public void setUp() {
+        factory = new ArchiveStreamFactory();
+        byteArrayOutputStream = new ByteArrayOutputStream();
+    }
+
+    @AfterEach
+    public void tearDown() throws IOException {
+        byteArrayOutputStream.close();
+    }
+
+    @Test
+    public void testDetectZip() throws IOException, ArchiveException {
+        createZipArchive();
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        assertEquals(ArchiveStreamFactory.ZIP, factory.detect(byteArrayInputStream));
+    }
+
+    @Test
+    public void testDetectJar() throws IOException, ArchiveException {
+        createZipArchive(); // JAR is detected as ZIP
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        assertEquals(ArchiveStreamFactory.JAR, factory.detect(byteArrayInputStream));
+    }
+
+    @Test
+    public void testDetectAr() throws IOException, ArchiveException {
+        byte[] arSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(arSignature);
+        assertEquals(ArchiveStreamFactory.AR, factory.detect(byteArrayInputStream));
+    }
+
+    @Test
+    public void testDetectCpio() throws IOException, ArchiveException {
+        byte[] cpioSignature = "070701".getBytes(StandardCharsets.US_ASCII);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(cpioSignature);
+        assertEquals(ArchiveStreamFactory.CPIO, factory.detect(byteArrayInputStream));
+    }
+
+    @Test
+    public void testDetectArj() throws IOException, ArchiveException {
+        byte[] arjSignature = {(byte) 0x60, (byte) 0xea};
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(arjSignature);
+        assertEquals(ArchiveStreamFactory.ARJ, factory.detect(byteArrayInputStream));
+    }
+
+    @Test
+    public void testDetectSevenZ() throws IOException, ArchiveException {
+        byte[] sevenZSignature = "7z\xbc\xaf\x27\x1c".getBytes(StandardCharsets.ISO_8859_1);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(sevenZSignature);
+        assertEquals(ArchiveStreamFactory.SEVEN_Z, factory.detect(byteArrayInputStream));
+    }
+
+    @Test
+    public void testDetectDump() throws IOException, ArchiveException {
+        byte[] dumpSignature = new byte[32];
+        dumpSignature[0] = 0x30;
+        dumpSignature[1] = 0x31;
+        dumpSignature[2] = 0x30;
+        dumpSignature[3] = 0x30;
+        dumpSignature[4] = 0x30;
+        dumpSignature[5] = 0x30;
+        dumpSignature[6] = 0x30;
+        dumpSignature[7] = 0x30;
+        dumpSignature[8] = 0x30;
+        dumpSignature[9] = 0x30;
+        dumpSignature[10] = 0x30;
+        dumpSignature[11] = 0x30;
+        dumpSignature[12] = 0x30;
+        dumpSignature[13] = 0x30;
+        dumpSignature[14] = 0x30;
+        dumpSignature[15] = 0x30;
+        dumpSignature[16] = 0x30;
+        dumpSignature[17] = 0x30;
+        dumpSignature[18] = 0x30;
+        dumpSignature[19] = 0x30;
+        dumpSignature[20] = 0x30;
+        dumpSignature[21] = 0x30;
+        dumpSignature[22] = 0x30;
+        dumpSignature[23] = 0x30;
+        dumpSignature[24] = 0x30;
+        dumpSignature[25] = 0x30;
+        dumpSignature[26] = 0x30;
+        dumpSignature[27] = 0x30;
+        dumpSignature[28] = 0x30;
+        dumpSignature[29] = 0x30;
+        dumpSignature[30] = 0x30;
+        dumpSignature[31] = 0x30;
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(dumpSignature);
+        assertEquals(ArchiveStreamFactory.DUMP, factory.detect(byteArrayInputStream));
+    }
+
+    @Test
+    public void testDetectTar() throws IOException, ArchiveException {
+        byte[] tarSignature = "ustar".getBytes(StandardCharsets.US_ASCII);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(tarSignature);
+        assertEquals(ArchiveStreamFactory.TAR, factory.detect(byteArrayInputStream));
+    }
+
+    @Test
+    public void testDetectInvalidSignature() throws IOException {
+        byte[] invalidSignature = "invalid".getBytes(StandardCharsets.US_ASCII);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(invalidSignature);
+        ArchiveException exception = assertThrows(ArchiveException.class, () -> factory.detect(byteArrayInputStream));
+        assertEquals("No Archiver found for the stream signature", exception.getMessage());
+    }
+
+    @Test
+    public void testDetectNullInputStream() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> factory.detect(null));
+        assertEquals("Stream must not be null.", exception.getMessage());
+    }
+
+    @Test
+    public void testDetectNonMarkSupportedInputStream() throws IOException {
+        InputStream nonMarkSupportedInputStream = new InputStream() {
+            @Override
+            public int read() throws IOException {
+                return 0;
+            }
+        };
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> factory.detect(nonMarkSupportedInputStream));
+        assertEquals("Mark is not supported.", exception.getMessage());
+    }
+
+    private void createZipArchive() throws IOException {
+        ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream);
+        ZipEntry zipEntry = new ZipEntry("test.txt");
+        zipOutputStream.putNextEntry(zipEntry);
+        zipOutputStream.write("Hello, World!".getBytes(StandardCharsets.UTF_8));
+        zipOutputStream.closeEntry();
+        zipOutputStream.close();
+    }
+}
+```

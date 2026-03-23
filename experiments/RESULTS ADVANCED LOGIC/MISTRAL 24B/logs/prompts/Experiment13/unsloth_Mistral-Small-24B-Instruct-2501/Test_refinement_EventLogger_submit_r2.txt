@@ -1,0 +1,335 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.interfaces.handling.mobile;
+Class name (MUST be exactly): EventLogger_submitTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testSubmitWithVoyageRequired --
+ERROR: java.lang.NoClassDefFoundError: com/sun/faces/util/Util
+Caused by: java.lang.ClassNotFoundException: com.sun.faces.util.Util
+... 7 more
+--------------------------------------------------
+TEST: testSubmitWithoutVoyageRequired --
+ERROR: java.lang.NoClassDefFoundError: com/sun/faces/util/Util
+Caused by: java.lang.ClassNotFoundException: com.sun.faces.util.Util
+... 7 more
+--------------------------------------------------
+TEST: testSubmitWithNullCompletionTime --
+ERROR: org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <java.lang.NullPointerException> but was: <java.lang.NoClassDefFoundError>
+Caused by: java.lang.NoClassDefFoundError: com/sun/faces/util/Util
+... 8 more
+Caused by: java.lang.ClassNotFoundException: com.sun.faces.util.Util
+... 10 more
+
+TEST CODE TO FIX:
+package org.eclipse.cargotracker.interfaces.handling.mobile;
+
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import java.time.LocalDateTime;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class EventLogger_submitTestGenerated {
+    @Mock
+    private ApplicationEvents applicationEvents;
+    @Mock
+    private FacesContext facesContext;
+    @Mock
+    private FacesMessage facesMessage;
+    @Spy
+    @InjectMocks
+    private EventLogger eventLogger;
+    private AutoCloseable closeable;
+    @BeforeEach
+    void setUp() {
+        closeable = MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(eventLogger, "applicationEvents", applicationEvents);
+        ReflectionTestUtils.setField(eventLogger, "context", facesContext);
+        eventLogger.setTrackingId("trackingId123");
+        eventLogger.setLocation("USNYC");
+        eventLogger.setEventType(HandlingEvent.Type.LOAD);
+        eventLogger.setVoyageNumber("voyage123");
+        eventLogger.setCompletionTime(LocalDateTime.now());
+        eventLogger.getTrackingIds();
+        eventLogger.getLocations();
+        eventLogger.getVoyages();
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
+    }
+
+
+    @Test
+        void testSubmitWithNullCompletionTime() {
+            eventLogger.setCompletionTime(null);
+            assertThrows(NullPointerException.class, eventLogger::submit);
+        }
+
+    @Test
+        void testSubmitWithVoyageRequired() {
+            HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+            eventLogger.setEventType(type);
+            eventLogger.submit();
+            verify(applicationEvents, times(1)).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+            verify(facesContext, times(1)).addMessage(eq(null), any(FacesMessage.class));
+        }
+
+    @Test
+        void testSubmitWithoutVoyageRequired() {
+            HandlingEvent.Type type = HandlingEvent.Type.RECEIVE;
+            eventLogger.setEventType(type);
+            eventLogger.submit();
+            verify(applicationEvents, times(1)).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+            verify(facesContext, times(1)).addMessage(eq(null), any(FacesMessage.class));
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    void testSubmitWithNullTrackingId() {}
+    @Test
+    void testSubmitWithNullLocation() {}
+    @Test
+    void testSubmitWithNullEventType() {}
+    @Test
+    void testSubmitWithNullVoyageNumber() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   PostConstruct -> jakarta.annotation.PostConstruct
+//   FacesMessage -> jakarta.faces.application.FacesMessage
+//   FacesContext -> jakarta.faces.context.FacesContext
+//   SelectItem -> jakarta.faces.model.SelectItem
+//   ViewScoped -> jakarta.faces.view.ViewScoped
+//   Inject -> jakarta.inject.Inject
+//   Named -> jakarta.inject.Named
+//   Serializable -> java.io.Serializable
+//   LocalDateTime -> java.time.LocalDateTime
+//   Function -> java.util.function.Function
+//   ApplicationEvents -> org.eclipse.cargotracker.application.ApplicationEvents
+//   DateConverter -> org.eclipse.cargotracker.application.util.DateConverter
+//   Cargo -> org.eclipse.cargotracker.domain.model.cargo.Cargo
+//   CargoRepository -> org.eclipse.cargotracker.domain.model.cargo.CargoRepository
+//   TrackingId -> org.eclipse.cargotracker.domain.model.cargo.TrackingId
+//   TransportStatus -> org.eclipse.cargotracker.domain.model.cargo.TransportStatus
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+//   Location -> org.eclipse.cargotracker.domain.model.location.Location
+//   LocationRepository -> org.eclipse.cargotracker.domain.model.location.LocationRepository
+//   UnLocode -> org.eclipse.cargotracker.domain.model.location.UnLocode
+//   Voyage -> org.eclipse.cargotracker.domain.model.voyage.Voyage
+//   VoyageNumber -> org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+//   VoyageRepository -> org.eclipse.cargotracker.domain.model.voyage.VoyageRepository
+//   HandlingEventRegistrationAttempt -> org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+//   FlowEvent -> org.primefaces.event.FlowEvent
+//   EventLogger -> org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+
+// === Class: EventLogger ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private CargoRepository cargoRepository;
+    private LocationRepository locationRepository;
+    private VoyageRepository voyageRepository;
+    private ApplicationEvents applicationEvents;
+    private FacesContext context;
+    private List trackingIds;
+    private List locations;
+    private List voyages;
+    private String trackingId;
+    private String location;
+    private HandlingEvent eventType;
+    private String voyageNumber;
+    private LocalDateTime completionTime;
+
+// Getter/Setter Methods (for test assertions):
+public String getTrackingId();
+public void setTrackingId(String trackingId);
+public List<SelectItem> getTrackingIds();
+public String getLocation();
+public void setLocation(String location);
+public List<SelectItem> getLocations();
+public void setEventType(HandlingEvent.Type eventType);
+public String getVoyageNumber();
+public void setVoyageNumber(String voyageNumber);
+public List<SelectItem> getVoyages();
+public LocalDateTime getCompletionTime();
+public void setCompletionTime(LocalDateTime completionTime);
+public String getCompletionTimeValue();
+public String getCompletionTimePattern();
+
+// === External Class: HandlingEvent ===
+// Full import path: org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+// Import paths:
+//   Column -> jakarta.persistence.Column
+//   Entity -> jakarta.persistence.Entity
+//   EnumType -> jakarta.persistence.EnumType
+//   Enumerated -> jakarta.persistence.Enumerated
+//   GeneratedValue -> jakarta.persistence.GeneratedValue
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private Long id;
+    private Type type;
+    private Voyage voyage;
+    private Location location;
+    private LocalDateTime completionTime;
+    private LocalDateTime registrationTime;
+    private Cargo cargo;
+    private String summary;
+    private final boolean voyageRequired;
+
+// Enum Values (use ONLY these constants):
+//   Type: LOAD, UNLOAD, RECEIVE, CLAIM, CUSTOMS
+
+// Constructors:
+public HandlingEvent();
+public HandlingEvent(Cargo cargo, LocalDateTime completionTime, LocalDateTime registrationTime, Type type, Location location, Voyage voyage);
+public HandlingEvent(Cargo cargo, LocalDateTime completionTime, LocalDateTime registrationTime, Type type, Location location);
+private Type(boolean voyageRequired);
+
+// Method Signatures (used by target method):
+public boolean requiresVoyage();
+
+// Public Getter Methods (for test assertions):
+public Type getType();
+public Voyage getVoyage();
+public LocalDateTime getCompletionTime();
+public LocalDateTime getRegistrationTime();
+public Location getLocation();
+public Cargo getCargo();
+public String getSummary();
+public String toString();
+
+// === External Class: ApplicationEvents ===
+// Full import path: org.eclipse.cargotracker.application.ApplicationEvents
+// Import paths:
+//   Cargo -> org.eclipse.cargotracker.domain.model.cargo.Cargo
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+//   HandlingEventRegistrationAttempt -> org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+// Method Signatures (used by target method):
+void receivedHandlingEventRegistrationAttempt(HandlingEventRegistrationAttempt attempt);
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() {
+        closeable = MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(eventLogger, "applicationEvents", applicationEvents);
+        ReflectionTestUtils.setField(eventLogger, "context", facesContext);
+        eventLogger.setTrackingId("trackingId123");
+        eventLogger.setLocation("USNYC");
+        eventLogger.setEventType(HandlingEvent.Type.LOAD);
+        eventLogger.setVoyageNumber("voyage123");
+        eventLogger.setCompletionTime(LocalDateTime.now());
+        eventLogger.getTrackingIds();
+        eventLogger.getLocations();
+        eventLogger.getVoyages();
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+  public void submit() {
+    VoyageNumber voyage;
+
+    TrackingId trackingId = new TrackingId(this.trackingId);
+    UnLocode location = new UnLocode(this.location);
+
+    if (eventType.requiresVoyage()) {
+      voyage = new VoyageNumber(voyageNumber);
+    } else {
+      voyage = null;
+    }
+
+    HandlingEventRegistrationAttempt attempt =
+            new HandlingEventRegistrationAttempt(
+                    LocalDateTime.now(), completionTime, trackingId, voyage, eventType, location);
+
+    applicationEvents.receivedHandlingEventRegistrationAttempt(attempt);
+
+    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Event submitted", "")); // NOT COVERED BY TESTS
+  }
+
+
+COVERAGE ISSUES:
+Current line coverage: 80.00%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

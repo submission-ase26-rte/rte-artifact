@@ -1,0 +1,212 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.springframework.samples.petclinic.owner;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Owner_getPetTestGenerated {
+
+    @Mock
+    private Pet mockPet1;
+
+    @Mock
+    private Pet mockPet2;
+
+    @InjectMocks
+    private Owner owner;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        List<Pet> pets = new ArrayList<>();
+        pets.add(mockPet1);
+        pets.add(mockPet2);
+        ReflectionTestUtils.setField(owner, "pets", pets);
+    }
+
+    @AfterEach
+    public void tearDown() {
+    }
+
+    @Test
+    public void testGetPet_NameFound_ReturnsPet() {
+        when(mockPet1.getName()).thenReturn("Buddy");
+        when(mockPet2.getName()).thenReturn("Max");
+        Pet result = owner.getPet("buddy", false);
+        assertEquals(mockPet1, result);
+    }
+
+    @Test
+    public void testGetPet_NameNotFound_ReturnsNull() {
+        when(mockPet1.getName()).thenReturn("Buddy");
+        when(mockPet2.getName()).thenReturn("Max");
+        Pet result = owner.getPet("Charlie", false);
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetPet_NameFoundIgnoreCase_ReturnsPet() {
+        when(mockPet1.getName()).thenReturn("Buddy");
+        when(mockPet2.getName()).thenReturn("Max");
+        Pet result = owner.getPet("bUDDY", false);
+        assertEquals(mockPet1, result);
+    }
+
+    @Test
+    public void testGetPet_NameFoundIgnoreNew_ReturnsPet() {
+        when(mockPet1.getName()).thenReturn("Buddy");
+        when(mockPet1.isNew()).thenReturn(false);
+        when(mockPet2.getName()).thenReturn("Max");
+        when(mockPet2.isNew()).thenReturn(true);
+        Pet result = owner.getPet("buddy", true);
+        assertEquals(mockPet1, result);
+    }
+
+    @Test
+    public void testGetPet_NameFoundIgnoreNew_ReturnsNull() {
+        when(mockPet1.getName()).thenReturn("Buddy");
+        when(mockPet1.isNew()).thenReturn(true);
+        when(mockPet2.getName()).thenReturn("Max");
+        when(mockPet2.isNew()).thenReturn(true);
+        Pet result = owner.getPet("buddy", true);
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetPet_NameNull_ReturnsNull() {
+        Pet result = owner.getPet(null, false);
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetPet_NameEmpty_ReturnsNull() {
+        Pet result = owner.getPet("", false);
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetPet_NoPets_ReturnsNull() {
+        ReflectionTestUtils.setField(owner, "pets", new ArrayList<>());
+        Pet result = owner.getPet("Buddy", false);
+        assertNull(result);
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 100.00%
+- Tests: 7/8 passed
+
+TEST STATUS:
+- PASSED (7): testGetPet_NameFound_ReturnsPet, testGetPet_NameNotFound_ReturnsNull, testGetPet_NameFoundIgnoreCase_ReturnsPet, testGetPet_NameFoundIgnoreNew_ReturnsPet, testGetPet_NameFoundIgnoreNew_ReturnsNull, testGetPet_NameEmpty_ReturnsNull, testGetPet_NoPets_ReturnsNull
+- FAILED (0): none
+- ERRORS (1): testGetPet_NameNull_ReturnsNull
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   ToStringCreator -> org.springframework.core.style.ToStringCreator
+//   Person -> org.springframework.samples.petclinic.model.Person
+//   Assert -> org.springframework.util.Assert
+//   CascadeType -> jakarta.persistence.CascadeType
+//   Column -> jakarta.persistence.Column
+//   Entity -> jakarta.persistence.Entity
+//   FetchType -> jakarta.persistence.FetchType
+//   JoinColumn -> jakarta.persistence.JoinColumn
+//   OneToMany -> jakarta.persistence.OneToMany
+//   OrderBy -> jakarta.persistence.OrderBy
+//   Table -> jakarta.persistence.Table
+//   Pattern -> jakarta.validation.constraints.Pattern
+//   NotBlank -> jakarta.validation.constraints.NotBlank
+
+// === Class: Owner ===
+// Fields (with actual visibility):
+    private String address;
+    private String city;
+    private String telephone;
+    private List pets;
+
+// Getter/Setter Methods (for test assertions):
+public String getAddress();
+public void setAddress(String address);
+public String getCity();
+public void setCity(String city);
+public String getTelephone();
+public void setTelephone(String telephone);
+public List<Pet> getPets();
+public Pet getPet(String name);
+public Pet getPet(Integer id);
+public Pet getPet(String name, boolean ignoreNew);
+
+// Internal Method Signatures (used by target method):
+public List getPets();
+
+// === External Class: Pet ===
+// Import paths:
+//   LocalDate -> java.time.LocalDate
+//   Collection -> java.util.Collection
+//   LinkedHashSet -> java.util.LinkedHashSet
+//   Set -> java.util.Set
+//   DateTimeFormat -> org.springframework.format.annotation.DateTimeFormat
+// Fields (with actual visibility):
+    private LocalDate birthDate;
+    private PetType type;
+    private Set visits;
+
+
+
+TASK:
+Regenerate ONLY the method "getPet" OF CLASS "Owner" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public Pet getPet(String name, boolean ignoreNew) {
+    // your implementation here
+}
+```
+
+
+- Package: org.springframework.samples.petclinic.owner
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in Owner
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

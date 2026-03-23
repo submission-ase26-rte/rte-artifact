@@ -1,0 +1,174 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.compress.archivers;
+Class name (MUST be exactly): ArchiveStreamFactory_detectTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArchiveStreamFactory_detectTestGenerated {
+    @Mock
+    private InputStream mockInputStream;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void testDetectArArchive() throws ArchiveException {
+        byte[] arSignature = new byte[]{33, 100, 101, 98, 105, 97, 110};
+        InputStream in = new ByteArrayInputStream(arSignature);
+        assertEquals(ArchiveStreamFactory.AR, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectCpioArchive() throws ArchiveException {
+        byte[] cpioSignature = new byte[]{99, 112, 105, 111, 32, 110, 111, 99, 114, 99, 32};
+        InputStream in = new ByteArrayInputStream(cpioSignature);
+        assertEquals(ArchiveStreamFactory.CPIO, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectArjArchive() throws ArchiveException {
+        byte[] arjSignature = new byte[]{10, 22, 4, 20};
+        InputStream in = new ByteArrayInputStream(arjSignature);
+        assertEquals(ArchiveStreamFactory.ARJ, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectDumpArchive() throws ArchiveException {
+        byte[] dumpSignature = new byte[32];
+        dumpSignature[0] = (byte) 116;
+        dumpSignature[1] = (byte) 97;
+        dumpSignature[2] = (byte) 112;
+        dumpSignature[3] = (byte) 101;
+        InputStream in = new ByteArrayInputStream(dumpSignature);
+        assertEquals(ArchiveStreamFactory.DUMP, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectTarWithValidHeader() throws ArchiveException {
+        byte[] tarSignature = new byte[512];
+        tarSignature[257] = (byte) 'u'; // valid tar header
+        tarSignature[258] = (byte) 's';
+        tarSignature[259] = (byte) 't';
+        InputStream in = new ByteArrayInputStream(tarSignature);
+        assertEquals(ArchiveStreamFactory.TAR, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectIOExceptionOnSignatureRead() {
+        InputStream in = mock(InputStream.class);
+        when(in.markSupported()).thenReturn(true);
+        when(in.read(any(byte[].class))).thenThrow(new IOException("Mocked IOException"));
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectIOExceptionOnDumpSignatureRead() {
+        InputStream in = mock(InputStream.class);
+        when(in.markSupported()).thenReturn(true);
+        when(in.read(any(byte[].class), anyInt(), anyInt())).thenReturn(32).thenThrow(new IOException("Mocked IOException"));
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectIOExceptionOnTarSignatureRead() {
+        InputStream in = mock(InputStream.class);
+        when(in.markSupported()).thenReturn(true);
+        when(in.read(any(byte[].class), anyInt(), anyInt())).thenReturn(512).thenThrow(new IOException("Mocked IOException"));
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectNoArchiveFound() {
+        InputStream in = new ByteArrayInputStream(new byte[512]);
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectJarArchive() throws ArchiveException {
+        byte[] jarSignature = new byte[4];
+        jarSignature[0] = (byte) 'P';
+        jarSignature[1] = (byte) 'K';
+        jarSignature[2] = (byte) 3;
+        jarSignature[3] = (byte) 4;
+        InputStream in = new ByteArrayInputStream(jarSignature);
+        assertEquals(ArchiveStreamFactory.ZIP, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectSevenZArchive() throws ArchiveException {
+        byte[] sevenZSignature = new byte[6];
+        sevenZSignature[0] = (byte) 0x37;
+        sevenZSignature[1] = (byte) 0x7A;
+        sevenZSignature[2] = (byte) 0xBC;
+        sevenZSignature[3] = (byte) 0xAF;
+        sevenZSignature[4] = (byte) 0x27;
+        sevenZSignature[5] = (byte) 0x1C;
+        InputStream in = new ByteArrayInputStream(sevenZSignature);
+        assertEquals(ArchiveStreamFactory.SEVEN_Z, ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectTarWithInvalidHeader() {
+        byte[] tarSignature = new byte[512];
+        InputStream in = new ByteArrayInputStream(tarSignature);
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectTarWithEmptyFileEntry() {
+        byte[] tarSignature = new byte[512];
+        tarSignature[257] = (byte) 'u'; // valid tar header
+        tarSignature[258] = (byte) 's';
+        tarSignature[259] = (byte) 't';
+        InputStream in = new ByteArrayInputStream(tarSignature);
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(in));
+    }
+
+    @Test
+    void testDetectTarWithCorruptedChecksum() {
+        byte[] tarSignature = new byte[512];
+        tarSignature[257] = (byte) 'u'; // valid tar header
+        tarSignature[258] = (byte) 's';
+        tarSignature[259] = (byte) 't';
+        InputStream in = new ByteArrayInputStream(tarSignature);
+        assertThrows(ArchiveException.class, () -> ArchiveStreamFactory.detect(in));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[73] unreported exception java.io.IOException; must be caught or declared to be thrown
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[81] unreported exception java.io.IOException; must be caught or declared to be thrown
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_detectTestGenerated.java:[89] unreported exception java.io.IOException; must be caught or declared to be thrown
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: ArchiveStreamFactory_detectTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

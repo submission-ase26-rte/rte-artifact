@@ -1,0 +1,142 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package org.springframework.samples.petclinic.owner;
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   ToStringCreator -> org.springframework.core.style.ToStringCreator
+//   Person -> org.springframework.samples.petclinic.model.Person
+//   Assert -> org.springframework.util.Assert
+//   CascadeType -> jakarta.persistence.CascadeType
+//   Column -> jakarta.persistence.Column
+//   Entity -> jakarta.persistence.Entity
+//   FetchType -> jakarta.persistence.FetchType
+//   JoinColumn -> jakarta.persistence.JoinColumn
+//   OneToMany -> jakarta.persistence.OneToMany
+//   OrderBy -> jakarta.persistence.OrderBy
+//   Table -> jakarta.persistence.Table
+//   Pattern -> jakarta.validation.constraints.Pattern
+//   NotBlank -> jakarta.validation.constraints.NotBlank
+//   Owner -> org.springframework.samples.petclinic.owner.Owner
+//   Pet -> org.springframework.samples.petclinic.owner.Pet
+
+// === Class: Owner ===
+// Fields (with actual visibility):
+    private String address;
+    private String city;
+    private String telephone;
+    private List pets;
+
+// Getter/Setter Methods (for test assertions):
+public String getAddress();
+public void setAddress(String address);
+public String getCity();
+public void setCity(String city);
+public String getTelephone();
+public void setTelephone(String telephone);
+public List<Pet> getPets();
+public Pet getPet(String name);
+public Pet getPet(Integer id);
+public Pet getPet(String name, boolean ignoreNew);
+
+// Internal Methods (full implementation for context):
+	public Pet getPet(String name) {
+		return getPet(name, false);
+	}
+
+// === Superclass: Person (inherited members) ===
+// Inherited Fields:
+
+// Inherited Method Signatures:
+public String getFirstName();
+public void setFirstName(String firstName);
+public String getLastName();
+public void setLastName(String lastName);
+
+// === External Class: Pet ===
+// Full import path: org.springframework.samples.petclinic.owner.Pet
+// Import paths:
+//   LocalDate -> java.time.LocalDate
+//   Collection -> java.util.Collection
+//   LinkedHashSet -> java.util.LinkedHashSet
+//   Set -> java.util.Set
+//   DateTimeFormat -> org.springframework.format.annotation.DateTimeFormat
+// Fields (with actual visibility):
+    private LocalDate birthDate;
+    private PetType type;
+    private Set visits;
+
+// Method Signatures (used by target method):
+public void addVisit(Visit visit);
+
+// Public Getter Methods (for test assertions):
+public LocalDate getBirthDate();
+public PetType getType();
+public Collection<Visit> getVisits();
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+	/**
+	 * Adds the given {@link Visit} to the {@link Pet} with the given identifier.
+	 * @param petId the identifier of the {@link Pet}, must not be {@literal null}.
+	 * @param visit the visit to add, must not be {@literal null}.
+	 */
+	public void addVisit(Integer petId, Visit visit) {
+
+		Assert.notNull(petId, "Pet identifier must not be null!");
+		Assert.notNull(visit, "Visit must not be null!");
+
+		Pet pet = getPet(petId);
+
+		Assert.notNull(pet, "Invalid Pet identifier!");
+
+		pet.addVisit(visit);
+	}
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "addVisit" of class "Owner".
+
+REQUIREMENTS:
+- Test class name: Owner_addVisitTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths that are:
+  - deterministically reachable from the method’s public API
+  - independent from hidden, external, or runtime-loaded data
+- Test error scenarios by asserting the actual runtime behavior
+  when invalid or null inputs are provided.
+- Do not assume defensive checks unless they are explicitly present.
+- Cover expected exceptions declared in the method signature if present
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes or custom implementations.
+- Helper methods inside the test class are allowed if they do not reimplement production logic.
+- DO NOT use getter/setter methods that are not present in the provided class context
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing its actual behavior
+- You MAY mock DEPENDENCIES (constructor parameters, injected services) using @Mock, but NEVER the class under test
+- CRITICAL: DO NOT instantiate INTERFACES or ABSTRACT classes directly - use Mockito.mock(Interface.class) instead
+- DO NOT try to modify static final fields via ReflectionTestUtils - they are IMMUTABLE
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Use ONLY the import paths explicitly provided in the 'CORRECT IMPORT PATHS' section - do not guess or invent import paths.
+- Generate ONLY the test class without explanations or comments outside the code
+- For PRIVATE fields without public setters (e.g., @Inject, @Autowired), use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

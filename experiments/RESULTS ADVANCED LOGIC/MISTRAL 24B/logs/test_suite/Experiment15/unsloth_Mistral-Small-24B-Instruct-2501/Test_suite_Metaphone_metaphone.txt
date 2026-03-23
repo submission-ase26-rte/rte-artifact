@@ -1,0 +1,167 @@
+package org.apache.commons.codec.language;
+
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.StringEncoder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Metaphone_metaphoneTestGenerated {
+
+    private Metaphone metaphone;
+
+    @BeforeEach
+    void setUp() {
+        metaphone = new Metaphone();
+    }
+
+    @Test
+    void testMetaphoneNullInput() {
+        String result = metaphone.metaphone(null);
+        assertEquals("", result);
+    }
+
+    @Test
+    void testMetaphoneEmptyInput() {
+        String result = metaphone.metaphone("");
+        assertEquals("", result);
+    }
+
+    @Test
+    void testMetaphoneSingleCharacter() {
+        String result = metaphone.metaphone("a");
+        assertEquals("A", result);
+
+        result = metaphone.metaphone("Z");
+        assertEquals("Z", result);
+    }
+
+    @Test
+    void testMetaphoneInitialKN() {
+        String result = metaphone.metaphone("KNIGHT");
+        assertEquals("NAIT", result);
+    }
+
+    @Test
+    void testMetaphoneInitialAE() {
+        String result = metaphone.metaphone("AEON");
+        assertEquals("AON", result);
+    }
+
+    @Test
+    void testMetaphoneInitialWR() {
+        String result = metaphone.metaphone("WRONG");
+        assertEquals("RONG", result);
+    }
+
+    @Test
+    void testMetaphoneInitialWH() {
+        String result = metaphone.metaphone("WHAT");
+        assertEquals("AT", result);
+    }
+
+    @Test
+    void testMetaphoneInitialX() {
+        String result = metaphone.metaphone("XENON");
+        assertEquals("SNON", result);
+    }
+
+    @Test
+    void testMetaphoneVowels() {
+        String result = metaphone.metaphone("AEIOU");
+        assertEquals("A", result);
+    }
+
+    @Test
+    void testMetaphoneB() {
+        String result = metaphone.metaphone("ABRACADABRA");
+        assertEquals("ABRKT", result);
+    }
+
+    @Test
+    void testMetaphoneC() {
+        String result = metaphone.metaphone("CACAO");
+        assertEquals("KK", result);
+    }
+
+    @Test
+    void testMetaphoneD() {
+        String result = metaphone.metaphone("DISGUST");
+        assertEquals("TSK", result);
+    }
+
+    @Test
+    void testMetaphoneG() {
+        String result = metaphone.metaphone("GHOST");
+        assertEquals("KST", result);
+    }
+
+    @Test
+    void testMetaphoneH() {
+        String result = metaphone.metaphone("HAPPY");
+        assertEquals("AP", result);
+    }
+
+    @Test
+    void testMetaphoneFJLMRN() {
+        String result = metaphone.metaphone("FLY");
+        assertEquals("FL", result);
+    }
+
+    @Test
+    void testMetaphoneK() {
+        String result = metaphone.metaphone("KITCHEN");
+        assertEquals("KCHN", result);
+    }
+
+    @Test
+    void testMetaphoneP() {
+        String result = metaphone.metaphone("PHOTO");
+        assertEquals("FT", result);
+    }
+
+    @Test
+    void testMetaphoneQ() {
+        String result = metaphone.metaphone("QUIET");
+        assertEquals("KET", result);
+    }
+
+    @Test
+    void testMetaphoneS() {
+        String result = metaphone.metaphone("SHIP");
+        assertEquals("XP", result);
+    }
+
+    @Test
+    void testMetaphoneT() {
+        String result = metaphone.metaphone("THOR");
+        assertEquals("TR", result);
+    }
+
+    @Test
+    void testMetaphoneV() {
+        String result = metaphone.metaphone("VAN");
+        assertEquals("FN", result);
+    }
+
+    @Test
+    void testMetaphoneWY() {
+        String result = metaphone.metaphone("WYOMING");
+        assertEquals("AMNG", result);
+    }
+
+    @Test
+    void testMetaphoneX() {
+        String result = metaphone.metaphone("XENON");
+        assertEquals("KSNN", result);
+    }
+
+    @Test
+    void testMetaphoneZ() {
+        String result = metaphone.metaphone("ZENITH");
+        assertEquals("SNTH", result);
+    }
+}

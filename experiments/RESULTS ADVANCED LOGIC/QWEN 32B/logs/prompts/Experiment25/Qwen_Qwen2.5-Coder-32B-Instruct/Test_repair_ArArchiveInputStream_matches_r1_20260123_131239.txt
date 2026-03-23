@@ -1,0 +1,47 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.compress.archivers.ar;
+Class name (MUST be exactly): ArArchiveInputStream_matchesTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.compress.archivers.ar;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArArchiveInputStream_matchesTestGenerated {
+
+    @Test
+    public void testMatchesWithInputStreamMock() {
+        InputStream mockInputStream = mock(InputStream.class);
+        ArArchiveInputStream arArchiveInputStream = new ArArchiveInputStream(mockInputStream);
+        byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertTrue(ArArchiveInputStream.matches(validSignature, validSignature.length));
+    }
+
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream_matchesTestGenerated.java:[16] cannot find symbol
+  symbol:   method mock(java.lang.Class<java.io.InputStream>)
+  location: class org.apache.commons.compress.archivers.ar.ArArchiveInputStream_matchesTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: ArArchiveInputStream_matchesTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

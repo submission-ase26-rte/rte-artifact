@@ -1,0 +1,42 @@
+```java
+public static Options parsePattern(final String pattern) {
+    if (pattern == null) {
+        throw new NullPointerException("Pattern cannot be null");
+    }
+    Options options = new Options();
+    int i = 0;
+    while (i < pattern.length()) {
+        char opt = pattern.charAt(i++);
+        boolean hasArg = false;
+        boolean isRequired = false;
+        Class<?> type = null;
+
+        if (i < pattern.length()) {
+            char nextChar = pattern.charAt(i);
+            if (nextChar == '!') {
+                isRequired = true;
+                i++;
+            } else if (nextChar == ':') {
+                hasArg = true;
+                i++;
+                if (i < pattern.length() && isValueCode(pattern.charAt(i))) {
+                    type = getValueType(pattern.charAt(i));
+                    i++;
+                }
+            } else if (nextChar == '*') {
+                hasArg = true;
+                type = FILES_VALUE;
+                i++;
+            }
+        }
+
+        Option option = Option.builder(String.valueOf(opt))
+                .hasArg(hasArg)
+                .required(isRequired)
+                .type(type)
+                .build();
+        options.addOption(option);
+    }
+    return options;
+}
+```

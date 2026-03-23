@@ -1,0 +1,194 @@
+Here's the fixed test class with all compilation errors resolved:
+
+```java
+package org.apache.commons.jxpath.util;
+
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class BasicTypeConverter_canConvertTestGenerated {
+
+    @Mock
+    private Object mockBean;
+
+    @Mock
+    private List mockValues;
+
+    @Mock
+    private List mockNodes;
+
+    @Mock
+    private List mockPointers;
+
+    @Mock
+    private NodeSet mockNodeSet;
+
+    @Mock
+    private Pointer mockPointer;
+
+    @Mock
+    private Converter mockConverter;
+
+    private BasicTypeConverter converter;
+
+    @BeforeEach
+    void setUp() {
+        converter = new BasicTypeConverter();
+        when(mockBean.getClass()).thenReturn(Object.class);
+        when(mockNodeSet.getValues()).thenReturn((List) Collections.emptyList());
+        when(mockPointer.getValue()).thenReturn("test");
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueForNullObject() {
+        assertTrue(converter.canConvert(null, String.class));
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueWhenTargetTypeAssignableFromSourceType() {
+        assertTrue(converter.canConvert("test", Object.class));
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueWhenTargetTypeIsString() {
+        assertTrue(converter.canConvert(123, String.class));
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueWhenBooleanCanBeConvertedToNumber() {
+        assertTrue(converter.canConvert(true, Integer.class));
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueWhenNumberCanBeConvertedToBoolean() {
+        assertTrue(converter.canConvert(1, Boolean.class));
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueWhenStringCanBeConvertedToNumber() {
+        assertTrue(converter.canConvert("123", Integer.class));
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueForArrayToArrayConversion() {
+        String[] array = {"test1", "test2"};
+        assertTrue(converter.canConvert(array, String[].class));
+    }
+
+    @Test
+    void canConvert_shouldReturnFalseForArrayToArrayConversionWhenElementConversionFails() {
+        Object[] array = {1, "test"};
+        assertFalse(converter.canConvert(array, String[].class));
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueForArrayToCollectionConversion() {
+        String[] array = {"test1", "test2"};
+        assertTrue(converter.canConvert(array, List.class));
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueForArrayToSingleElementConversion() {
+        String[] array = {"test"};
+        assertTrue(converter.canConvert(array, String.class));
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueForEmptyArrayToTypeConversion() {
+        String[] array = {};
+        assertTrue(converter.canConvert(array, String.class));
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueForCollectionToArrayConversion() {
+        List<String> list = new ArrayList<>();
+        list.add("test1");
+        list.add("test2");
+        assertTrue(converter.canConvert(list, String[].class));
+    }
+
+    @Test
+    void canConvert_shouldReturnFalseForCollectionToArrayConversionWhenElementConversionFails() {
+        List<Object> list = new ArrayList<>();
+        list.add(1);
+        list.add("test");
+        assertFalse(converter.canConvert(list, String[].class));
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueForCollectionToCollectionConversion() {
+        List<String> list = new ArrayList<>();
+        list.add("test1");
+        list.add("test2");
+        assertTrue(converter.canConvert(list, Set.class));
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueForCollectionToSingleElementConversion() {
+        List<String> list = new ArrayList<>();
+        list.add("test");
+        assertTrue(converter.canConvert(list, String.class));
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueForEmptyCollectionToTypeConversion() {
+        List<String> list = new ArrayList<>();
+        assertTrue(converter.canConvert(list, String.class));
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueForNodeSetConversion() {
+        when(mockNodeSet.getValues()).thenReturn((List) Collections.emptyList());
+        assertTrue(converter.canConvert(mockNodeSet, List.class));
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueForPointerConversion() {
+        assertTrue(converter.canConvert(mockPointer, String.class));
+    }
+
+    @Test
+    void canConvert_shouldReturnTrueWhenConverterExistsForType() {
+        ConvertUtils.register(new Converter() {
+            @Override
+            public Object convert(Class type, Object value) {
+                return null;
+            }
+        }, String.class);
+        assertTrue(converter.canConvert("test", CustomType.class));
+        ConvertUtils.deregister(String.class);
+    }
+
+    @Test
+    void canConvert_shouldReturnFalseWhenNoConverterExistsForType() {
+        assertFalse(converter.canConvert("test", CustomType.class));
+    }
+
+    private static class CustomType {}
+}
+```

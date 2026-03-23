@@ -1,0 +1,131 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Collection;
+
+import javax.jms.JMSContext;
+import javax.jms.Queue;
+import javax.jms.QueueConnectionFactory;
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoJUnit5Extension;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.Log;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoJUnit5Extension.class)
+public class TradeDirect_loginTestGenerated {
+
+    private TradeDirect tradeDirect;
+    private DataSource dataSource;
+    private UserTransaction userTransaction;
+    private QueueConnectionFactory queueConnectionFactory;
+    private Queue topicConnectionFactory;
+    private Queue tradeBrokerQueue;
+    private JMSContext jmsContext;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        dataSource = Mockito.mock(DataSource.class);
+        userTransaction = Mockito.mock(UserTransaction.class);
+        queueConnectionFactory = Mockito.mock(QueueConnectionFactory.class);
+        topicConnectionFactory = Mockito.mock(Queue.class);
+        tradeBrokerQueue = Mockito.mock(Queue.class);
+        jmsContext = Mockito.mock(JMSContext.class);
+
+        tradeDirect = new TradeDirect(dataSource, userTransaction, queueConnectionFactory, topicConnectionFactory,
+                tradeBrokerQueue, jmsContext);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(dataSource, userTransaction, queueConnectionFactory, topicConnectionFactory,
+                tradeBrokerQueue, jmsContext);
+    }
+
+    @Test
+    public void testLoginValidUser() throws Exception {
+        AccountDataBean expectedAccount = new AccountDataBean(1, 1, 1, new Timestamp(System.currentTimeMillis()),
+                new Timestamp(System.currentTimeMillis()), java.math.BigDecimal.valueOf(100.00),
+                java.math.BigDecimal.valueOf(0.00), "testuser");
+
+        Connection mockConn = Mockito.mock(Connection.class);
+        PreparedStatement mockStmt1 = Mockito.mock(PreparedStatement.class);
+        ResultSet mockRs = Mockito.mock(ResultSet.class);
+        PreparedStatement mockStmt2 = Mockito.mock(PreparedStatement.class);
+
+        when(dataSource.getConnection()).thenReturn(mockConn);
+        when(mockConn.prepareStatement(TradeDirect.loginSQL)).thenReturn(mockStmt1);
+        when(mockStmt1.executeUpdate()).thenReturn(1);
+        when(mockConn.prepareStatement(TradeDirect.getAccountForUserSQL)).thenReturn(mockStmt2);
+        when(mockStmt2.setString(1, "testuser")).thenReturn(mockStmt2);
+        when(mockStmt2.executeQuery()).thenReturn(mockRs);
+        when(mockRs.next()).thenReturn(true);
+        when(mockRs.getString("passwd")).thenReturn("password");
+        when(mockRs.getInt("accountID")).thenReturn(1);
+        when(mockRs.getInt("loginCount")).thenReturn(1);
+        when(mockRs.getInt("logoutCount")).thenReturn(1);
+        when(mockRs.getTimestamp("lastLogin")).thenReturn(new Timestamp(System.currentTimeMillis()));
+        when(mockRs.getTimestamp("creationDate")).thenReturn(new Timestamp(System.currentTimeMillis()));
+        when(mockRs.getBigDecimal("balance")).thenReturn(java.math.BigDecimal.valueOf(100.00));
+        when(mockRs.getBigDecimal("openBalance")).thenReturn(java.math.BigDecimal.valueOf(0.00));
+        when(mockRs.getString("profile_userID")).thenReturn("testuser");
+
+
+        AccountDataBean actualAccount = tradeDirect.login("testuser", "password");
+
+        assertEquals(expectedAccount, actualAccount);
+    }
+
+    @Test
+    public void testLoginInvalidPassword() throws Exception {
+        Connection mockConn = Mockito.mock(Connection.class);
+        PreparedStatement mockStmt1 = Mockito.mock(PreparedStatement.class);
+        ResultSet mockRs = Mockito.mock(ResultSet.class);
+
+        when(dataSource.getConnection()).thenReturn(mockConn);
+        when(mockConn.prepareStatement(TradeDirect.getAccountProfileSQL)).thenReturn(mockStmt1);
+        when(mockStmt1.setString(1, "testuser")).thenReturn(mockStmt1);
+        when(mockStmt1.executeQuery()).thenReturn(mockRs);
+        when(mockRs.next()).thenReturn(true);
+        when(mockRs.getString("passwd")).thenReturn("wrongpassword");
+
+        assertThrows(Exception.class, () -> tradeDirect.login("testuser", "wrongpassword"));
+    }
+
+    @Test
+    public void testLoginUserNotFound() throws Exception {
+        Connection mockConn = Mockito.mock(Connection.class);
+        PreparedStatement mockStmt1 = Mockito.mock(PreparedStatement.class);
+        ResultSet mockRs = Mockito.mock(ResultSet.class);
+
+        when(dataSource.getConnection()).thenReturn(mockConn);
+        when(mockConn.prepareStatement(TradeDirect.getAccountProfileSQL)).thenReturn(mockStmt1);
+        when(mockStmt1.setString(1, "testuser")).thenReturn(mockStmt1);
+        when(mockStmt1.executeQuery()).thenReturn(mockRs);
+        when(mockRs.next()).thenReturn(false);
+
+        assertThrows(javax.ejb.FinderException.class, () -> tradeDirect.login("nonexistentuser", "password"));
+    }
+}
+```

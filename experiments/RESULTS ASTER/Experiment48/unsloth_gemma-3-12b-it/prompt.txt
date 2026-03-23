@@ -1,0 +1,229 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Filtered unit tests for method: getPet(String name, boolean ignoreNew)
+ * Original class: Owner
+ * Tests that actually call the target method
+ */
+package org.springframework.samples.petclinic.owner;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo48_unit_getPet_Owner_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetExistingPet_PhgC0() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("testPet");
+    owner.getPets().add(pet);
+    Pet result = owner.getPet("testPet", false);
+    assertEquals(pet, result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetNonExistingPet_ofkI1() {
+    Owner owner = new Owner();
+    Pet result = owner.getPet("nonExistingPet", false);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetNonExistingPetIgnoreNew_tcjx3() {
+    Owner owner = new Owner();
+    Pet result = owner.getPet("nonExistingPet", true);
+    assertNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetExistingPetNewPet_gkCj4_ttHn0() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("testPet");
+    owner.setAddress("testAddress");
+    owner.getPets().add(pet);
+    Pet result = owner.getPet("testPet", false);
+    assertEquals(pet, result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetExistingPet_Gewy0() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("pet1");
+    owner.getPets().add(pet);
+    Pet result = owner.getPet("pet1", false);
+    assert result != null;
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetNonExistingPet_qTED1() {
+    Owner owner = new Owner();
+    Pet result = owner.getPet("pet1", false);
+    assert result == null;
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetNonExistingPetIgnoreNew_KSgs3() {
+    Owner owner = new Owner();
+    Pet result = owner.getPet("pet1", true);
+    assert result == null;
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetCaseSensitive_qwuA4() {
+    Owner owner = new Owner();
+    Pet pet = new Pet();
+    pet.setName("Pet1");
+    owner.getPets().add(pet);
+    Pet result = owner.getPet("pet1", false);
+    assert result == null;
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetNullPetName_PSVw5() {
+    Owner owner = new Owner();
+    Pet result = owner.getPet(null, false);
+    assert result == null;
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testGetPetEmptyPetName_yAaf6() {
+    Owner owner = new Owner();
+    Pet result = owner.getPet("", false);
+    assert result == null;
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 8/10 passed
+
+TEST STATUS:
+- PASSED (8): testGetPetExistingPet_PhgC0, testGetPetNonExistingPet_ofkI1, testGetPetNonExistingPetIgnoreNew_tcjx3, testGetPetExistingPetNewPet_gkCj4_ttHn0, testGetPetExistingPet_Gewy0, testGetPetNonExistingPet_qTED1, testGetPetNonExistingPetIgnoreNew_KSgs3, testGetPetEmptyPetName_yAaf6
+- FAILED (1): testGetPetCaseSensitive_qwuA4
+- ERRORS (1): testGetPetNullPetName_PSVw5
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   ToStringCreator -> org.springframework.core.style.ToStringCreator
+//   Person -> org.springframework.samples.petclinic.model.Person
+//   Assert -> org.springframework.util.Assert
+//   CascadeType -> jakarta.persistence.CascadeType
+//   Column -> jakarta.persistence.Column
+//   Entity -> jakarta.persistence.Entity
+//   FetchType -> jakarta.persistence.FetchType
+//   JoinColumn -> jakarta.persistence.JoinColumn
+//   OneToMany -> jakarta.persistence.OneToMany
+//   OrderBy -> jakarta.persistence.OrderBy
+//   Table -> jakarta.persistence.Table
+//   Pattern -> jakarta.validation.constraints.Pattern
+//   NotBlank -> jakarta.validation.constraints.NotBlank
+//   Owner -> org.springframework.samples.petclinic.owner.Owner
+
+// === Class: Owner ===
+// Fields (with actual visibility):
+    private String address;
+    private String city;
+    private String telephone;
+    private List pets;
+
+// Getter/Setter Methods (for test assertions):
+public String getAddress();
+public void setAddress(String address);
+public String getCity();
+public void setCity(String city);
+public String getTelephone();
+public void setTelephone(String telephone);
+public List<Pet> getPets();
+public Pet getPet(String name);
+public Pet getPet(Integer id);
+public Pet getPet(String name, boolean ignoreNew);
+
+// Internal Methods (full implementation for context):
+	public List<Pet> getPets() {
+		return this.pets;
+	}
+
+// === Superclass: Person (inherited members) ===
+// Inherited Fields:
+
+// Inherited Method Signatures:
+public String getFirstName();
+public void setFirstName(String firstName);
+public String getLastName();
+public void setLastName(String lastName);
+
+// === External Class: Pet ===
+// Full import path: org.springframework.samples.petclinic.owner.Pet
+// Fields (with actual visibility):
+    private LocalDate birthDate;
+    private PetType type;
+    private Set visits;
+// Public Getter Methods (for test assertions):
+public LocalDate getBirthDate();
+public PetType getType();
+public Collection<Visit> getVisits();
+
+
+TASK:
+Regenerate ONLY the method "getPet" OF CLASS "Owner" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public Pet getPet(String name, boolean ignoreNew) {
+    // your implementation here
+}
+```
+
+- Package: org.springframework.samples.petclinic.owner
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "getPet"
+- Allowed imports: exactly those already present in Owner
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

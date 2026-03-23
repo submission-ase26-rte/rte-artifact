@@ -1,0 +1,104 @@
+```java
+public String encode(final String source) {
+    if (SoundexUtils.isEmpty(source)) {
+        return "1111111111";
+    }
+
+    StringBuilder result = new StringBuilder();
+    if (Character.isUpperCase(source.charAt(0))) {
+        result.append(source.charAt(0));
+    } else {
+        result.append(Character.toUpperCase(source.charAt(0)));
+    }
+
+    int length = source.length();
+    for (int i = 1; i < length; i++) {
+        char c = source.charAt(i);
+        switch (c) {
+            case 'A': case 'E': case 'I': case 'O': case 'U': case 'Y': case 'H': case 'W': case '3': case 'Hh': case 'Rr': case 'Ll':
+                result.append('1');
+                break;
+            case 'B': case 'P': case 'F': case 'V':
+                result.append('1');
+                break;
+            case 'C':
+                if (i + 1 < length && source.charAt(i + 1) == 'h') {
+                    result.append("2CH");
+                } else if (i + 1 < length && (source.charAt(i + 1) == 'i' || source.charAt(i + 1) == 'e' || source.charAt(i + 1) == 'y')) {
+                    result.append("S");
+                } else {
+                    result.append('K');
+                }
+                i++;
+                break;
+            case 'D':
+                if (i + 1 < length && (source.charAt(i + 1) == 'g')) {
+                    result.append("2G");
+                    i++;
+                } else {
+                    result.append('T');
+                }
+                break;
+            case 'G':
+                if (i + 1 < length && (source.charAt(i + 1) == 'h')) {
+                    result.append("2G");
+                    i++;
+                } else {
+                    result.append('K');
+                }
+                break;
+            case 'J':
+                result.append("Y");
+                break;
+            case 'K':
+                result.append('K');
+                break;
+            case 'L':
+                result.append('L');
+                break;
+            case 'M':
+                result.append('M');
+                break;
+            case 'N':
+                result.append('N');
+                break;
+            case 'Q':
+                result.append('K');
+                break;
+            case 'R':
+                result.append('R');
+                break;
+            case 'S':
+                result.append('S');
+                break;
+            case 'T':
+                if (i + 1 < length && (source.charAt(i + 1) == 'h' || source.charAt(i + 1) == 'i' || source.charAt(i + 1) == 'o')) {
+                    result.append('T');
+                } else {
+                    result.append('T');
+                }
+                i++;
+                break;
+            case 'X':
+                result.append('K');
+                break;
+            case 'Z':
+                result.append('S');
+                break;
+            case '2':
+            case '3':
+            case 'Gh':
+                result.append('2');
+                break;
+            default:
+                break;
+        }
+    }
+
+    while (result.length() < 10) {
+        result.append('1');
+    }
+
+    return result.toString().substring(0, 10);
+}
+```

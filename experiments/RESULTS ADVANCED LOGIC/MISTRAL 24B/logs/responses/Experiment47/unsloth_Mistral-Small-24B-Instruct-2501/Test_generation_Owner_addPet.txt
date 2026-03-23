@@ -1,0 +1,64 @@
+```java
+package org.springframework.samples.petclinic.owner;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.samples.petclinic.owner.Pet;
+import org.springframework.samples.petclinic.model.Person;
+import org.springframework.test.util.ReflectionTestUtils;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class Owner_addPetTestGenerated {
+
+    private Owner owner;
+    private Pet pet;
+
+    @BeforeEach
+    public void setUp() {
+        owner = new Owner();
+        pet = new Pet();
+
+        // Initialize the owner's pets list to avoid NullPointerException
+        ReflectionTestUtils.setField(owner, "pets", new ArrayList<Pet>());
+    }
+
+    @Test
+    public void testAddPet_NewPet_ShouldAddPetToList() {
+        // Arrange
+        ReflectionTestUtils.setField(pet, "new", true);
+
+        // Act
+        owner.addPet(pet);
+
+        // Assert
+        List<Pet> pets = owner.getPets();
+        assertTrue(pets.contains(pet));
+    }
+
+    @Test
+    public void testAddPet_ExistingPet_ShouldNotAddPetToList() {
+        // Arrange
+        ReflectionTestUtils.setField(pet, "new", false);
+
+        // Act
+        owner.addPet(pet);
+
+        // Assert
+        List<Pet> pets = owner.getPets();
+        assertFalse(pets.contains(pet));
+    }
+
+    @Test
+    public void testAddPet_NullPet_ShouldNotAddPetToList() {
+        // Act
+        owner.addPet(null);
+
+        // Assert
+        List<Pet> pets = owner.getPets();
+        assertEquals(0, pets.size());
+    }
+}
+```

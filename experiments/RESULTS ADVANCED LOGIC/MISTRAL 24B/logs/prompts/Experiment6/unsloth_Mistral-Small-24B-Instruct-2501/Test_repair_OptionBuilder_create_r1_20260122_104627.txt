@@ -1,0 +1,193 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): OptionBuilder_createTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.cli;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class OptionBuilder_createTestGenerated {
+
+    private OptionBuilder optionBuilder;
+
+    @BeforeEach
+    public void setUp() {
+        optionBuilder = OptionBuilder.reset();
+    }
+
+    @Test
+    public void testCreateValidOption() {
+        OptionBuilder.longOption = "longOpt";
+        OptionBuilder.description = "description";
+        OptionBuilder.argName = "argName";
+        OptionBuilder.required = true;
+        OptionBuilder.argCount = 1;
+        OptionBuilder.type = String.class;
+        OptionBuilder.optionalArg = true;
+        OptionBuilder.valueSeparator = '=';
+
+        Option option = OptionBuilder.create("opt");
+
+        assertEquals("description", option.getDescription());
+        assertEquals("longOpt", option.getLongOpt());
+        assertTrue(option.isRequired());
+        assertEquals(1, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals("argName", option.getArgName());
+        assertTrue(option.hasOptionalArg());
+        assertEquals('=', option.getValueSeparator());
+    }
+
+    @Test
+    public void testCreateWithNullDescription() {
+        OptionBuilder.longOption = "longOpt";
+        OptionBuilder.description = null;
+        OptionBuilder.argName = "argName";
+        OptionBuilder.required = true;
+        OptionBuilder.argCount = 1;
+        OptionBuilder.type = String.class;
+        OptionBuilder.optionalArg = true;
+        OptionBuilder.valueSeparator = '=';
+
+        Option option = OptionBuilder.create("opt");
+
+        assertEquals(null, option.getDescription());
+        assertEquals("longOpt", option.getLongOpt());
+        assertTrue(option.isRequired());
+        assertEquals(1, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals("argName", option.getArgName());
+        assertTrue(option.hasOptionalArg());
+        assertEquals('=', option.getValueSeparator());
+    }
+
+    @Test
+    public void testCreateWithInvalidOptionChar() {
+        OptionBuilder.longOption = "longOpt";
+        OptionBuilder.description = "description";
+        OptionBuilder.argName = "argName";
+        OptionBuilder.required = true;
+        OptionBuilder.argCount = 1;
+        OptionBuilder.type = String.class;
+        OptionBuilder.optionalArg = true;
+        OptionBuilder.valueSeparator = '=';
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            OptionBuilder.create("");
+        });
+    }
+
+    @Test
+    public void testCreateWithNullLongOpt() {
+        OptionBuilder.longOption = null;
+        OptionBuilder.description = "description";
+        OptionBuilder.argName = "argName";
+        OptionBuilder.required = true;
+        OptionBuilder.argCount = 1;
+        OptionBuilder.type = String.class;
+        OptionBuilder.optionalArg = true;
+        OptionBuilder.valueSeparator = '=';
+
+        Option option = OptionBuilder.create("opt");
+
+        assertEquals(null, option.getLongOpt());
+        assertEquals("description", option.getDescription());
+        assertTrue(option.isRequired());
+        assertEquals(1, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals("argName", option.getArgName());
+        assertTrue(option.hasOptionalArg());
+        assertEquals('=', option.getValueSeparator());
+    }
+
+    @Test
+    public void testCreateWithDefaultType() {
+        OptionBuilder.longOption = "longOpt";
+        OptionBuilder.description = "description";
+        OptionBuilder.argName = "argName";
+        OptionBuilder.required = true;
+        OptionBuilder.argCount = 1;
+        OptionBuilder.type = null;
+        OptionBuilder.optionalArg = true;
+        OptionBuilder.valueSeparator = '=';
+
+        Option option = OptionBuilder.create("opt");
+
+        assertEquals("description", option.getDescription());
+        assertEquals("longOpt", option.getLongOpt());
+        assertTrue(option.isRequired());
+        assertEquals(1, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals("argName", option.getArgName());
+        assertTrue(option.hasOptionalArg());
+        assertEquals('=', option.getValueSeparator());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[16] reset() has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[16] incompatible types: void cannot be converted to org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[21] longOption has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[22] description has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[23] argName has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[24] required has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[25] argCount has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[26] type has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[27] optionalArg has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[28] valueSeparator has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[44] longOption has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[45] description has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[46] argName has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[47] required has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[48] argCount has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[49] type has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[50] optionalArg has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[51] valueSeparator has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[67] longOption has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[68] description has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[69] argName has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[70] required has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[71] argCount has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[72] type has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[73] optionalArg has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[74] valueSeparator has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[83] longOption has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[84] description has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[85] argName has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[86] required has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[87] argCount has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[88] type has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[89] optionalArg has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[90] valueSeparator has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[106] longOption has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[107] description has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[108] argName has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[109] required has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[110] argCount has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[111] type has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[112] optionalArg has private access in org.apache.commons.cli.OptionBuilder
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[113] valueSeparator has private access in org.apache.commons.cli.OptionBuilder
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: OptionBuilder_createTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

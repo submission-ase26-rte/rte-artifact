@@ -1,0 +1,83 @@
+```java
+public static String md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) {
+    if (keyBytes == null) {
+        throw new NullPointerException("Key bytes must not be null");
+    }
+    if (salt == null) {
+        StringBuilder saltBuilder = new StringBuilder(prefix);
+        for (int i = 0; i < 8; i++) {
+            saltBuilder.append(B64.B64T_ARRAY[random.nextInt(64)]);
+        }
+        return md5Crypt(keyBytes, saltBuilder.toString(), prefix, random);
+    }
+    if (salt.length() < 1) {
+        throw new IllegalArgumentException("Invalid salt value: " + salt);
+    }
+    if (!salt.matches("^" + Pattern.quote(prefix) + "[a-zA-Z0-9./]{1,8}$")) {
+        throw new IllegalArgumentException("Invalid salt value: " + salt);
+    }
+
+    String saltPart = salt.substring(prefix.length(), Math.min(salt.length(), prefix.length() + 8));
+    MessageDigest md = DigestUtils.getMd5Digest();
+    md.update(keyBytes);
+    md.update(saltPart.getBytes(StandardCharsets.UTF_8));
+
+    byte[] ctx = md.digest();
+    md.reset();
+    md.update(keyBytes);
+    md.update(saltPart.getBytes(StandardCharsets.UTF_8));
+    md.update(keyBytes);
+
+    byte[] finalState = md.digest();
+    for (int i = keyBytes.length; i > 0; i -= 16) {
+        md.update(finalState, 0, i > 16 ? 16 : i);
+    }
+
+    for (int i = keyBytes.length; i > 0; i >>= 1) {
+        if ((i & 1) == 1) {
+            md.update(finalState, 0, 1);
+        } else {
+            md.update(keyBytes, 0, 1);
+        }
+    }
+
+    finalState = md.digest();
+
+    for (int i = 0; i < 1000; i++) {
+        md.reset();
+        if ((i & 1) == 1) {
+            md.update(keyBytes);
+        } else {
+            md.update(finalState);
+        }
+        if (i % 3 != 0) {
+            md.update(saltPart.getBytes(StandardCharsets.UTF_8));
+        }
+        if (i % 7 != 0) {
+            md.update(keyBytes);
+        }
+        if ((i & 1) == 1) {
+            md.update(finalState);
+        } else {
+            md.update(keyBytes);
+        }
+        finalState = md.digest();
+    }
+
+    StringBuilder result = new StringBuilder(prefix);
+    result.append(saltPart);
+    result.append("$");
+
+    byte[] pBytes = new byte[16];
+    System.arraycopy(finalState, 0, pBytes, 0, 16);
+
+    B64.b64from24bit(pBytes[0], pBytes[6], pBytes[12], 4, result);
+    B64.b64from24bit(pBytes[1], pBytes[7], pBytes[13], 4, result);
+    B64.b64from24bit(pBytes[2], pBytes[8], pBytes[14], 4, result);
+    B64.b64from24bit(pBytes[3], pBytes[9], pBytes[15], 4, result);
+    B64.b64from24bit(pBytes[4], pBytes[10], pBytes[5], 4, result);
+    B64.b64from24bit((byte) 0, (byte) 0, pBytes[11], 2, result);
+
+    return result.toString();
+}
+```

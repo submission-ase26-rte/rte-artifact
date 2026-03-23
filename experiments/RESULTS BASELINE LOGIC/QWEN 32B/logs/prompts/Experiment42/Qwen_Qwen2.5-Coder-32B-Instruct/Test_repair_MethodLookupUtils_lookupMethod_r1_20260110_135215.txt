@@ -1,0 +1,136 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.util;
+Class name (MUST be exactly): MethodLookupUtils_lookupMethodTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import org.apache.commons.jxpath.ExpressionContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class MethodLookupUtils_lookupMethodTestGenerated {
+    private static final Class<?> TARGET_CLASS = ExpressionContext.class;
+    private static final String METHOD_NAME = "getVariables";
+    private static final Object[] VALID_PARAMETERS = new Object[]{new ExpressionContext(null), new HashMap<>()};
+
+    @BeforeEach
+    public void setUp() {
+        // Setup code if necessary
+    }
+
+    @AfterEach
+    public void tearDown() {
+        // Teardown code if necessary
+    }
+
+    @Test
+    public void testLookupMethodWithValidParameters() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, VALID_PARAMETERS);
+        assertNotNull(method);
+        assertEquals(METHOD_NAME, method.getName());
+    }
+
+    @Test
+    public void testLookupMethodWithAmbiguousMethods() {
+        assertThrows(JXPathException.class, () -> {
+            MethodLookupUtils.lookupMethod(TARGET_CLASS, "ambiguousMethod", new Object[]{new ExpressionContext(null), new HashMap<>(), new HashMap<>()});
+        });
+    }
+
+    @Test
+    public void testLookupMethodWithExactMatch() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, "getVariables", new Object[]{new ExpressionContext(null), new HashMap<>()});
+        assertNotNull(method);
+        assertEquals("getVariables", method.getName());
+    }
+
+    @Test
+    public void testLookupMethodWithApproximateMatch() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, "getVariables", new Object[]{new ExpressionContext(null), new HashMap<>()});
+        assertNotNull(method);
+        assertEquals("getVariables", method.getName());
+    }
+
+    @Test
+    public void testLookupMethodWithNullParameters() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, null);
+        assertNull(method);
+    }
+
+    @Test
+    public void testLookupMethodWithEmptyParameters() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, new Object[]{});
+        assertNull(method);
+    }
+
+    @Test
+    public void testLookupMethodWithNullFirstParameter() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, new Object[]{null});
+        assertNull(method);
+    }
+
+    @Test
+    public void testLookupMethodWithInvalidFirstParameter() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, new Object[]{"invalid"});
+        assertNull(method);
+    }
+
+    @Test
+    public void testLookupMethodWithNoMatch() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, "nonExistentMethod", new Object[]{new ExpressionContext(null)});
+        assertNull(method);
+    }
+
+    @Test
+    public void testLookupMethodWithAmbiguousMatch() {
+        assertThrows(JXPathException.class, () -> {
+            MethodLookupUtils.lookupMethod(TARGET_CLASS, "ambiguousMethod", new Object[]{new ExpressionContext(null), new HashMap<>(), new HashMap<>()});
+        });
+    }
+
+    @Test
+    public void testLookupMethodWithNullParameterInMiddle() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, new Object[]{new ExpressionContext(null), null, new HashMap<>()});
+        assertNull(method);
+    }
+
+    @Test
+    public void testLookupMethodWithStaticMethod() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, "staticMethod", new Object[]{new ExpressionContext(null)});
+        assertNull(method);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/MethodLookupUtils_lookupMethodTestGenerated.java:[18] org.apache.commons.jxpath.ExpressionContext is abstract; cannot be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/MethodLookupUtils_lookupMethodTestGenerated.java:[40] org.apache.commons.jxpath.ExpressionContext is abstract; cannot be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/MethodLookupUtils_lookupMethodTestGenerated.java:[46] org.apache.commons.jxpath.ExpressionContext is abstract; cannot be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/MethodLookupUtils_lookupMethodTestGenerated.java:[53] org.apache.commons.jxpath.ExpressionContext is abstract; cannot be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/MethodLookupUtils_lookupMethodTestGenerated.java:[84] org.apache.commons.jxpath.ExpressionContext is abstract; cannot be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/MethodLookupUtils_lookupMethodTestGenerated.java:[91] org.apache.commons.jxpath.ExpressionContext is abstract; cannot be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/MethodLookupUtils_lookupMethodTestGenerated.java:[97] org.apache.commons.jxpath.ExpressionContext is abstract; cannot be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/MethodLookupUtils_lookupMethodTestGenerated.java:[103] org.apache.commons.jxpath.ExpressionContext is abstract; cannot be instantiated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: MethodLookupUtils_lookupMethodTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

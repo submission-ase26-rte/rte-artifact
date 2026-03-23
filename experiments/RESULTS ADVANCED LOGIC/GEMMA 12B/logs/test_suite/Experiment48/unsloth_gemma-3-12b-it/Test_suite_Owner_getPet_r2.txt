@@ -1,0 +1,84 @@
+package org.springframework.samples.petclinic.owner;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.springframework.samples.petclinic.model.Person;
+import org.springframework.samples.petclinic.owner.Owner;
+import org.springframework.samples.petclinic.owner.Pet;
+import org.springframework.samples.petclinic.owner.PetType;
+import org.springframework.test.util.ReflectionTestUtils;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Owner_getPetTestGenerated {
+    private Owner owner;
+    private Pet pet1;
+    private Pet pet2;
+
+    @BeforeEach
+    void setUp() {
+        owner = new Owner();
+        List<Pet> pets = new ArrayList<>();
+        pet1 = new Pet();
+        pet1.setName("Buddy");
+        pet2 = new Pet();
+        pet2.setName("buddy");
+        pets.add(pet1);
+        pets.add(pet2);
+        ReflectionTestUtils.setField(owner, "pets", pets);
+    }
+
+    @Test
+    void testGetPetExistingNameIgnoreCase() {
+        Pet result = owner.getPet("buddy", false);
+        assertNotNull(result);
+        assertEquals("Buddy", result.getName());
+    }
+
+    @Test
+    void testGetPetNewPetIgnoreNewFalse() {
+        pet1.setBirthDate(LocalDate.now());
+        Pet result = owner.getPet("Buddy", false);
+        assertNotNull(result);
+        assertEquals("Buddy", result.getName());
+    }
+
+    @Test
+    void testGetPetNonExistingName() {
+        Pet result = owner.getPet("Max", false);
+        assertNull(result);
+    }
+
+    @Test
+    void testGetPetEmptyName() {
+        Pet result = owner.getPet("", false);
+        assertNull(result);
+    }
+
+    @Test
+        void testGetPetExistingNameIgnoreNewTrue() {
+            Pet result = owner.getPet("buddy", true);
+            assertNotNull(result);
+            assertEquals("Buddy", result.getName());
+        }
+
+    @Test
+        void testGetPetNewPetIgnoreNewTrue() {
+            pet1.setBirthDate(LocalDate.now());
+            Pet result = owner.getPet("Buddy", true);
+            assertNotNull(result);
+            assertEquals("Buddy", result.getName());
+        }
+
+    @Test
+        void testGetPetNullName() {
+            Pet result = owner.getPet(null, false);
+            assertNull(result);
+        }
+
+}

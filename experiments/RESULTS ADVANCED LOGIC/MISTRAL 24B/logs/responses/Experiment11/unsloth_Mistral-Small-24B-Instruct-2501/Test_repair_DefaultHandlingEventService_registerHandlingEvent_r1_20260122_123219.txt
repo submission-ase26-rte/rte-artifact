@@ -1,0 +1,111 @@
+```java
+package org.eclipse.cargotracker.application.internal;
+
+import jakarta.inject.Inject;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
+import java.util.logging.Logger;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+public class DefaultHandlingEventService_registerHandlingEventTestGenerated {
+
+    @Mock
+    private org.eclipse.cargotracker.application.internal.ApplicationEvents applicationEvents;
+
+    @Mock
+    private org.eclipse.cargotracker.application.internal.HandlingEventRepository handlingEventRepository;
+
+    @Mock
+    private org.eclipse.cargotracker.application.internal.HandlingEventFactory handlingEventFactory;
+
+    @Mock
+    private Logger logger;
+
+    @InjectMocks
+    private DefaultHandlingEventService defaultHandlingEventService;
+
+    private LocalDateTime completionTime;
+    private org.eclipse.cargotracker.application.internal.TrackingId trackingId;
+    private org.eclipse.cargotracker.application.internal.VoyageNumber voyageNumber;
+    private org.eclipse.cargotracker.application.internal.UnLocode unlocode;
+    private org.eclipse.cargotracker.application.internal.HandlingEvent.Type type;
+
+    @BeforeEach
+    public void setUp() {
+        completionTime = LocalDateTime.now();
+        trackingId = new org.eclipse.cargotracker.application.internal.TrackingId("123456");
+        voyageNumber = new org.eclipse.cargotracker.application.internal.VoyageNumber("V1234");
+        unlocode = new org.eclipse.cargotracker.application.internal.UnLocode("USNYC");
+        type = org.eclipse.cargotracker.application.internal.HandlingEvent.Type.LOAD;
+    }
+
+    @AfterEach
+    public void tearDown() {
+        defaultHandlingEventService = null;
+    }
+
+    @Test
+    public void testRegisterHandlingEvent_Success() throws org.eclipse.cargotracker.application.internal.CannotCreateHandlingEventException {
+        org.eclipse.cargotracker.application.internal.HandlingEvent event = mock(org.eclipse.cargotracker.application.internal.HandlingEvent.class);
+        when(handlingEventFactory.createHandlingEvent(any(LocalDateTime.class), any(LocalDateTime.class), any(org.eclipse.cargotracker.application.internal.TrackingId.class), any(org.eclipse.cargotracker.application.internal.VoyageNumber.class), any(org.eclipse.cargotracker.application.internal.UnLocode.class), any(org.eclipse.cargotracker.application.internal.HandlingEvent.Type.class)))
+                .thenReturn(event);
+        when(event.getType()).thenReturn(org.eclipse.cargotracker.application.internal.HandlingEvent.Type.LOAD);
+
+        defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, voyageNumber, unlocode, type);
+
+        verify(handlingEventFactory, times(1)).createHandlingEvent(any(LocalDateTime.class), any(LocalDateTime.class), any(org.eclipse.cargotracker.application.internal.TrackingId.class), any(org.eclipse.cargotracker.application.internal.VoyageNumber.class), any(org.eclipse.cargotracker.application.internal.UnLocode.class), any(org.eclipse.cargotracker.application.internal.HandlingEvent.Type.class));
+        verify(handlingEventRepository, times(1)).store(event);
+        verify(applicationEvents, times(1)).cargoWasHandled(event);
+        verify(logger, times(1)).info("Registered handling event");
+    }
+
+    @Test
+    public void testRegisterHandlingEvent_InvalidTrackingId() {
+        org.eclipse.cargotracker.application.internal.TrackingId invalidTrackingId = null;
+
+        assertThrows(org.eclipse.cargotracker.application.internal.CannotCreateHandlingEventException.class, () -> {
+            defaultHandlingEventService.registerHandlingEvent(completionTime, invalidTrackingId, voyageNumber, unlocode, type);
+        });
+    }
+
+    @Test
+    public void testRegisterHandlingEvent_InvalidVoyageNumber() {
+        org.eclipse.cargotracker.application.internal.VoyageNumber invalidVoyageNumber = null;
+
+        assertThrows(org.eclipse.cargotracker.application.internal.CannotCreateHandlingEventException.class, () -> {
+            defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, invalidVoyageNumber, unlocode, type);
+        });
+    }
+
+    @Test
+    public void testRegisterHandlingEvent_InvalidUnLocode() {
+        org.eclipse.cargotracker.application.internal.UnLocode invalidUnLocode = null;
+
+        assertThrows(org.eclipse.cargotracker.application.internal.CannotCreateHandlingEventException.class, () -> {
+            defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, voyageNumber, invalidUnLocode, type);
+        });
+    }
+
+    @Test
+    public void testRegisterHandlingEvent_InvalidType() {
+        org.eclipse.cargotracker.application.internal.HandlingEvent.Type invalidType = null;
+
+        assertThrows(org.eclipse.cargotracker.application.internal.CannotCreateHandlingEventException.class, () -> {
+            defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, voyageNumber, unlocode, invalidType);
+        });
+    }
+}
+```

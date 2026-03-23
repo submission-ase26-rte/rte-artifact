@@ -1,0 +1,75 @@
+{
+  "method_id": 38,
+  "tested_method": "login",
+  "tested_class": "TradeDirect",
+  "project": "Daytrader",
+  "timestamp": "2026-01-27T18:58:54.015290",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\Daytrader\\Run-1\\src\\test\\java\\com\\ibm\\websphere\\samples\\daytrader\\impl\\direct\\Metodo38_unit_login_TradeDirect_Test.java",
+  "test_results": {
+    "success": false,
+    "tests_passed": 0,
+    "tests_total": 3,
+    "tests_failed": 3,
+    "line_coverage": 18.75,
+    "branch_coverage": 0.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testLoginInvalidUser_tCUN1 --\nERROR: org.opentest4j.AssertionFailedError: expected: <Cannot find account forinvalidUser> but was: <Cannot invoke \"javax.sql.DataSource.getConnection()\" because \"this.datasource\" is null>\n--------------------------------------------------\nTEST: testLoginInvalidPassword_WNur2 --\nERROR: org.opentest4j.AssertionFailedError:\nexpected: <TradeDirect:Login failure for user: validUser\nIncorrect password-->validUser:invalidPassword> but was: <Cannot invoke \"javax.sql.DataSource.getConnection()\" because \"this.datasource\" is null>\n--------------------------------------------------\nTEST: testLoginNoResultSet_JYVX3 --\nERROR: org.opentest4j.AssertionFailedError: expected: <Cannot find account fornoResultSetUser> but was: <Cannot invoke \"javax.sql.DataSource.getConnection()\" because \"this.datasource\" is null>",
+    "test_info": {
+      "valid_tests": [],
+      "invalid_tests": [
+        "testLoginInvalidPassword_WNur2",
+        "testLoginInvalidUser_tCUN1",
+        "testLoginNoResultSet_JYVX3"
+      ],
+      "failed_assert_tests": [
+        "testLoginInvalidPassword_WNur2",
+        "testLoginInvalidUser_tCUN1",
+        "testLoginNoResultSet_JYVX3"
+      ],
+      "runtime_error_tests": []
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 3,
+    "assertion_complexity": 0.2857,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.5,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.8484,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.7879,
+    "overall_naturalness_score": 0.9091
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.4411349273099093,
+    "string_similarity": 0.36129861780777883,
+    "token_similarity": 0.5294117647058824,
+    "ast_similarity": 0.7317073170731707,
+    "embedding_similarity": 0.8227778077125549,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.11570247933884298,
+      "similar_blocks": 7,
+      "total_blocks": 121
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.6454904820479783,
+    "passes_threshold": false
+  },
+  "original_method": "  public AccountDataBean login(String userID, String password) throws Exception {\n\n    AccountDataBean accountData = null;\n    Connection conn = null;\n    try {\n      Log.trace(\"TradeDirect:login - inSession(\" + this.inSession + \")\", userID, password);\n\n      conn = getConn();\n      PreparedStatement stmt = getStatement(conn, getAccountProfileSQL);\n      stmt.setString(1, userID);\n\n      ResultSet rs = stmt.executeQuery();\n      if (!rs.next()) {\n        Log.error(\"TradeDirect:login -- failure to find account for\" + userID);\n        throw new javax.ejb.FinderException(\"Cannot find account for\" + userID);\n      }\n\n      String pw = rs.getString(\"passwd\");\n      stmt.close();\n      if ((pw == null) || (pw.equals(password) == false)) {\n        String error = \"TradeDirect:Login failure for user: \" + userID + \"\\n\\tIncorrect password-->\" + userID + \":\" + password;\n        Log.error(error);\n        throw new Exception(error);\n      }\n\n      stmt = getStatement(conn, loginSQL);\n      stmt.setTimestamp(1, new Timestamp(System.currentTimeMillis()));\n      stmt.setString(2, userID);\n\n      stmt.executeUpdate();\n      stmt.close();\n\n      stmt = getStatement(conn, getAccountForUserSQL);\n      stmt.setString(1, userID);\n      rs = stmt.executeQuery();\n\n      accountData = getAccountDataFromResultSet(rs);\n\n      stmt.close();\n\n      commit(conn);\n    } catch (Exception e) {\n      Log.error(\"TradeDirect:login -- error logging in user\", e);\n      rollBack(conn, e);\n    } finally {\n      releaseConn(conn);\n    }\n    return accountData;\n\n    /*\n     * setLastLogin( new Timestamp(System.currentTimeMillis()) );\n     * setLoginCount( getLoginCount() + 1 );\n     */\n  }",
+  "regenerated_method": "public AccountDataBean login(String userID, String password) throws Exception {\n        Connection conn = null;\n        try {\n            conn = getConn();\n            String sql = \"SELECT * FROM ACCOUNT WHERE profile_userID = ?\";\n            PreparedStatement stmt = getStatement(conn, sql);\n            stmt.setString(1, userID);\n            ResultSet rs = stmt.executeQuery();\n            AccountDataBean accountData = getAccountDataFromResultSet(rs);\n            if (accountData == null) {\n                throw new Exception(\"Cannot find account for\" + userID);\n            }\n            if (!accountData.getPassword().equals(password)) {\n                throw new Exception(\"TradeDirect:Login failure for user: \" + userID + \"\\n\\tIncorrect password-->\" + userID + \":\" + password);\n            }\n            accountData.setLoginCount(accountData.getLoginCount() + 1);\n            updateAccount(conn, accountData);\n            return accountData;\n        } catch (Exception e) {\n            rollBack(conn, e);\n            throw e;\n        } finally {\n            releaseConn(conn);\n        }\n    }\n\n    private void updateAccount(Connection conn, AccountDataBean accountData) throws Exception {\n        String sql = \"UPDATE ACCOUNT SET loginCount = ?, lastLogin = ? WHERE accountID = ?\";\n        PreparedStatement stmt = getStatement(conn, sql);\n        stmt.setInt(1, accountData.getLoginCount());\n        stmt.setTimestamp(2, new Timestamp(System.currentTimeMillis()));\n        stmt.setInt(3, accountData.getAccountID());\n        stmt.executeUpdate();\n    }",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.670446769648675,
+  "original_metrics": {
+    "loc": 54,
+    "sloc": 39,
+    "complexity": 10
+  }
+}

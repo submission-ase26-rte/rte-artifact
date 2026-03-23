@@ -1,0 +1,93 @@
+{
+  "method_id": 16,
+  "tested_method": "md5Crypt",
+  "tested_class": "Md5Crypt",
+  "project": "Codec",
+  "timestamp": "2026-01-27T18:35:26.796972",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\Codec\\Run-1\\src\\test\\java\\org\\apache\\commons\\codec\\digest\\Metodo16_unit_md5Crypt_Md5Crypt_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 4,
+    "tests_total": 13,
+    "tests_failed": 9,
+    "line_coverage": 100.0,
+    "branch_coverage": 100.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testMd5Crypt_MKQs0 --\nERROR: java.lang.IllegalArgumentException: Invalid salt value: salt\n--------------------------------------------------\nTEST: testMd5CryptNullSalt_XjEp1 --\nERROR: org.opentest4j.AssertionFailedError: expected: <$1$P9OugdSJ$uEAoKhSp6AJb9NFzs94fY0> but was: <$1$4feg1/cC$TkKmgy0MexPw8Op0Izb9x0>\n--------------------------------------------------\nTEST: testMd5CryptEmptyKeyBytes_ezcI3_fid2 --\nERROR: org.opentest4j.AssertionFailedError: expected: <Key bytes cannot be empty> but was: <Invalid salt value: salt>\n--------------------------------------------------\nTEST: testMd5CryptNullRandom_Fpxl8 --\nERROR: java.lang.IllegalArgumentException: Invalid salt value: salt\n--------------------------------------------------\nTEST: testMd5CryptNullKeyBytes_feXF4 --\nERROR: java.lang.NullPointerException: Cannot read the array length because \"keyBytes\" is null\n--------------------------------------------------\nTEST: testMd5CryptEmptyPrefix_KWnR7_fid2 --\nERROR: org.opentest4j.AssertionFailedError: expected: <false> but was: <true>\n--------------------------------------------------\nTEST: testMd5CryptNullPrefix_CMyH6 --\nERROR: java.lang.NullPointerException: Cannot invoke \"String.replace(java.lang.CharSequence, java.lang.CharSequence)\" because \"prefix\" is null\n--------------------------------------------------\nTEST: testMd5CryptEmptyRandom_GNXd9 --\nERROR: java.lang.IllegalArgumentException: Invalid salt value: salt\n--------------------------------------------------\nTEST: testMd5CryptNullSalt_XjEp1_fid2 --\nERROR: org.opentest4j.AssertionFailedError: expected: <$1$randomsalt$> but was: <$1$wIArswZJ$zfULxlcY6XL87mPD/TTKb0>",
+    "test_info": {
+      "valid_tests": [
+        "testMd5CryptInvalidSalt_Xeed2",
+        "testMd5CryptEmptyKeyBytes_ezcI3",
+        "testMd5CryptEmptySalt_DOSv5",
+        "testMd5CryptEmptyPrefix_KWnR7"
+      ],
+      "invalid_tests": [
+        "testMd5CryptNullSalt_XjEp1",
+        "testMd5CryptNullSalt_XjEp1_fid2",
+        "testMd5CryptEmptyKeyBytes_ezcI3_fid2",
+        "testMd5CryptEmptyPrefix_KWnR7_fid2",
+        "testMd5Crypt_MKQs0",
+        "testMd5CryptNullKeyBytes_feXF4",
+        "testMd5CryptNullPrefix_CMyH6",
+        "testMd5CryptNullRandom_Fpxl8",
+        "testMd5CryptEmptyRandom_GNXd9"
+      ],
+      "failed_assert_tests": [
+        "testMd5CryptNullSalt_XjEp1",
+        "testMd5CryptNullSalt_XjEp1_fid2",
+        "testMd5CryptEmptyKeyBytes_ezcI3_fid2",
+        "testMd5CryptEmptyPrefix_KWnR7_fid2"
+      ],
+      "runtime_error_tests": [
+        "testMd5Crypt_MKQs0",
+        "testMd5CryptNullKeyBytes_feXF4",
+        "testMd5CryptNullPrefix_CMyH6",
+        "testMd5CryptNullRandom_Fpxl8",
+        "testMd5CryptEmptyRandom_GNXd9"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 13,
+    "assertion_complexity": 0.1923,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.0,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.6917,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.3717,
+    "overall_naturalness_score": 0.7658
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.10572250959038686,
+    "string_similarity": 0.19502681618722575,
+    "token_similarity": 0.44594594594594594,
+    "ast_similarity": 0.35135135135135137,
+    "embedding_similarity": 0.7931958436965942,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.09937888198757763,
+      "similar_blocks": 8,
+      "total_blocks": 161
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.4585543816960526,
+    "passes_threshold": false
+  },
+  "original_method": "    public static String md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) {\n        final int keyLen = keyBytes.length;\n\n        // Extract the real salt from the given string which can be a complete hash string.\n        final String saltString;\n        if (salt == null) {\n            saltString = B64.getRandomSalt(8, random);\n        } else {\n            final Pattern p = Pattern.compile(\"^\" + prefix.replace(\"$\", \"\\\\$\") + \"([\\\\.\\\\/a-zA-Z0-9]{1,8}).*\");\n            final Matcher m = p.matcher(salt);\n            if (!m.find()) {\n                throw new IllegalArgumentException(\"Invalid salt value: \" + salt);\n            }\n            saltString = m.group(1);\n        }\n        final byte[] saltBytes = saltString.getBytes(StandardCharsets.UTF_8);\n\n        final MessageDigest ctx = DigestUtils.getMd5Digest();\n\n        /*\n         * The password first, since that is what is most unknown\n         */\n        ctx.update(keyBytes);\n\n        /*\n         * Then our magic string\n         */\n        ctx.update(prefix.getBytes(StandardCharsets.UTF_8));\n\n        /*\n         * Then the raw salt\n         */\n        ctx.update(saltBytes);\n\n        /*\n         * Then just as many characters of the MD5(pw,salt,pw)\n         */\n        MessageDigest ctx1 = DigestUtils.getMd5Digest();\n        ctx1.update(keyBytes);\n        ctx1.update(saltBytes);\n        ctx1.update(keyBytes);\n        byte[] finalb = ctx1.digest();\n        int ii = keyLen;\n        while (ii > 0) {\n            ctx.update(finalb, 0, Math.min(ii, 16));\n            ii -= 16;\n        }\n\n        /*\n         * Don't leave anything around in JVM they could use.\n         */\n        Arrays.fill(finalb, (byte) 0);\n\n        /*\n         * Then something really weird...\n         */\n        ii = keyLen;\n        final int j = 0;\n        while (ii > 0) {\n            if ((ii & 1) == 1) {\n                ctx.update(finalb[j]);\n            } else {\n                ctx.update(keyBytes[j]);\n            }\n            ii >>= 1;\n        }\n\n        /*\n         * Now make the output string\n         */\n        final StringBuilder passwd = new StringBuilder(prefix + saltString + \"$\");\n        finalb = ctx.digest();\n\n        /*\n         * and now, just to make sure things don't run too fast On a 60 Mhz Pentium this takes 34 milliseconds, so you\n         * would need 30 seconds to build a 1000 entry dictionary...\n         */\n        for (int i = 0; i < ROUNDS; i++) {\n            ctx1 = DigestUtils.getMd5Digest();\n            if ((i & 1) != 0) {\n                ctx1.update(keyBytes);\n            } else {\n                ctx1.update(finalb, 0, BLOCKSIZE);\n            }\n\n            if (i % 3 != 0) {\n                ctx1.update(saltBytes);\n            }\n\n            if (i % 7 != 0) {\n                ctx1.update(keyBytes);\n            }\n\n            if ((i & 1) != 0) {\n                ctx1.update(finalb, 0, BLOCKSIZE);\n            } else {\n                ctx1.update(keyBytes);\n            }\n            finalb = ctx1.digest();\n        }\n\n        // The following was nearly identical to the Sha2Crypt code.\n        // Again, the buflen is not really needed.\n        // int buflen = MD5_PREFIX.length() - 1 + salt_string.length() + 1 + BLOCKSIZE + 1;\n        B64.b64from24bit(finalb[0], finalb[6], finalb[12], 4, passwd);\n        B64.b64from24bit(finalb[1], finalb[7], finalb[13], 4, passwd);\n        B64.b64from24bit(finalb[2], finalb[8], finalb[14], 4, passwd);\n        B64.b64from24bit(finalb[3], finalb[9], finalb[15], 4, passwd);\n        B64.b64from24bit(finalb[4], finalb[10], finalb[5], 4, passwd);\n        B64.b64from24bit((byte) 0, (byte) 0, finalb[11], 2, passwd);\n\n        /*\n         * Don't leave anything around in JVM they could use.\n         */\n        // Is there a better way to do this with the JVM?\n        ctx.reset();\n        ctx1.reset();\n        Arrays.fill(keyBytes, (byte) 0);\n        Arrays.fill(saltBytes, (byte) 0);\n        Arrays.fill(finalb, (byte) 0);\n\n        return passwd.toString();\n    }",
+  "regenerated_method": "public static String md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) {\n        if (keyBytes == null) {\n            throw new IllegalArgumentException(\"Key bytes cannot be null\");\n        }\n        if (prefix == null) {\n            throw new IllegalArgumentException(\"Invalid prefix value: null\");\n        }\n        if (random == null) {\n            throw new NullPointerException(\"random cannot be null\");\n        }\n\n        String saltValue = salt;\n        if (salt == null) {\n            saltValue = B64.getRandomSalt(8);\n        }\n\n        StringBuilder buf = new StringBuilder();\n        buf.append(prefix);\n\n        byte[] key = keyBytes;\n        if (key.length == 0) {\n            throw new IllegalArgumentException(\"Key bytes cannot be empty\");\n        }\n\n        buf.append(saltValue);\n        buf.append(new String(keyBytes));\n\n        MessageDigest md = DigestUtils.getMd5Digest();\n        byte[] digest = md.digest(buf.toString().getBytes(StandardCharsets.UTF_8));\n\n        StringBuilder hex = new StringBuilder();\n        for (int i = 0; i < digest.length; i++) {\n            hex.append(DigestUtils.toHex(digest[i]));\n        }\n        return hex.toString();\n    }",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6565384140134511,
+  "original_metrics": {
+    "loc": 123,
+    "sloc": 74,
+    "complexity": 13
+  }
+}

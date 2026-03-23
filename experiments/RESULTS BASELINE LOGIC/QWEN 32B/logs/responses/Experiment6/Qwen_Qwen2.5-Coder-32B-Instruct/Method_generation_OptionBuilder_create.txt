@@ -1,0 +1,15 @@
+```java
+public static Option create(final String opt) throws IllegalArgumentException {
+    if (opt == null || opt.isEmpty() || opt.length() > 1 || !Character.isLetterOrDigit(opt.charAt(0))) {
+        throw new IllegalArgumentException("opt cannot be null, empty, more than one character, or a special character");
+    }
+    Option option = new Option(opt, hasArg, description);
+    option.setLongOpt(longOption);
+    option.setRequired(required);
+    option.setType(type);
+    option.setValueSeparator(valueSeparator);
+    option.setArgName(argName);
+    reset();
+    return option;
+}
+```

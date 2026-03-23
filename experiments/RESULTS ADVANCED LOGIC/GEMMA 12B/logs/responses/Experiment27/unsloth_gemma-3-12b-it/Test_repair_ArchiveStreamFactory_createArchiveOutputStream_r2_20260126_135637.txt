@@ -1,0 +1,135 @@
+```java
+package org.apache.commons.compress.archivers;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.apache.commons.compress.archivers.ArchiveStreamFactory.APK;
+import static org.apache.commons.compress.archivers.ArchiveStreamFactory.AR;
+import static org.apache.commons.compress.archivers.ArchiveStreamFactory.ARJ;
+import static org.apache.commons.compress.archivers.ArchiveStreamFactory.CPIO;
+import static org.apache.commons.compress.archivers.ArchiveStreamFactory.DUMP;
+import static org.apache.commons.compress.archivers.ArchiveStreamFactory.JAR;
+import static org.apache.commons.compress.archivers.ArchiveStreamFactory.TAR;
+import static org.apache.commons.compress.archivers.ArchiveStreamFactory.ZIP;
+import static org.apache.commons.compress.archivers.ArchiveStreamFactory.SEVEN_Z;
+import static org.apache.commons.compress.archivers.ArchiveStreamFactory.DEFAULT;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Collections;
+import java.util.Set;
+
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.ArchiveOutputStream;
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.archivers.arj.ArArchiveOutputStream;
+import org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream;
+import org.apache.commons.compress.archivers.jar.JarArchiveOutputStream;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArchiveStreamFactory_createArchiveOutputStreamTestGenerated {
+
+    @Test
+    void testCreateArchiveOutputStream_ar() throws ArchiveException {
+        ArchiveStreamFactory factory = new ArchiveStreamFactory();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream archiveOutputStream = factory.createArchiveOutputStream(AR, out);
+        assertNotNull(archiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStream_zip() throws ArchiveException {
+        ArchiveStreamFactory factory = new ArchiveStreamFactory();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream archiveOutputStream = factory.createArchiveOutputStream(ZIP, out);
+        assertNotNull(archiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStream_tar() throws ArchiveException {
+        ArchiveStreamFactory factory = new ArchiveStreamFactory();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream archiveOutputStream = factory.createArchiveOutputStream(TAR, out);
+        assertNotNull(archiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStream_jar() throws ArchiveException {
+        ArchiveStreamFactory factory = new ArchiveStreamFactory();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream archiveOutputStream = factory.createArchiveOutputStream(JAR, out);
+        assertNotNull(archiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStream_cpio() throws ArchiveException {
+        ArchiveStreamFactory factory = new ArchiveStreamFactory();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream archiveOutputStream = factory.createArchiveOutputStream(CPIO, out);
+        assertNotNull(archiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStream_sevenZ() throws ArchiveException {
+        ArchiveStreamFactory factory = new ArchiveStreamFactory();
+        assertThrows(StreamingNotSupportedException.class, () -> factory.createArchiveOutputStream(SEVEN_Z, new ByteArrayOutputStream()));
+    }
+
+    @Test
+    void testCreateArchiveOutputStream_nullArchiverName() {
+        ArchiveStreamFactory factory = new ArchiveStreamFactory();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        assertThrows(IllegalArgumentException.class, () -> factory.createArchiveOutputStream(null, out));
+    }
+
+    @Test
+    void testCreateArchiveOutputStream_nullOutputStream() {
+        ArchiveStreamFactory factory = new ArchiveStreamFactory();
+        assertThrows(IllegalArgumentException.class, () -> factory.createArchiveOutputStream(ZIP, null));
+    }
+
+    @Test
+    void testCreateArchiveOutputStream_unknownArchiver() throws ArchiveException {
+        ArchiveStreamFactory factory = new ArchiveStreamFactory();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        assertThrows(ArchiveException.class, () -> factory.createArchiveOutputStream("unknown", out));
+    }
+
+    @Test
+    void testCreateArchiveOutputStream_tarWithEncoding() throws ArchiveException {
+        ArchiveStreamFactory factory = new ArchiveStreamFactory();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream archiveOutputStream = factory.createArchiveOutputStream(TAR, out, "UTF-8");
+        assertNotNull(archiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStream_zipWithEncoding() throws ArchiveException {
+        ArchiveStreamFactory factory = new ArchiveStreamFactory();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream archiveOutputStream = factory.createArchiveOutputStream(ZIP, out, "UTF-8");
+        assertNotNull(archiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStream_jarWithEncoding() throws ArchiveException {
+        ArchiveStreamFactory factory = new ArchiveStreamFactory();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream archiveOutputStream = factory.createArchiveOutputStream(JAR, out, "UTF-8");
+        assertNotNull(archiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStream_cpioWithEncoding() throws ArchiveException {
+        ArchiveStreamFactory factory = new ArchiveStreamFactory();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream archiveOutputStream = factory.createArchiveOutputStream(CPIO, out, "UTF-8");
+        assertNotNull(archiveOutputStream);
+    }
+}
+```

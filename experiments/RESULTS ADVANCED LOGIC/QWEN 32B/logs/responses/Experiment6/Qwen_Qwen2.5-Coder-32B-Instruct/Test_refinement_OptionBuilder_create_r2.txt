@@ -1,0 +1,48 @@
+```java
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class OptionBuilder_createTestGenerated {
+    @BeforeEach
+    public void setUp() {
+        // Reset OptionBuilder before each test
+        ReflectionTestUtils.invokeMethod(OptionBuilder.class, "reset");
+    }
+
+    @AfterEach
+    public void tearDown() {
+        // Reset OptionBuilder after each test
+        ReflectionTestUtils.invokeMethod(OptionBuilder.class, "reset");
+    }
+
+    @Test
+    public void testCreateWithInvalidShortOption() {
+        // Arrange
+        String opt = "ab"; // Invalid short option
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            OptionBuilder.create(opt);
+        });
+        assertNotNull(exception);
+    }
+
+    @Test
+    public void testCreateWithNullShortOption() {
+        // Arrange
+        String opt = null; // Null short option
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            OptionBuilder.create(opt);
+        });
+        assertNotNull(exception);
+    }
+}
+```

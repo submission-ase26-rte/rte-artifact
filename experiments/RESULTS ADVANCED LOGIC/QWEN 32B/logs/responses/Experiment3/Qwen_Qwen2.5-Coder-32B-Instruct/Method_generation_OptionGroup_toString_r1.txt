@@ -1,0 +1,28 @@
+```java
+public String toString() {
+    if (optionMap.isEmpty()) {
+        return "[]";
+    }
+    StringBuilder buffer = new StringBuilder("[");
+    Iterator<Option> it = getOptions().iterator();
+    while (it.hasNext()) {
+        Option option = it.next();
+        buffer.append("-");
+        if (option.getLongOpt() != null) {
+            buffer.append("-");
+            buffer.append(option.getLongOpt());
+        } else {
+            buffer.append(option.getOpt());
+        }
+        if (option.getDescription() != null) {
+            buffer.append(" ");
+            buffer.append(option.getDescription());
+        }
+        if (it.hasNext()) {
+            buffer.append(", ");
+        }
+    }
+    buffer.append("]");
+    return buffer.toString();
+}
+```

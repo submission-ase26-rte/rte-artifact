@@ -1,0 +1,26 @@
+```java
+@Override
+public CommandLine parse(final Options options, final String[] arguments, final Properties properties, final boolean stopAtNonOption) throws ParseException {
+    cmd = new CommandLine();
+    setOptions(options);
+    processProperties(properties);
+
+    if (arguments == null || arguments.length == 0) {
+        checkRequiredOptions();
+        return cmd;
+    }
+
+    String[] args = flatten(options, arguments, stopAtNonOption);
+
+    for (final String arg : args) {
+        try {
+            processOption(arg, new java.util.LinkedList().listIterator());
+        } catch (final UnrecognizedOptionException e) {
+            throw e;
+        }
+    }
+
+    checkRequiredOptions();
+    return cmd;
+}
+```

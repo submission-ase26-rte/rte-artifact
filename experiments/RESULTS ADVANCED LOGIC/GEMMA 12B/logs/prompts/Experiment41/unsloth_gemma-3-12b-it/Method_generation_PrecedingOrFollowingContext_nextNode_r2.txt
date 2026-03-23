@@ -1,0 +1,287 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.jxpath.ri.axes;
+
+import java.util.Stack;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.EvalContext;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class PrecedingOrFollowingContext_nextNodeTestGenerated {
+    private EvalContext mockEvalContext;
+    private NodeTest mockNodeTest;
+    private PrecedingOrFollowingContext target;
+
+    @BeforeEach
+    void setUp() {
+        mockEvalContext = mock(EvalContext.class);
+        mockNodeTest = mock(NodeTest.class);
+        target = new PrecedingOrFollowingContext(mockEvalContext, mockNodeTest, false);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mockEvalContext = null;
+        mockNodeTest = null;
+        target = null;
+    }
+
+    @Test
+    void testNextNode_noStack_rootHasNoParent() {
+        NodePointer root = Mockito.mock(NodePointer.class);
+        when(root.isLeaf()).thenReturn(false);
+        when(root.getParent()).thenReturn(null);
+        when(mockEvalContext.getCurrentNodePointer()).thenReturn(root);
+        assertFalse(target.nextNode());
+    }
+
+    @Test
+    void testNextNode_reverse_rootHasNoParent() {
+        NodePointer root = Mockito.mock(NodePointer.class);
+        when(root.isLeaf()).thenReturn(false);
+        when(root.getParent()).thenReturn(null);
+        when(mockEvalContext.getCurrentNodePointer()).thenReturn(root);
+        target = new PrecedingOrFollowingContext(mockEvalContext, mockNodeTest, true);
+        assertFalse(target.nextNode());
+    }
+
+    @Test
+            void testNextNode_noStack_rootHasParent_pushIterator() {
+                NodePointer root = Mockito.mock(NodePointer.class);
+                when(root.isLeaf()).thenReturn(false);
+                when(root.getParent()).thenReturn(Mockito.mock(NodePointer.class));
+                when(mockEvalContext.getCurrentNodePointer()).thenReturn(root);
+                NodeIterator iterator = Mockito.mock(NodeIterator.class);
+                when(root.childIterator(null, false, root)).thenReturn(iterator);
+                target.nextNode();
+                verify(root).childIterator(null, false, root);
+            }
+
+    @Test
+        void testNextNode_reverse_rootHasParent_pushIterator() {
+            NodePointer root = Mockito.mock(NodePointer.class);
+            when(root.isLeaf()).thenReturn(false);
+            when(root.getParent()).thenReturn(Mockito.mock(NodePointer.class));
+            when(mockEvalContext.getCurrentNodePointer()).thenReturn(root);
+            NodeIterator iterator = Mockito.mock(NodeIterator.class);
+            when(root.childIterator(null, true, root)).thenReturn(iterator);
+            target = new PrecedingOrFollowingContext(mockEvalContext, mockNodeTest, true);
+            target.nextNode();
+            verify(root).childIterator(null, true, root);
+        }
+
+    @Test
+    void testNextNode_withStack_reverse() {
+        NodePointer root = Mockito.mock(NodePointer.class);
+        when(root.isLeaf()).thenReturn(false);
+        when(root.getParent()).thenReturn(Mockito.mock(NodePointer.class));
+        when(mockEvalContext.getCurrentNodePointer()).thenReturn(root);
+        NodeIterator iterator = Mockito.mock(NodeIterator.class);
+        when(root.childIterator(null, true, root)).thenReturn(iterator);
+        when(iterator.setPosition(0)).thenReturn(true);
+        when(iterator.getNodePointer()).thenReturn(Mockito.mock(NodePointer.class));
+        target = new PrecedingOrFollowingContext(mockEvalContext, mockNodeTest, true);
+        assertTrue(target.nextNode());
+    }
+
+    @Test
+    void testNextNode_rootHasParent_reverse_iteratorEmpty() {
+        NodePointer root = Mockito.mock(NodePointer.class);
+        when(root.isLeaf()).thenReturn(false);
+        when(root.getParent()).thenReturn(Mockito.mock(NodePointer.class));
+        when(mockEvalContext.getCurrentNodePointer()).thenReturn(root);
+        NodeIterator iterator = Mockito.mock(NodeIterator.class);
+        when(root.childIterator(null, true, root)).thenReturn(iterator);
+        when(iterator.setPosition(0)).thenReturn(false);
+        target = new PrecedingOrFollowingContext(mockEvalContext, mockNodeTest, true);
+        assertFalse(target.nextNode());
+    }
+
+    @Test
+    void testNextNode_rootHasParent_noReverse_iteratorEmpty() {
+        NodePointer root = Mockito.mock(NodePointer.class);
+        when(root.isLeaf()).thenReturn(false);
+        when(root.getParent()).thenReturn(Mockito.mock(NodePointer.class));
+        when(mockEvalContext.getCurrentNodePointer()).thenReturn(root);
+        NodeIterator iterator = Mockito.mock(NodeIterator.class);
+        when(root.childIterator(null, false, root)).thenReturn(iterator);
+        when(iterator.setPosition(0)).thenReturn(false);
+        target = new PrecedingOrFollowingContext(mockEvalContext, mockNodeTest, false);
+        assertFalse(target.nextNode());
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 34.00% | Branch: 29.41%
+- Tests: 2/7 passed
+
+TEST STATUS:
+- PASSED (2): testNextNode_noStack_rootHasNoParent, testNextNode_reverse_rootHasNoParent
+- FAILED (0): none
+- ERRORS (5): testNextNode_noStack_rootHasParent_pushIterator, testNextNode_reverse_rootHasParent_pushIterator, testNextNode_withStack_reverse, testNextNode_rootHasParent_reverse_iteratorEmpty, testNextNode_rootHasParent_noReverse_iteratorEmpty
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Stack -> java.util.Stack
+//   EvalContext -> org.apache.commons.jxpath.ri.EvalContext
+//   NodeTest -> org.apache.commons.jxpath.ri.compiler.NodeTest
+//   NodeIterator -> org.apache.commons.jxpath.ri.model.NodeIterator
+//   NodePointer -> org.apache.commons.jxpath.ri.model.NodePointer
+//   PrecedingOrFollowingContext -> org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+
+// === Class: PrecedingOrFollowingContext ===
+// Fields (with actual visibility):
+    private final NodeTest nodeTest;
+    private boolean setStarted;
+    private Stack stack;
+    private NodePointer currentNodePointer;
+    private NodePointer currentRootLocation;
+    private final boolean reverse;
+
+// Constructors:
+public PrecedingOrFollowingContext(EvalContext parentContext, NodeTest nodeTest, boolean reverse);
+
+// Getter/Setter Methods (for test assertions):
+public NodePointer getCurrentNodePointer();
+public int getDocumentOrder();
+public boolean setPosition(final int position);
+
+// === Superclass: EvalContext (inherited members) ===
+// Inherited Fields:
+    protected EvalContext parentContext;
+    protected RootContext rootContext;
+    protected int position;
+
+// Inherited Method Signatures:
+public Pointer getContextNodePointer();
+public JXPathContext getJXPathContext();
+public int getPosition();
+public int getDocumentOrder();
+public boolean isChildOrderingRequired();
+public boolean hasNext();
+public Object next();
+public void remove();
+protected void sortPointers(final List l);
+public List getContextNodeList();
+public NodeSet getNodeSet();
+public Object getValue();
+public RootContext getRootContext();
+public void reset();
+public int getCurrentPosition();
+public Pointer getSingleNodePointer();
+abstract public NodePointer getCurrentNodePointer();
+public boolean nextSet();
+abstract public boolean nextNode();
+public boolean setPosition(final int position);
+
+// === External Class: NodePointer ===
+// Full import path: org.apache.commons.jxpath.ri.model.NodePointer
+// Type: ABSTRACT CLASS (cannot instantiate directly - use Mockito.mock() or anonymous subclass)
+// Import paths:
+//   HashSet -> java.util.HashSet
+//   Locale -> java.util.Locale
+//   AbstractFactory -> org.apache.commons.jxpath.AbstractFactory
+//   ExceptionHandler -> org.apache.commons.jxpath.ExceptionHandler
+//   JXPathContext -> org.apache.commons.jxpath.JXPathContext
+// Fields (with actual visibility):
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int WHOLE_COLLECTION;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final String UNKNOWN_NAMESPACE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    protected int index;
+    private boolean attribute;
+    private NamespaceResolver namespaceResolver;
+    private ExceptionHandler exceptionHandler;
+    private Object rootNode;
+    protected NodePointer parent;
+    protected Locale locale;
+
+// Constructors:
+protected NodePointer(NodePointer parent);
+protected NodePointer(NodePointer parent, Locale locale);
+
+// Method Signatures (used by target method):
+public NodePointer getParent();
+public NodeIterator childIterator(final NodeTest test, final boolean reverse, final NodePointer startWith);
+public boolean testNode(final NodeTest test);
+public boolean isRoot();
+abstract public boolean isLeaf();
+
+// Public Getter Methods (for test assertions):
+public NamespaceResolver getNamespaceResolver();
+public NodePointer getImmediateParentPointer();
+public boolean isAttribute();
+public boolean isNode();
+public boolean isContainer();
+public int getIndex();
+public boolean isCollection();
+public int getLength();
+public Object getValue();
+public NodePointer getValuePointer();
+public NodePointer getImmediateValuePointer();
+public boolean isActual();
+public QName getName();
+public Object getBaseValue();
+public Object getNodeValue();
+
+// === External Class: NodeIterator ===
+// Full import path: org.apache.commons.jxpath.ri.model.NodeIterator
+// Type: INTERFACE (cannot instantiate - use Mockito.mock(NodeIterator.class) instead)
+// Method Signatures (used by target method):
+boolean setPosition(int position);
+int getPosition();
+NodePointer getNodePointer();
+
+
+TASK:
+Regenerate ONLY the method "nextNode" OF CLASS "PrecedingOrFollowingContext" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public boolean nextNode() {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.jxpath.ri.axes
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "nextNode"
+– Allowed imports: exactly those already present in PrecedingOrFollowingContext
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

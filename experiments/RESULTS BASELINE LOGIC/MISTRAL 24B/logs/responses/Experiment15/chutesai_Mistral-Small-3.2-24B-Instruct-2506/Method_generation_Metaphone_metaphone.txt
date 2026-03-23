@@ -1,0 +1,115 @@
+```java
+public String metaphone(final String txt) {
+    if (txt == null || txt.isEmpty()) {
+        return "";
+    }
+
+    StringBuilder coded = new StringBuilder();
+    int wdsz = txt.length();
+    boolean hard = false;
+
+    // Initial handling of silent 'H'
+    if (wdsz > 1 && txt.charAt(0) == 'H' && isVowel(new StringBuilder(txt), 1)) {
+        coded.append("H");
+        hard = true;
+    }
+
+    // Main processing loop
+    for (int n = 0; n < wdsz && !hard; n++) {
+        char ch = Character.toUpperCase(txt.charAt(n));
+
+        switch (ch) {
+            case 'A':
+            case 'E':
+            case 'I':
+            case 'O':
+            case 'U':
+                if (n == 0) {
+                    coded.append(ch);
+                }
+                break;
+            case 'B':
+                if (!isNextChar(new StringBuilder(txt), n, 'B') && !isNextChar(new StringBuilder(txt), n, 'M')) {
+                    coded.append("B");
+                }
+                hard = true;
+                break;
+            case 'Ç':
+            case 'C':
+                if (isNextChar(new StringBuilder(txt), n, 'H') && !isLastChar(wdsz, n) && (isVowel(new StringBuilder(txt), n + 2) || isVowel(new StringBuilder(txt), n + 3))) {
+                    coded.append("S");
+                } else if (isNextChar(new StringBuilder(txt), n, 'H') && isLastChar(wdsz, n + 1)) {
+                    coded.append("K");
+                } else if (regionMatch(new StringBuilder(txt), n, "L") || regionMatch(new StringBuilder(txt), n, "R") || regionMatch(new StringBuilder(txt), n, "T") || regionMatch(new StringBuilder(txt), n, "D") || regionMatch(new StringBuilder(txt), n, "G") || regionMatch(new StringBuilder(txt), n, "N")) {
+                    coded.append("K");
+                } else if (isNextChar(new StringBuilder(txt), n, 'S') || isNextChar(new StringBuilder(txt), n, 'Z') || isNextChar(new StringBuilder(txt), n, 'X') || (n > 0 && (txt.charAt(n - 1) == 'S' || txt.charAt(n - 1) == 'Z'))) {
+                    coded.append("S");
+                } else if (n == 0 && isVowel(new StringBuilder(txt), n + 1) && isVowel(new StringBuilder(txt), n + 2)) {
+                    coded.append("S");
+                } else if (n > 0 && !isVowel(new StringBuilder(txt), n - 1) && isVowel(new StringBuilder(txt), n + 1) && !isVowel(new StringBuilder(txt), n + 2)) {
+                    coded.append("S");
+                } else {
+                    coded.append("K");
+                }
+                hard = true;
+                break;
+            case 'D':
+                if (isNextChar(new StringBuilder(txt), n, 'G') && (isVowel(new StringBuilder(txt), n + 2) || isVowel(new StringBuilder(txt), n + 3) || isLastChar(wdsz, n + 2) || isLastChar(wdsz, n + 3))) {
+                    coded.append("J");
+                } else {
+                    coded.append("T");
+                }
+                hard = true;
+                break;
+            case 'G':
+                if (n > 1 && !isVowel(new StringBuilder(txt), n - 1) && (isVowel(new StringBuilder(txt), n + 1) || isVowel(new StringBuilder(txt), n + 2))) {
+                    coded.append("J");
+                } else if (!isNextChar(new StringBuilder(txt), n, 'H') && !isNextChar(new StringBuilder(txt), n, 'E') && !isNextChar(new StringBuilder(txt), n, 'I') && !isNextChar(new StringBuilder(txt), n, 'Y')) {
+                    coded.append("K");
+                }
+                hard = true;
+                break;
+            case 'K':
+            case 'J':
+            case 'P':
+            case 'T':
+            case 'Q':
+            case 'V':
+            case 'W':
+            case 'X':
+            case 'Y':
+            case 'Z':
+                coded.append(ch == 'X' ? "KS" : Character.toString(ch));
+                hard = true;
+                break;
+            case 'F':
+            case 'L':
+            case 'M':
+            case 'N':
+            case 'R':
+                coded.append(ch);
+                hard = true;
+                break;
+            case 'H':
+                if (!isVowel(new StringBuilder(txt), n + 1)) {
+                    coded.append("H");
+                }
+                hard = true;
+                break;
+            case 'S':
+                if (isNextChar(new StringBuilder(txt), n, 'H')) {
+                    coded.append("X");
+                } else {
+                    coded.append("S");
+                }
+                hard = true;
+                break;
+            default:
+                hard = true;
+                break;
+        }
+    }
+
+    return coded.length() > getMaxCodeLen() ? coded.substring(0, getMaxCodeLen()) : coded.toString();
+}
+```

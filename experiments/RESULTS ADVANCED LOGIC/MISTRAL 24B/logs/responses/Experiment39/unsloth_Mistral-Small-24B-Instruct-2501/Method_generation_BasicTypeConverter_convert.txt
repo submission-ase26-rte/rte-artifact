@@ -1,0 +1,76 @@
+```java
+public Object convert(final Object object, final Class toType) {
+    if (object == null) {
+        return convertNullToPrimitive(toType);
+    }
+
+    if (toType.isAssignableFrom(object.getClass())) {
+        return object;
+    }
+
+    if (toType.isArray()) {
+        if (object.getClass().isArray()) {
+            int length = Array.getLength(object);
+            Object array = Array.newInstance(toType.getComponentType(), length);
+            for (int i = 0; i < length; i++) {
+                Array.set(array, i, convert(Array.get(object, i), toType.getComponentType()));
+            }
+            return array;
+        } else if (object instanceof Collection) {
+            Collection collection = (Collection) object;
+            Object array = Array.newInstance(toType.getComponentType(), collection.size());
+            int i = 0;
+            for (Object item : collection) {
+                Array.set(array, i++, convert(item, toType.getComponentType()));
+            }
+            return array;
+        }
+    } else if (Collection.class.isAssignableFrom(toType)) {
+        if (object.getClass().isArray()) {
+            int length = Array.getLength(object);
+            Collection collection = allocateCollection(toType);
+            for (int i = 0; i < length; i++) {
+                collection.add(convert(Array.get(object, i), toType));
+            }
+            return unmodifiableCollection(collection);
+        } else if (object instanceof Collection) {
+            Collection collection = (Collection) object;
+            Collection result = allocateCollection(toType);
+            for (Object item : collection) {
+                result.add(convert(item, toType));
+            }
+            return unmodifiableCollection(result);
+        }
+    }
+
+    if (toType == String.class) {
+        return object.toString();
+    }
+
+    if (toType == Boolean.class && object instanceof Number) {
+        return ((Number) object).intValue() != 0;
+    }
+
+    if (object instanceof Number && toType == Boolean.class) {
+        return ((Number) object).intValue() != 0;
+    }
+
+    if (toType == Integer.class && object instanceof Boolean) {
+        return ((Boolean) object) ? 1 : 0;
+    }
+
+    if (toType == Boolean.class && object instanceof Boolean) {
+        return (Boolean) object;
+    }
+
+    if (toType == Integer.class && object instanceof String) {
+        return Integer.valueOf((String) object);
+    }
+
+    if (ConvertUtils.lookup(toType) != null) {
+        return ConvertUtils.convert(object, toType);
+    }
+
+    throw new JXPathTypeConversionException("Cannot convert " + object + " to " + toType);
+}
+```

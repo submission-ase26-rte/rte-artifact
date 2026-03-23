@@ -1,0 +1,427 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.cli;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class DefaultParser_parseTestGenerated {
+
+    private DefaultParser parser;
+    private Options options;
+    private Properties properties;
+
+    @BeforeEach
+    void setUp() {
+        parser = new DefaultParser();
+        options = new Options();
+        properties = new Properties();
+    }
+
+    @Test
+    void testParseWithNoArguments() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{}, properties, false);
+        assertNotNull(cmd);
+        assertTrue(cmd.getArgList().isEmpty());
+    }
+
+    @Test
+    void testParseWithValidShortOption() throws ParseException {
+        options.addOption("a", false, "short option a");
+        CommandLine cmd = parser.parse(options, new String[]{"-a"}, properties, false);
+        assertTrue(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithValidLongOption() throws ParseException {
+        options.addOption("alpha", false, "long option alpha");
+        CommandLine cmd = parser.parse(options, new String[]{"--alpha"}, properties, false);
+        assertTrue(cmd.hasOption("alpha"));
+    }
+
+    @Test
+    void testParseWithValidShortOptionWithArgument() throws ParseException {
+        options.addOption("b", true, "short option b with argument");
+        CommandLine cmd = parser.parse(options, new String[]{"-b", "value"}, properties, false);
+        assertEquals("value", cmd.getOptionValue("b"));
+    }
+
+    @Test
+    void testParseWithValidLongOptionWithArgument() throws ParseException {
+        options.addOption("beta", true, "long option beta with argument");
+        CommandLine cmd = parser.parse(options, new String[]{"--beta", "value"}, properties, false);
+        assertEquals("value", cmd.getOptionValue("beta"));
+    }
+
+    @Test
+    void testParseWithRequiredOptionMissing() {
+        options.addOption(Option.builder("r").required(true).build());
+        assertThrows(MissingOptionException.class, () -> parser.parse(options, new String[]{}, properties, false));
+    }
+
+    @Test
+    void testParseWithRequiredOptionPresent() throws ParseException {
+        options.addOption(Option.builder("r").required(true).build());
+        CommandLine cmd = parser.parse(options, new String[]{"-r"}, properties, false);
+        assertTrue(cmd.hasOption("r"));
+    }
+
+    @Test
+    void testParseWithStopAtNonOptionTrue() throws ParseException {
+        options.addOption("a", false, "short option a");
+        CommandLine cmd = parser.parse(options, new String[]{"-a", "non-option"}, properties, true);
+        assertTrue(cmd.hasOption("a"));
+        assertEquals("non-option", cmd.getArgList().get(0));
+    }
+
+    @Test
+    void testParseWithStopAtNonOptionFalse() {
+        options.addOption("a", false, "short option a");
+        assertThrows(ParseException.class, () -> parser.parse(options, new String[]{"-a", "non-option"}, properties, false));
+    }
+
+    @Test
+    void testParseWithProperties() throws ParseException {
+        options.addOption("p", true, "property option p");
+        properties.setProperty("p", "value");
+        CommandLine cmd = parser.parse(options, new String[]{}, properties, false);
+        assertEquals("value", cmd.getOptionValue("p"));
+    }
+
+    @Test
+    void testParseWithPropertiesAndCommandLineOverride() throws ParseException {
+        options.addOption("p", true, "property option p");
+        properties.setProperty("p", "value");
+        CommandLine cmd = parser.parse(options, new String[]{"-p", "override"}, properties, false);
+        assertEquals("override", cmd.getOptionValue("p"));
+    }
+
+    @Test
+    void testParseWithPropertiesAndRequiredOption() throws ParseException {
+        options.addOption(Option.builder("r").required(true).build());
+        properties.setProperty("r", "value");
+        CommandLine cmd = parser.parse(options, new String[]{}, properties, false);
+        assertTrue(cmd.hasOption("r"));
+    }
+
+    @Test
+    void testParseWithPropertiesAndOptionGroup() throws ParseException {
+        OptionGroup group = new OptionGroup();
+        group.addOption(new Option("a", false, "option a"));
+        group.addOption(new Option("b", false, "option b"));
+        options.addOptionGroup(group);
+        properties.setProperty("a", "value");
+        CommandLine cmd = parser.parse(options, new String[]{}, properties, false);
+        assertTrue(cmd.hasOption("a"));
+        assertFalse(cmd.hasOption("b"));
+    }
+
+    @Test
+    void testParseWithPropertiesAndOptionGroupConflict() {
+        OptionGroup group = new OptionGroup();
+        group.addOption(new Option("a", false, "option a"));
+        group.addOption(new Option("b", false, "option b"));
+        options.addOptionGroup(group);
+        properties.setProperty("a", "value");
+        properties.setProperty("b", "value");
+        assertThrows(ParseException.class, () -> parser.parse(options, new String[]{}, properties, false));
+    }
+
+    @Test
+    void testParseWithInvalidShortOption() {
+        assertThrows(UnrecognizedOptionException.class, () -> parser.parse(options, new String[]{"-x"}, properties, false));
+    }
+
+    @Test
+    void testParseWithInvalidLongOption() {
+        assertThrows(UnrecognizedOptionException.class, () -> parser.parse(options, new String[]{"--unknown"}, properties, false));
+    }
+
+    @Test
+    void testParseWithNullArguments() throws ParseException {
+        CommandLine cmd = parser.parse(options, null, properties, false);
+        assertNotNull(cmd);
+        assertTrue(cmd.getArgList().isEmpty());
+    }
+
+    @Test
+    void testParseWithNullProperties() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{}, null, false);
+        assertNotNull(cmd);
+        assertTrue(cmd.getArgList().isEmpty());
+    }
+
+    @Test
+    void testParseWithNullOptions() {
+        assertThrows(NullPointerException.class, () -> parser.parse(null, new String[]{}, properties, false));
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 100.00%
+- Tests: 13/19 passed
+
+TEST STATUS:
+- PASSED (13): testParseWithNoArguments, testParseWithValidShortOption, testParseWithValidShortOptionWithArgument, testParseWithRequiredOptionMissing, testParseWithRequiredOptionPresent, testParseWithStopAtNonOptionTrue, testParseWithProperties, testParseWithPropertiesAndCommandLineOverride, testParseWithInvalidShortOption, testParseWithInvalidLongOption, testParseWithNullArguments, testParseWithNullProperties, testParseWithNullOptions
+- FAILED (3): testParseWithStopAtNonOptionFalse, testParseWithPropertiesAndOptionGroup, testParseWithPropertiesAndOptionGroupConflict
+- ERRORS (3): testParseWithValidLongOption, testParseWithValidLongOptionWithArgument, testParseWithPropertiesAndRequiredOption
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ArrayList -> java.util.ArrayList
+//   Enumeration -> java.util.Enumeration
+//   List -> java.util.List
+//   Properties -> java.util.Properties
+//   Consumer -> java.util.function.Consumer
+//   DefaultParser -> org.apache.commons.cli.DefaultParser
+//   Options -> org.apache.commons.cli.Options
+//   OptionGroup -> org.apache.commons.cli.OptionGroup
+//   CommandLine -> org.apache.commons.cli.CommandLine
+
+// === Class: DefaultParser ===
+// Fields (with actual visibility):
+    private final boolean allowPartialMatching;
+    private final Consumer deprecatedHandler;
+    private final Boolean stripLeadingAndTrailingQuotes;
+    protected CommandLine cmd;
+    protected Options options;
+    protected boolean stopAtNonOption;
+    protected String currentToken;
+    protected Option currentOption;
+    protected boolean skipParsing;
+    protected List expectedOpts;
+
+// Constructors:
+private Builder();
+public DefaultParser();
+public DefaultParser(boolean allowPartialMatching);
+private DefaultParser(boolean allowPartialMatching, Boolean stripLeadingAndTrailingQuotes, Consumer deprecatedHandler);
+
+// Getter/Setter Methods (for test assertions):
+public Builder setAllowPartialMatching(final boolean allowPartialMatching);
+public Builder setDeprecatedHandler(final Consumer<Option> deprecatedHandler);
+public Builder setStripLeadingAndTrailingQuotes(final Boolean stripLeadingAndTrailingQuotes);
+private String getLongPrefix(final String token);
+private List<String> getMatchingLongOptions(final String token);
+private boolean isArgument(final String token);
+private boolean isJavaProperty(final String token);
+private boolean isLongOption(final String token);
+private boolean isNegativeNumber(final String token);
+private boolean isOption(final String token);
+private boolean isShortOption(final String token);
+
+// Internal Methods (full implementation for context):
+    private void checkRequiredArgs() throws ParseException {
+        if (currentOption != null && currentOption.requiresArg()) {
+            if (isJavaProperty(currentOption.getKey()) && currentOption.getValuesList().size() == 1) {
+                return;
+            }
+            throw new MissingArgumentException(currentOption);
+        }
+    }
+    private void handleToken(final String token) throws ParseException {
+        currentToken = token;
+        if (skipParsing) {
+            cmd.addArg(token);
+        } else if ("--".equals(token)) {
+            skipParsing = true;
+        } else if (currentOption != null && currentOption.acceptsArg() && isArgument(token)) {
+            currentOption.processValue(stripLeadingAndTrailingQuotesDefaultOn(token));
+        } else if (token.startsWith("--")) {
+            handleLongOption(token);
+        } else if (token.startsWith("-") && !"-".equals(token)) {
+            handleShortAndLongOption(token);
+        } else {
+            handleUnknownToken(token);
+        }
+        if (currentOption != null && !currentOption.acceptsArg()) {
+            currentOption = null;
+        }
+    }
+    protected void checkRequiredOptions() throws MissingOptionException {
+        // if there are required options that have not been processed
+        if (!expectedOpts.isEmpty()) {
+            throw new MissingOptionException(expectedOpts);
+        }
+    }
+    private void handleProperties(final Properties properties) throws ParseException {
+        if (properties == null) {
+            return;
+        }
+        for (final Enumeration<?> e = properties.propertyNames(); e.hasMoreElements();) {
+            final String option = e.nextElement().toString();
+            final Option opt = options.getOption(option);
+            if (opt == null) {
+                throw new UnrecognizedOptionException("Default option wasn't defined", option);
+            }
+            // if the option is part of a group, check if another option of the group has been selected
+            final OptionGroup group = options.getOptionGroup(opt);
+            final boolean selected = group != null && group.getSelected() != null;
+            if (!cmd.hasOption(option) && !selected) {
+                // get the value from the properties
+                final String value = properties.getProperty(option);
+
+                if (opt.hasArg()) {
+                    if (opt.getValues() == null || opt.getValues().length == 0) {
+                        opt.processValue(stripLeadingAndTrailingQuotesDefaultOff(value));
+                    }
+                } else if (!("yes".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value) || "1".equalsIgnoreCase(value))) {
+                    // if the value is not yes, true or 1 then don't add the option to the CommandLine
+                    continue;
+                }
+                handleOption(opt);
+                currentOption = null;
+            }
+        }
+    }
+
+// === External Class: Options ===
+// Full import path: org.apache.commons.cli.Options
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   Collection -> java.util.Collection
+//   Collections -> java.util.Collections
+//   HashSet -> java.util.HashSet
+// Fields (with actual visibility):
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private final Map shortOpts;
+    private final Map longOpts;
+    private final List requiredOpts;
+    private final Map optionGroups;
+
+// Method Signatures (used by target method):
+public List getRequiredOptions();
+Collection getOptionGroups();
+
+// Public Getter Methods (for test assertions):
+public List<String> getMatchingOptions(String opt);
+public Option getOption(String opt);
+public OptionGroup getOptionGroup(Option opt);
+public Collection<Option> getOptions();
+public boolean hasLongOption(String opt);
+public boolean hasOption(String opt);
+public boolean hasShortOption(String opt);
+public String toString();
+
+// === External Class: OptionGroup ===
+// Full import path: org.apache.commons.cli.OptionGroup
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   LinkedHashMap -> java.util.LinkedHashMap
+//   Map -> java.util.Map
+// Fields (with actual visibility):
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private final Map optionMap;
+    private String selected;
+    private boolean required;
+
+// Method Signatures (used by target method):
+public void setSelected(final Option option);
+
+// Public Getter Methods (for test assertions):
+public Collection<String> getNames();
+public Collection<Option> getOptions();
+public String getSelected();
+public boolean isRequired();
+public String toString();
+
+// === External Class: CommandLine ===
+// Full import path: org.apache.commons.cli.CommandLine
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   Iterator -> java.util.Iterator
+//   LinkedList -> java.util.LinkedList
+//   List -> java.util.List
+// Fields (with actual visibility):
+    package-private static final Consumer DEPRECATED_HANDLER;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private final List args;
+    private final List options;
+    private final Consumer deprecatedHandler;
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+
+// Constructors:
+protected CommandLine();
+private CommandLine(List args, List options, Consumer deprecatedHandler);
+
+// Method Signatures (used by target method):
+static public Builder builder();
+
+// Public Getter Methods (for test assertions):
+public List<String> getArgList();
+public String getArgs();
+public Object getOptionObject(char opt);
+public Object getOptionObject(String opt);
+public Properties getOptionProperties(Option option);
+public Properties getOptionProperties(String opt);
+public Option getOptions();
+public String getOptionValue(char opt);
+public String getOptionValue(char opt, String defaultValue);
+public String getOptionValue(char opt, Supplier defaultValue);
+public String getOptionValue(Option option);
+public String getOptionValue(Option option, String defaultValue);
+public String getOptionValue(Option option, Supplier defaultValue);
+public String getOptionValue(String opt);
+public String getOptionValue(String opt, String defaultValue);
+
+
+// === Exception Class: ParseException ===
+// NOTE: The target method throws this exception.
+// Constructors:
+public ParseException(String message);
+public ParseException(Throwable e);
+
+TASK:
+Regenerate ONLY the method "parse" OF CLASS "DefaultParser" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public CommandLine parse(final Options options, final String[] arguments, final Properties properties, final boolean stopAtNonOption) throws ParseException {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.cli
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "parse"
+– Allowed imports: exactly those already present in DefaultParser
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

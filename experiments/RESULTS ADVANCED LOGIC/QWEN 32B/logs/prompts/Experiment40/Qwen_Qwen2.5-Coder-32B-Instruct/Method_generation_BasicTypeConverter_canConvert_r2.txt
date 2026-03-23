@@ -1,0 +1,408 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class BasicTypeConverter_canConvertTestGenerated {
+    private BasicTypeConverter converter;
+
+    @BeforeEach
+    public void setUp() {
+        converter = new BasicTypeConverter();
+    }
+
+    @Test
+    public void testCanConvertNullObject() {
+        assertTrue(converter.canConvert(null, String.class));
+        assertTrue(converter.canConvert(null, Integer.class));
+        assertTrue(converter.canConvert(null, List.class));
+    }
+
+    @Test
+    public void testCanConvertSameType() {
+        assertTrue(converter.canConvert("test", String.class));
+        assertTrue(converter.canConvert(123, Integer.class));
+        assertTrue(converter.canConvert(123L, Long.class));
+        assertTrue(converter.canConvert(123.45, Double.class));
+        assertTrue(converter.canConvert(true, Boolean.class));
+    }
+
+    @Test
+    public void testCanConvertToSuperType() {
+        assertTrue(converter.canConvert("test", Object.class));
+        assertTrue(converter.canConvert(123, Number.class));
+        assertTrue(converter.canConvert(123L, Number.class));
+        assertTrue(converter.canConvert(123.45, Number.class));
+        assertTrue(converter.canConvert(true, Object.class));
+    }
+
+    @Test
+    public void testCanConvertStringToNumber() {
+        assertTrue(converter.canConvert("123", Integer.class));
+        assertTrue(converter.canConvert("123", Long.class));
+        assertTrue(converter.canConvert("123.45", Double.class));
+        assertTrue(converter.canConvert("123.45", Float.class));
+        assertTrue(converter.canConvert("123", Byte.class));
+        assertTrue(converter.canConvert("123", Short.class));
+        assertTrue(converter.canConvert("123", Character.class));
+    }
+
+    @Test
+    public void testCanConvertNumberToString() {
+        assertTrue(converter.canConvert(123, String.class));
+        assertTrue(converter.canConvert(123L, String.class));
+        assertTrue(converter.canConvert(123.45, String.class));
+    }
+
+    @Test
+    public void testCanConvertBooleanToNumber() {
+        assertTrue(converter.canConvert(true, Integer.class));
+        assertTrue(converter.canConvert(true, Long.class));
+        assertTrue(converter.canConvert(true, Double.class));
+        assertTrue(converter.canConvert(true, Float.class));
+        assertTrue(converter.canConvert(true, Byte.class));
+        assertTrue(converter.canConvert(true, Short.class));
+        assertTrue(converter.canConvert(true, Character.class));
+        assertTrue(converter.canConvert(true, Boolean.class));
+    }
+
+    @Test
+    public void testCanConvertNumberToBoolean() {
+        assertTrue(converter.canConvert(1, Boolean.class));
+        assertTrue(converter.canConvert(0, Boolean.class));
+        assertTrue(converter.canConvert(1L, Boolean.class));
+        assertTrue(converter.canConvert(0L, Boolean.class));
+        assertTrue(converter.canConvert(1.0, Boolean.class));
+        assertTrue(converter.canConvert(0.0, Boolean.class));
+    }
+
+    @Test
+    public void testCanConvertArrayToArray() {
+        Integer[] intArray = {1, 2, 3};
+        assertTrue(converter.canConvert(intArray, Integer[].class));
+        assertTrue(converter.canConvert(intArray, Number[].class));
+        assertTrue(converter.canConvert(intArray, Object[].class));
+    }
+
+    @Test
+    public void testCanConvertArrayToCollection() {
+        Integer[] intArray = {1, 2, 3};
+        assertTrue(converter.canConvert(intArray, List.class));
+        assertTrue(converter.canConvert(intArray, Collection.class));
+        assertTrue(converter.canConvert(intArray, Set.class));
+    }
+
+    @Test
+    public void testCanConvertArrayToSingleType() {
+        Integer[] intArray = {1, 2, 3};
+        assertTrue(converter.canConvert(intArray, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertEmptyArrayToSingleType() {
+        Integer[] intArray = {};
+        assertTrue(converter.canConvert(intArray, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertEmptyCollectionToSingleType() {
+        List<Integer> intList = Collections.emptyList();
+        assertTrue(converter.canConvert(intList, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertPointer() {
+        Pointer pointer = Mockito.mock(Pointer.class);
+        Mockito.when(pointer.getValue()).thenReturn("test");
+        assertTrue(converter.canConvert(pointer, String.class));
+    }
+
+    @Test
+    public void testCanConvertUsingConvertUtils() {
+        ConvertUtils.register(Mockito.mock(Converter.class), BigDecimal.class);
+        assertTrue(converter.canConvert("123", BigDecimal.class));
+    }
+
+    @Test
+    public void testCanConvertNumberToNumber() {
+        assertTrue(converter.canConvert(1, Double.class));
+        assertTrue(converter.canConvert(1.0, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertStringToBoolean() {
+        assertTrue(converter.canConvert("true", Boolean.class));
+        assertTrue(converter.canConvert("false", Boolean.class));
+    }
+
+    @Test
+    public void testCanConvertStringToCharacter() {
+        assertTrue(converter.canConvert("a", Character.class));
+    }
+
+    @Test
+    public void testCanConvertStringToByte() {
+        assertTrue(converter.canConvert("123", Byte.class));
+    }
+
+    @Test
+    public void testCanConvertStringToShort() {
+        assertTrue(converter.canConvert("123", Short.class));
+    }
+
+    @Test
+    public void testCanConvertStringToInteger() {
+        assertTrue(converter.canConvert("123", Integer.class));
+    }
+
+    @Test
+    public void testCanConvertStringToLong() {
+        assertTrue(converter.canConvert("123", Long.class));
+    }
+
+    @Test
+    public void testCanConvertStringToFloat() {
+        assertTrue(converter.canConvert("123.45", Float.class));
+    }
+
+    @Test
+    public void testCanConvertStringToDouble() {
+        assertTrue(converter.canConvert("123.45", Double.class));
+    }
+
+    @Test
+    public void testCanConvertArrayToArrayComponentType() {
+        assertTrue(converter.canConvert(new int[]{1, 2, 3}, Integer.class));
+        assertTrue(converter.canConvert(new String[]{"a", "b"}, String.class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToArrayComponentType() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        assertTrue(converter.canConvert(list, Integer.class));
+        Set<String> set = new HashSet<>();
+        set.add("a");
+        set.add("b");
+        assertTrue(converter.canConvert(set, String.class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToCollection() {
+        assertTrue(converter.canConvert(new ArrayList<>(), List.class));
+        assertTrue(converter.canConvert(new HashSet<>(), Set.class));
+    }
+
+    @Test
+    public void testCanConvertEmptyCollectionToArrayComponentType() {
+        assertTrue(converter.canConvert(new ArrayList<>(), Integer.class));
+        assertTrue(converter.canConvert(new HashSet<>(), String.class));
+    }
+
+    @Test
+    public void testCanConvertNonEmptyCollectionToArrayComponentType() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        assertTrue(converter.canConvert(list, Integer.class));
+        Set<String> set = new HashSet<>();
+        set.add("a");
+        assertTrue(converter.canConvert(set, String.class));
+    }
+
+    @Test
+    public void testCanConvertNonEmptyCollectionToCollection() {
+        assertTrue(converter.canConvert(new ArrayList<>(), List.class));
+        assertTrue(converter.canConvert(new HashSet<>(), Set.class));
+    }
+
+    @Test
+    public void testCanConvertUnsupportedConversion() {
+        assertFalse(converter.canConvert("test", BigInteger.class));
+        assertFalse(converter.canConvert(123, String[].class));
+    }
+
+    @Test
+    public void testCanConvertNodeSet() {
+        NodeSet nodeSet = Mockito.mock(NodeSet.class);
+        Mockito.when(nodeSet.getValues()).thenReturn(Collections.singletonList("test"));
+        assertTrue(converter.canConvert(nodeSet, String.class));
+    }
+
+    @Test
+    public void testCanConvertBooleanToAtomicBoolean() {
+        try {
+            assertTrue(converter.canConvert(true, TypeUtils.wrapPrimitive(Class.forName("java.util.concurrent.atomic.AtomicBoolean"))));
+        } catch (ClassNotFoundException e) {
+            fail("Class not found: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testCanConvertUsingConvertUtilsForUnsupportedType() {
+        assertFalse(converter.canConvert("123", Class.class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToArray() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        assertTrue(converter.canConvert(list, Integer[].class));
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 76.36% | Branch: 82.35%
+- Tests: 31/34 passed
+
+TEST STATUS:
+- PASSED (31): testCanConvertNullObject, testCanConvertSameType, testCanConvertToSuperType, testCanConvertStringToNumber, testCanConvertNumberToString, testCanConvertBooleanToNumber, testCanConvertNumberToBoolean, testCanConvertArrayToArray, testCanConvertArrayToCollection, testCanConvertArrayToSingleType, testCanConvertEmptyArrayToSingleType, testCanConvertEmptyCollectionToSingleType, testCanConvertPointer, testCanConvertUsingConvertUtils, testCanConvertNumberToNumber, testCanConvertStringToBoolean, testCanConvertStringToCharacter, testCanConvertStringToByte, testCanConvertStringToShort, testCanConvertStringToInteger, testCanConvertStringToLong, testCanConvertStringToFloat, testCanConvertStringToDouble, testCanConvertArrayToArrayComponentType, testCanConvertCollectionToArrayComponentType, testCanConvertCollectionToCollection, testCanConvertEmptyCollectionToArrayComponentType, testCanConvertNonEmptyCollectionToArrayComponentType, testCanConvertNonEmptyCollectionToCollection, testCanConvertBooleanToAtomicBoolean, testCanConvertCollectionToArray
+- FAILED (2): testCanConvertUnsupportedConversion, testCanConvertUsingConvertUtilsForUnsupportedType
+- ERRORS (1): testCanConvertNodeSet
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Array -> java.lang.reflect.Array
+//   Modifier -> java.lang.reflect.Modifier
+//   BigDecimal -> java.math.BigDecimal
+//   BigInteger -> java.math.BigInteger
+//   ArrayList -> java.util.ArrayList
+//   Collection -> java.util.Collection
+//   Collections -> java.util.Collections
+//   HashSet -> java.util.HashSet
+//   Iterator -> java.util.Iterator
+//   List -> java.util.List
+//   Set -> java.util.Set
+//   SortedSet -> java.util.SortedSet
+//   ConvertUtils -> org.apache.commons.beanutils.ConvertUtils
+//   Converter -> org.apache.commons.beanutils.Converter
+//   JXPathInvalidAccessException -> org.apache.commons.jxpath.JXPathInvalidAccessException
+//   JXPathTypeConversionException -> org.apache.commons.jxpath.JXPathTypeConversionException
+//   NodeSet -> org.apache.commons.jxpath.NodeSet
+//   Pointer -> org.apache.commons.jxpath.Pointer
+//   BasicTypeConverter -> org.apache.commons.jxpath.util.BasicTypeConverter
+//   TypeUtils -> org.apache.commons.jxpath.util.TypeUtils
+
+// === Class: BasicTypeConverter ===
+// Fields (with actual visibility):
+    private final List values;
+    private List pointers;
+    private static final long serialVersionUID;
+    private final Object bean;
+
+// Constructors:
+public ValueNodeSet(List values);
+public ValuePointer(Object object);
+
+// Getter/Setter Methods (for test assertions):
+public List getValues();
+public List getNodes();
+public List getPointers();
+public Object getValue();
+public Object getNode();
+public Object getRootNode();
+public void setValue(final Object value);
+
+// Internal Methods (full implementation for context):
+    protected boolean canCreateCollection(final Class type) {
+        if (!type.isInterface()
+                && (type.getModifiers() & Modifier.ABSTRACT) == 0) {
+            try {
+                type.getConstructor();
+                return true;
+            }
+            catch (final Exception e) {
+                return false;
+            }
+        }
+        return type == List.class || type == Collection.class || type == Set.class;
+    }
+
+// === External Class: TypeUtils ===
+// Full import path: org.apache.commons.jxpath.util.TypeUtils
+// Import paths:
+//   HashMap -> java.util.HashMap
+// Fields (with actual visibility):
+    private static TypeConverter typeConverter;
+    private static final HashMap PRIMITIVE_TYPE_MAP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+
+// Method Signatures (used by target method):
+public static Class wrapPrimitive(final Class p);
+
+// Public Getter Methods (for test assertions):
+public static TypeConverter getTypeConverter();
+public static boolean canConvert(Object object, Class toType);
+
+
+TASK:
+Regenerate ONLY the method "canConvert" OF CLASS "BasicTypeConverter" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public boolean canConvert(final Object object, final Class toType) {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.jxpath.util
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "canConvert"
+– Allowed imports: exactly those already present in BasicTypeConverter
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

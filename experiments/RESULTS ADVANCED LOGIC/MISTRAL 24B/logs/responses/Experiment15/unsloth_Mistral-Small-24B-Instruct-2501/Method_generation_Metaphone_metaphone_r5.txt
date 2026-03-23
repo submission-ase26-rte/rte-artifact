@@ -1,0 +1,128 @@
+```java
+public String metaphone(final String txt) {
+    if (txt == null || txt.isEmpty()) {
+        return "";
+    }
+
+    StringBuilder metaphone = new StringBuilder();
+    int length = txt.length();
+    int prevIndex = 0;
+    int currentIndex = 0;
+
+    boolean prevWasVowel = false;
+
+    while (currentIndex < length) {
+        char currentChar = txt.charAt(currentIndex);
+        boolean currentIsVowel = isVowel(metaphone, currentIndex);
+
+        if (currentIsVowel) {
+            metaphone.append(currentChar);
+            prevWasVowel = true;
+        } else {
+            if (prevWasVowel) {
+                prevWasVowel = false;
+            }
+
+            if (currentChar == 'C') {
+                if (currentIndex + 1 < length && txt.charAt(currentIndex + 1) == 'H') {
+                    if (currentIndex + 2 < length && txt.charAt(currentIndex + 2) == 'I' ||
+                        currentIndex + 2 < length && txt.charAt(currentIndex + 2) == 'E' ||
+                        currentIndex + 2 < length && txt.charAt(currentIndex + 2) == 'Y') {
+                        metaphone.append("K");
+                        currentIndex += 2;
+                    } else if (currentIndex + 1 < length && txt.charAt(currentIndex + 1) == 'K') {
+                        metaphone.append("K");
+                        currentIndex += 2;
+                    } else {
+                        metaphone.append("K");
+                        currentIndex++;
+                    }
+                } else {
+                    metaphone.append("K");
+                    currentIndex++;
+                }
+            } else if (currentChar == 'G') {
+                if (currentIndex + 1 < length && txt.charAt(currentIndex + 1) == 'H') {
+                    if (currentIndex + 2 < length && txt.charAt(currentIndex + 2) == 'I' ||
+                        currentIndex + 2 < length && txt.charAt(currentIndex + 2) == 'E' ||
+                        currentIndex + 2 < length && txt.charAt(currentIndex + 2) == 'Y') {
+                        metaphone.append("K");
+                        currentIndex += 2;
+                    } else {
+                        metaphone.append("K");
+                        currentIndex++;
+                    }
+                } else {
+                    metaphone.append("K");
+                    currentIndex++;
+                }
+            } else if (currentChar == 'P') {
+                metaphone.append("P");
+                currentIndex++;
+            } else if (currentChar == 'S') {
+                metaphone.append("S");
+                currentIndex++;
+            } else if (currentChar == 'V') {
+                metaphone.append("F");
+                currentIndex++;
+            } else if (currentChar == 'T') {
+                metaphone.append("T");
+                currentIndex++;
+            } else if (currentChar == 'D') {
+                metaphone.append("T");
+                currentIndex++;
+            } else if (currentChar == 'B') {
+                metaphone.append("P");
+                currentIndex++;
+            } else if (currentChar == 'Z') {
+                metaphone.append("S");
+                currentIndex++;
+            } else if (currentChar == 'X') {
+                metaphone.append("KS");
+                currentIndex++;
+            } else if (currentChar == 'Q') {
+                metaphone.append("K");
+                currentIndex++;
+            } else if (currentChar == 'F') {
+                metaphone.append("F");
+                currentIndex++;
+            } else if (currentChar == 'J') {
+                metaphone.append("J");
+                currentIndex++;
+            } else if (currentChar == 'L') {
+                metaphone.append("L");
+                currentIndex++;
+            } else if (currentChar == 'M') {
+                metaphone.append("M");
+                currentIndex++;
+            } else if (currentChar == 'N') {
+                metaphone.append("N");
+                currentIndex++;
+            } else if (currentChar == 'R') {
+                metaphone.append("R");
+                currentIndex++;
+            } else if (currentChar == 'W') {
+                metaphone.append("W");
+                currentIndex++;
+            } else if (currentChar == 'H') {
+                metaphone.append("H");
+                currentIndex++;
+            } else if (currentChar == 'Y') {
+                metaphone.append("Y");
+                currentIndex++;
+            } else {
+                metaphone.append(currentChar);
+                currentIndex++;
+            }
+        }
+
+        prevIndex = currentIndex;
+    }
+
+    if (metaphone.length() > maxCodeLen) {
+        metaphone.setLength(maxCodeLen);
+    }
+
+    return metaphone.toString();
+}
+```

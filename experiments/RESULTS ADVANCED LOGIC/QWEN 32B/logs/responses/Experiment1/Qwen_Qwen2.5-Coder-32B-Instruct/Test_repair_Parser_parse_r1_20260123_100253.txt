@@ -1,0 +1,168 @@
+```java
+package org.apache.commons.cli;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Parser_parseTestGenerated {
+
+    private Parser parser;
+    private Options options;
+    private Properties properties;
+
+    @BeforeEach
+    void setUp() {
+        parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+        };
+        options = new Options();
+        properties = new Properties();
+    }
+
+    @Test
+    void testParseWithNoOptionsAndNoArguments() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{}, properties, false);
+        assertTrue(cmd.getArgList().isEmpty());
+        assertTrue(cmd.getOptions().isEmpty());
+    }
+
+    @Test
+    void testParseWithNoOptionsAndArguments() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{"arg1", "arg2"}, properties, false);
+        assertEquals(Arrays.asList("arg1", "arg2"), cmd.getArgList());
+        assertTrue(cmd.getOptions().isEmpty());
+    }
+
+    @Test
+    void testParseWithRequiredOptionAndNoArguments() {
+        options.addOption(Option.builder("a").required(true).build());
+        assertThrows(MissingOptionException.class, () -> parser.parse(options, new String[]{}, properties, false));
+    }
+
+    @Test
+    void testParseWithRequiredOptionAndProvidedArgument() throws ParseException {
+        options.addOption(Option.builder("a").required(true).build());
+        CommandLine cmd = parser.parse(options, new String[]{"-a"}, properties, false);
+        assertTrue(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithOptionalOptionAndNoArguments() throws ParseException {
+        options.addOption(Option.builder("a").build());
+        CommandLine cmd = parser.parse(options, new String[]{}, properties, false);
+        assertFalse(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithOptionalOptionAndProvidedArgument() throws ParseException {
+        options.addOption(Option.builder("a").build());
+        CommandLine cmd = parser.parse(options, new String[]{"-a"}, properties, false);
+        assertTrue(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithOptionHavingArgumentAndProvidedArgument() throws ParseException {
+        options.addOption(Option.builder("a").hasArg().build());
+        CommandLine cmd = parser.parse(options, new String[]{"-a", "value"}, properties, false);
+        assertEquals("value", cmd.getOptionValue("a"));
+    }
+
+    @Test
+    void testParseWithOptionHavingArgumentAndNoArgument() {
+        options.addOption(Option.builder("a").hasArg().build());
+        assertThrows(ParseException.class, () -> parser.parse(options, new String[]{"-a"}, properties, false));
+    }
+
+    @Test
+    void testParseWithStopAtNonOptionTrueAndUnrecognizedOption() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{"-a", "arg1", "arg2"}, properties, true);
+        assertEquals(Arrays.asList("arg1", "arg2"), cmd.getArgList());
+        assertFalse(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithStopAtNonOptionFalseAndUnrecognizedOption() {
+        options.addOption(Option.builder("a").build());
+        assertThrows(UnrecognizedOptionException.class, () -> parser.parse(options, new String[]{"-a", "-b"}, properties, false));
+    }
+
+    @Test
+    void testParseWithDoubleDash() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{"-a", "--", "arg1", "arg2"}, properties, false);
+        assertEquals(Arrays.asList("arg1", "arg2"), cmd.getArgList());
+        assertFalse(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithProperties() throws ParseException {
+        options.addOption(Option.builder("a").build());
+        properties.setProperty("a", "true");
+        CommandLine cmd = parser.parse(options, new String[]{}, properties, false);
+        assertTrue(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithPropertiesAndOptionAlreadySet() throws ParseException {
+        options.addOption(Option.builder("a").build());
+        properties.setProperty("a", "true");
+        CommandLine cmd = parser.parse(options, new String[]{"-a"}, properties, false);
+        assertTrue(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithPropertiesAndOptionGroup() throws ParseException {
+        OptionGroup group = new OptionGroup();
+        group.addOption(Option.builder("a").build());
+        group.addOption(Option.builder("b").build());
+        options.addOptionGroup(group);
+        properties.setProperty("a", "true");
+        CommandLine cmd = parser.parse(options, new String[]{}, properties, false);
+        assertTrue(cmd.hasOption("a"));
+        assertFalse(cmd.hasOption("b"));
+    }
+
+    @Test
+    void testParseWithPropertiesAndUnrecognizedOption() {
+        properties.setProperty("unknown", "true");
+        assertThrows(UnrecognizedOptionException.class, () -> parser.parse(options, new String[]{}, properties, false));
+    }
+
+    @Test
+    void testParseWithNullArguments() throws ParseException {
+        CommandLine cmd = parser.parse(options, null, properties, false);
+        assertTrue(cmd.getArgList().isEmpty());
+    }
+
+    @Test
+    void testParseWithNullProperties() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{"-a"}, null, false);
+        assertFalse(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithHelpOptions() throws ParseException {
+        options.addOption(Option.builder("h").longOpt("help").build());
+        CommandLine cmd = parser.parse(options, new String[]{"-h"}, properties, false);
+        assertTrue(cmd.hasOption("h"));
+    }
+
+    @Test
+    void testParseWithHelpOptionsAndStopAtNonOption() throws ParseException {
+        options.addOption(Option.builder("h").longOpt("help").build());
+        CommandLine cmd = parser.parse(options, new String[]{"-h", "arg1"}, properties, true);
+        assertEquals(Arrays.asList("arg1"), cmd.getArgList());
+        assertTrue(cmd.hasOption("h"));
+    }
+}
+```

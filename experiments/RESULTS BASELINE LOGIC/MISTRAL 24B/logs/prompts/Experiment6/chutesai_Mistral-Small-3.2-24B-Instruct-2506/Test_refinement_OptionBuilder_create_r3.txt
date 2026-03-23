@@ -1,0 +1,241 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): OptionBuilder_createTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: createWithMultiCharOpt --
+ERROR: org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown.
+--------------------------------------------------
+TEST: createWithDefaultProperties --
+ERROR: org.opentest4j.AssertionFailedError: expected: <0> but was: <-1>
+
+TEST CODE TO FIX:
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class OptionBuilder_createTestGenerated {
+
+    @Test
+        void createWithMultiCharOpt() {
+            assertThrows(IllegalArgumentException.class, () -> {
+                Option.builder("ab").build();
+            });
+        }
+
+    @Test
+        void createWithDefaultProperties() {
+            Option option = Option.builder("o").build();
+            assertNull(option.getLongOpt());
+            assertFalse(option.isRequired());
+            assertFalse(option.hasOptionalArg());
+            assertEquals(0, option.getArgs());
+            assertNull(option.getType());
+            assertNull(option.getArgName());
+            assertEquals(' ', option.getValueSeparator());
+            assertNull(option.getDescription());
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    void createWithLongOption() {}
+    @Test
+    void createWithRequired() {}
+    @Test
+    void createWithArgsCount() {}
+    @Test
+    void createWithType() {}
+    @Test
+    void createWithArgName() {}
+    @Test
+    void createWithValueSeparator() {}
+    @Test
+    void createWithEmptyOpt() {}
+    @Test
+    void createWithResetBetweenCalls() {}
+    @Test
+    void createWithOptionCreation() {}
+    @Test
+    void createWithConverter() {}
+    @Test
+    void createWithDefaultConverter() {}
+    @Test
+    void createWithNullOpt() {}
+    @Test
+    void createWithOptionalArg() {}
+
+
+
+PROJECT CONTEXT:
+// === Class: OptionBuilder ===
+// Fields (with actual visibility):
+    private static String longOption;
+    private static String description;
+    private static String argName;
+    private static boolean required;
+    private static int argCount;
+    private static Class type;
+    private static boolean optionalArg;
+    private static char valueSeparator;
+    private static final OptionBuilder INSTANCE;
+
+// Constructors:
+private OptionBuilder();
+
+// Getter/Setter Methods (for test assertions):
+public static OptionBuilder isRequired();
+public static OptionBuilder isRequired(final boolean newRequired);
+
+// Internal Method Signatures (used by target method):
+static private void reset();
+
+// === External Class: Option ===
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   Objects -> java.util.Objects
+// Fields (with actual visibility):
+    private static final Class DEFAULT_TYPE;
+    private int argCount;
+    private String argName;
+    private Converter converter;
+    private final DeprecatedAttributes deprecated;
+    private String description;
+    private String longOption;
+    private final String option;
+    private boolean optionalArg;
+    private boolean required;
+    private Class type;
+    private char valueSeparator;
+    package-private static final Option[] EMPTY_ARRAY;
+    private static final long serialVersionUID;
+    public static final int UNINITIALIZED;
+    public static final int UNLIMITED_VALUES;
+    private List values;
+    private char valuesep;
+
+// Constructors:
+private Builder(String option);
+private Option(Builder builder);
+public Option(String option, boolean hasArg, String description);
+public Option(String option, String description);
+public Option(String option, String longOption, boolean hasArg, String description);
+
+// Method Signatures (used by target method):
+public void setLongOpt(final String longOpt);
+public void setType(final Class type);
+public void setArgName(final String argName);
+public void setConverter(final Converter converter);
+public void setRequired(final boolean required);
+public void setValueSeparator(final char sep);
+public void setArgs(final int num);
+public void setOptionalArg(final boolean optionalArg);
+
+// === External Class: TypeHandler ===
+// Import paths:
+//   File -> java.io.File
+//   FileInputStream -> java.io.FileInputStream
+//   BigDecimal -> java.math.BigDecimal
+//   BigInteger -> java.math.BigInteger
+//   URL -> java.net.URL
+// Fields (with actual visibility):
+    private static final TypeHandler DEFAULT;
+    private static final int HEX_RADIX;
+    private final Map converterMap;
+
+// Constructors:
+public TypeHandler();
+public TypeHandler(Map converterMap);
+
+// Method Signatures (used by target method):
+static public TypeHandler getDefault();
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+    /**
+     * Creates an Option using the current settings and with the specified Option {@code char}.
+     *
+     * @param opt the {@code String} representation of the Option
+     * @return the Option instance
+     * @throws IllegalArgumentException if {@code opt} is not a valid character. See Option.
+     */
+    public static Option create(final String opt) throws IllegalArgumentException {
+        Option option;
+        try {
+            // create the option
+            option = new Option(opt, description); // NOT COVERED BY TESTS
+
+            // set the option properties
+            option.setLongOpt(longOption); // NOT COVERED BY TESTS
+            option.setRequired(required); // NOT COVERED BY TESTS
+            option.setOptionalArg(optionalArg); // NOT COVERED BY TESTS
+            option.setArgs(argCount); // NOT COVERED BY TESTS
+            option.setType(type); // NOT COVERED BY TESTS
+            option.setConverter(TypeHandler.getDefault().getConverter(type)); // NOT COVERED BY TESTS
+            option.setValueSeparator(valueSeparator); // NOT COVERED BY TESTS
+            option.setArgName(argName); // NOT COVERED BY TESTS
+        } finally {
+            // reset the OptionBuilder properties
+            OptionBuilder.reset(); // NOT COVERED BY TESTS
+        }
+
+        // return the Option instance
+        return option; // NOT COVERED BY TESTS
+    }
+
+
+COVERAGE ISSUES:
+Current line coverage: 0.00%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers only if ensuring unique names.
+- DO NOT mock the target class
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

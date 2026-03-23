@@ -1,0 +1,156 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Filtered unit tests for method: writeItems(List<Object> items)
+ * Original class: EventItemWriter
+ * Tests that actually call the target method
+ */
+package org.eclipse.cargotracker.interfaces.handling.file;
+
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo9_unit_writeItems_EventItemWriter_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testStreamMapEmptyItems_WFlw11_DVEJ0() throws Exception {
+    List<Object> items = new ArrayList<>();
+    EventItemWriter writer = new EventItemWriter();
+    writer.writeItems(items);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testWriteItemsEmptyItems_yBTo3_kHSa0() throws Exception {
+    List<Object> items = new ArrayList<>();
+    EventItemWriter eventItemWriter = new EventItemWriter(); // Create an instance of EventItemWriter
+    eventItemWriter.writeItems(items);
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 0/2 passed
+
+TEST STATUS:
+- PASSED (0): none
+- FAILED (0): none
+- ERRORS (2): testStreamMapEmptyItems_WFlw11_DVEJ0, testWriteItemsEmptyItems_yBTo3_kHSa0
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   BufferedWriter -> java.io.BufferedWriter
+//   File -> java.io.File
+//   FileWriter -> java.io.FileWriter
+//   PrintWriter -> java.io.PrintWriter
+//   Serializable -> java.io.Serializable
+//   List -> java.util.List
+//   AbstractItemWriter -> jakarta.batch.api.chunk.AbstractItemWriter
+//   JobContext -> jakarta.batch.runtime.context.JobContext
+//   Dependent -> jakarta.enterprise.context.Dependent
+//   Inject -> jakarta.inject.Inject
+//   Named -> jakarta.inject.Named
+//   Transactional -> jakarta.transaction.Transactional
+//   ApplicationEvents -> org.eclipse.cargotracker.application.ApplicationEvents
+//   DateConverter -> org.eclipse.cargotracker.application.util.DateConverter
+//   HandlingEventRegistrationAttempt -> org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+//   EventItemWriter -> org.eclipse.cargotracker.interfaces.handling.file.EventItemWriter
+
+// === Class: EventItemWriter ===
+// Fields (with actual visibility):
+    private static final String ARCHIVE_DIRECTORY;
+    private JobContext jobContext;
+    private ApplicationEvents applicationEvents;
+
+// === External Class: ApplicationEvents ===
+// Full import path: org.eclipse.cargotracker.application.ApplicationEvents
+// Type: INTERFACE (cannot instantiate)
+// Method Signatures (used by target method):
+void receivedHandlingEventRegistrationAttempt(HandlingEventRegistrationAttempt attempt);
+
+// === External Class: DateConverter ===
+// Full import path: org.eclipse.cargotracker.application.util.DateConverter
+// Fields (with actual visibility):
+    public static final String DATE_FORMAT;
+    public static final String DATE_TIME_FORMAT;
+    private static final DateTimeFormatter DATE_FORMATTER;
+    private static final DateTimeFormatter DATE_TIME_FORMATTER;
+// Constructors:
+private DateConverter();
+// Method Signatures (used by target method):
+public static String toString(LocalDateTime dateTime);
+// Public Getter Methods (for test assertions):
+public static LocalDate toDate(String date);
+public static LocalDateTime toDateTime(String datetime);
+
+// === External Class: HandlingEventRegistrationAttempt ===
+// Full import path: org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final LocalDateTime registrationTime;
+    private final LocalDateTime completionTime;
+    private final TrackingId trackingId;
+    private final VoyageNumber voyageNumber;
+    private final HandlingEvent type;
+    private final UnLocode unLocode;
+// Constructors:
+public HandlingEventRegistrationAttempt(LocalDateTime registrationDate, LocalDateTime completionDate, TrackingId trackingId, VoyageNumber voyageNumber, HandlingEvent type, UnLocode unLocode);
+// Public Getter Methods (for test assertions):
+public TrackingId getTrackingId();
+public VoyageNumber getVoyageNumber();
+public HandlingEvent getType();
+public UnLocode getUnLocode();
+public LocalDateTime getRegistrationTime();
+public LocalDateTime getCompletionTime();
+public String toString();
+
+
+TASK:
+Regenerate ONLY the method "writeItems" OF CLASS "EventItemWriter" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void writeItems(List<Object> items) throws Exception {
+    // your implementation here
+}
+```
+
+- Package: org.eclipse.cargotracker.interfaces.handling.file
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "writeItems"
+- Allowed imports: exactly those already present in EventItemWriter
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

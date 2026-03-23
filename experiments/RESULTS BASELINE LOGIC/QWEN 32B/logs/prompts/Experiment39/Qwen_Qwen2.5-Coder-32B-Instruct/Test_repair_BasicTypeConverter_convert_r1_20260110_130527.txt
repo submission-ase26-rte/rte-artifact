@@ -1,0 +1,228 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.util;
+Class name (MUST be exactly): BasicTypeConverter_convertTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.jxpath.util;
+
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class BasicTypeConverter_convertTestGenerated {
+
+    private BasicTypeConverter converter;
+
+    @BeforeEach
+    void setUp() {
+        converter = new BasicTypeConverter(new ArrayList<>());
+    }
+
+    @Test
+    void testConvertNullToPrimitive() {
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert(null, int.class));
+    }
+
+    @Test
+    void testConvertNullToObject() {
+        assertNull(converter.convert(null, Object.class));
+    }
+
+    @Test
+    void testConvertNodeSetToObject() {
+        NodeSet nodeSet = new NodeSet(Arrays.asList("value1", "value2"));
+        assertEquals(Arrays.asList("value1", "value2"), converter.convert(nodeSet, Object.class));
+    }
+
+    @Test
+    void testConvertPointerToObject() {
+        Pointer pointer = new ValuePointer("value");
+        assertEquals("value", converter.convert(pointer, Object.class));
+    }
+
+    @Test
+    void testConvertObjectToObject() {
+        Object obj = new Object();
+        assertSame(obj, converter.convert(obj, Object.class));
+    }
+
+    @Test
+    void testConvertCompatibleTypes() {
+        Integer intValue = 10;
+        assertSame(intValue, converter.convert(intValue, Integer.class));
+    }
+
+    @Test
+    void testConvertArrayToArray() {
+        Integer[] intArray = {1, 2, 3};
+        Integer[] convertedArray = (Integer[]) converter.convert(intArray, Integer[].class);
+        assertArrayEquals(intArray, convertedArray);
+    }
+
+    @Test
+    void testConvertArrayToCollection() {
+        Integer[] intArray = {1, 2, 3};
+        Collection<?> collection = (Collection<?>) converter.convert(intArray, List.class);
+        assertTrue(collection instanceof List);
+        assertEquals(Arrays.asList(1, 2, 3), collection);
+    }
+
+    @Test
+    void testConvertEmptyArrayToCollection() {
+        Integer[] intArray = {};
+        Collection<?> collection = (Collection<?>) converter.convert(intArray, List.class);
+        assertTrue(collection instanceof List);
+        assertTrue(collection.isEmpty());
+    }
+
+    @Test
+    void testConvertArrayToSingleValue() {
+        Integer[] intArray = {1};
+        assertEquals(Integer.valueOf(1), converter.convert(intArray, Integer.class));
+    }
+
+    @Test
+    void testConvertEmptyArrayToSingleValue() {
+        Integer[] intArray = {};
+        assertEquals("", converter.convert(intArray, String.class));
+    }
+
+    @Test
+    void testConvertCollectionToArray() {
+        List<Integer> intList = Arrays.asList(1, 2, 3);
+        Integer[] array = (Integer[]) converter.convert(intList, Integer[].class);
+        assertArrayEquals(new Integer[]{1, 2, 3}, array);
+    }
+
+    @Test
+    void testConvertCollectionToCollection() {
+        List<Integer> intList = Arrays.asList(1, 2, 3);
+        Collection<?> collection = (Collection<?>) converter.convert(intList, Set.class);
+        assertTrue(collection instanceof Set);
+        assertEquals(new HashSet<>(Arrays.asList(1, 2, 3)), collection);
+    }
+
+    @Test
+    void testConvertEmptyCollectionToCollection() {
+        List<Integer> intList = new ArrayList<>();
+        Collection<?> collection = (Collection<?>) converter.convert(intList, Set.class);
+        assertTrue(collection instanceof Set);
+        assertTrue(collection.isEmpty());
+    }
+
+    @Test
+    void testConvertCollectionToSingleValue() {
+        List<Integer> intList = Arrays.asList(1);
+        assertEquals(Integer.valueOf(1), converter.convert(intList, Integer.class));
+    }
+
+    @Test
+    void testConvertEmptyCollectionToSingleValue() {
+        List<Integer> intList = new ArrayList<>();
+        assertEquals("", converter.convert(intList, String.class));
+    }
+
+    @Test
+    void testConvertNodeSetToType() {
+        NodeSet nodeSet = new NodeSet(Arrays.asList("1", "2", "3"));
+        assertEquals(Arrays.asList(1, 2, 3), converter.convert(nodeSet, List.class));
+    }
+
+    @Test
+    void testConvertPointerToType() {
+        Pointer pointer = new ValuePointer("1");
+        assertEquals(Integer.valueOf(1), converter.convert(pointer, Integer.class));
+    }
+
+    @Test
+    void testConvertToString() {
+        Integer intValue = 10;
+        assertEquals("10", converter.convert(intValue, String.class));
+    }
+
+    @Test
+    void testConvertBooleanToNumber() {
+        Boolean boolValue = true;
+        assertEquals(Integer.valueOf(1), converter.convert(boolValue, Integer.class));
+    }
+
+    @Test
+    void testConvertNumberToBoolean() {
+        Integer intValue = 1;
+        assertEquals(Boolean.TRUE, converter.convert(intValue, Boolean.class));
+    }
+
+    @Test
+    void testConvertStringToPrimitive() {
+        String strValue = "10";
+        assertEquals(Integer.valueOf(10), converter.convert(strValue, Integer.class));
+    }
+
+    @Test
+    void testConvertUsingBeanUtils() {
+        ConvertUtils.register(new Converter() {
+            @Override
+            public <T> T convert(Class<T> type, Object value) {
+                return type.cast("converted");
+            }
+        }, String.class);
+        assertEquals("converted", converter.convert("value", String.class));
+    }
+
+    @Test
+    void testConvertUnsupportedType() {
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert("value", BigInteger.class));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[30] constructor BasicTypeConverter in class org.apache.commons.jxpath.util.BasicTypeConverter cannot be applied to given types;
+  required: no arguments
+  found:    java.util.ArrayList<java.lang.Object>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[45] org.apache.commons.jxpath.NodeSet is abstract; cannot be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[51] cannot find symbol
+  symbol:   class ValuePointer
+  location: class org.apache.commons.jxpath.util.BasicTypeConverter_convertTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[139] org.apache.commons.jxpath.NodeSet is abstract; cannot be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[145] cannot find symbol
+  symbol:   class ValuePointer
+  location: class org.apache.commons.jxpath.util.BasicTypeConverter_convertTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[175] cannot find symbol
+  symbol:   class Converter
+  location: class org.apache.commons.jxpath.util.BasicTypeConverter_convertTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[176] method does not override or implement a method from a supertype
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[175] cannot find symbol
+  symbol:   variable ConvertUtils
+  location: class org.apache.commons.jxpath.util.BasicTypeConverter_convertTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: BasicTypeConverter_convertTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

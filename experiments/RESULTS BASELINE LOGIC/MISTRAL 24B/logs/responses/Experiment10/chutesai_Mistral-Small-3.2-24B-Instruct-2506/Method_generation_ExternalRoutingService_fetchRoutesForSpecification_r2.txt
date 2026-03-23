@@ -1,0 +1,36 @@
+```java
+public List<Itinerary> fetchRoutesForSpecification(RouteSpecification routeSpecification) {
+    if (routeSpecification == null) {
+        throw new NullPointerException("Route specification cannot be null");
+    }
+
+    Location origin = routeSpecification.getOrigin();
+    Location destination = routeSpecification.getDestination();
+
+    if (origin == null || destination == null) {
+        throw new NullPointerException("Origin and destination must not be null");
+    }
+
+    String originUnLocode = origin.getUnLocode().getIdString();
+    String destinationUnLocode = destination.getUnLocode().getIdString();
+
+    List<TransitPath> transitPaths = graphTraversalResource
+            .queryParam("source", originUnLocode)
+            .queryParam("target", destinationUnLocode)
+            .request(MediaType.APPLICATION_JSON_TYPE)
+            .get(new GenericType<List<TransitPath>>() {});
+
+    List<Itinerary> itineraries = new ArrayList<>();
+
+    for (TransitPath transitPath : transitPaths) {
+        Itinerary itinerary = toItinerary(transitPath);
+        if (routeSpecification.isSatisfiedBy(itinerary)) {
+            itineraries.add(itinerary);
+        } else {
+            logger.log(Level.FINE, "Received itinerary that did not satisfy the route specification");
+        }
+    }
+
+    return itineraries;
+}
+```

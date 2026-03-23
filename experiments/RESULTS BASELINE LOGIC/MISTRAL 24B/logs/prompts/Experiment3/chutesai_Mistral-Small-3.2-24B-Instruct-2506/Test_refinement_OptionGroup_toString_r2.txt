@@ -1,0 +1,337 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): OptionGroup_toStringTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testToStringWithOptionWithNullOptAndNullLongOpt --
+ERROR: java.lang.IllegalArgumentException: Could not find field 'options' of type [null] on target object [[]] or target class [class org.apache.commons.cli.OptionGroup]
+--------------------------------------------------
+TEST: testToStringWithMultipleOptionsWithShortOpt --
+ERROR: java.lang.IllegalArgumentException: Could not find field 'options' of type [null] on target object [[]] or target class [class org.apache.commons.cli.OptionGroup]
+--------------------------------------------------
+TEST: testToStringWithEmptyOptionGroup --
+ERROR: java.lang.IllegalArgumentException: Could not find field 'options' of type [null] on target object [[]] or target class [class org.apache.commons.cli.OptionGroup]
+--------------------------------------------------
+TEST: testToStringWithMixedOptions --
+ERROR: java.lang.IllegalArgumentException: Could not find field 'options' of type [null] on target object [[]] or target class [class org.apache.commons.cli.OptionGroup]
+--------------------------------------------------
+TEST: testToStringWithOptionWithNullDescription --
+ERROR: java.lang.IllegalArgumentException: Could not find field 'options' of type [null] on target object [[]] or target class [class org.apache.commons.cli.OptionGroup]
+--------------------------------------------------
+TEST: testToStringWithMultipleOptionsWithLongOpt --
+ERROR: java.lang.IllegalArgumentException: Could not find field 'options' of type [null] on target object [[]] or target class [class org.apache.commons.cli.OptionGroup]
+--------------------------------------------------
+TEST: testToStringWithSingleOption --
+ERROR: java.lang.IllegalArgumentException: Could not find field 'options' of type [null] on target object [[]] or target class [class org.apache.commons.cli.OptionGroup]
+--------------------------------------------------
+TEST: testToStringWithMultipleOptionsWithSomeNullOptions --
+ERROR: java.lang.IllegalArgumentException: Could not find field 'options' of type [null] on target object [[]] or target class [class org.apache.commons.cli.OptionGroup]
+--------------------------------------------------
+TEST: testToStringWithNoDescription --
+ERROR: java.lang.IllegalArgumentException: Could not find field 'options' of type [null] on target object [[]] or target class [class org.apache.commons.cli.OptionGroup]
+--------------------------------------------------
+TEST: testToStringWithNullOptions --
+ERROR: java.lang.IllegalArgumentException: Could not find field 'options' of type [null] on target object [[]] or target class [class org.apache.commons.cli.OptionGroup]
+
+TEST CODE TO FIX:
+package org.apache.commons.cli;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class OptionGroup_toStringTestGenerated {
+    @Mock
+    private Option option1;
+    @Mock
+    private Option option2;
+    @Mock
+    private Option option3;
+    private OptionGroup optionGroup;
+    @BeforeEach
+    void setUp() {
+        optionGroup = new OptionGroup();
+        ReflectionTestUtils.setField(optionGroup, "options", new ArrayList<>());
+    }
+
+
+    @Test
+        void testToStringWithMultipleOptionsWithShortOpt() {
+            when(option1.getOpt()).thenReturn("a");
+            when(option1.getDescription()).thenReturn("description1");
+            when(option2.getOpt()).thenReturn("b");
+            when(option2.getDescription()).thenReturn("description2");
+            List<Option> options = new ArrayList<>();
+            options.add(option1);
+            options.add(option2);
+            ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+            String result = optionGroup.toString();
+            assertEquals("[-a description1, -b description2]", result);
+        }
+
+    @Test
+        void testToStringWithMultipleOptionsWithLongOpt() {
+            when(option1.getLongOpt()).thenReturn("option1");
+            when(option1.getDescription()).thenReturn("description1");
+            when(option2.getLongOpt()).thenReturn("option2");
+            when(option2.getDescription()).thenReturn("description2");
+            List<Option> options = new ArrayList<>();
+            options.add(option1);
+            options.add(option2);
+            ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+            String result = optionGroup.toString();
+            assertEquals("[--option1 description1, --option2 description2]", result);
+        }
+
+    @Test
+        void testToStringWithMixedOptions() {
+            when(option1.getOpt()).thenReturn("a");
+            when(option1.getDescription()).thenReturn("description1");
+            when(option2.getLongOpt()).thenReturn("option2");
+            when(option2.getDescription()).thenReturn("description2");
+            List<Option> options = new ArrayList<>();
+            options.add(option1);
+            options.add(option2);
+            ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+            String result = optionGroup.toString();
+            assertEquals("[-a description1, --option2 description2]", result);
+        }
+
+    @Test
+        void testToStringWithNoDescription() {
+            when(option1.getOpt()).thenReturn("a");
+            when(option2.getOpt()).thenReturn("b");
+            List<Option> options = new ArrayList<>();
+            options.add(option1);
+            options.add(option2);
+            ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+            String result = optionGroup.toString();
+            assertEquals("[-a, -b]", result);
+        }
+
+    @Test
+        void testToStringWithSingleOption() {
+            when(option1.getOpt()).thenReturn("a");
+            when(option1.getDescription()).thenReturn("description1");
+            List<Option> options = new ArrayList<>();
+            options.add(option1);
+            ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+            String result = optionGroup.toString();
+            assertEquals("[-a description1]", result);
+        }
+
+    @Test
+        void testToStringWithEmptyOptionGroup() {
+            String result = optionGroup.toString();
+            assertEquals("[]", result);
+        }
+
+    @Test
+        void testToStringWithNullOptions() {
+            when(option1.getOpt()).thenReturn(null);
+            when(option1.getLongOpt()).thenReturn(null);
+            when(option1.getDescription()).thenReturn("description1");
+            List<Option> options = new ArrayList<>();
+            options.add(option1);
+            ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+            String result = optionGroup.toString();
+            assertEquals("[]", result);
+        }
+
+    @Test
+        void testToStringWithOptionWithNullOptAndNullLongOpt() {
+            when(option1.getOpt()).thenReturn(null);
+            when(option1.getLongOpt()).thenReturn(null);
+            when(option1.getDescription()).thenReturn("description1");
+            List<Option> options = new ArrayList<>();
+            options.add(option1);
+            ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+            String result = optionGroup.toString();
+            assertEquals("[]", result);
+        }
+
+    @Test
+        void testToStringWithOptionWithNullDescription() {
+            when(option1.getOpt()).thenReturn("a");
+            when(option1.getDescription()).thenReturn(null);
+            List<Option> options = new ArrayList<>();
+            options.add(option1);
+            ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+            String result = optionGroup.toString();
+            assertEquals("[-a]", result);
+        }
+
+    @Test
+        void testToStringWithMultipleOptionsWithSomeNullOptions() {
+            when(option1.getOpt()).thenReturn("a");
+            when(option1.getDescription()).thenReturn("description1");
+            when(option2.getOpt()).thenReturn(null);
+            when(option2.getLongOpt()).thenReturn(null);
+            List<Option> options = new ArrayList<>();
+            options.add(option1);
+            options.add(option2);
+            ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+            String result = optionGroup.toString();
+            assertEquals("[-a description1]", result);
+        }
+
+}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Serializable -> java.io.Serializable
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   LinkedHashMap -> java.util.LinkedHashMap
+//   Map -> java.util.Map
+
+// === Class: OptionGroup ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final Map optionMap;
+    private String selected;
+    private boolean required;
+
+// Getter/Setter Methods (for test assertions):
+public Collection<String> getNames();
+public Collection<Option> getOptions();
+public String getSelected();
+public boolean isRequired();
+public void setRequired(final boolean required);
+public void setSelected(final Option option) throws AlreadySelectedException;
+
+// Internal Method Signatures (used by target method):
+public Collection getOptions();
+
+// === External Class: Option ===
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   Objects -> java.util.Objects
+// Fields (with actual visibility):
+    private static final Class DEFAULT_TYPE;
+    private int argCount;
+    private String argName;
+    private Converter converter;
+    private final DeprecatedAttributes deprecated;
+    private String description;
+    private String longOption;
+    private final String option;
+    private boolean optionalArg;
+    private boolean required;
+    private Class type;
+    private char valueSeparator;
+    package-private static final Option[] EMPTY_ARRAY;
+    private static final long serialVersionUID;
+    public static final int UNINITIALIZED;
+    public static final int UNLIMITED_VALUES;
+    private List values;
+    private char valuesep;
+
+// Constructors:
+private Builder(String option);
+private Option(Builder builder);
+public Option(String option, boolean hasArg, String description);
+public Option(String option, String description);
+public Option(String option, String longOption, boolean hasArg, String description);
+
+// Method Signatures (used by target method):
+public String getDescription();
+public String getLongOpt();
+public String getOpt();
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() {
+        optionGroup = new OptionGroup();
+        ReflectionTestUtils.setField(optionGroup, "options", new ArrayList<>());
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+    /**
+     * Returns the stringified version of this OptionGroup.
+     *
+     * @return the stringified representation of this group
+     */
+    @Override
+    public String toString() {
+        final StringBuilder buff = new StringBuilder();
+        final Iterator<Option> iter = getOptions().iterator();
+        buff.append("[");
+        while (iter.hasNext()) { // NOT COVERED BY TESTS
+            final Option option = iter.next(); // NOT COVERED BY TESTS
+            if (option.getOpt() != null) { // NOT COVERED BY TESTS
+                buff.append("-"); // NOT COVERED BY TESTS
+                buff.append(option.getOpt()); // NOT COVERED BY TESTS
+            } else {
+                buff.append("--"); // NOT COVERED BY TESTS
+                buff.append(option.getLongOpt()); // NOT COVERED BY TESTS
+            }
+
+            if (option.getDescription() != null) { // NOT COVERED BY TESTS
+                buff.append(Char.SP); // NOT COVERED BY TESTS
+                buff.append(option.getDescription()); // NOT COVERED BY TESTS
+            }
+
+            if (iter.hasNext()) { // NOT COVERED BY TESTS
+                buff.append(", "); // NOT COVERED BY TESTS
+            }
+        }
+        buff.append("]");
+        return buff.toString();
+    }
+
+
+COVERAGE ISSUES:
+Current line coverage: 33.33%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers only if ensuring unique names.
+- DO NOT mock the target class
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

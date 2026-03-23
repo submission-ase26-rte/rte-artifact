@@ -1,0 +1,103 @@
+```java
+package org.springframework.samples.petclinic.owner;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.MapBindingResult;
+
+import java.util.Collections;
+import java.util.HashMap;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+public class OwnerController_processFindFormTestGenerated {
+
+    @Mock
+    private OwnerService ownerService;
+
+    @InjectMocks
+    private OwnerController ownerController;
+
+    @Mock
+    private Model model;
+
+    @BeforeEach
+    public void setUp() {
+        ownerController = new OwnerController(ownerService);
+    }
+
+    @Test
+    public void testProcessFindForm_EmptyLastName_ReturnsFindOwnersView() {
+        Owner owner = new Owner();
+        BindingResult result = new MapBindingResult(new HashMap<>(), "owner");
+        Page<Owner> ownersResults = new PageImpl<>(Collections.emptyList());
+
+        when(ownerService.findPaginatedForOwnersLastName(anyInt(), anyString())).thenReturn(ownersResults);
+
+        String view = ownerController.processFindForm(1, owner, result, model);
+
+        assertEquals("owners/findOwners", view);
+        verify(result).rejectValue("lastName", "notFound", "not found");
+    }
+
+    @Test
+    public void testProcessFindForm_SingleOwner_RedirectsToOwnerView() {
+        Owner owner = new Owner();
+        owner.setLastName("Smith");
+        BindingResult result = new MapBindingResult(new HashMap<>(), "owner");
+
+        Owner singleOwner = new Owner();
+        singleOwner.setId(1);
+        Page<Owner> ownersResults = new PageImpl<>(Collections.singletonList(singleOwner));
+
+        when(ownerService.findPaginatedForOwnersLastName(anyInt(), anyString())).thenReturn(ownersResults);
+
+        String view = ownerController.processFindForm(1, owner, result, model);
+
+        assertEquals("redirect:/owners/1", view);
+    }
+
+    @Test
+    public void testProcessFindForm_MultipleOwners_ReturnsPaginationView() {
+        Owner owner = new Owner();
+        owner.setLastName("Smith");
+        BindingResult result = new MapBindingResult(new HashMap<>(), "owner");
+
+        Owner owner1 = new Owner();
+        owner1.setId(1);
+        Owner owner2 = new Owner();
+        owner2.setId(2);
+        Page<Owner> ownersResults = new PageImpl<>(Collections.singletonList(owner1));
+
+        when(ownerService.findPaginatedForOwnersLastName(anyInt(), anyString())).thenReturn(ownersResults);
+
+        String view = ownerController.processFindForm(1, owner, result, model);
+
+        assertEquals("owners/ownersList", view);
+    }
+
+    @Test
+    public void testProcessFindForm_NullOwner_ReturnsFindOwnersView() {
+        Owner owner = null;
+        BindingResult result = new MapBindingResult(new HashMap<>(), "owner");
+        Page<Owner> ownersResults = new PageImpl<>(Collections.emptyList());
+
+        when(ownerService.findPaginatedForOwnersLastName(anyInt(), anyString())).thenReturn(ownersResults);
+
+        String view = ownerController.processFindForm(1, owner, result, model);
+
+        assertEquals("owners/findOwners", view);
+        verify(result).rejectValue("lastName", "notFound", "not found");
+    }
+}
+```

@@ -1,0 +1,193 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.util;
+Class name (MUST be exactly): BasicTypeConverter_convertTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.util.BasicTypeConverter;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class BasicTypeConverter_convertTestGenerated {
+    private BasicTypeConverter converter;
+
+    @BeforeEach
+    public void setUp() {
+        converter = new BasicTypeConverter();
+    }
+
+    @Test
+    public void testConvertUsingConverter() {
+        ConvertUtils.register(new Converter() {
+            @Override
+            public Object convert(Class type, Object value) {
+                return "converted";
+            }
+        }, String.class);
+        assertEquals("converted", converter.convert("test", String.class));
+    }
+
+    @Test
+    public void testConvertInvalidType() {
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert("test", Object.class));
+    }
+
+    @Test
+    public void testConvertStringToPrimitiveInvalid() {
+        assertThrows(NumberFormatException.class, () -> converter.convert("invalid", Integer.class));
+    }
+
+    @Test
+    public void testConvertNullToArray() {
+        assertArrayEquals(new String[]{}, (String[]) converter.convert(null, String[].class));
+    }
+
+    @Test
+    public void testConvertNullToCollection() {
+        assertEquals(0, ((Collection<?>) converter.convert(null, Collection.class)).size());
+    }
+
+    @Test
+    public void testConvertArrayToNull() {
+        Integer[] array = {};
+        assertNull(converter.convert(array, Void.class));
+    }
+
+    @Test
+    public void testConvertCollectionToNull() {
+        List<Integer> list = new ArrayList<>();
+        assertNull(converter.convert(list, Void.class));
+    }
+
+    @Test
+    public void testConvertNodeSetToCollection() {
+        NodeSet nodeSet = new NodeSet(new ArrayList<>());
+        assertEquals(0, ((Collection<?>) converter.convert(nodeSet, Collection.class)).size());
+    }
+
+    @Test
+    public void testConvertPointerToObject() {
+        Pointer pointer = new Pointer("test");
+        assertEquals("test", converter.convert(pointer, Object.class));
+    }
+
+    @Test
+    public void testConvertArrayToArray() {
+        Integer[] array = {1, 2, 3};
+        assertArrayEquals(new Integer[]{1, 2, 3}, (Integer[]) converter.convert(array, Integer[].class));
+    }
+
+    @Test
+    public void testConvertArrayToCollection() {
+        Integer[] array = {1, 2, 3};
+        assertEquals(3, ((Collection<?>) converter.convert(array, Collection.class)).size());
+    }
+
+    @Test
+    public void testConvertCollectionToArray() {
+        List<Integer> list = Arrays.asList(1, 2, 3);
+        assertArrayEquals(new Integer[]{1, 2, 3}, (Integer[]) converter.convert(list, Integer[].class));
+    }
+
+    @Test
+    public void testConvertCollectionToCollection() {
+        List<Integer> list = Arrays.asList(1, 2, 3);
+        assertEquals(3, ((Collection<?>) converter.convert(list, Collection.class)).size());
+    }
+
+    @Test
+    public void testConvertObjectToString() {
+        assertEquals("test", converter.convert("test", String.class));
+    }
+
+    @Test
+    public void testConvertBooleanToNumber() {
+        assertEquals(1, converter.convert(true, Integer.class));
+    }
+
+    @Test
+    public void testConvertNumberToBoolean() {
+        assertEquals(Boolean.TRUE, converter.convert(1, Boolean.class));
+    }
+
+    @Test
+    public void testConvertStringToPrimitive() {
+        assertEquals(123, converter.convert("123", Integer.class));
+    }
+
+    @Test
+    public void testConvertObjectToObject() {
+        assertEquals("test", converter.convert("test", Object.class));
+    }
+
+    @Test
+    public void testConvertArrayToArrayDifferentTypes() {
+        Integer[] array = {1, 2, 3};
+        assertArrayEquals(new String[]{"1", "2", "3"}, (String[]) converter.convert(array, String[].class));
+    }
+
+    @Test
+    public void testConvertCollectionToCollectionDifferentTypes() {
+        List<Integer> list = Arrays.asList(1, 2, 3);
+        assertEquals(3, ((Collection<?>) converter.convert(list, List.class)).size());
+    }
+
+    @Test
+    public void testConvertNodeSetToArray() {
+        NodeSet nodeSet = new NodeSet(Arrays.asList("1", "2", "3"));
+        assertArrayEquals(new String[]{"1", "2", "3"}, (String[]) converter.convert(nodeSet, String[].class));
+    }
+
+    @Test
+    public void testConvertPointerToArray() {
+        Pointer pointer = new Pointer("test");
+        assertArrayEquals(new String[]{"test"}, (String[]) converter.convert(pointer, String[].class));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[76] org.apache.commons.jxpath.NodeSet is abstract; cannot be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[82] org.apache.commons.jxpath.Pointer is abstract; cannot be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[100] cannot find symbol
+  symbol:   variable Arrays
+  location: class org.apache.commons.jxpath.util.BasicTypeConverter_convertTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[106] cannot find symbol
+  symbol:   variable Arrays
+  location: class org.apache.commons.jxpath.util.BasicTypeConverter_convertTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[143] cannot find symbol
+  symbol:   variable Arrays
+  location: class org.apache.commons.jxpath.util.BasicTypeConverter_convertTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[149] org.apache.commons.jxpath.NodeSet is abstract; cannot be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[155] org.apache.commons.jxpath.Pointer is abstract; cannot be instantiated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: BasicTypeConverter_convertTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

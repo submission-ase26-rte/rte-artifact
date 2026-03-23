@@ -1,0 +1,181 @@
+```java
+package org.apache.commons.cli;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class OptionGroup_toStringTestGenerated {
+    @Mock
+    private Option option1;
+    @Mock
+    private Option option2;
+    @Mock
+    private Option option3;
+    private OptionGroup optionGroup;
+
+    @BeforeEach
+    void setUp() {
+        optionGroup = new OptionGroup();
+        ReflectionTestUtils.setField(optionGroup, "optionMap", new ArrayList<>());
+    }
+
+    @Test
+    void testToStringWithMultipleOptionsWithShortOpt() {
+        when(option1.getOpt()).thenReturn("a");
+        when(option1.getDescription()).thenReturn("description1");
+        when(option2.getOpt()).thenReturn("b");
+        when(option2.getDescription()).thenReturn("description2");
+
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        options.add(option2);
+
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+
+        String result = optionGroup.toString();
+        assertEquals("[-a description1, -b description2]", result);
+    }
+
+    @Test
+    void testToStringWithMultipleOptionsWithLongOpt() {
+        when(option1.getLongOpt()).thenReturn("option1");
+        when(option1.getDescription()).thenReturn("description1");
+        when(option2.getLongOpt()).thenReturn("option2");
+        when(option2.getDescription()).thenReturn("description2");
+
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        options.add(option2);
+
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+
+        String result = optionGroup.toString();
+        assertEquals("[--option1 description1, --option2 description2]", result);
+    }
+
+    @Test
+    void testToStringWithMixedOptions() {
+        when(option1.getOpt()).thenReturn("a");
+        when(option1.getDescription()).thenReturn("description1");
+        when(option2.getLongOpt()).thenReturn("option2");
+        when(option2.getDescription()).thenReturn("description2");
+
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        options.add(option2);
+
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+
+        String result = optionGroup.toString();
+        assertEquals("[-a description1, --option2 description2]", result);
+    }
+
+    @Test
+    void testToStringWithNoDescription() {
+        when(option1.getOpt()).thenReturn("a");
+        when(option2.getOpt()).thenReturn("b");
+
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        options.add(option2);
+
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+
+        String result = optionGroup.toString();
+        assertEquals("[-a, -b]", result);
+    }
+
+    @Test
+    void testToStringWithSingleOption() {
+        when(option1.getOpt()).thenReturn("a");
+        when(option1.getDescription()).thenReturn("description1");
+
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+
+        String result = optionGroup.toString();
+        assertEquals("[-a description1]", result);
+    }
+
+    @Test
+    void testToStringWithEmptyOptionGroup() {
+        String result = optionGroup.toString();
+        assertEquals("[]", result);
+    }
+
+    @Test
+    void testToStringWithNullOptions() {
+        when(option1.getOpt()).thenReturn(null);
+        when(option1.getLongOpt()).thenReturn(null);
+        when(option1.getDescription()).thenReturn("description1");
+
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+
+        String result = optionGroup.toString();
+        assertEquals("[]", result);
+    }
+
+    @Test
+    void testToStringWithOptionWithNullOptAndNullLongOpt() {
+        when(option1.getOpt()).thenReturn(null);
+        when(option1.getLongOpt()).thenReturn(null);
+        when(option1.getDescription()).thenReturn("description1");
+
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+
+        String result = optionGroup.toString();
+        assertEquals("[]", result);
+    }
+
+    @Test
+    void testToStringWithOptionWithNullDescription() {
+        when(option1.getOpt()).thenReturn("a");
+        when(option1.getDescription()).thenReturn(null);
+
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+
+        String result = optionGroup.toString();
+        assertEquals("[-a]", result);
+    }
+
+    @Test
+    void testToStringWithMultipleOptionsWithSomeNullOptions() {
+        when(option1.getOpt()).thenReturn("a");
+        when(option1.getDescription()).thenReturn("description1");
+        when(option2.getOpt()).thenReturn(null);
+        when(option2.getLongOpt()).thenReturn(null);
+
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        options.add(option2);
+
+        ReflectionTestUtils.setField(optionGroup, "optionMap", options);
+
+        String result = optionGroup.toString();
+        assertEquals("[-a description1]", result);
+    }
+}
+```

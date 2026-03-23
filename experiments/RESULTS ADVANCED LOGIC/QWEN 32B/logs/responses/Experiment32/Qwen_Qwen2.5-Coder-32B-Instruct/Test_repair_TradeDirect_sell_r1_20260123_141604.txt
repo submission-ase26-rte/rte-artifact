@@ -1,0 +1,423 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.mockito.stubbing.OngoingStubbing;
+
+import javax.annotation.Resource;
+import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.jms.JMSContext;
+import javax.jms.Queue;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.TextMessage;
+import javax.jms.Topic;
+import javax.jms.TopicConnectionFactory;
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeDirect_sellTestGenerated {
+
+    @Mock
+    private QueueConnectionFactory queueConnectionFactory;
+
+    @Mock
+    private TopicConnectionFactory topicConnectionFactory;
+
+    @Mock
+    private Topic tradeStreamerTopic;
+
+    @Mock
+    private Queue tradeBrokerQueue;
+
+    @Mock
+    private DataSource datasource;
+
+    @Mock
+    private UserTransaction txn;
+
+    @Mock
+    private ManagedExecutorService mes;
+
+    @Spy
+    @InjectMocks
+    private TradeDirect tradeDirect;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        verifyNoMoreInteractions(queueConnectionFactory, topicConnectionFactory, tradeStreamerTopic, tradeBrokerQueue, datasource, txn, mes);
+    }
+
+    @Test
+    public void testSell_SuccessfulSync() throws Exception {
+        // Arrange
+        String userID = "user1";
+        Integer holdingID = 1;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        AccountDataBean accountData = mock(AccountDataBean.class);
+        HoldingDataBean holdingData = mock(HoldingDataBean.class);
+        QuoteDataBean quoteData = mock(QuoteDataBean.class);
+        OrderDataBean orderData = mock(OrderDataBean.class);
+
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+
+        when(datasource.getConnection()).thenReturn(conn);
+        when(tradeDirect.getAccountData(conn, userID)).thenReturn(accountData);
+        when(tradeDirect.getHoldingData(conn, holdingID)).thenReturn(holdingData);
+        when(holdingData.getQuoteID()).thenReturn("symbol1");
+        when(tradeDirect.getQuoteData(conn, "symbol1")).thenReturn(quoteData);
+        when(quoteData.getPrice()).thenReturn(new BigDecimal("100.00"));
+        when(tradeDirect.createOrder(accountData, quoteData, holdingData, "sell", holdingData.getQuantity())).thenReturn(orderData);
+        when(orderData.getOrderID()).thenReturn(1);
+        when(orderData.getOrderFee()).thenReturn(new BigDecimal("10.00"));
+        when(tradeDirect.getOrderData(conn, 1)).thenReturn(orderData);
+        when(stmt.executeUpdate()).thenReturn(1);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true).thenReturn(false);
+        when(tradeDirect.getStatement(conn, anyString())).thenReturn(stmt);
+
+        // Act
+        OrderDataBean result = tradeDirect.sell(userID, holdingID, orderProcessingMode);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(orderData, result);
+        verify(tradeDirect).completeOrder(conn, 1);
+        verify(tradeDirect).commit(conn);
+    }
+
+    @Test
+    public void testSell_SuccessfulAsync() throws Exception {
+        // Arrange
+        String userID = "user1";
+        Integer holdingID = 1;
+        int orderProcessingMode = TradeConfig.ASYNCH;
+
+        AccountDataBean accountData = mock(AccountDataBean.class);
+        HoldingDataBean holdingData = mock(HoldingDataBean.class);
+        QuoteDataBean quoteData = mock(QuoteDataBean.class);
+        OrderDataBean orderData = mock(OrderDataBean.class);
+
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+
+        when(datasource.getConnection()).thenReturn(conn);
+        when(tradeDirect.getAccountData(conn, userID)).thenReturn(accountData);
+        when(tradeDirect.getHoldingData(conn, holdingID)).thenReturn(holdingData);
+        when(holdingData.getQuoteID()).thenReturn("symbol1");
+        when(tradeDirect.getQuoteData(conn, "symbol1")).thenReturn(quoteData);
+        when(quoteData.getPrice()).thenReturn(new BigDecimal("100.00"));
+        when(tradeDirect.createOrder(accountData, quoteData, holdingData, "sell", holdingData.getQuantity())).thenReturn(orderData);
+        when(orderData.getOrderID()).thenReturn(1);
+        when(orderData.getOrderFee()).thenReturn(new BigDecimal("10.00"));
+        when(tradeDirect.getOrderData(conn, 1)).thenReturn(orderData);
+        when(stmt.executeUpdate()).thenReturn(1);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true).thenReturn(false);
+        when(tradeDirect.getStatement(conn, anyString())).thenReturn(stmt);
+
+        // Act
+        OrderDataBean result = tradeDirect.sell(userID, holdingID, orderProcessingMode);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(orderData, result);
+        verify(tradeDirect).completeOrderAsync(1, true);
+        verify(tradeDirect).commit(conn);
+    }
+
+    @Test
+    public void testSell_SuccessfulAsync2Phase() throws Exception {
+        // Arrange
+        String userID = "user1";
+        Integer holdingID = 1;
+        int orderProcessingMode = TradeConfig.ASYNCH_2PHASE;
+
+        AccountDataBean accountData = mock(AccountDataBean.class);
+        HoldingDataBean holdingData = mock(HoldingDataBean.class);
+        QuoteDataBean quoteData = mock(QuoteDataBean.class);
+        OrderDataBean orderData = mock(OrderDataBean.class);
+
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+
+        when(datasource.getConnection()).thenReturn(conn);
+        when(tradeDirect.getAccountData(conn, userID)).thenReturn(accountData);
+        when(tradeDirect.getHoldingData(conn, holdingID)).thenReturn(holdingData);
+        when(holdingData.getQuoteID()).thenReturn("symbol1");
+        when(tradeDirect.getQuoteData(conn, "symbol1")).thenReturn(quoteData);
+        when(quoteData.getPrice()).thenReturn(new BigDecimal("100.00"));
+        when(tradeDirect.createOrder(accountData, quoteData, holdingData, "sell", holdingData.getQuantity())).thenReturn(orderData);
+        when(orderData.getOrderID()).thenReturn(1);
+        when(orderData.getOrderFee()).thenReturn(new BigDecimal("10.00"));
+        when(tradeDirect.getOrderData(conn, 1)).thenReturn(orderData);
+        when(stmt.executeUpdate()).thenReturn(1);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true).thenReturn(false);
+        when(tradeDirect.getStatement(conn, anyString())).thenReturn(stmt);
+        when(txn.begin()).thenReturn(null);
+        when(txn.commit()).thenReturn(null);
+
+        // Act
+        OrderDataBean result = tradeDirect.sell(userID, holdingID, orderProcessingMode);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(orderData, result);
+        verify(tradeDirect).queueOrder(1, true);
+        verify(txn).begin();
+        verify(txn).commit();
+    }
+
+    @Test
+    public void testSell_Failure_AccountNotFound() throws Exception {
+        // Arrange
+        String userID = "user1";
+        Integer holdingID = 1;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+
+        when(datasource.getConnection()).thenReturn(conn);
+        when(tradeDirect.getAccountData(conn, userID)).thenReturn(null);
+        when(stmt.executeUpdate()).thenReturn(1);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true).thenReturn(false);
+        when(tradeDirect.getStatement(conn, anyString())).thenReturn(stmt);
+
+        // Act
+        OrderDataBean result = tradeDirect.sell(userID, holdingID, orderProcessingMode);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("cancelled", result.getOrderStatus());
+        verify(tradeDirect).rollBack(conn, any(Exception.class));
+    }
+
+    @Test
+    public void testSell_Failure_HoldingNotFound() throws Exception {
+        // Arrange
+        String userID = "user1";
+        Integer holdingID = 1;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        AccountDataBean accountData = mock(AccountDataBean.class);
+
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+
+        when(datasource.getConnection()).thenReturn(conn);
+        when(tradeDirect.getAccountData(conn, userID)).thenReturn(accountData);
+        when(tradeDirect.getHoldingData(conn, holdingID)).thenReturn(null);
+        when(stmt.executeUpdate()).thenReturn(1);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true).thenReturn(false);
+        when(tradeDirect.getStatement(conn, anyString())).thenReturn(stmt);
+
+        // Act
+        OrderDataBean result = tradeDirect.sell(userID, holdingID, orderProcessingMode);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("cancelled", result.getOrderStatus());
+        verify(tradeDirect).rollBack(conn, any(Exception.class));
+    }
+
+    @Test
+    public void testSell_Failure_QuoteNotFound() throws Exception {
+        // Arrange
+        String userID = "user1";
+        Integer holdingID = 1;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        AccountDataBean accountData = mock(AccountDataBean.class);
+        HoldingDataBean holdingData = mock(HoldingDataBean.class);
+
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+
+        when(datasource.getConnection()).thenReturn(conn);
+        when(tradeDirect.getAccountData(conn, userID)).thenReturn(accountData);
+        when(tradeDirect.getHoldingData(conn, holdingID)).thenReturn(holdingData);
+        when(holdingData.getQuoteID()).thenReturn("symbol1");
+        when(tradeDirect.getQuoteData(conn, "symbol1")).thenReturn(null);
+        when(stmt.executeUpdate()).thenReturn(1);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true).thenReturn(false);
+        when(tradeDirect.getStatement(conn, anyString())).thenReturn(stmt);
+
+        // Act
+        OrderDataBean result = tradeDirect.sell(userID, holdingID, orderProcessingMode);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("cancelled", result.getOrderStatus());
+        verify(tradeDirect).rollBack(conn, any(Exception.class));
+    }
+
+    @Test
+    public void testSell_Exception_DuringOrderProcessing() throws Exception {
+        // Arrange
+        String userID = "user1";
+        Integer holdingID = 1;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        AccountDataBean accountData = mock(AccountDataBean.class);
+        HoldingDataBean holdingData = mock(HoldingDataBean.class);
+        QuoteDataBean quoteData = mock(QuoteDataBean.class);
+        OrderDataBean orderData = mock(OrderDataBean.class);
+
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+
+        when(datasource.getConnection()).thenReturn(conn);
+        when(tradeDirect.getAccountData(conn, userID)).thenReturn(accountData);
+        when(tradeDirect.getHoldingData(conn, holdingID)).thenReturn(holdingData);
+        when(holdingData.getQuoteID()).thenReturn("symbol1");
+        when(tradeDirect.getQuoteData(conn, "symbol1")).thenReturn(quoteData);
+        when(quoteData.getPrice()).thenReturn(new BigDecimal("100.00"));
+        when(tradeDirect.createOrder(accountData, quoteData, holdingData, "sell", holdingData.getQuantity())).thenReturn(orderData);
+        when(orderData.getOrderID()).thenReturn(1);
+        when(orderData.getOrderFee()).thenReturn(new BigDecimal("10.00"));
+        when(tradeDirect.getOrderData(conn, 1)).thenReturn(orderData);
+        when(stmt.executeUpdate()).thenReturn(1);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true).thenReturn(false);
+        when(tradeDirect.getStatement(conn, anyString())).thenReturn(stmt);
+        doThrow(new Exception("Test Exception")).when(tradeDirect).completeOrder(conn, 1);
+
+        // Act & Assert
+        assertThrows(Exception.class, () -> tradeDirect.sell(userID, holdingID, orderProcessingMode));
+        verify(tradeDirect).rollBack(conn, any(Exception.class));
+    }
+
+    @Test
+    public void testSell_Exception_DuringQueueOrder() throws Exception {
+        // Arrange
+        String userID = "user1";
+        Integer holdingID = 1;
+        int orderProcessingMode = TradeConfig.ASYNCH_2PHASE;
+
+        AccountDataBean accountData = mock(AccountDataBean.class);
+        HoldingDataBean holdingData = mock(HoldingDataBean.class);
+        QuoteDataBean quoteData = mock(QuoteDataBean.class);
+        OrderDataBean orderData = mock(OrderDataBean.class);
+
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+
+        when(datasource.getConnection()).thenReturn(conn);
+        when(tradeDirect.getAccountData(conn, userID)).thenReturn(accountData);
+        when(tradeDirect.getHoldingData(conn, holdingID)).thenReturn(holdingData);
+        when(holdingData.getQuoteID()).thenReturn("symbol1");
+        when(tradeDirect.getQuoteData(conn, "symbol1")).thenReturn(quoteData);
+        when(quoteData.getPrice()).thenReturn(new BigDecimal("100.00"));
+        when(tradeDirect.createOrder(accountData, quoteData, holdingData, "sell", holdingData.getQuantity())).thenReturn(orderData);
+        when(orderData.getOrderID()).thenReturn(1);
+        when(orderData.getOrderFee()).thenReturn(new BigDecimal("10.00"));
+        when(tradeDirect.getOrderData(conn, 1)).thenReturn(orderData);
+        when(stmt.executeUpdate()).thenReturn(1);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true).thenReturn(false);
+        when(tradeDirect.getStatement(conn, anyString())).thenReturn(stmt);
+        when(txn.begin()).thenReturn(null);
+        when(txn.commit()).thenReturn(null);
+        doThrow(new Exception("Test Exception")).when(tradeDirect).queueOrder(1, true);
+
+        // Act & Assert
+        assertThrows(Exception.class, () -> tradeDirect.sell(userID, holdingID, orderProcessingMode));
+        verify(tradeDirect).cancelOrder(conn, 1);
+        verify(txn).rollback();
+    }
+
+    @Test
+    public void testSell_Exception_DuringConnection() throws Exception {
+        // Arrange
+        String userID = "user1";
+        Integer holdingID = 1;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        when(datasource.getConnection()).thenThrow(new SQLException("Test Exception"));
+
+        // Act & Assert
+        assertThrows(Exception.class, () -> tradeDirect.sell(userID, holdingID, orderProcessingMode));
+    }
+
+    @Test
+    public void testSell_Exception_DuringRollback() throws Exception {
+        // Arrange
+        String userID = "user1";
+        Integer holdingID = 1;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        AccountDataBean accountData = mock(AccountDataBean.class);
+        HoldingDataBean holdingData = mock(HoldingDataBean.class);
+        QuoteDataBean quoteData = mock(QuoteDataBean.class);
+        OrderDataBean orderData = mock(OrderDataBean.class);
+
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+
+        when(datasource.getConnection()).thenReturn(conn);
+        when(tradeDirect.getAccountData(conn, userID)).thenReturn(accountData);
+        when(tradeDirect.getHoldingData(conn, holdingID)).thenReturn(holdingData);
+        when(holdingData.getQuoteID()).thenReturn("symbol1");
+        when(tradeDirect.getQuoteData(conn, "symbol1")).thenReturn(quoteData);
+        when(quoteData.getPrice()).thenReturn(new BigDecimal("100.00"));
+        when(tradeDirect.createOrder(accountData, quoteData, holdingData, "sell", holdingData.getQuantity())).thenReturn(orderData);
+        when(orderData.getOrderID()).thenReturn(1);
+        when(orderData.getOrderFee()).thenReturn(new BigDecimal("10.00"));
+        when(tradeDirect.getOrderData(conn, 1)).thenReturn(orderData);
+        when(stmt.executeUpdate()).thenReturn(1);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true).thenReturn(false);
+        when(tradeDirect.getStatement(conn, anyString())).thenReturn(stmt);
+        doThrow(new Exception("Test Exception")).when(tradeDirect).completeOrder(conn, 1);
+        doThrow(new SQLException("Rollback Exception")).when(tradeDirect).rollBack(conn, any(Exception.class));
+
+        // Act & Assert
+        assertThrows(Exception.class, () -> tradeDirect.sell(userID, holdingID, orderProcessingMode));
+    }
+}
+```

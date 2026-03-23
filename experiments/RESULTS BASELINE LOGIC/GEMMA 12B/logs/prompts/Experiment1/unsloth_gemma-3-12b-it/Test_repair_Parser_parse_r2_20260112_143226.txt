@@ -1,0 +1,258 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): Parser_parseTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Parser_parseTestGenerated {
+
+    private Parser parser;
+
+    @BeforeEach
+    void setUp() {
+        parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+
+        };
+    }
+
+    @AfterEach
+    void tearDown() {
+        parser = null;
+    }
+
+    @Test
+    void testParseValidOptions() throws ParseException {
+        Options options = new Options();
+        Option option = new Option("a", "a", true, "a");
+        options.addOption(option);
+
+        String[] arguments = {"-a", "value"};
+        Properties properties = new Properties();
+
+        CommandLine cmd = parser.parse(options, arguments, properties, false);
+
+        assertNotNull(cmd);
+        assertEquals(1, cmd.getArgList().size());
+        assertEquals("value", cmd.getArgList().get(0));
+        assertTrue(option.hasValue());
+        assertEquals("value", option.getValue());
+    }
+
+    @Test
+    void testParseWithRequiredOptionAndValue() throws ParseException {
+        Options options = new Options();
+        Option option = new Option("r", "required", true, "required option");
+        option.setRequired(true);
+        options.addOption(option);
+
+        String[] arguments = {"-r", "value"};
+        Properties properties = new Properties();
+
+        CommandLine cmd = parser.parse(options, arguments, properties, false);
+
+        assertNotNull(cmd);
+        assertTrue(option.hasValue());
+        assertEquals("value", option.getValue());
+    }
+
+    @Test
+    void testParseWithStopAtNonOptionTrue() throws ParseException {
+        Options options = new Options();
+        Option option = new Option("a", "a", true, "a");
+        options.addOption(option);
+
+        String[] arguments = {"-a", "value", "extra"};
+        Properties properties = new Properties();
+
+        CommandLine cmd = parser.parse(options, arguments, properties, true);
+
+        assertNotNull(cmd);
+        assertEquals(1, cmd.getArgList().size());
+        assertEquals("value", cmd.getArgList().get(0));
+        assertTrue(option.hasValue());
+        assertEquals("value", option.getValue());
+    }
+
+    @Test
+    void testParseWithStopAtNonOptionFalseAndExtraArgument() throws ParseException {
+        Options options = new Options();
+        Option option = new Option("a", "a", true, "a");
+        options.addOption(option);
+
+        String[] arguments = {"-a", "value", "extra"};
+        Properties properties = new Properties();
+
+        CommandLine cmd = parser.parse(options, arguments, properties, false);
+
+        assertNotNull(cmd);
+        assertEquals(2, cmd.getArgList().size());
+        assertEquals("value", cmd.getArgList().get(0));
+        assertEquals("extra", cmd.getArgList().get(1));
+        assertTrue(option.hasValue());
+        assertEquals("value", option.getValue());
+    }
+
+    @Test
+    void testParseWithProperties() throws ParseException {
+        Options options = new Options();
+        Option option = new Option("p", "property", true, "property option");
+        options.addOption(option);
+
+        String[] arguments = {};
+        Properties properties = new Properties();
+        properties.setProperty("property", "propertyValue");
+
+        CommandLine cmd = parser.parse(options, arguments, properties, false);
+
+        assertNotNull(cmd);
+        assertTrue(option.hasValue());
+        assertEquals("propertyValue", option.getValue());
+    }
+
+    @Test
+    void testParseWithNullArguments() throws ParseException {
+        Options options = new Options();
+        Option option = new Option("a", "a", true, "a");
+        options.addOption(option);
+
+        String[] arguments = null;
+        Properties properties = new Properties();
+
+        CommandLine cmd = parser.parse(options, arguments, properties, false);
+
+        assertNotNull(cmd);
+        assertFalse(option.hasValue());
+    }
+
+    @Test
+    void testParseWithEmptyOptions() throws ParseException {
+        Options options = new Options();
+
+        String[] arguments = {"-a", "value"};
+        Properties properties = new Properties();
+
+        CommandLine cmd = parser.parse(options, arguments, properties, false);
+
+        assertNotNull(cmd);
+        assertEquals(1, cmd.getArgList().size());
+        assertEquals("value", cmd.getArgList().get(0));
+    }
+
+    @Test
+    void testParseWithRequiredOptionMissingValue() throws ParseException {
+        Options options = new Options();
+        Option option = new Option("r", "required", true, "required option");
+        option.setRequired(true);
+        options.addOption(option);
+
+        String[] arguments = {"-r"};
+        Properties properties = new Properties();
+
+        assertThrows(ParseException.class, () -> parser.parse(options, arguments, properties, false));
+    }
+
+    @Test
+    void testParseWithRequiredOptionAndNoValueProvidedViaProperties() throws ParseException {
+        Options options = new Options();
+        Option option = new Option("r", "required", true, "required option");
+        option.setRequired(true);
+        options.addOption(option);
+
+        String[] arguments = {};
+        Properties properties = new Properties();
+        properties.setProperty("required", "value");
+
+        CommandLine cmd = parser.parse(options, arguments, properties, false);
+
+        assertNotNull(cmd);
+        assertTrue(option.hasValue());
+        assertEquals("value", option.getValue());
+    }
+
+    @Test
+    void testParseException() {
+        Options options = new Options();
+        Option option = new Option("a", "a", true, "a");
+        options.addOption(option);
+
+        String[] arguments = {"-b", "value"};
+
+        Properties properties = new Properties();
+
+        assertThrows(ParseException.class, () -> parser.parse(options, arguments, properties, false));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[53] cannot find symbol
+  symbol:   method hasValue()
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[70] cannot find symbol
+  symbol:   method hasValue()
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[88] cannot find symbol
+  symbol:   method hasValue()
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[107] cannot find symbol
+  symbol:   method hasValue()
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[124] cannot find symbol
+  symbol:   method hasValue()
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[140] cannot find symbol
+  symbol:   method hasValue()
+  location: variable option of type org.apache.commons.cli.Option
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[184] cannot find symbol
+  symbol:   method hasValue()
+  location: variable option of type org.apache.commons.cli.Option
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: Parser_parseTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations
+
+IMPORTANT: The target class "Parser" is ABSTRACT and cannot be instantiated directly.
+- DO NOT use Mockito to mock the class itself (unless you need a partial mock).
+- INSTANTIATE using this REAL ANONYMOUS SUBCLASS template (copy exactly):
+```java
+new Parser() {
+    @Override
+    public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+        return arguments;
+    }
+
+}
+```
+- DO NOT create custom concrete subclasses files.
+- DO NOT invent classes that do not exist in the codebase.

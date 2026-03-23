@@ -1,0 +1,515 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.direct;
+Class name (MUST be exactly): TradeDirectDBUtils_resetTradeTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testResetTradeDeleteAll --
+ERROR: org.mockito.exceptions.misusing.CannotStubVoidMethodWithReturnValue:
+'error' is a *void method* and it *cannot* be stubbed with a *return value*!
+Voids are usually stubbed with Throwables:
+doThrow(exception).when(mock).someVoidMethod();
+If you need to set the void method to do nothing you can use:
+doNothing().when(mock).someVoidMethod();
+For more information, check out the javadocs for Mockito.doNothing().
+***
+If you're unsure why you're getting above error read on.
+Due to the nature of the syntax above problem might occur because:
+1. The method you are trying to stub is *overloaded*. Make sure you are calling the right overloaded version.
+2. Somewhere in your test you are stubbing *final methods*. Sorry, Mockito does not verify/stub final methods.
+3. A spy is stubbed using when(spy.foo()).then() syntax. It is safer to stub spies -
+- with doReturn|Throw() family of methods. More in javadocs for Mockito.spy() method.
+4. Mocking methods declared on non-public parent classes is not supported.
+--------------------------------------------------
+TEST: testResetTradeNotDeleteAll --
+ERROR: org.mockito.exceptions.misusing.CannotStubVoidMethodWithReturnValue:
+'error' is a *void method* and it *cannot* be stubbed with a *return value*!
+Voids are usually stubbed with Throwables:
+doThrow(exception).when(mock).someVoidMethod();
+If you need to set the void method to do nothing you can use:
+doNothing().when(mock).someVoidMethod();
+For more information, check out the javadocs for Mockito.doNothing().
+***
+If you're unsure why you're getting above error read on.
+Due to the nature of the syntax above problem might occur because:
+1. The method you are trying to stub is *overloaded*. Make sure you are calling the right overloaded version.
+2. Somewhere in your test you are stubbing *final methods*. Sorry, Mockito does not verify/stub final methods.
+3. A spy is stubbed using when(spy.foo()).then() syntax. It is safer to stub spies -
+- with doReturn|Throw() family of methods. More in javadocs for Mockito.spy() method.
+4. Mocking methods declared on non-public parent classes is not supported.
+
+TEST CODE TO FIX:
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.MDBStats;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class TradeDirectDBUtils_resetTradeTestGenerated {
+    private DataSource datasource;
+    private TradeDirectDBUtils tradeDirectDBUtils;
+    @BeforeEach
+    void setUp() {
+        datasource = mock(DataSource.class);
+        tradeDirectDBUtils = new TradeDirectDBUtils();
+        ReflectionTestUtils.setField(tradeDirectDBUtils, "datasource", datasource);
+    }
+
+    @AfterEach
+    void tearDown() {
+        tradeDirectDBUtils = null;
+    }
+
+
+    @Test
+        void testResetTradeDeleteAll() throws Exception {
+            try (MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class);
+                 MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+    
+                Connection conn = mock(Connection.class);
+                when(datasource.getConnection()).thenReturn(conn);
+                when(conn.prepareStatement(anyString())).thenReturn(mock(PreparedStatement.class));
+                when(conn.prepareStatement(anyString())).thenReturn(mock(PreparedStatement.class));
+    
+                mockedMDBStats.when(MDBStats::getInstance).thenReturn(mock(MDBStats.class));
+                mockedLog.when(() -> Log.error(anyString(), any(Throwable.class))).thenReturn(null);
+    
+                RunStatsDataBean result = tradeDirectDBUtils.resetTrade(true);
+    
+                assertEquals(0, result.getTradeUserCount());
+                assertEquals(0, result.getNewUserCount());
+                assertEquals(0, result.getSumLoginCount());
+                assertEquals(0, result.getSumLogoutCount());
+                assertEquals(0, result.getHoldingCount());
+                assertEquals(0, result.getOrderCount());
+                assertEquals(0, result.getBuyOrderCount());
+                assertEquals(0, result.getSellOrderCount());
+                assertEquals(0, result.getCancelledOrderCount());
+                assertEquals(0, result.getOpenOrderCount());
+                assertEquals(0, result.getDeletedOrderCount());
+                assertEquals(0, result.getTradeStockCount());
+    
+                verify(conn, times(1)).setAutoCommit(false);
+                verify(conn, times(1)).commit();
+                verify(conn, times(1)).close();
+            }
+        }
+
+    @Test
+        void testResetTradeNotDeleteAll() throws Exception {
+            try (MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class);
+                 MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+    
+                Connection conn = mock(Connection.class);
+                when(datasource.getConnection()).thenReturn(conn);
+                when(conn.prepareStatement(anyString())).thenReturn(mock(PreparedStatement.class));
+                when(conn.prepareStatement(anyString())).thenReturn(mock(PreparedStatement.class));
+    
+                mockedMDBStats.when(MDBStats::getInstance).thenReturn(mock(MDBStats.class));
+                mockedLog.when(() -> Log.error(anyString(), any(Throwable.class))).thenReturn(null);
+    
+                RunStatsDataBean result = tradeDirectDBUtils.resetTrade(false);
+    
+                assertEquals(0, result.getTradeUserCount());
+                assertEquals(0, result.getNewUserCount());
+                assertEquals(0, result.getSumLoginCount());
+                assertEquals(0, result.getSumLogoutCount());
+                assertEquals(0, result.getHoldingCount());
+                assertEquals(0, result.getOrderCount());
+                assertEquals(0, result.getBuyOrderCount());
+                assertEquals(0, result.getSellOrderCount());
+                assertEquals(0, result.getCancelledOrderCount());
+                assertEquals(0, result.getOpenOrderCount());
+                assertEquals(0, result.getDeletedOrderCount());
+                assertEquals(0, result.getTradeStockCount());
+    
+                verify(conn, times(1)).setAutoCommit(false);
+                verify(conn, times(1)).commit();
+                verify(conn, times(1)).close();
+            }
+        }
+
+}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   RunStatsDataBean -> com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean
+//   AccountDataBean -> com.ibm.websphere.samples.daytrader.entities.AccountDataBean
+//   TradeDB -> com.ibm.websphere.samples.daytrader.interfaces.TradeDB
+//   TradeJDBC -> com.ibm.websphere.samples.daytrader.interfaces.TradeJDBC
+//   TradeServices -> com.ibm.websphere.samples.daytrader.interfaces.TradeServices
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   MDBStats -> com.ibm.websphere.samples.daytrader.util.MDBStats
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   BufferedReader -> java.io.BufferedReader
+//   IOException -> java.io.IOException
+//   InputStream -> java.io.InputStream
+//   InputStreamReader -> java.io.InputStreamReader
+//   BigDecimal -> java.math.BigDecimal
+//   Connection -> java.sql.Connection
+//   DatabaseMetaData -> java.sql.DatabaseMetaData
+//   PreparedStatement -> java.sql.PreparedStatement
+//   ResultSet -> java.sql.ResultSet
+//   SQLException -> java.sql.SQLException
+//   Statement -> java.sql.Statement
+//   ArrayList -> java.util.ArrayList
+//   Resource -> javax.annotation.Resource
+//   ApplicationScoped -> javax.enterprise.context.ApplicationScoped
+//   Inject -> javax.inject.Inject
+//   DataSource -> javax.sql.DataSource
+//   TradeDirectDBUtils -> com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils
+
+// === Class: TradeDirectDBUtils ===
+// Fields (with actual visibility):
+    private DataSource datasource;
+    package-private TradeServices ts;
+
+// Getter/Setter Methods (for test assertions):
+private PreparedStatement getStatement(Connection conn, String sql) throws Exception;
+
+// Internal Methods (full implementation for context):
+  private PreparedStatement getStatement(Connection conn, String sql) throws Exception {
+    return conn.prepareStatement(sql);
+  }
+
+// === External Class: MDBStats ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.MDBStats
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private static MDBStats mdbStats;
+
+// Constructors:
+private MDBStats();
+
+// Method Signatures (used by target method):
+static public synchronized MDBStats getInstance();
+
+// === External Class: Log ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.Log
+// Import paths:
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   Level -> java.util.logging.Level
+//   Logger -> java.util.logging.Logger
+// Fields (with actual visibility):
+    private static final Logger log;
+
+// Method Signatures (used by target method):
+static public void error(String message);
+
+// === External Class: RunStatsDataBean ===
+// Full import path: com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean
+// Import paths:
+//   Serializable -> java.io.Serializable
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private int tradeUserCount;
+    private int tradeStockCount;
+    private int newUserCount;
+    private int sumLoginCount;
+    private int sumLogoutCount;
+    private int holdingCount;
+    private int orderCount;
+    private int buyOrderCount;
+    private int sellOrderCount;
+    private int cancelledOrderCount;
+    private int openOrderCount;
+    private int deletedOrderCount;
+
+// Constructors:
+public RunStatsDataBean();
+
+// Method Signatures (used by target method):
+public void setOpenOrderCount(int openOrderCount);
+public void setNewUserCount(int newUserCount);
+public void setTradeUserCount(int tradeUserCount);
+public void setBuyOrderCount(int buyOrderCount);
+public void setHoldingCount(int holdingCount);
+public void setSellOrderCount(int sellOrderCount);
+public void setSumLogoutCount(int sumLogoutCount);
+public void setSumLoginCount(int sumLoginCount);
+public void setDeletedOrderCount(int deletedOrderCount);
+public void setCancelledOrderCount(int cancelledOrderCount);
+public void setOrderCount(int orderCount);
+public void setTradeStockCount(int tradeStockCount);
+
+// Public Getter Methods (for test assertions):
+public String toString();
+public int getTradeUserCount();
+public int getNewUserCount();
+public int getSumLoginCount();
+public int getSumLogoutCount();
+public int getHoldingCount();
+public int getBuyOrderCount();
+public int getSellOrderCount();
+public int getCancelledOrderCount();
+public int getOpenOrderCount();
+public int getDeletedOrderCount();
+public int getOrderCount();
+public int getTradeStockCount();
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() {
+        datasource = mock(DataSource.class);
+        tradeDirectDBUtils = new TradeDirectDBUtils();
+        ReflectionTestUtils.setField(tradeDirectDBUtils, "datasource", datasource);
+    }
+
+    @AfterEach
+    void tearDown() {
+        tradeDirectDBUtils = null;
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+  public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception {
+    // Clear MDB Statistics
+    MDBStats.getInstance().reset(); // NOT COVERED BY TESTS
+    // Reset Trade
+
+    RunStatsDataBean runStatsData = new RunStatsDataBean(); // NOT COVERED BY TESTS
+    Connection conn = null; // NOT COVERED BY TESTS
+    try {
+
+      conn = datasource.getConnection(); // NOT COVERED BY TESTS
+      conn.setAutoCommit(false); // NOT COVERED BY TESTS
+      PreparedStatement stmt = null; // NOT COVERED BY TESTS
+      ResultSet rs = null; // NOT COVERED BY TESTS
+
+      if (deleteAll) { // NOT COVERED BY TESTS
+        try {
+          stmt = getStatement(conn, "delete from quoteejb"); // NOT COVERED BY TESTS
+          stmt.executeUpdate(); // NOT COVERED BY TESTS
+          stmt.close(); // NOT COVERED BY TESTS
+          stmt = getStatement(conn, "delete from accountejb"); // NOT COVERED BY TESTS
+          stmt.executeUpdate(); // NOT COVERED BY TESTS
+          stmt.close(); // NOT COVERED BY TESTS
+          stmt = getStatement(conn, "delete from accountprofileejb"); // NOT COVERED BY TESTS
+          stmt.executeUpdate(); // NOT COVERED BY TESTS
+          stmt.close(); // NOT COVERED BY TESTS
+          stmt = getStatement(conn, "delete from holdingejb"); // NOT COVERED BY TESTS
+          stmt.executeUpdate(); // NOT COVERED BY TESTS
+          stmt.close(); // NOT COVERED BY TESTS
+          stmt = getStatement(conn, "delete from orderejb"); // NOT COVERED BY TESTS
+          stmt.executeUpdate(); // NOT COVERED BY TESTS
+          stmt.close(); // NOT COVERED BY TESTS
+          // FUTURE: - DuplicateKeyException - For now, don't start at
+          // zero as KeySequenceDirect and KeySequenceBean will still
+          // give out
+          // the cached Block and then notice this change. Better
+          // solution is
+          // to signal both classes to drop their cached blocks
+          // stmt = getStatement(conn, "delete from keygenejb");
+          // stmt.executeUpdate();
+          // stmt.close();
+          conn.commit(); // NOT COVERED BY TESTS
+        } catch (Exception e) { // NOT COVERED BY TESTS
+          Log.error(e, "TradeDirect:resetTrade(deleteAll) -- Error deleting Trade users and stock from the Trade database"); // NOT COVERED BY TESTS
+        }
+        return runStatsData; // NOT COVERED BY TESTS
+      }
+
+      stmt = getStatement(conn, "delete from holdingejb where holdingejb.account_accountid is null"); // NOT COVERED BY TESTS
+      stmt.executeUpdate(); // NOT COVERED BY TESTS
+      stmt.close(); // NOT COVERED BY TESTS
+
+      // Count and Delete newly registered users (users w/ id that start
+      // "ru:%":
+      stmt = getStatement(conn, "delete from accountprofileejb where userid like 'ru:%'"); // NOT COVERED BY TESTS
+      stmt.executeUpdate(); // NOT COVERED BY TESTS
+      stmt.close(); // NOT COVERED BY TESTS
+
+      stmt = getStatement(conn, "delete from orderejb where account_accountid in (select accountid from accountejb a where a.profile_userid like 'ru:%')"); // NOT COVERED BY TESTS
+      stmt.executeUpdate(); // NOT COVERED BY TESTS
+      stmt.close(); // NOT COVERED BY TESTS
+
+      stmt = getStatement(conn, // NOT COVERED BY TESTS
+          "delete from holdingejb where account_accountid in (select accountid from accountejb a where a.profile_userid like 'ru:%')");
+      stmt.executeUpdate(); // NOT COVERED BY TESTS
+      stmt.close(); // NOT COVERED BY TESTS
+
+      stmt = getStatement(conn, "delete from accountejb where profile_userid like 'ru:%'"); // NOT COVERED BY TESTS
+      int newUserCount = stmt.executeUpdate(); // NOT COVERED BY TESTS
+      runStatsData.setNewUserCount(newUserCount); // NOT COVERED BY TESTS
+      stmt.close(); // NOT COVERED BY TESTS
+
+      // Count of trade users
+      stmt = getStatement(conn, "select count(accountid) as \"tradeUserCount\" from accountejb a where a.profile_userid like 'uid:%'"); // NOT COVERED BY TESTS
+      rs = stmt.executeQuery(); // NOT COVERED BY TESTS
+      rs.next(); // NOT COVERED BY TESTS
+      int tradeUserCount = rs.getInt("tradeUserCount"); // NOT COVERED BY TESTS
+      runStatsData.setTradeUserCount(tradeUserCount); // NOT COVERED BY TESTS
+      stmt.close(); // NOT COVERED BY TESTS
+
+      rs.close(); // NOT COVERED BY TESTS
+      // Count of trade stocks
+      stmt = getStatement(conn, "select count(symbol) as \"tradeStockCount\" from quoteejb a where a.symbol like 's:%'"); // NOT COVERED BY TESTS
+      rs = stmt.executeQuery(); // NOT COVERED BY TESTS
+      rs.next(); // NOT COVERED BY TESTS
+      int tradeStockCount = rs.getInt("tradeStockCount"); // NOT COVERED BY TESTS
+      runStatsData.setTradeStockCount(tradeStockCount); // NOT COVERED BY TESTS
+      stmt.close(); // NOT COVERED BY TESTS
+
+      // Count of trade users login, logout
+      stmt = getStatement(conn, // NOT COVERED BY TESTS
+          "select sum(loginCount) as \"sumLoginCount\", sum(logoutCount) as \"sumLogoutCount\" from accountejb a where  a.profile_userID like 'uid:%'");
+      rs = stmt.executeQuery(); // NOT COVERED BY TESTS
+      rs.next(); // NOT COVERED BY TESTS
+      int sumLoginCount = rs.getInt("sumLoginCount"); // NOT COVERED BY TESTS
+      int sumLogoutCount = rs.getInt("sumLogoutCount"); // NOT COVERED BY TESTS
+      runStatsData.setSumLoginCount(sumLoginCount); // NOT COVERED BY TESTS
+      runStatsData.setSumLogoutCount(sumLogoutCount); // NOT COVERED BY TESTS
+      stmt.close(); // NOT COVERED BY TESTS
+
+      rs.close(); // NOT COVERED BY TESTS
+      // Update logoutcount and loginCount back to zero
+
+      stmt = getStatement(conn, "update accountejb set logoutCount=0,loginCount=0 where profile_userID like 'uid:%'"); // NOT COVERED BY TESTS
+      stmt.executeUpdate(); // NOT COVERED BY TESTS
+      stmt.close(); // NOT COVERED BY TESTS
+
+      // count holdings for trade users
+      stmt = getStatement(conn, "select count(holdingid) as \"holdingCount\" from holdingejb h where h.account_accountid in " // NOT COVERED BY TESTS
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')");
+
+      rs = stmt.executeQuery(); // NOT COVERED BY TESTS
+      rs.next(); // NOT COVERED BY TESTS
+      int holdingCount = rs.getInt("holdingCount"); // NOT COVERED BY TESTS
+      runStatsData.setHoldingCount(holdingCount); // NOT COVERED BY TESTS
+      stmt.close(); // NOT COVERED BY TESTS
+      rs.close(); // NOT COVERED BY TESTS
+
+      // count orders for trade users
+      stmt = getStatement(conn, "select count(orderid) as \"orderCount\" from orderejb o where o.account_accountid in " // NOT COVERED BY TESTS
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')");
+
+      rs = stmt.executeQuery(); // NOT COVERED BY TESTS
+      rs.next(); // NOT COVERED BY TESTS
+      int orderCount = rs.getInt("orderCount"); // NOT COVERED BY TESTS
+      runStatsData.setOrderCount(orderCount); // NOT COVERED BY TESTS
+      stmt.close(); // NOT COVERED BY TESTS
+      rs.close(); // NOT COVERED BY TESTS
+
+      // count orders by type for trade users
+      stmt = getStatement(conn, "select count(orderid) \"buyOrderCount\"from orderejb o where (o.account_accountid in " // NOT COVERED BY TESTS
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')) AND " + " (o.orderType='buy')");
+
+      rs = stmt.executeQuery(); // NOT COVERED BY TESTS
+      rs.next(); // NOT COVERED BY TESTS
+      int buyOrderCount = rs.getInt("buyOrderCount"); // NOT COVERED BY TESTS
+      runStatsData.setBuyOrderCount(buyOrderCount); // NOT COVERED BY TESTS
+      stmt.close(); // NOT COVERED BY TESTS
+      rs.close(); // NOT COVERED BY TESTS
+
+      // count orders by type for trade users
+      stmt = getStatement(conn, "select count(orderid) \"sellOrderCount\"from orderejb o where (o.account_accountid in " // NOT COVERED BY TESTS
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')) AND " + " (o.orderType='sell')");
+
+      rs = stmt.executeQuery(); // NOT COVERED BY TESTS
+      rs.next(); // NOT COVERED BY TESTS
+      int sellOrderCount = rs.getInt("sellOrderCount"); // NOT COVERED BY TESTS
+      runStatsData.setSellOrderCount(sellOrderCount); // NOT COVERED BY TESTS
+      stmt.close(); // NOT COVERED BY TESTS
+      rs.close(); // NOT COVERED BY TESTS
+
+      // Delete cancelled orders
+      stmt = getStatement(conn, "delete from orderejb where orderStatus='cancelled'"); // NOT COVERED BY TESTS
+      int cancelledOrderCount = stmt.executeUpdate(); // NOT COVERED BY TESTS
+      runStatsData.setCancelledOrderCount(cancelledOrderCount); // NOT COVERED BY TESTS
+      stmt.close(); // NOT COVERED BY TESTS
+      rs.close(); // NOT COVERED BY TESTS
+
+      // count open orders by type for trade users
+      stmt = getStatement(conn, "select count(orderid) \"openOrderCount\"from orderejb o where (o.account_accountid in " // NOT COVERED BY TESTS
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')) AND " + " (o.orderStatus='open')");
+
+      rs = stmt.executeQuery(); // NOT COVERED BY TESTS
+      rs.next(); // NOT COVERED BY TESTS
+      int openOrderCount = rs.getInt("openOrderCount"); // NOT COVERED BY TESTS
+      runStatsData.setOpenOrderCount(openOrderCount); // NOT COVERED BY TESTS
+
+      stmt.close(); // NOT COVERED BY TESTS
+      rs.close(); // NOT COVERED BY TESTS
+      // Delete orders for holding which have been purchased and sold
+      stmt = getStatement(conn, "delete from orderejb where holding_holdingid is null"); // NOT COVERED BY TESTS
+      int deletedOrderCount = stmt.executeUpdate(); // NOT COVERED BY TESTS
+      runStatsData.setDeletedOrderCount(deletedOrderCount); // NOT COVERED BY TESTS
+      stmt.close(); // NOT COVERED BY TESTS
+      rs.close(); // NOT COVERED BY TESTS
+
+      conn.commit(); // NOT COVERED BY TESTS
+
+      System.out.println("TradeDirect:reset Run stats data\n\n" + runStatsData); // NOT COVERED BY TESTS
+    } catch (Exception e) { // NOT COVERED BY TESTS
+      Log.error(e, "Failed to reset Trade"); // NOT COVERED BY TESTS
+      conn.rollback(); // NOT COVERED BY TESTS
+      throw e; // NOT COVERED BY TESTS
+    } finally {
+      conn.close(); // NOT COVERED BY TESTS
+    }
+    return runStatsData; // NOT COVERED BY TESTS
+
+  }
+
+
+COVERAGE ISSUES:
+Current line coverage: 0.00%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

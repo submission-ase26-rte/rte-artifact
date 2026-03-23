@@ -1,0 +1,388 @@
+{
+  "experiments": {
+    "version_": {
+      "tested_method": "addPet",
+      "similarity_threshold": 0.7,
+      "passes_evaluation": false,
+      "timestamp": "2026-01-23T16:10:34.437571",
+      "executed_phases": {
+        "first_phase": true,
+        "second_phase": true
+      },
+      "metrics": {
+        "crystalbleu_similarity": 0.19422069098763883,
+        "string_similarity": 0.24293785310734464,
+        "token_similarity": 0.3684210526315789,
+        "ast_similarity": 0.42857142857142855,
+        "embedding_similarity": 0.84758061170578,
+        "clone_detection": {
+          "exact_match": false,
+          "clone_percentage": 0.0,
+          "similar_blocks": 0,
+          "total_blocks": 11
+        },
+        "weights": {
+          "crystalbleu_similarity": 0.2,
+          "string_similarity": 0.08,
+          "token_similarity": 0.15,
+          "ast_similarity": 0.22,
+          "embedding_similarity": 0.35
+        },
+        "overall_similarity": 0.5044812527235895,
+        "passes_threshold": false
+      },
+      "test_results": {
+        "original": {
+          "success": true,
+          "tests_passed": 8,
+          "tests_total": 8,
+          "tests_failed": 0,
+          "line_coverage": 100.0,
+          "branch_coverage": 100.0,
+          "has_compilation_errors": false,
+          "test_info": {
+            "valid_tests": [
+              "testAddPet_NewPet",
+              "testAddPet_ExistingPet",
+              "testAddPet_NullPet",
+              "testAddPet_NewPetWithSpecificName",
+              "testAddPet_NewPetWithSpecificBirthDate",
+              "testAddPet_NewPetWithSpecificType",
+              "testAddPet_MultipleNewPets",
+              "testAddPet_NewPetWithNoVisits"
+            ],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          }
+        },
+        "regenerated": {
+          "success": true,
+          "tests_passed": 8,
+          "tests_total": 8,
+          "tests_failed": 0,
+          "line_coverage": 85.71428571428571,
+          "branch_coverage": 83.33333333333334,
+          "has_compilation_errors": false,
+          "test_info": {
+            "valid_tests": [
+              "testAddPet_NewPet",
+              "testAddPet_ExistingPet",
+              "testAddPet_NullPet",
+              "testAddPet_NewPetWithSpecificName",
+              "testAddPet_NewPetWithSpecificBirthDate",
+              "testAddPet_NewPetWithSpecificType",
+              "testAddPet_MultipleNewPets",
+              "testAddPet_NewPetWithNoVisits"
+            ],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          }
+        }
+      },
+      "test_filtering": {},
+      "context": {
+        "dependency_selection": {
+          "active": true,
+          "method": "structural",
+          "top_k": null,
+          "weights": null,
+          "selected_classes": [
+            {
+              "class": "Pet",
+              "score": null,
+              "norm_score": null,
+              "rank": null
+            }
+          ],
+          "rankings": {},
+          "project_type_flags": {
+            "has_servlet": false,
+            "has_spring": true,
+            "has_jpa": true,
+            "has_ejb": false,
+            "has_cdi": false,
+            "has_jndi": false,
+            "has_static_utils": false
+          }
+        }
+      },
+      "paths": {
+        "original_file": "./../JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+        "regenerated_file": "results/outputs\\Final_Owner_addPet.java"
+      },
+      "original_metrics": {
+        "loc": 5,
+        "sloc": 5,
+        "complexity": 2
+      },
+      "retry_history": [
+        {
+          "repair_iteration": 1,
+          "has_compilation_errors": true,
+          "compilation_errors": "/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/Owner_addPetTestGenerated.java:[39] cannot find symbol\n  symbol:   method setVisits(java.util.Set)\n  location: variable pet of type org.springframework.samples.petclinic.owner.Pet",
+          "test_results": {
+            "tests_passed": 0,
+            "tests_total": 0,
+            "tests_failed": 0,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "valid_tests": [],
+            "invalid_tests": []
+          },
+          "type": "repair"
+        },
+        {
+          "type": "initial_test_execution",
+          "test_results_originale": {
+            "tests_passed": 3,
+            "tests_total": 3,
+            "tests_failed": 0,
+            "line_coverage": 100.0,
+            "branch_coverage": 100.0,
+            "test_info": {
+              "valid_tests": [
+                "testAddPet_NewPet",
+                "testAddPet_ExistingPet",
+                "testAddPet_NullPet"
+              ],
+              "invalid_tests": [],
+              "failed_assert_tests": [],
+              "runtime_error_tests": []
+            }
+          }
+        },
+        {
+          "type": "initial_regenerated_test_execution",
+          "test_results_rigenerato": {
+            "tests_passed": 3,
+            "tests_total": 3,
+            "tests_failed": 0,
+            "line_coverage": 85.71428571428571,
+            "branch_coverage": 83.33333333333334,
+            "test_info": {
+              "valid_tests": [
+                "testAddPet_NewPet",
+                "testAddPet_ExistingPet",
+                "testAddPet_NullPet"
+              ],
+              "invalid_tests": [],
+              "failed_assert_tests": [],
+              "runtime_error_tests": []
+            }
+          }
+        },
+        {
+          "type": "initial_method_generation",
+          "refinement_iteration": 0,
+          "original_method": "\tpublic void addPet(Pet pet) {\n\t\tif (pet.isNew()) {\n\t\t\tgetPets().add(pet);\n\t\t}\n\t}",
+          "regenerated_method": "public void addPet(Pet pet) {\n    if (pet == null) {\n        throw new NullPointerException();\n    }\n    if (pet.getId() == null) {\n        if (pets == null) {\n            pets = new ArrayList<>();\n        }\n        pets.add(pet);\n    }\n}",
+          "overall_similarity": 0.5289073468601657,
+          "passes_threshold": false,
+          "similarity_metrics": {
+            "crystalbleu_similarity": 0.23418123261847468,
+            "string_similarity": 0.31974921630094044,
+            "token_similarity": 0.4375,
+            "ast_similarity": 0.42857142857142855,
+            "embedding_similarity": 0.8473727107048035,
+            "clone_detection": {
+              "exact_match": false,
+              "clone_percentage": 0.0,
+              "similar_blocks": 0,
+              "total_blocks": 10
+            },
+            "weights": {
+              "crystalbleu_similarity": 0.2,
+              "string_similarity": 0.08,
+              "token_similarity": 0.15,
+              "ast_similarity": 0.22,
+              "embedding_similarity": 0.35
+            },
+            "overall_similarity": 0.5289073468601657,
+            "passes_threshold": false
+          },
+          "test_results_originale": {
+            "tests_passed": 3,
+            "tests_total": 3,
+            "tests_failed": 0,
+            "line_coverage": 100.0,
+            "branch_coverage": 100.0,
+            "test_info": {
+              "valid_tests": [
+                "testAddPet_NewPet",
+                "testAddPet_ExistingPet",
+                "testAddPet_NullPet"
+              ],
+              "invalid_tests": [],
+              "failed_assert_tests": [],
+              "runtime_error_tests": []
+            }
+          },
+          "test_results_rigenerato": {
+            "tests_passed": 3,
+            "tests_total": 3,
+            "tests_failed": 0,
+            "line_coverage": 85.71428571428571,
+            "branch_coverage": 83.33333333333334,
+            "test_info": {
+              "valid_tests": [
+                "testAddPet_NewPet",
+                "testAddPet_ExistingPet",
+                "testAddPet_NullPet"
+              ],
+              "invalid_tests": [],
+              "failed_assert_tests": [],
+              "runtime_error_tests": []
+            }
+          }
+        },
+        {
+          "refinement_iteration": 1,
+          "overall_similarity": 0.5044812527235895,
+          "passes_threshold": false,
+          "similarity_metrics": {
+            "crystalbleu_similarity": 0.19422069098763883,
+            "string_similarity": 0.24293785310734464,
+            "token_similarity": 0.3684210526315789,
+            "ast_similarity": 0.42857142857142855,
+            "embedding_similarity": 0.84758061170578,
+            "clone_detection": {
+              "exact_match": false,
+              "clone_percentage": 0.0,
+              "similar_blocks": 0,
+              "total_blocks": 11
+            },
+            "weights": {
+              "crystalbleu_similarity": 0.2,
+              "string_similarity": 0.08,
+              "token_similarity": 0.15,
+              "ast_similarity": 0.22,
+              "embedding_similarity": 0.35
+            },
+            "overall_similarity": 0.5044812527235895,
+            "passes_threshold": false
+          },
+          "original_method": "\tpublic void addPet(Pet pet) {\n\t\tif (pet.isNew()) {\n\t\t\tgetPets().add(pet);\n\t\t}\n\t}",
+          "regenerated_method": "public void addPet(Pet pet) {\n    if (pet == null) {\n        throw new NullPointerException(\"Pet cannot be null\");\n    }\n    if (pet.getId() == null) {\n        if (this.pets == null) {\n            this.pets = new ArrayList<>();\n        }\n        this.pets.add(pet);\n    }\n}",
+          "test_results_originale": {
+            "tests_passed": 8,
+            "tests_total": 8,
+            "tests_failed": 0,
+            "line_coverage": 100.0,
+            "branch_coverage": 100.0,
+            "valid_tests": [
+              "testAddPet_NewPet",
+              "testAddPet_ExistingPet",
+              "testAddPet_NullPet",
+              "testAddPet_NewPetWithSpecificName",
+              "testAddPet_NewPetWithSpecificBirthDate",
+              "testAddPet_NewPetWithSpecificType",
+              "testAddPet_MultipleNewPets",
+              "testAddPet_NewPetWithNoVisits"
+            ],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          },
+          "test_results_rigenerato": {
+            "tests_passed": 8,
+            "tests_total": 8,
+            "tests_failed": 0,
+            "line_coverage": 85.71428571428571,
+            "branch_coverage": 83.33333333333334,
+            "valid_tests": [
+              "testAddPet_NewPet",
+              "testAddPet_ExistingPet",
+              "testAddPet_NullPet",
+              "testAddPet_NewPetWithSpecificName",
+              "testAddPet_NewPetWithSpecificBirthDate",
+              "testAddPet_NewPetWithSpecificType",
+              "testAddPet_MultipleNewPets",
+              "testAddPet_NewPetWithNoVisits"
+            ],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          },
+          "type": "refinement"
+        }
+      ],
+      "original_method_display": "\tpublic void addPet(Pet pet) {\n\t\tif (pet.isNew()) {\n\t\t\tgetPets().add(pet);\n\t\t}\n\t}",
+      "regenerated_method_display": "public void addPet(Pet pet) {\n    if (pet == null) {\n        throw new NullPointerException(\"Pet cannot be null\");\n    }\n    if (pet.getId() == null) {\n        if (this.pets == null) {\n            this.pets = new ArrayList<>();\n        }\n        this.pets.add(pet);\n    }\n}",
+      "token_usage": {
+        "test_generation": {
+          "input_tokens": 1188,
+          "output_tokens": 340
+        },
+        "method_generation": {
+          "calls": 2,
+          "details": [
+            {
+              "input_tokens": 1266,
+              "output_tokens": 64,
+              "refinement_iteration": "initial"
+            },
+            {
+              "input_tokens": 1724,
+              "output_tokens": 75,
+              "refinement_iteration": 0
+            }
+          ],
+          "total_input_tokens": 2990,
+          "total_output_tokens": 139
+        },
+        "test_repair_initial": {
+          "calls": 1,
+          "details": [
+            {
+              "input_tokens": 769,
+              "output_tokens": 362,
+              "iteration": 1
+            }
+          ],
+          "total_input_tokens": 769,
+          "total_output_tokens": 362
+        },
+        "test_refinement": {
+          "calls": 1,
+          "details": [
+            {
+              "input_tokens": 1745,
+              "output_tokens": 774,
+              "iteration": 1
+            }
+          ],
+          "total_input_tokens": 1745,
+          "total_output_tokens": 774
+        },
+        "totals": {
+          "total_input_tokens": 6692,
+          "total_output_tokens": 1615,
+          "total_tokens": 8307
+        }
+      },
+      "test_naturalness": {
+        "num_test_methods": 8,
+        "assertion_complexity": 0.3508,
+        "pct_null_assertions": 0.0,
+        "pct_duplicate_assertions": 0.0,
+        "pct_exception_assertions": 0.0714,
+        "pct_no_assertion": 0.0,
+        "naturalness_method_name": 0.6877,
+        "pct_focal_method_covered": 1.0,
+        "diversity_literal_values": 1.0,
+        "overall_naturalness_score": 0.9219
+      }
+    }
+  },
+  "general_info": {
+    "tested_class": "Owner",
+    "tested_method": "addPet",
+    "last_update": "2026-01-23T16:10:34.699280",
+    "description": "Test addPet(Pet pet) - Medium - Qwen/Qwen2.5-Coder-32B-Instruct",
+    "provider": "chutes",
+    "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
+    "similarity_threshold": 0.7
+  }
+}

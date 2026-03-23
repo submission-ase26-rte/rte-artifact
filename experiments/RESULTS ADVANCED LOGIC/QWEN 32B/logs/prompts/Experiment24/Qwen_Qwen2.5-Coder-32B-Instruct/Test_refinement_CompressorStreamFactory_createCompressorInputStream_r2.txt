@@ -1,0 +1,587 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.compress.compressors;
+Class name (MUST be exactly): CompressorStreamFactory_createCompressorInputStreamTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testCreateCompressorInputStreamWithZstandardNotAvailable --
+ERROR: org.mockito.exceptions.misusing.MissingMethodInvocationException:
+when() requires an argument which has to be 'a method call on a mock'.
+For example:
+when(mock.getArticles()).thenReturn(articles);
+Also, this error might show up because:
+1. you stub either of: final/private/equals()/hashCode() methods.
+Those methods *cannot* be stubbed/verified.
+Mocking methods declared on non-public parent classes is not supported.
+2. inside when() you don't call method on mock but on some other object.
+--------------------------------------------------
+TEST: testCreateCompressorInputStreamWithLzmaNotAvailable --
+ERROR: org.mockito.exceptions.misusing.MissingMethodInvocationException:
+when() requires an argument which has to be 'a method call on a mock'.
+For example:
+when(mock.getArticles()).thenReturn(articles);
+Also, this error might show up because:
+1. you stub either of: final/private/equals()/hashCode() methods.
+Those methods *cannot* be stubbed/verified.
+Mocking methods declared on non-public parent classes is not supported.
+2. inside when() you don't call method on mock but on some other object.
+--------------------------------------------------
+TEST: testCreateCompressorInputStreamWithBrotliNotAvailable --
+ERROR: org.mockito.exceptions.misusing.MissingMethodInvocationException:
+when() requires an argument which has to be 'a method call on a mock'.
+For example:
+when(mock.getArticles()).thenReturn(articles);
+Also, this error might show up because:
+1. you stub either of: final/private/equals()/hashCode() methods.
+Those methods *cannot* be stubbed/verified.
+Mocking methods declared on non-public parent classes is not supported.
+2. inside when() you don't call method on mock but on some other object.
+--------------------------------------------------
+TEST: testCreateCompressorInputStreamWithXzNotAvailable --
+ERROR: org.mockito.exceptions.misusing.MissingMethodInvocationException:
+when() requires an argument which has to be 'a method call on a mock'.
+For example:
+when(mock.getArticles()).thenReturn(articles);
+Also, this error might show up because:
+1. you stub either of: final/private/equals()/hashCode() methods.
+Those methods *cannot* be stubbed/verified.
+Mocking methods declared on non-public parent classes is not supported.
+2. inside when() you don't call method on mock but on some other object.
+--------------------------------------------------
+TEST: testCreateCompressorInputStreamWithIOException --
+ERROR: org.mockito.exceptions.misusing.UnnecessaryStubbingException:
+Unnecessary stubbings detected.
+Clean & maintainable test code requires zero unnecessary code.
+Following stubbings are unnecessary (click to navigate to relevant line of code):
+1. -> at org.apache.commons.compress.compressors.CompressorStreamFactory_createCompressorInputStreamTestGenerated.testCreateCompressorInputStreamWithIOException(CompressorStreamFactory_createCompressorInputStreamTestGenerated.java:69)
+Please remove unnecessary stubbings or use 'lenient' strictness. More info: javadoc for UnnecessaryStubbingException class.
+
+TEST CODE TO FIX:
+package org.apache.commons.compress.compressors;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ServiceConfigurationError;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import org.apache.commons.compress.compressors.brotli.BrotliCompressorInputStream;
+import org.apache.commons.compress.compressors.brotli.BrotliUtils;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+import org.apache.commons.compress.compressors.deflate.DeflateCompressorInputStream;
+import org.apache.commons.compress.compressors.deflate64.Deflate64CompressorInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorInputStream;
+import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorInputStream;
+import org.apache.commons.compress.compressors.lzma.LZMACompressorInputStream;
+import org.apache.commons.compress.compressors.lzma.LZMAUtils;
+import org.apache.commons.compress.compressors.pack200.Pack200CompressorInputStream;
+import org.apache.commons.compress.compressors.snappy.FramedSnappyCompressorInputStream;
+import org.apache.commons.compress.compressors.snappy.SnappyCompressorInputStream;
+import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
+import org.apache.commons.compress.compressors.xz.XZUtils;
+import org.apache.commons.compress.compressors.z.ZCompressorInputStream;
+import org.apache.commons.compress.compressors.zstandard.ZstdCompressorInputStream;
+import org.apache.commons.compress.compressors.zstandard.ZstdUtils;
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.compress.utils.Sets;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class CompressorStreamFactory_createCompressorInputStreamTestGenerated {
+    private CompressorStreamFactory factory;
+    private InputStream mockInputStream;
+    @Mock
+    private CompressorStreamProvider mockCompressorStreamProvider;
+    @BeforeEach
+    void setUp() {
+        factory = new CompressorStreamFactory();
+        mockInputStream = mock(InputStream.class);
+    }
+
+
+    @Test
+        void testCreateCompressorInputStreamWithIOException() throws IOException {
+            when(mockInputStream.read()).thenThrow(new IOException("Mocked IOException"));
+            assertThrows(ServiceConfigurationError.class, () -> factory.createCompressorInputStream("GZIP", mockInputStream, false));
+        }
+
+    @Test
+        void testCreateCompressorInputStreamWithBrotliNotAvailable() {
+            when(BrotliUtils.isBrotliCompressionAvailable()).thenReturn(false);
+            assertThrows(ServiceConfigurationError.class, () -> factory.createCompressorInputStream("BROTLI", mockInputStream, false));
+        }
+
+    @Test
+        void testCreateCompressorInputStreamWithXzNotAvailable() {
+            when(XZUtils.isXZCompressionAvailable()).thenReturn(false);
+            assertThrows(ServiceConfigurationError.class, () -> factory.createCompressorInputStream("XZ", mockInputStream, false));
+        }
+
+    @Test
+        void testCreateCompressorInputStreamWithZstandardNotAvailable() {
+            when(ZstdUtils.isZstdCompressionAvailable()).thenReturn(false);
+            assertThrows(ServiceConfigurationError.class, () -> factory.createCompressorInputStream("ZSTANDARD", mockInputStream, false));
+        }
+
+    @Test
+        void testCreateCompressorInputStreamWithLzmaNotAvailable() {
+            when(LZMAUtils.isLZMACompressionAvailable()).thenReturn(false);
+            assertThrows(ServiceConfigurationError.class, () -> factory.createCompressorInputStream("LZMA", mockInputStream, false));
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    void testCreateCompressorInputStreamWithNullName() {}
+    @Test
+    void testCreateCompressorInputStreamWithNullInputStream() {}
+    @Test
+    void testCreateCompressorInputStreamWithUnknownCompressor() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   IOException -> java.io.IOException
+//   InputStream -> java.io.InputStream
+//   OutputStream -> java.io.OutputStream
+//   AccessController -> java.security.AccessController
+//   PrivilegedAction -> java.security.PrivilegedAction
+//   Collections -> java.util.Collections
+//   Locale -> java.util.Locale
+//   ServiceLoader -> java.util.ServiceLoader
+//   Set -> java.util.Set
+//   SortedMap -> java.util.SortedMap
+//   TreeMap -> java.util.TreeMap
+//   BrotliCompressorInputStream -> org.apache.commons.compress.compressors.brotli.BrotliCompressorInputStream
+//   BrotliUtils -> org.apache.commons.compress.compressors.brotli.BrotliUtils
+//   BZip2CompressorInputStream -> org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream
+//   BZip2CompressorOutputStream -> org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream
+//   DeflateCompressorInputStream -> org.apache.commons.compress.compressors.deflate.DeflateCompressorInputStream
+//   DeflateCompressorOutputStream -> org.apache.commons.compress.compressors.deflate.DeflateCompressorOutputStream
+//   Deflate64CompressorInputStream -> org.apache.commons.compress.compressors.deflate64.Deflate64CompressorInputStream
+//   GzipCompressorInputStream -> org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream
+//   GzipCompressorOutputStream -> org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream
+//   BlockLZ4CompressorInputStream -> org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorInputStream
+//   BlockLZ4CompressorOutputStream -> org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorOutputStream
+//   FramedLZ4CompressorInputStream -> org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorInputStream
+//   FramedLZ4CompressorOutputStream -> org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorOutputStream
+//   LZMACompressorInputStream -> org.apache.commons.compress.compressors.lzma.LZMACompressorInputStream
+//   LZMACompressorOutputStream -> org.apache.commons.compress.compressors.lzma.LZMACompressorOutputStream
+//   LZMAUtils -> org.apache.commons.compress.compressors.lzma.LZMAUtils
+//   Pack200CompressorInputStream -> org.apache.commons.compress.compressors.pack200.Pack200CompressorInputStream
+//   Pack200CompressorOutputStream -> org.apache.commons.compress.compressors.pack200.Pack200CompressorOutputStream
+//   FramedSnappyCompressorInputStream -> org.apache.commons.compress.compressors.snappy.FramedSnappyCompressorInputStream
+//   FramedSnappyCompressorOutputStream -> org.apache.commons.compress.compressors.snappy.FramedSnappyCompressorOutputStream
+//   SnappyCompressorInputStream -> org.apache.commons.compress.compressors.snappy.SnappyCompressorInputStream
+//   XZCompressorInputStream -> org.apache.commons.compress.compressors.xz.XZCompressorInputStream
+//   XZCompressorOutputStream -> org.apache.commons.compress.compressors.xz.XZCompressorOutputStream
+//   XZUtils -> org.apache.commons.compress.compressors.xz.XZUtils
+//   ZCompressorInputStream -> org.apache.commons.compress.compressors.z.ZCompressorInputStream
+//   ZstdCompressorInputStream -> org.apache.commons.compress.compressors.zstandard.ZstdCompressorInputStream
+//   ZstdCompressorOutputStream -> org.apache.commons.compress.compressors.zstandard.ZstdCompressorOutputStream
+//   ZstdUtils -> org.apache.commons.compress.compressors.zstandard.ZstdUtils
+//   IOUtils -> org.apache.commons.compress.utils.IOUtils
+//   Sets -> org.apache.commons.compress.utils.Sets
+//   CompressorStreamFactory -> org.apache.commons.compress.compressors.CompressorStreamFactory
+//   Pack200 -> org.apache.commons.compress.java.util.jar.Pack200
+//   CompressorStreamProvider -> org.apache.commons.compress.compressors.CompressorStreamProvider
+
+// === Class: CompressorStreamFactory ===
+// Fields (with actual visibility):
+    private static final CompressorStreamFactory SINGLETON;
+    public static final String BROTLI;
+    public static final String BZIP2;
+    public static final String GZIP;
+    public static final String PACK200;
+    public static final String XZ;
+    public static final String LZMA;
+    public static final String SNAPPY_FRAMED;
+    public static final String SNAPPY_RAW;
+    public static final String Z;
+    public static final String DEFLATE;
+    public static final String DEFLATE64;
+    public static final String LZ4_BLOCK;
+    public static final String LZ4_FRAMED;
+    public static final String ZSTANDARD;
+    private static final String YOU_NEED_BROTLI_DEC;
+    private static final String YOU_NEED_XZ_JAVA;
+    private static final String YOU_NEED_ZSTD_JNI;
+    private static final Set ALL_NAMES;
+    private final Boolean decompressUntilEOF;
+    private SortedMap compressorInputStreamProviders;
+    private SortedMap compressorOutputStreamProviders;
+    private boolean decompressConcatenated;
+    private final int memoryLimitInKb;
+
+// Constructors:
+public CompressorStreamFactory();
+public CompressorStreamFactory(boolean decompressUntilEOF);
+public CompressorStreamFactory(boolean decompressUntilEOF, int memoryLimitInKb);
+
+// Getter/Setter Methods (for test assertions):
+public static String getBrotli();
+public static String getBzip2();
+public static String getDeflate();
+public static String getDeflate64();
+public static String getGzip();
+public static String getLZ4Block();
+public static String getLZ4Framed();
+public static String getLzma();
+public static String getPack200();
+public static CompressorStreamFactory getSingleton();
+public static String getSnappyFramed();
+public static String getSnappyRaw();
+public static String getXz();
+public static String getZ();
+public static String getZstandard();
+public SortedMap<String, CompressorStreamProvider> getCompressorInputStreamProviders();
+public SortedMap<String, CompressorStreamProvider> getCompressorOutputStreamProviders();
+public Boolean getDecompressUntilEOF();
+public Set<String> getInputStreamCompressorNames();
+public Set<String> getOutputStreamCompressorNames();
+public void setDecompressConcatenated(final boolean decompressConcatenated);
+
+// Internal Methods (full implementation for context):
+    public SortedMap<String, CompressorStreamProvider> getCompressorInputStreamProviders() {
+        if (compressorInputStreamProviders == null) {
+            compressorInputStreamProviders = Collections.unmodifiableSortedMap(findAvailableCompressorInputStreamProviders());
+        }
+        return compressorInputStreamProviders;
+    }
+    private static String toKey(final String name) {
+        return name.toUpperCase(Locale.ROOT);
+    }
+
+// === External Class: BrotliUtils ===
+// Full import path: org.apache.commons.compress.compressors.brotli.BrotliUtils
+// Import paths:
+//   OsgiUtils -> org.apache.commons.compress.utils.OsgiUtils
+// Fields (with actual visibility):
+    private static CachedAvailability cachedBrotliAvailability;
+
+// Enum Values (use ONLY these constants):
+//   CachedAvailability: DONT_CACHE, CACHED_AVAILABLE, CACHED_UNAVAILABLE
+
+// Constructors:
+private BrotliUtils();
+
+// Method Signatures (used by target method):
+static public boolean isBrotliCompressionAvailable();
+
+// === External Class: XZUtils ===
+// Full import path: org.apache.commons.compress.compressors.xz.XZUtils
+// Import paths:
+//   HashMap -> java.util.HashMap
+//   Map -> java.util.Map
+//   FileNameUtil -> org.apache.commons.compress.compressors.FileNameUtil
+//   OsgiUtils -> org.apache.commons.compress.utils.OsgiUtils
+// Fields (with actual visibility):
+    private static final FileNameUtil fileNameUtil;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final byte[] HEADER_MAGIC;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static CachedAvailability cachedXZAvailability;
+
+// Enum Values (use ONLY these constants):
+//   CachedAvailability: DONT_CACHE, CACHED_AVAILABLE, CACHED_UNAVAILABLE
+
+// Constructors:
+private XZUtils();
+
+// Method Signatures (used by target method):
+static public boolean isXZCompressionAvailable();
+
+// Public Getter Methods (for test assertions):
+public static String getCompressedFilename(String fileName);
+public static String getCompressedFileName(String fileName);
+public static String getUncompressedFilename(String fileName);
+public static String getUncompressedFileName(String fileName);
+public static boolean isCompressedFilename(String fileName);
+public static boolean isCompressedFileName(String fileName);
+
+// === External Class: ZstdUtils ===
+// Full import path: org.apache.commons.compress.compressors.zstandard.ZstdUtils
+// Import paths:
+//   OsgiUtils -> org.apache.commons.compress.utils.OsgiUtils
+// Fields (with actual visibility):
+    private static final byte[] ZSTANDARD_FRAME_MAGIC;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final byte[] SKIPPABLE_FRAME_MAGIC;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static CachedAvailability cachedZstdAvailability;
+
+// Enum Values (use ONLY these constants):
+//   CachedAvailability: DONT_CACHE, CACHED_AVAILABLE, CACHED_UNAVAILABLE
+
+// Constructors:
+private ZstdUtils();
+
+// Method Signatures (used by target method):
+static public boolean isZstdCompressionAvailable();
+
+// === External Class: LZMAUtils ===
+// Full import path: org.apache.commons.compress.compressors.lzma.LZMAUtils
+// Import paths:
+//   HashMap -> java.util.HashMap
+//   Map -> java.util.Map
+//   FileNameUtil -> org.apache.commons.compress.compressors.FileNameUtil
+//   OsgiUtils -> org.apache.commons.compress.utils.OsgiUtils
+// Fields (with actual visibility):
+    private static final FileNameUtil fileNameUtil;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final byte[] HEADER_MAGIC;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static CachedAvailability cachedLZMAAvailability;
+
+// Enum Values (use ONLY these constants):
+//   CachedAvailability: DONT_CACHE, CACHED_AVAILABLE, CACHED_UNAVAILABLE
+
+// Constructors:
+private LZMAUtils();
+
+// Method Signatures (used by target method):
+static public boolean isLZMACompressionAvailable();
+
+// Public Getter Methods (for test assertions):
+public static String getCompressedFilename(String fileName);
+public static String getCompressedFileName(String fileName);
+public static String getUncompressedFilename(String fileName);
+public static String getUncompressedFileName(String fileName);
+public static boolean isCompressedFilename(String fileName);
+public static boolean isCompressedFileName(String fileName);
+
+// === External Class: Pack200 ===
+// Full import path: org.apache.commons.compress.java.util.jar.Pack200
+// Type: ABSTRACT CLASS (cannot instantiate directly - use Mockito.mock() or anonymous subclass)
+// Import paths:
+//   PropertyChangeListener -> java.beans.PropertyChangeListener
+//   File -> java.io.File
+//   IOException -> java.io.IOException
+//   InputStream -> java.io.InputStream
+//   OutputStream -> java.io.OutputStream
+// Fields (with actual visibility):
+    package-private String CLASS_ATTRIBUTE_PFX;
+    package-private String CODE_ATTRIBUTE_PFX;
+    package-private String DEFLATE_HINT;
+    package-private String EFFORT;
+    package-private String ERROR;
+    package-private String FALSE;
+    package-private String FIELD_ATTRIBUTE_PFX;
+    package-private String KEEP;
+    package-private String KEEP_FILE_ORDER;
+    package-private String LATEST;
+    package-private String METHOD_ATTRIBUTE_PFX;
+    package-private String MODIFICATION_TIME;
+    package-private String PASS;
+    package-private String PASS_FILE_PFX;
+    package-private String PROGRESS;
+    package-private String SEGMENT_LIMIT;
+    package-private String STRIP;
+    package-private String TRUE;
+    package-private String UNKNOWN_ATTRIBUTE;
+    private static final String SYSTEM_PROPERTY_PACKER;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final String SYSTEM_PROPERTY_UNPACKER;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+
+// Constructors:
+private Pack200();
+
+
+// === External Class: CompressorStreamProvider ===
+// Full import path: org.apache.commons.compress.compressors.CompressorStreamProvider
+// Type: INTERFACE (cannot instantiate - use Mockito.mock(CompressorStreamProvider.class) instead)
+// Import paths:
+//   InputStream -> java.io.InputStream
+//   OutputStream -> java.io.OutputStream
+//   Set -> java.util.Set
+// Method Signatures (used by target method):
+CompressorInputStream createCompressorInputStream(String name, InputStream in, boolean decompressUntilEOF);
+
+
+// === Exception Class: CompressorException ===
+// NOTE: The target method throws this exception.
+// Constructors:
+public CompressorException(String message);
+public CompressorException(String message, Throwable cause);
+
+
+EXCEPTION HANDLING IN TESTS - Use ONE of these patterns:
+Pattern 1 (for tests that EXPECT the exception to be thrown):
+```java
+@Test
+void testMethodThrowsCompressorException() {
+assertThrows(CompressorException.class, () -> targetMethod(...));
+}
+```
+
+
+Pattern 2 (for tests where exception should NOT occur):
+```java
+@Test
+void testMethodSucceeds() throws CompressorException {
+// Call method directly - exception propagates if thrown
+result = targetMethod(...);
+assertNotNull(result);
+}
+```
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() {
+        factory = new CompressorStreamFactory();
+        mockInputStream = mock(InputStream.class);
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+    @Override
+    public CompressorInputStream createCompressorInputStream(final String name, final InputStream in, final boolean actualDecompressConcatenated)
+            throws CompressorException {
+        if (name == null || in == null) {
+            throw new IllegalArgumentException("Compressor name and stream must not be null.");
+        }
+
+        try {
+
+            if (GZIP.equalsIgnoreCase(name)) { // NOT COVERED BY TESTS
+                return new GzipCompressorInputStream(in, actualDecompressConcatenated); // NOT COVERED BY TESTS
+            }
+
+            if (BZIP2.equalsIgnoreCase(name)) { // NOT COVERED BY TESTS
+                return new BZip2CompressorInputStream(in, actualDecompressConcatenated); // NOT COVERED BY TESTS
+            }
+
+            if (BROTLI.equalsIgnoreCase(name)) { // NOT COVERED BY TESTS
+                if (!BrotliUtils.isBrotliCompressionAvailable()) { // NOT COVERED BY TESTS
+                    throw new CompressorException("Brotli compression is not available." + YOU_NEED_BROTLI_DEC); // NOT COVERED BY TESTS
+                }
+                return new BrotliCompressorInputStream(in); // NOT COVERED BY TESTS
+            }
+
+            if (XZ.equalsIgnoreCase(name)) { // NOT COVERED BY TESTS
+                if (!XZUtils.isXZCompressionAvailable()) { // NOT COVERED BY TESTS
+                    throw new CompressorException("XZ compression is not available." + YOU_NEED_XZ_JAVA); // NOT COVERED BY TESTS
+                }
+                return new XZCompressorInputStream(in, actualDecompressConcatenated, memoryLimitInKb); // NOT COVERED BY TESTS
+            }
+
+            if (ZSTANDARD.equalsIgnoreCase(name)) { // NOT COVERED BY TESTS
+                if (!ZstdUtils.isZstdCompressionAvailable()) { // NOT COVERED BY TESTS
+                    throw new CompressorException("Zstandard compression is not available." + YOU_NEED_ZSTD_JNI); // NOT COVERED BY TESTS
+                }
+                return new ZstdCompressorInputStream(in); // NOT COVERED BY TESTS
+            }
+
+            if (LZMA.equalsIgnoreCase(name)) { // NOT COVERED BY TESTS
+                if (!LZMAUtils.isLZMACompressionAvailable()) { // NOT COVERED BY TESTS
+                    throw new CompressorException("LZMA compression is not available" + YOU_NEED_XZ_JAVA); // NOT COVERED BY TESTS
+                }
+                return new LZMACompressorInputStream(in, memoryLimitInKb); // NOT COVERED BY TESTS
+            }
+
+            if (PACK200.equalsIgnoreCase(name)) { // NOT COVERED BY TESTS
+                return new Pack200CompressorInputStream(in); // NOT COVERED BY TESTS
+            }
+
+            if (SNAPPY_RAW.equalsIgnoreCase(name)) { // NOT COVERED BY TESTS
+                return new SnappyCompressorInputStream(in); // NOT COVERED BY TESTS
+            }
+
+            if (SNAPPY_FRAMED.equalsIgnoreCase(name)) { // NOT COVERED BY TESTS
+                return new FramedSnappyCompressorInputStream(in); // NOT COVERED BY TESTS
+            }
+
+            if (Z.equalsIgnoreCase(name)) { // NOT COVERED BY TESTS
+                return new ZCompressorInputStream(in, memoryLimitInKb); // NOT COVERED BY TESTS
+            }
+
+            if (DEFLATE.equalsIgnoreCase(name)) { // NOT COVERED BY TESTS
+                return new DeflateCompressorInputStream(in); // NOT COVERED BY TESTS
+            }
+
+            if (DEFLATE64.equalsIgnoreCase(name)) { // NOT COVERED BY TESTS
+                return new Deflate64CompressorInputStream(in); // NOT COVERED BY TESTS
+            }
+
+            if (LZ4_BLOCK.equalsIgnoreCase(name)) { // NOT COVERED BY TESTS
+                return new BlockLZ4CompressorInputStream(in); // NOT COVERED BY TESTS
+            }
+
+            if (LZ4_FRAMED.equalsIgnoreCase(name)) { // NOT COVERED BY TESTS
+                return new FramedLZ4CompressorInputStream(in, actualDecompressConcatenated); // NOT COVERED BY TESTS
+            }
+
+        } catch (final IOException e) { // NOT COVERED BY TESTS
+            throw new CompressorException("Could not create CompressorInputStream.", e); // NOT COVERED BY TESTS
+        }
+        final CompressorStreamProvider compressorStreamProvider = getCompressorInputStreamProviders().get(toKey(name)); // NOT COVERED BY TESTS
+        if (compressorStreamProvider != null) { // NOT COVERED BY TESTS
+            return compressorStreamProvider.createCompressorInputStream(name, in, actualDecompressConcatenated); // NOT COVERED BY TESTS
+        }
+
+        throw new CompressorException("Compressor: " + name + " not found."); // NOT COVERED BY TESTS
+    }
+
+
+COVERAGE ISSUES:
+Current line coverage: 33.33%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

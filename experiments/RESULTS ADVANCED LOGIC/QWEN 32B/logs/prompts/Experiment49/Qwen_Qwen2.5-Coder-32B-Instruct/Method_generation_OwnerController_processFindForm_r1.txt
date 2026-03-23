@@ -1,0 +1,212 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.springframework.samples.petclinic.owner;
+
+import java.util.Collections;
+import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.openMocks;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class OwnerController_processFindFormTestGenerated {
+    @Mock
+    private OwnerRepository ownerRepository;
+    @InjectMocks
+    private OwnerController ownerController;
+    private AutoCloseable closeable;
+
+    @BeforeEach
+    public void setUp() {
+        closeable = openMocks(this);
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        closeable.close();
+    }
+
+    @Test
+    public void testProcessFindForm_NoOwnersFound() {
+        Owner owner = new Owner();
+        owner.setLastName("Doe");
+        BindingResult result = mock(BindingResult.class);
+        Model model = mock(Model.class);
+        when(ownerRepository.findByLastName(eq("Doe"), any(PageRequest.class)))
+                .thenReturn(new PageImpl<>(Collections.emptyList()));
+        String viewName = ownerController.processFindForm(1, owner, result, model);
+        assertEquals("owners/findOwners", viewName);
+        verify(result).rejectValue("lastName", "notFound", "not found");
+        verify(model, never()).addAttribute(anyString(), any());
+    }
+
+    @Test
+    public void testProcessFindForm_OneOwnerFound() {
+        Owner owner = new Owner();
+        owner.setLastName("Doe");
+        BindingResult result = mock(BindingResult.class);
+        Model model = mock(Model.class);
+        Owner foundOwner = new Owner();
+        foundOwner.setId(1);
+        foundOwner.setLastName("Doe");
+        when(ownerRepository.findByLastName(eq("Doe"), any(PageRequest.class)))
+                .thenReturn(new PageImpl<>(List.of(foundOwner)));
+        String viewName = ownerController.processFindForm(1, owner, result, model);
+        assertEquals("redirect:/owners/1", viewName);
+        verify(result, never()).rejectValue(anyString(), anyString(), anyString());
+        verify(model, never()).addAttribute(anyString(), any());
+    }
+
+    @Test
+    public void testProcessFindForm_MultipleOwnersFound() {
+        Owner owner = new Owner();
+        owner.setLastName("Doe");
+        BindingResult result = mock(BindingResult.class);
+        Model model = mock(Model.class);
+        Owner foundOwner1 = new Owner();
+        foundOwner1.setId(1);
+        foundOwner1.setLastName("Doe");
+        Owner foundOwner2 = new Owner();
+        foundOwner2.setId(2);
+        foundOwner2.setLastName("Doe");
+        Page<Owner> ownersResults = new PageImpl<>(List.of(foundOwner1, foundOwner2));
+        when(ownerRepository.findByLastName(eq("Doe"), any(PageRequest.class)))
+                .thenReturn(ownersResults);
+        String viewName = ownerController.processFindForm(1, owner, result, model);
+        assertEquals("owners/ownersList", viewName);
+        verify(result, never()).rejectValue(anyString(), anyString(), anyString());
+        verify(model).addAttribute("currentPage", 1);
+        verify(model).addAttribute("totalPages", 1);
+        verify(model).addAttribute("totalItems", 2L);
+        verify(model).addAttribute("listOwners", List.of(foundOwner1, foundOwner2));
+    }
+
+    @Test
+    public void testProcessFindForm_NoLastName() {
+        Owner owner = new Owner();
+        BindingResult result = mock(BindingResult.class);
+        Model model = mock(Model.class);
+        when(ownerRepository.findByLastName(eq(""), any(PageRequest.class)))
+                .thenReturn(new PageImpl<>(Collections.emptyList()));
+        String viewName = ownerController.processFindForm(1, owner, result, model);
+        assertEquals("owners/findOwners", viewName);
+        verify(result).rejectValue("lastName", "notFound", "not found");
+        verify(model, never()).addAttribute(anyString(), any());
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 100.00%
+- Tests: 4/4 passed
+
+TEST STATUS:
+- PASSED (4): testProcessFindForm_NoOwnersFound, testProcessFindForm_OneOwnerFound, testProcessFindForm_MultipleOwnersFound, testProcessFindForm_NoLastName
+- FAILED (0): none
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+CONTEXT - TARGET CLASS STRUCTURE:
+// === Original Class: OwnerController ===
+
+// --- Imports ---
+import java.util.List;
+import java.util.Map;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import jakarta.validation.Valid;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+// --- Fields ---
+	private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
+	private final OwnerRepository owners;
+
+// --- Constructors ---
+	public OwnerController(OwnerRepository clinicService) {
+		this.owners = clinicService;
+	}
+
+// --- Internal Methods (used by target method) ---
+	private String addPaginationModel(int page, Model model, Page<Owner> paginated) {
+		List<Owner> listOwners = paginated.getContent();
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", paginated.getTotalPages());
+		model.addAttribute("totalItems", paginated.getTotalElements());
+		model.addAttribute("listOwners", listOwners);
+		return "owners/ownersList";
+	}
+	private Page<Owner> findPaginatedForOwnersLastName(int page, String lastname) {
+		int pageSize = 5;
+		Pageable pageable = PageRequest.of(page - 1, pageSize);
+		return owners.findByLastName(lastname, pageable);
+	}
+
+
+TASK:
+Regenerate ONLY the method "processFindForm" OF CLASS "OwnerController" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public String processFindForm(@RequestParam(defaultValue = "1") int page, Owner owner, BindingResult result, Model model) {
+    // your implementation here
+}
+```
+
+
+- Package: org.springframework.samples.petclinic.owner
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "processFindForm"
+– Allowed imports: exactly those already present in OwnerController
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

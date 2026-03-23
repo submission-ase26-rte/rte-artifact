@@ -1,0 +1,21 @@
+```java
+public <I extends ArchiveInputStream<? extends ArchiveEntry>> I createArchiveInputStream(final String archiverName, final InputStream in, final String actualEncoding) throws ArchiveException {
+    if (archiverName == null) {
+        throw new IllegalArgumentException("Archiver name must not be null");
+    }
+    if (in == null) {
+        throw new IllegalArgumentException("Input stream must not be null");
+    }
+    String key = toKey(archiverName);
+    SortedMap<String, ArchiveStreamProvider> providers = getArchiveInputStreamProviders();
+    ArchiveStreamProvider provider = providers.get(key);
+    if (provider == null) {
+        throw new ArchiveException("No provider available for archiver: " + archiverName);
+    }
+    try {
+        return provider.createArchiveInputStream(key, in, actualEncoding);
+    } catch (Exception e) {
+        throw new ArchiveException("Error creating archive input stream for archiver: " + archiverName, e);
+    }
+}
+```

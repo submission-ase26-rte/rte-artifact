@@ -1,0 +1,33 @@
+```java
+public List<Itinerary> fetchRoutesForSpecification(RouteSpecification routeSpecification) {
+    if (routeSpecification == null) {
+        throw new NullPointerException("Route specification is null");
+    }
+    Location origin = routeSpecification.getOrigin();
+    Location destination = routeSpecification.getDestination();
+    if (origin == null || origin.getUnLocode() == null) {
+        throw new NullPointerException("Origin location or its UNLocode is null");
+    }
+    if (destination == null || destination.getUnLocode() == null) {
+        throw new NullPointerException("Destination location or its UNLocode is null");
+    }
+    if (graphTraversalResource == null) {
+        throw new NullPointerException("Graph traversal resource is null");
+    }
+
+    List<TransitPath> transitPaths = graphTraversalResource
+            .queryParam("origin", origin.getUnLocode().getIdString())
+            .queryParam("destination", destination.getUnLocode().getIdString())
+            .request(MediaType.APPLICATION_JSON_TYPE)
+            .get(new GenericType<List<TransitPath>>() {});
+
+    List<Itinerary> itineraries = new ArrayList<>();
+    for (TransitPath transitPath : transitPaths) {
+        Itinerary itinerary = toItinerary(transitPath);
+        if (itinerary.isExpected(null) && routeSpecification.isSatisfiedBy(itinerary)) {
+            itineraries.add(itinerary);
+        }
+    }
+    return itineraries;
+}
+```

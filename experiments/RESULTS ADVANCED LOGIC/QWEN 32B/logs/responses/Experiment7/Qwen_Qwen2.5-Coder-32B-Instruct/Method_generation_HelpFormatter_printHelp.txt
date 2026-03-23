@@ -1,0 +1,20 @@
+```java
+public void printHelp(final PrintWriter pw, final int width, final String cmdLineSyntax, final String header, final Options options, final int leftPad, final int descPad, final String footer, final boolean autoUsage) {
+    if (cmdLineSyntax == null || cmdLineSyntax.isEmpty()) {
+        throw new IllegalArgumentException("cmdLineSyntax not provided");
+    }
+    if (header != null && !header.isEmpty()) {
+        printWrapped(pw, width, 0, header);
+        pw.println();
+    }
+    if (autoUsage) {
+        printUsage(pw, width, cmdLineSyntax);
+        pw.println();
+    }
+    printOptions(pw, width, options, leftPad, descPad);
+    if (footer != null && !footer.isEmpty()) {
+        pw.println();
+        printWrapped(pw, width, 0, footer);
+    }
+}
+```

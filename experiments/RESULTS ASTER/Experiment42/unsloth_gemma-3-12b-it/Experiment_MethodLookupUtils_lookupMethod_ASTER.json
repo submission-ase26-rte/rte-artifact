@@ -1,0 +1,96 @@
+{
+  "method_id": 42,
+  "tested_method": "lookupMethod",
+  "tested_class": "MethodLookupUtils",
+  "project": "JxPath",
+  "timestamp": "2026-01-27T19:02:26.063868",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\JxPath\\Run-1\\src\\test\\java\\org\\apache\\commons\\jxpath\\util\\Metodo42_unit_lookupMethod_MethodLookupUtils_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 7,
+    "tests_total": 16,
+    "tests_failed": 9,
+    "line_coverage": 46.51162790697674,
+    "branch_coverage": 46.875,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testLookupStaticMethodNonStaticMethodWithNullParameter_xDOI12_wqXv0 --\nERROR: org.opentest4j.AssertionFailedError: ClassNotFoundException was thrown\n--------------------------------------------------\nTEST: testLookupStaticMethodNonStaticMethod_DuAN1_ttPa0 --\nERROR: org.opentest4j.AssertionFailedError: ClassNotFoundException was thrown\n--------------------------------------------------\nTEST: testLookupMethodStaticMethod_FEuu8 --\nERROR: org.opentest4j.AssertionFailedError: expected: not <null>\n--------------------------------------------------\nTEST: testLookupMethodStaticMethod_yXrh7 --\nERROR: org.apache.commons.beanutils.ConversionException: Error converting from 'String' to 'Class' test\nCaused by: java.lang.ClassNotFoundException: test\n... 10 more\n--------------------------------------------------\nTEST: testLookupMethodNonStaticMethod_uzdS8 --\nERROR: org.opentest4j.AssertionFailedError: expected: not <null>\n--------------------------------------------------\nTEST: testLookupStaticMethodNullParameterTypes_Koil7_BrTf0 --\nERROR: org.opentest4j.AssertionFailedError: ClassNotFoundException was thrown\n--------------------------------------------------\nTEST: testLookupMethodMultipleMatches_uAkE9 --\nERROR: org.opentest4j.AssertionFailedError: Expected JXPathException\n--------------------------------------------------\nTEST: testLookupMethodSingleParameter_RzMZ2 --\nERROR: org.apache.commons.beanutils.ConversionException: Error converting from 'String' to 'Class' test\nCaused by: java.lang.ClassNotFoundException: test\n... 10 more\n--------------------------------------------------\nTEST: testLookupMethodExactMatch_cwlq4_RhHb0 --\nERROR: org.opentest4j.AssertionFailedError: expected: not <null>",
+    "test_info": {
+      "valid_tests": [
+        "testLookupMethodNullParameters_TDSp0",
+        "testLookupMethodEmptyParameters_lQXT1",
+        "testLookupMethodNullParameter_dBzh2",
+        "testLookupMethodNoMatch_letG3",
+        "testLookupMethodMethodNotFound_bffn7",
+        "testLookupMethodNullParameters_tYPJ0",
+        "testLookupMethodEmptyParameters_DEvi1"
+      ],
+      "invalid_tests": [
+        "testLookupMethodStaticMethod_FEuu8",
+        "testLookupStaticMethodNonStaticMethod_DuAN1_ttPa0",
+        "testLookupStaticMethodNullParameterTypes_Koil7_BrTf0",
+        "testLookupStaticMethodNonStaticMethodWithNullParameter_xDOI12_wqXv0",
+        "testLookupMethodNonStaticMethod_uzdS8",
+        "testLookupMethodMultipleMatches_uAkE9",
+        "testLookupMethodExactMatch_cwlq4_RhHb0",
+        "testLookupMethodSingleParameter_RzMZ2",
+        "testLookupMethodStaticMethod_yXrh7"
+      ],
+      "failed_assert_tests": [
+        "testLookupMethodStaticMethod_FEuu8",
+        "testLookupStaticMethodNonStaticMethod_DuAN1_ttPa0",
+        "testLookupStaticMethodNullParameterTypes_Koil7_BrTf0",
+        "testLookupStaticMethodNonStaticMethodWithNullParameter_xDOI12_wqXv0",
+        "testLookupMethodNonStaticMethod_uzdS8",
+        "testLookupMethodMultipleMatches_uAkE9",
+        "testLookupMethodExactMatch_cwlq4_RhHb0"
+      ],
+      "runtime_error_tests": [
+        "testLookupMethodSingleParameter_RzMZ2",
+        "testLookupMethodStaticMethod_yXrh7"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 16,
+    "assertion_complexity": 0.4411,
+    "pct_null_assertions": 0.7895,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.2105,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.5383,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.65,
+    "overall_naturalness_score": 0.7379
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.06712920619677962,
+    "string_similarity": 0.10362047440699126,
+    "token_similarity": 0.4,
+    "ast_similarity": 0.3269230769230769,
+    "embedding_similarity": 0.8773829340934753,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.112,
+      "similar_blocks": 7,
+      "total_blocks": 125
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.4607225830477085,
+    "passes_threshold": false
+  },
+  "original_method": "    public static Method lookupMethod(\n        Class targetClass,\n        final String name,\n        final Object[] parameters) {\n        if (parameters == null\n            || parameters.length < 1\n            || parameters[0] == null) {\n            return null;\n        }\n\n        if (matchType(targetClass, parameters[0]) == NO_MATCH) {\n            return null;\n        }\n\n        targetClass = TypeUtils.convert(parameters[0], targetClass).getClass();\n\n        boolean tryExact = true;\n        final int count = parameters.length - 1;\n        final Class[] types = new Class[count];\n        final Object[] arguments = new Object[count];\n        for (int i = 0; i < count; i++) {\n            final Object param = parameters[i + 1];\n            arguments[i] = param;\n            if (param != null) {\n                types[i] = param.getClass();\n            }\n            else {\n                types[i] = null;\n                tryExact = false;\n            }\n        }\n\n        Method method = null;\n\n        if (tryExact) {\n            // First - without type conversion\n            try {\n                method = targetClass.getMethod(name, types);\n                if (method != null\n                    && !Modifier.isStatic(method.getModifiers())) {\n                    return method;\n                }\n            }\n            catch (final NoSuchMethodException ignore) { // NOPMD\n                // Ignore\n            }\n        }\n\n        int currentMatch = 0;\n        boolean ambiguous = false;\n\n        // Then - with type conversion\n        final Method[] methods = targetClass.getMethods();\n        for (final Method method2 : methods) {\n            if (!Modifier.isStatic(method2.getModifiers())\n                && method2.getName().equals(name)) {\n                final int match =\n                    matchParameterTypes(\n                        method2.getParameterTypes(),\n                        arguments);\n                if (match != NO_MATCH) {\n                    if (match > currentMatch) {\n                        method = method2;\n                        currentMatch = match;\n                        ambiguous = false;\n                    }\n                    else if (match == currentMatch) {\n                        ambiguous = true;\n                    }\n                }\n            }\n        }\n        if (ambiguous) {\n            throw new JXPathException(\"Ambiguous method call: \" + name);\n        }\n        return method;\n    }",
+  "regenerated_method": "@SuppressWarnings(\"unchecked\")\n    public static Method lookupMethod( Class targetClass, final String name, final Object[] parameters) {\n        Method[] methods = targetClass.getDeclaredMethods();\n        for (Method method : methods) {\n            if (name.equals(method.getName())) {\n                Class<?>[] parameterTypes = method.getParameterTypes();\n                if (parameters == null && parameterTypes.length == 0) {\n                    return method;\n                }\n                if (parameters != null && parameterTypes.length == parameters.length) {\n                    int match = matchParameterTypes(parameterTypes, parameters);\n                    if (match == EXACT_MATCH) {\n                        return method;\n                    }\n                }\n            }\n        }\n        return null;\n    }",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6586962598649586,
+  "original_metrics": {
+    "loc": 77,
+    "sloc": 67,
+    "complexity": 19
+  }
+}

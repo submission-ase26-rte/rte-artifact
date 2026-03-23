@@ -1,0 +1,27 @@
+```java
+public HandlingEvent createHandlingEvent(LocalDateTime registrationTime, LocalDateTime completionTime, TrackingId trackingId, VoyageNumber voyageNumber, UnLocode unlocode, HandlingEvent.Type type) throws CannotCreateHandlingEventException {
+    if (registrationTime == null || completionTime == null || trackingId == null || unlocode == null || type == null) {
+        throw new NullPointerException();
+    }
+
+    Cargo cargo = findCargo(trackingId);
+    if (cargo == null) {
+        throw new CannotCreateHandlingEventException("Cargo not found");
+    }
+
+    Location location = findLocation(unlocode);
+    if (location == null) {
+        throw new CannotCreateHandlingEventException("Location not found");
+    }
+
+    Voyage voyage = null;
+    if (voyageNumber != null) {
+        voyage = findVoyage(voyageNumber);
+        if (voyage == null) {
+            throw new CannotCreateHandlingEventException("Voyage not found");
+        }
+    }
+
+    return new HandlingEvent(registrationTime, completionTime, cargo, voyage, location, type);
+}
+```

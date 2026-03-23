@@ -1,0 +1,44 @@
+```java
+public CommandLine parse(final Options options, final String[] arguments, final Properties properties, final boolean stopAtNonOption) throws ParseException {
+    if (arguments == null) {
+        return new CommandLine();
+    }
+
+    if (arguments.length == 0) {
+        return new CommandLine();
+    }
+
+    if (stopAtNonOption && arguments.length > 0 && "--".equals(arguments[0])) {
+        List<String> args = new ArrayList<>(Arrays.asList(arguments).subList(1, arguments.length));
+        return CommandLine.builder().addArgs(args).build();
+    }
+
+    this.options = options;
+    this.requiredOptions = new ArrayList<>(options.getRequiredOptions());
+
+    ListIterator<String> iter = Arrays.asList(arguments).listIterator();
+    while (iter.hasNext()) {
+        String arg = iter.next();
+        if ("-".equals(arg)) {
+            List<String> extraArgs = new ArrayList<>();
+            while (iter.hasNext()) {
+                extraArgs.add(iter.next());
+            }
+            return CommandLine.builder().addArgs(extraArgs).build();
+        } else if ("--".equals(arg)) {
+            List<String> extraArgs = new ArrayList<>();
+            while (iter.hasNext()) {
+                extraArgs.add(iter.next());
+            }
+            return CommandLine.builder().addArgs(extraArgs).build();
+        } else {
+            processOption(arg, iter);
+        }
+    }
+
+    processProperties(properties);
+    checkRequiredOptions();
+
+    return cmd;
+}
+```

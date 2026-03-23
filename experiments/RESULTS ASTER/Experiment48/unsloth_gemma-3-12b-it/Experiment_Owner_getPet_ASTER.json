@@ -1,0 +1,83 @@
+{
+  "method_id": 48,
+  "tested_method": "getPet",
+  "tested_class": "Owner",
+  "project": "Petclinic",
+  "timestamp": "2026-01-27T19:06:24.577053",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\Petclinic\\Run-1\\src\\test\\java\\org\\springframework\\samples\\petclinic\\owner\\Metodo48_unit_getPet_Owner_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 8,
+    "tests_total": 10,
+    "tests_failed": 2,
+    "line_coverage": 87.5,
+    "branch_coverage": 50.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testGetPetCaseSensitive_qwuA4 --\nERROR: java.lang.AssertionError\n--------------------------------------------------\nTEST: testGetPetNullPetName_PSVw5 --\nERROR: java.lang.NullPointerException: Cannot invoke \"String.toLowerCase()\" because \"name\" is null",
+    "test_info": {
+      "valid_tests": [
+        "testGetPetExistingPet_PhgC0",
+        "testGetPetNonExistingPet_ofkI1",
+        "testGetPetNonExistingPetIgnoreNew_tcjx3",
+        "testGetPetExistingPetNewPet_gkCj4_ttHn0",
+        "testGetPetExistingPet_Gewy0",
+        "testGetPetNonExistingPet_qTED1",
+        "testGetPetNonExistingPetIgnoreNew_KSgs3",
+        "testGetPetEmptyPetName_yAaf6"
+      ],
+      "invalid_tests": [
+        "testGetPetCaseSensitive_qwuA4",
+        "testGetPetNullPetName_PSVw5"
+      ],
+      "failed_assert_tests": [
+        "testGetPetCaseSensitive_qwuA4"
+      ],
+      "runtime_error_tests": [
+        "testGetPetNullPetName_PSVw5"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 10,
+    "assertion_complexity": 0.2643,
+    "pct_null_assertions": 0.2,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.0,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.6691,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 1.0,
+    "overall_naturalness_score": 0.9023
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.2915750741395353,
+    "string_similarity": 0.3025210084033613,
+    "token_similarity": 0.6666666666666666,
+    "ast_similarity": 0.7142857142857143,
+    "embedding_similarity": 0.888467013835907,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.1,
+      "similar_blocks": 1,
+      "total_blocks": 20
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.6506230074856005,
+    "passes_threshold": false
+  },
+  "original_method": "\tpublic Pet getPet(String name, boolean ignoreNew) {\n\t\tname = name.toLowerCase();\n\t\tfor (Pet pet : getPets()) {\n\t\t\tString compName = pet.getName();\n\t\t\tif (compName != null && compName.equalsIgnoreCase(name)) {\n\t\t\t\tif (!ignoreNew || !pet.isNew()) {\n\t\t\t\t\treturn pet;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\treturn null;\n\t}",
+  "regenerated_method": "public Pet getPet(String name, boolean ignoreNew) {\n        if (name == null || name.isEmpty()) {\n            return null;\n        }\n        for (Pet pet : this.getPets()) {\n            if (pet.getName().equals(name)) {\n                return pet;\n            }\n        }\n        return null;\n    }",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6960409376976188,
+  "original_metrics": {
+    "loc": 12,
+    "sloc": 12,
+    "complexity": 6
+  }
+}

@@ -1,0 +1,251 @@
+Here's the fixed test class with all compilation errors resolved:
+
+```java
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.concurrent.Future;
+
+import javax.transaction.UserTransaction;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import com.ibm.websphere.samples.daytrader.beans.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.beans.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.beans.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.beans.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class TradeDirect_sellTestGenerated {
+
+    @Mock
+    private Connection conn;
+
+    @Mock
+    private UserTransaction txn;
+
+    @Mock
+    private AccountDataBean accountData;
+
+    @Mock
+    private HoldingDataBean holdingData;
+
+    @Mock
+    private QuoteDataBean quoteData;
+
+    @Mock
+    private OrderDataBean orderData;
+
+    @InjectMocks
+    private TradeDirect tradeDirect;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        ReflectionTestUtils.setField(tradeDirect, "txn", txn);
+        ReflectionTestUtils.setField(tradeDirect, "inSession", false);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.framework().clearInlineMock(this);
+    }
+
+    @Test
+    void testSell_SuccessfulSynchronousProcessing() throws Exception {
+        try (MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class)) {
+            String userID = "testUser";
+            int holdingID = 1;
+
+            ReflectionTestUtils.setField(tradeDirect, "conn", conn);
+            when(tradeDirect.getAccountData(conn, userID)).thenReturn(accountData);
+            when(tradeDirect.getHoldingData(conn, holdingID)).thenReturn(holdingData);
+            when(holdingData.getQuoteID()).thenReturn("TEST");
+            when(tradeDirect.getQuoteData(conn, "TEST")).thenReturn(quoteData);
+            when(quoteData.getPrice()).thenReturn(new BigDecimal("100.00"));
+            when(tradeDirect.createOrder(any(), any(), any(), eq("sell"), anyDouble())).thenReturn(orderData);
+            when(orderData.getOrderID()).thenReturn(1);
+            when(orderData.getOrderFee()).thenReturn(new BigDecimal("5.00"));
+            when(tradeDirect.getOrderData(conn, 1)).thenReturn(orderData);
+
+            OrderDataBean result = tradeDirect.sell(userID, holdingID, TradeConfig.SYNCH);
+
+            assertNotNull(result);
+            assertEquals("open", result.getOrderStatus());
+            mockedLog.verify(() -> Log.trace(anyString(), eq(userID), eq(holdingID)));
+        }
+    }
+
+    @Test
+    void testSell_SuccessfulAsynchronousProcessing() throws Exception {
+        try (MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class)) {
+            String userID = "testUser";
+            int holdingID = 1;
+
+            ReflectionTestUtils.setField(tradeDirect, "conn", conn);
+            when(tradeDirect.getAccountData(conn, userID)).thenReturn(accountData);
+            when(tradeDirect.getHoldingData(conn, holdingID)).thenReturn(holdingData);
+            when(holdingData.getQuoteID()).thenReturn("TEST");
+            when(tradeDirect.getQuoteData(conn, "TEST")).thenReturn(quoteData);
+            when(quoteData.getPrice()).thenReturn(new BigDecimal("100.00"));
+            when(tradeDirect.createOrder(any(), any(), any(), eq("sell"), anyDouble())).thenReturn(orderData);
+            when(orderData.getOrderID()).thenReturn(1);
+            when(orderData.getOrderFee()).thenReturn(new BigDecimal("5.00"));
+            when(tradeDirect.completeOrderAsync(anyInt(), eq(true))).thenReturn(mock(Future.class));
+            when(tradeDirect.getOrderData(conn, 1)).thenReturn(orderData);
+
+            OrderDataBean result = tradeDirect.sell(userID, holdingID, TradeConfig.ASYNCH);
+
+            assertNotNull(result);
+            assertEquals("open", result.getOrderStatus());
+            mockedLog.verify(() -> Log.trace(anyString(), eq(userID), eq(holdingID)));
+        }
+    }
+
+    @Test
+    void testSell_SuccessfulTwoPhaseAsynchronousProcessing() throws Exception {
+        try (MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class)) {
+            String userID = "testUser";
+            int holdingID = 1;
+
+            ReflectionTestUtils.setField(tradeDirect, "conn", conn);
+            when(tradeDirect.getAccountData(conn, userID)).thenReturn(accountData);
+            when(tradeDirect.getHoldingData(conn, holdingID)).thenReturn(holdingData);
+            when(holdingData.getQuoteID()).thenReturn("TEST");
+            when(tradeDirect.getQuoteData(conn, "TEST")).thenReturn(quoteData);
+            when(quoteData.getPrice()).thenReturn(new BigDecimal("100.00"));
+            when(tradeDirect.createOrder(any(), any(), any(), eq("sell"), anyDouble())).thenReturn(orderData);
+            when(orderData.getOrderID()).thenReturn(1);
+            when(orderData.getOrderFee()).thenReturn(new BigDecimal("5.00"));
+            when(tradeDirect.queueOrder(anyInt(), eq(true))).thenReturn(null);
+            when(tradeDirect.getOrderData(conn, 1)).thenReturn(orderData);
+
+            OrderDataBean result = tradeDirect.sell(userID, holdingID, TradeConfig.ASYNCH_2PHASE);
+
+            assertNotNull(result);
+            assertEquals("open", result.getOrderStatus());
+            mockedLog.verify(() -> Log.trace(anyString(), eq(userID), eq(holdingID)));
+            mockedLog.verify(() -> Log.trace("TradeDirect:sell create/begin global transaction"));
+            mockedLog.verify(() -> Log.trace("TradeDirect:sell committing global transaction"));
+        }
+    }
+
+    @Test
+    void testSell_WithNullAccountData() throws Exception {
+        try (MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class)) {
+            String userID = "testUser";
+            int holdingID = 1;
+
+            ReflectionTestUtils.setField(tradeDirect, "conn", conn);
+            when(tradeDirect.getAccountData(conn, userID)).thenReturn(null);
+
+            OrderDataBean result = tradeDirect.sell(userID, holdingID, TradeConfig.SYNCH);
+
+            assertNotNull(result);
+            assertEquals("cancelled", result.getOrderStatus());
+            mockedLog.verify(() -> Log.debug(anyString()));
+        }
+    }
+
+    @Test
+    void testSell_WithNullHoldingData() throws Exception {
+        try (MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class)) {
+            String userID = "testUser";
+            int holdingID = 1;
+
+            ReflectionTestUtils.setField(tradeDirect, "conn", conn);
+            when(tradeDirect.getAccountData(conn, userID)).thenReturn(accountData);
+            when(tradeDirect.getHoldingData(conn, holdingID)).thenReturn(null);
+
+            OrderDataBean result = tradeDirect.sell(userID, holdingID, TradeConfig.SYNCH);
+
+            assertNotNull(result);
+            assertEquals("cancelled", result.getOrderStatus());
+            mockedLog.verify(() -> Log.debug(anyString()));
+        }
+    }
+
+    @Test
+    void testSell_WithNullQuoteData() throws Exception {
+        try (MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class)) {
+            String userID = "testUser";
+            int holdingID = 1;
+
+            ReflectionTestUtils.setField(tradeDirect, "conn", conn);
+            when(tradeDirect.getAccountData(conn, userID)).thenReturn(accountData);
+            when(tradeDirect.getHoldingData(conn, holdingID)).thenReturn(holdingData);
+            when(holdingData.getQuoteID()).thenReturn("TEST");
+            when(tradeDirect.getQuoteData(conn, "TEST")).thenReturn(null);
+
+            OrderDataBean result = tradeDirect.sell(userID, holdingID, TradeConfig.SYNCH);
+
+            assertNotNull(result);
+            assertEquals("cancelled", result.getOrderStatus());
+            mockedLog.verify(() -> Log.debug(anyString()));
+        }
+    }
+
+    @Test
+    void testSell_WithJMSExceptionDuringAsynchronousProcessing() throws Exception {
+        try (MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class)) {
+            String userID = "testUser";
+            int holdingID = 1;
+
+            ReflectionTestUtils.setField(tradeDirect, "conn", conn);
+            when(tradeDirect.getAccountData(conn, userID)).thenReturn(accountData);
+            when(tradeDirect.getHoldingData(conn, holdingID)).thenReturn(holdingData);
+            when(holdingData.getQuoteID()).thenReturn("TEST");
+            when(tradeDirect.getQuoteData(conn, "TEST")).thenReturn(quoteData);
+            when(quoteData.getPrice()).thenReturn(new BigDecimal("100.00"));
+            when(tradeDirect.createOrder(any(), any(), any(), eq("sell"), anyDouble())).thenReturn(orderData);
+            when(orderData.getOrderID()).thenReturn(1);
+            when(orderData.getOrderFee()).thenReturn(new BigDecimal("5.00"));
+            when(tradeDirect.completeOrderAsync(anyInt(), eq(true))).thenThrow(new RuntimeException("JMS Exception"));
+
+            OrderDataBean result = tradeDirect.sell(userID, holdingID, TradeConfig.ASYNCH);
+
+            assertNotNull(result);
+            assertEquals("cancelled", result.getOrderStatus());
+            mockedLog.verify(() -> Log.error(anyString(), any(Exception.class)));
+        }
+    }
+
+    @Test
+    void testSell_WithGeneralException() throws Exception {
+        try (MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class)) {
+            String userID = "testUser";
+            int holdingID = 1;
+
+            ReflectionTestUtils.setField(tradeDirect, "conn", conn);
+            when(tradeDirect.getAccountData(conn, userID)).thenThrow(new SQLException("DB Error"));
+
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.sell(userID, holdingID, TradeConfig.SYNCH);
+            });
+
+            assertTrue(exception.getMessage().contains("TradeDirect:sell error"));
+            mockedLog.verify(() -> Log.error(anyString(), any(Exception.class)));
+        }
+    }
+}
+```

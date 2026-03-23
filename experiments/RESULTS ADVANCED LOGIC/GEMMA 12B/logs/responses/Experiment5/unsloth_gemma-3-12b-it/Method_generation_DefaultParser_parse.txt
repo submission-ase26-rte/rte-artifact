@@ -1,0 +1,26 @@
+```java
+@Override
+public CommandLine parse(final Options options, final String[] arguments, final Properties properties, final boolean stopAtNonOption) throws ParseException {
+    this.options = options;
+    this.stopAtNonOption = stopAtNonOption;
+    this.cmd = builder().build();
+    this.expectedOpts = new ArrayList<>();
+
+    if (options != null) {
+        options.checkOptions();
+    }
+
+    handleProperties(properties);
+
+    if (arguments != null) {
+        for (final String token : arguments) {
+            handleToken(token);
+        }
+    }
+
+    checkRequiredOptions();
+    checkRequiredArgs();
+
+    return cmd;
+}
+```

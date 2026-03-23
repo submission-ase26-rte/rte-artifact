@@ -1,0 +1,73 @@
+package org.apache.commons.compress.archivers.cpio;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
+import java.util.Date;
+import java.util.Objects;
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.utils.ExactMath;
+import org.apache.commons.compress.utils.TimeUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class CpioArchiveEntry_setInodeTestGenerated {
+
+    private CpioArchiveEntry cpioArchiveEntry;
+    private Path tempFilePath;
+
+    @BeforeEach
+    public void setUp() throws IOException {
+        tempFilePath = Files.createTempFile("test", ".tmp");
+        cpioArchiveEntry = new CpioArchiveEntry(tempFilePath, "testEntry");
+    }
+
+    @AfterEach
+    public void tearDown() throws IOException {
+        Files.deleteIfExists(tempFilePath);
+    }
+
+    @Test
+    public void testSetInodeWithValidValue() {
+        long inodeValue = 12345;
+        cpioArchiveEntry.setInode(inodeValue);
+        assertEquals(inodeValue, cpioArchiveEntry.getInode());
+    }
+
+    @Test
+    public void testSetInodeWithZeroValue() {
+        long inodeValue = 0;
+        cpioArchiveEntry.setInode(inodeValue);
+        assertEquals(inodeValue, cpioArchiveEntry.getInode());
+    }
+
+    @Test
+    public void testSetInodeWithNegativeValue() {
+        long inodeValue = -12345;
+        cpioArchiveEntry.setInode(inodeValue);
+        assertEquals(inodeValue, cpioArchiveEntry.getInode());
+    }
+
+    @Test
+    public void testSetInodeWithMaxValue() {
+        long inodeValue = Long.MAX_VALUE;
+        cpioArchiveEntry.setInode(inodeValue);
+        assertEquals(inodeValue, cpioArchiveEntry.getInode());
+    }
+
+    @Test
+    public void testSetInodeWithMinValue() {
+        long inodeValue = Long.MIN_VALUE;
+        cpioArchiveEntry.setInode(inodeValue);
+        assertEquals(inodeValue, cpioArchiveEntry.getInode());
+    }
+}

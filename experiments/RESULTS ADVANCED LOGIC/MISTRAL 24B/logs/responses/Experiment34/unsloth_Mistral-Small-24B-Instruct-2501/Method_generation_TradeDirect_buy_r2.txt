@@ -1,0 +1,33 @@
+```java
+public OrderDataBean buy(String userID, String symbol, double quantity, int orderProcessingMode) throws Exception {
+    if (userID == null) {
+        throw new Exception("User ID cannot be null");
+    }
+    if (symbol == null) {
+        throw new Exception("Symbol cannot be null");
+    }
+    if (quantity <= 0) {
+        throw new Exception("Quantity must be positive");
+    }
+    if (orderProcessingMode != TradeConfig.SYNCH && orderProcessingMode != TradeConfig.ASYNCH && orderProcessingMode != TradeConfig.ASYNCH_2PHASE) {
+        throw new Exception("Invalid order processing mode");
+    }
+
+    AccountDataBean accountData = getAccountData(userID);
+    if (accountData == null) {
+        throw new Exception("Account data not found for user ID: " + userID);
+    }
+
+    QuoteDataBean quoteData = getQuote(symbol);
+    if (quoteData == null) {
+        throw new Exception("Quote data not found for symbol: " + symbol);
+    }
+
+    OrderDataBean orderData = createOrder(accountData, quoteData, null, "buy", quantity);
+    if (orderProcessingMode == TradeConfig.ASYNCH || orderProcessingMode == TradeConfig.ASYNCH_2PHASE) {
+        queueOrder(orderData.getOrderID(), orderProcessingMode == TradeConfig.ASYNCH_2PHASE);
+    }
+
+    return orderData;
+}
+```

@@ -1,0 +1,265 @@
+ROLE:
+You are an expert Java developer. Task: improve coverage.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.ri.model.dom;
+Class name (MUST be exactly): DOMNodePointer_asPathTestGenerated
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+Test class structure (reference):
+package org.apache.commons.jxpath.ri.model.dom;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.ri.NamespaceResolver;
+import org.apache.commons.jxpath.ri.QName;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.ProcessingInstruction;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+class DOMNodePointer_asPathTestGenerated {
+    private JXPathContext mockContext;
+    @BeforeEach
+    void setUp() {
+        mockContext = Mockito.mock(JXPathContext.class);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.reset(mockContext);
+    }
+
+
+}
+
+Valid test signatures:
+    @Test
+    void testAsPathWithId() {}
+}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   HashMap -> java.util.HashMap
+//   Locale -> java.util.Locale
+//   Map -> java.util.Map
+//   JXPathAbstractFactoryException -> org.apache.commons.jxpath.JXPathAbstractFactoryException
+//   JXPathContext -> org.apache.commons.jxpath.JXPathContext
+//   JXPathException -> org.apache.commons.jxpath.JXPathException
+//   Pointer -> org.apache.commons.jxpath.Pointer
+//   Compiler -> org.apache.commons.jxpath.ri.Compiler
+//   NamespaceResolver -> org.apache.commons.jxpath.ri.NamespaceResolver
+//   QName -> org.apache.commons.jxpath.ri.QName
+//   NodeNameTest -> org.apache.commons.jxpath.ri.compiler.NodeNameTest
+//   NodeTest -> org.apache.commons.jxpath.ri.compiler.NodeTest
+//   NodeTypeTest -> org.apache.commons.jxpath.ri.compiler.NodeTypeTest
+//   ProcessingInstructionTest -> org.apache.commons.jxpath.ri.compiler.ProcessingInstructionTest
+//   NodeIterator -> org.apache.commons.jxpath.ri.model.NodeIterator
+//   NodePointer -> org.apache.commons.jxpath.ri.model.NodePointer
+//   NullPointer -> org.apache.commons.jxpath.ri.model.beans.NullPointer
+//   TypeUtils -> org.apache.commons.jxpath.util.TypeUtils
+//   Attr -> org.w3c.dom.Attr
+//   Comment -> org.w3c.dom.Comment
+//   Document -> org.w3c.dom.Document
+//   Element -> org.w3c.dom.Element
+//   NamedNodeMap -> org.w3c.dom.NamedNodeMap
+//   Node -> org.w3c.dom.Node
+//   NodeList -> org.w3c.dom.NodeList
+//   ProcessingInstruction -> org.w3c.dom.ProcessingInstruction
+
+// === Class: DOMNodePointer ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final Node node;
+    private Map namespaces;
+    private String defaultNamespace;
+    private String id;
+    private NamespaceResolver localNamespaceResolver;
+    public static final String XML_NAMESPACE_URI;
+    public static final String XMLNS_NAMESPACE_URI;
+
+// Constructors:
+public DOMNodePointer(Node node, Locale locale);
+public DOMNodePointer(Node node, Locale locale, String id);
+public DOMNodePointer(NodePointer parent, Node node);
+
+// Getter/Setter Methods (for test assertions):
+public QName getName();
+public String getNamespaceURI();
+public synchronized NamespaceResolver getNamespaceResolver();
+public String getNamespaceURI(final String prefix);
+public String getDefaultNamespaceURI();
+public Object getBaseValue();
+public Object getImmediateNode();
+public boolean isActual();
+public boolean isCollection();
+public int getLength();
+public boolean isLeaf();
+public boolean isLanguage(final String lang);
+protected String getLanguage();
+public void setValue(final Object value);
+private int getRelativePositionByQName();
+private int getRelativePositionOfElement();
+private int getRelativePositionOfTextNode();
+private int getRelativePositionOfPI();
+public static String getPrefix(final Node node);
+public static String getLocalName(final Node node);
+public static String getNamespaceURI(Node node);
+public Object getValue();
+public Pointer getPointerByID(final JXPathContext context, final String id);
+
+// Internal Method Signatures (used by target method):
+public synchronized NamespaceResolver getNamespaceResolver();
+private int getRelativePositionOfPI();
+static public String getLocalName(final Node node);
+private int getRelativePositionByQName();
+private int getRelativePositionOfTextNode();
+public String getNamespaceURI();
+private int getRelativePositionOfElement();
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() {
+        mockContext = Mockito.mock(JXPathContext.class);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.reset(mockContext);
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+    @Override
+    public String asPath() {
+        if (id != null) { // NOT COVERED BY TESTS
+            return "id('" + escape(id) + "')";
+        }
+
+        final StringBuilder buffer = new StringBuilder(); // NOT COVERED BY TESTS
+        if (parent != null) { // NOT COVERED BY TESTS
+            buffer.append(parent.asPath()); // NOT COVERED BY TESTS
+        }
+        switch (node.getNodeType()) { // NOT COVERED BY TESTS
+            case Node.ELEMENT_NODE :
+                // If the parent pointer is not a DOMNodePointer, it is
+                // the parent's responsibility to produce the node test part
+                // of the path
+                if (parent instanceof DOMNodePointer) { // NOT COVERED BY TESTS
+                    if (buffer.length() == 0 // NOT COVERED BY TESTS
+                            || buffer.charAt(buffer.length() - 1) != '/') { // NOT COVERED BY TESTS
+                        buffer.append('/'); // NOT COVERED BY TESTS
+                    }
+                    final String ln = DOMNodePointer.getLocalName(node); // NOT COVERED BY TESTS
+                    final String nsURI = getNamespaceURI(); // NOT COVERED BY TESTS
+                    if (nsURI == null) { // NOT COVERED BY TESTS
+                        buffer.append(ln); // NOT COVERED BY TESTS
+                        buffer.append('['); // NOT COVERED BY TESTS
+                        buffer.append(getRelativePositionByQName()).append(']'); // NOT COVERED BY TESTS
+                    }
+                    else {
+                        final String prefix = getNamespaceResolver().getPrefix(nsURI); // NOT COVERED BY TESTS
+                        if (prefix != null) { // NOT COVERED BY TESTS
+                            buffer.append(prefix); // NOT COVERED BY TESTS
+                            buffer.append(':'); // NOT COVERED BY TESTS
+                            buffer.append(ln); // NOT COVERED BY TESTS
+                            buffer.append('['); // NOT COVERED BY TESTS
+                            buffer.append(getRelativePositionByQName()); // NOT COVERED BY TESTS
+                            buffer.append(']'); // NOT COVERED BY TESTS
+                        }
+                        else {
+                            buffer.append("node()"); // NOT COVERED BY TESTS
+                            buffer.append('['); // NOT COVERED BY TESTS
+                            buffer.append(getRelativePositionOfElement()); // NOT COVERED BY TESTS
+                            buffer.append(']'); // NOT COVERED BY TESTS
+                        }
+                    }
+                }
+            break;
+            case Node.TEXT_NODE :
+            case Node.CDATA_SECTION_NODE :
+                buffer.append("/text()"); // NOT COVERED BY TESTS
+                buffer.append('['); // NOT COVERED BY TESTS
+                buffer.append(getRelativePositionOfTextNode()).append(']'); // NOT COVERED BY TESTS
+                break; // NOT COVERED BY TESTS
+            case Node.PROCESSING_INSTRUCTION_NODE :
+                buffer.append("/processing-instruction(\'"); // NOT COVERED BY TESTS
+                buffer.append(((ProcessingInstruction) node).getTarget()).append("')"); // NOT COVERED BY TESTS
+                buffer.append('['); // NOT COVERED BY TESTS
+                buffer.append(getRelativePositionOfPI()).append(']'); // NOT COVERED BY TESTS
+                break; // NOT COVERED BY TESTS
+            case Node.DOCUMENT_NODE :
+                // That'll be empty
+                break; // NOT COVERED BY TESTS
+            default:
+                break;
+        }
+        return buffer.toString(); // NOT COVERED BY TESTS
+    }
+
+
+COVERAGE ANALYSIS:
+ STATUS: All tests are currently PASSING and there are NO compilation errors.
+  ISSUE: The test suite does not meet the minimum coverage threshold.
+
+COVERAGE METRICS:
+- Current line coverage: 5.00%
+- Target line coverage: 100%
+
+YOUR TASK:
+You MUST add NEW test cases to improve coverage from 5.00% to 100%.
+
+The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. 
+Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+IMPORTANT: Maintain all existing passing tests - do NOT modify or remove them. Only ADD new test cases.
+
+
+
+INSTRUCTIONS:
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

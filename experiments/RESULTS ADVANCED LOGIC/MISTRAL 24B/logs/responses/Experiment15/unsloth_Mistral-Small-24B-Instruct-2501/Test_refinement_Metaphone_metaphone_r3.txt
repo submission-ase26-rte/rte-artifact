@@ -1,0 +1,261 @@
+```java
+package org.apache.commons.codec.language;
+
+import org.apache.commons.codec.language.Metaphone;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Metaphone_metaphoneTestGenerated {
+    private Metaphone metaphone;
+
+    @BeforeEach
+    void setUp() {
+        metaphone = new Metaphone();
+    }
+
+    @Test
+    void testMetaphoneBEnding() {
+        String result = metaphone.metaphone("LAMB");
+        assertEquals("LM", result);
+    }
+
+    @Test
+    void testMetaphoneGEnding() {
+        String result = metaphone.metaphone("AGH");
+        assertEquals("", result);
+    }
+
+    @Test
+    void testMetaphoneTCH2() {
+        String result = metaphone.metaphone("TCHAIKOWSKY");
+        assertEquals("XKSK", result);
+    }
+
+    @Test
+    void testMetaphoneSCI() {
+        String result = metaphone.metaphone("SCIENTIFIC");
+        assertEquals("SNTF", result);
+    }
+
+    @Test
+    void testMetaphoneSCY() {
+        String result = metaphone.metaphone("SCYTHE");
+        assertEquals("S0", result);
+    }
+
+    @Test
+    void testMetaphoneTH2() {
+        String result = metaphone.metaphone("THOMAS");
+        assertEquals("0MS", result);
+    }
+
+    @Test
+    void testMetaphoneHNotVowel() {
+        String result = metaphone.metaphone("HONOR");
+        assertEquals("HNR", result);
+    }
+
+    @Test
+    void testMetaphoneW2() {
+        String result = metaphone.metaphone("WING");
+        assertEquals("WNK", result);
+    }
+
+    @Test
+    void testMetaphoneX2() {
+        String result = metaphone.metaphone("XENON");
+        assertEquals("SNN", result);
+    }
+
+    @Test
+    void testMetaphoneWY() {
+        String result = metaphone.metaphone("WYOMING");
+        assertEquals("YMNK", result);
+    }
+
+    @Test
+    void testMetaphoneVowels() {
+        String result = metaphone.metaphone("AEIOU");
+        assertEquals("E", result);
+    }
+
+    @Test
+    void testMetaphoneInitialAE() {
+        String result = metaphone.metaphone("AEON");
+        assertEquals("EN", result);
+    }
+
+    @Test
+    void testMetaphoneInitialKN() {
+        String result = metaphone.metaphone("KNIGHT");
+        assertEquals("NT", result);
+    }
+
+    @Test
+    void testMetaphoneInitialWR() {
+        String result = metaphone.metaphone("WRONG");
+        assertEquals("RNK", result);
+    }
+
+    @Test
+    void testMetaphoneInitialX1() {
+        String result = metaphone.metaphone("XENON");
+        assertEquals("SNN", result);
+    }
+
+    @Test
+    void testMetaphoneInitialWH() {
+        String result = metaphone.metaphone("WHAT");
+        assertEquals("WT", result);
+    }
+
+    @Test
+    void testMetaphoneB() {
+        String result = metaphone.metaphone("ABRACADABRA");
+        assertEquals("ABRK", result);
+    }
+
+    @Test
+    void testMetaphoneH() {
+        String result = metaphone.metaphone("HAPPY");
+        assertEquals("HP", result);
+    }
+
+    @Test
+    void testMetaphoneK() {
+        String result = metaphone.metaphone("KITCHEN");
+        assertEquals("KXN", result);
+    }
+
+    @Test
+    void testMetaphoneQ() {
+        String result = metaphone.metaphone("QUIET");
+        assertEquals("KT", result);
+    }
+
+    @Test
+    void testMetaphoneT() {
+        String result = metaphone.metaphone("THOR");
+        assertEquals("0R", result);
+    }
+
+    @Test
+    void testMetaphoneX() {
+        String result = metaphone.metaphone("XEROX");
+        assertEquals("SRKS", result);
+    }
+
+    @Test
+    void testMetaphoneZ() {
+        String result = metaphone.metaphone("ZEBRAS");
+        assertEquals("SBRS", result);
+    }
+
+    @Test
+    void testMetaphoneMaxCodeLen() {
+        metaphone.setMaxCodeLen(3);
+        String result = metaphone.metaphone("EXAMPLE");
+        assertEquals("EKS", result);
+    }
+
+    @Test
+    void testMetaphoneSilentG() {
+        String result = metaphone.metaphone("HANG");
+        assertEquals("HNK", result);
+    }
+
+    @Test
+    void testMetaphoneDuplicateC() {
+        String result = metaphone.metaphone("ACCENT");
+        assertEquals("AKSN", result);
+    }
+
+    @Test
+    void testMetaphoneHardG() {
+        String result = metaphone.metaphone("GARAGE");
+        assertEquals("KRJ", result);
+    }
+
+    @Test
+    void testMetaphoneInitialKB() {
+        String result = metaphone.metaphone("KNACK");
+        assertEquals("NK", result);
+    }
+
+    @Test
+    void testMetaphoneInitialKN2() {
+        String result = metaphone.metaphone("KNIFE");
+        assertEquals("NF", result);
+    }
+
+    @Test
+    void testMetaphoneInitialKN3() {
+        String result = metaphone.metaphone("KNIGHTS");
+        assertEquals("NTS", result);
+    }
+
+    @Test
+    void testMetaphoneInitialKN4() {
+        String result = metaphone.metaphone("KNOCK");
+        assertEquals("NK", result);
+    }
+
+    @Test
+    void testMetaphoneInitialKN5() {
+        String result = metaphone.metaphone("KNOW");
+        assertEquals("N", result);
+    }
+
+    @Test
+    void testMetaphoneInitialKN6() {
+        String result = metaphone.metaphone("KNOWS");
+        assertEquals("NS", result);
+    }
+
+    @Test
+    void testMetaphoneInitialKN7() {
+        String result = metaphone.metaphone("KNOWLEDGE");
+        assertEquals("NLDG", result);
+    }
+
+    @Test
+    void testMetaphoneInitialKN8() {
+        String result = metaphone.metaphone("KNOWS");
+        assertEquals("NS", result);
+    }
+
+    @Test
+    void testMetaphoneInitialKN9() {
+        String result = metaphone.metaphone("KNOWLEDGE");
+        assertEquals("NLDG", result);
+    }
+
+    @Test
+    void testMetaphoneInitialKN10() {
+        String result = metaphone.metaphone("KNOWLEDGES");
+        assertEquals("NLDGS", result);
+    }
+
+    @Test
+    void testMetaphoneInitialKN11() {
+        String result = metaphone.metaphone("KNOWLEDGEABLE");
+        assertEquals("NLDGBL", result);
+    }
+
+    @Test
+    void testMetaphoneInitialKN12() {
+        String result = metaphone.metaphone("KNOWLEDGEABLY");
+        assertEquals("NLDGBLY", result);
+    }
+
+    @Test
+    void testMetaphoneInitialKN13() {
+        String result = metaphone.metaphone("KNOWLEDGEABILITY");
+        assertEquals("NLDGBLTY", result);
+    }
+}
+```

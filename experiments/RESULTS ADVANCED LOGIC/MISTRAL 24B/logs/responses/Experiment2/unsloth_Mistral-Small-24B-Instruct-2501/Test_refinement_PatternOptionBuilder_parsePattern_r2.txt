@@ -1,0 +1,108 @@
+```java
+package org.apache.commons.cli;
+
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PatternOptionBuilder_parsePatternTestGenerated {
+    private Options options;
+
+    @BeforeEach
+    public void setUp() {
+        options = new Options();
+    }
+
+    @Test
+    public void testParsePattern_ValidPattern() {
+        String pattern = "a!b:c%";
+        Options result = PatternOptionBuilder.parsePattern(pattern);
+        Option optionA = result.getOption("a");
+        assertNotNull(optionA);
+        assertTrue(optionA.isRequired());
+        assertEquals(Option.UNINITIALIZED, optionA.getArgs());
+        assertEquals(Option.UNLIMITED_VALUES, optionA.getArgs());
+        Option optionB = result.getOption("b");
+        assertNotNull(optionB);
+        assertFalse(optionB.isRequired());
+        assertEquals(Option.UNINITIALIZED, optionB.getArgs());
+        assertEquals(Option.UNLIMITED_VALUES, optionB.getArgs());
+        Option optionC = result.getOption("c");
+        assertNotNull(optionC);
+        assertFalse(optionC.isRequired());
+        assertEquals(1, optionC.getArgs());
+        assertEquals(Option.UNLIMITED_VALUES, optionC.getArgs());
+    }
+
+    @Test
+    public void testParsePattern_InvalidPattern() {
+        String pattern = "a!b:c%!";
+        Options result = PatternOptionBuilder.parsePattern(pattern);
+        Option optionA = result.getOption("a");
+        assertNotNull(optionA);
+        assertTrue(optionA.isRequired());
+        assertEquals(Option.UNINITIALIZED, optionA.getArgs());
+        assertEquals(Option.UNLIMITED_VALUES, optionA.getArgs());
+        assertNull(result.getOption("b"));
+        assertNull(result.getOption("c"));
+    }
+
+    @Test
+    public void testParsePattern_MultipleOptions() {
+        String pattern = "a:b!c%";
+        Options result = PatternOptionBuilder.parsePattern(pattern);
+        Option optionA = result.getOption("a");
+        assertNotNull(optionA);
+        assertFalse(optionA.isRequired());
+        assertEquals(Option.UNINITIALIZED, optionA.getArgs());
+        assertEquals(Option.UNLIMITED_VALUES, optionA.getArgs());
+        Option optionB = result.getOption("b");
+        assertNotNull(optionB);
+        assertTrue(optionB.isRequired());
+        assertEquals(Option.UNINITIALIZED, optionB.getArgs());
+        assertEquals(Option.UNLIMITED_VALUES, optionB.getArgs());
+        Option optionC = result.getOption("c");
+        assertNotNull(optionC);
+        assertFalse(optionC.isRequired());
+        assertEquals(0, optionC.getArgs());
+        assertEquals(Option.UNLIMITED_VALUES, optionC.getArgs());
+    }
+
+    @Test
+    public void testParsePattern_SingleOption() {
+        String pattern = "a";
+        Options result = PatternOptionBuilder.parsePattern(pattern);
+        Option optionA = result.getOption("a");
+        assertNotNull(optionA);
+        assertFalse(optionA.isRequired());
+        assertEquals(Option.UNINITIALIZED, optionA.getArgs());
+        assertEquals(Option.UNLIMITED_VALUES, optionA.getArgs());
+    }
+
+    @Test
+    public void testParsePattern_MultipleTypes() {
+        String pattern = "a:b+c#";
+        Options result = PatternOptionBuilder.parsePattern(pattern);
+        Option optionA = result.getOption("a");
+        assertNotNull(optionA);
+        assertFalse(optionA.isRequired());
+        assertEquals(Option.UNINITIALIZED, optionA.getArgs());
+        assertEquals(Option.UNLIMITED_VALUES, optionA.getArgs());
+        Option optionB = result.getOption("b");
+        assertNotNull(optionB);
+        assertFalse(optionB.isRequired());
+        assertEquals(Option.UNINITIALIZED, optionB.getArgs());
+        assertEquals(Option.UNLIMITED_VALUES, optionB.getArgs());
+        Option optionC = result.getOption("c");
+        assertNotNull(optionC);
+        assertFalse(optionC.isRequired());
+        assertEquals(Option.UNINITIALIZED, optionC.getArgs());
+        assertEquals(Option.UNLIMITED_VALUES, optionC.getArgs());
+    }
+}
+```

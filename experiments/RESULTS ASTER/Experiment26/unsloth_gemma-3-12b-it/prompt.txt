@@ -1,0 +1,257 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Filtered unit tests for method: createArchiveInputStream(final String archiverName, final InputStream in, final String actualEncoding)
+ * Original class: ArchiveStreamFactory
+ * Tests that actually call the target method
+ */
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.compress.utils.Sets;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo26_unit_createArchiveInputStream_ArchiveStreamFactory_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateArchiveInputStreamSevenZ_dHZR8() throws Exception {
+    ArchiveStreamFactory factory = new ArchiveStreamFactory();
+    InputStream in = new ByteArrayInputStream(new byte[0]);
+    try {
+    factory.createArchiveInputStream("SEVEN_Z", in, null);
+    Assertions.fail();
+    } catch (StreamingNotSupportedException e) {
+    Assertions.assertNotNull(e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateArchiveInputStreamUnknownArchiverName_FIhm11() throws Exception {
+    ArchiveStreamFactory factory = new ArchiveStreamFactory();
+    InputStream in = new ByteArrayInputStream(new byte[0]);
+    try {
+    factory.createArchiveInputStream("UNKNOWN", in, null);
+    Assertions.fail();
+    } catch (ArchiveException e) {
+    Assertions.assertNotNull(e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateArchiveInputStreamNullEncoding_wpjv12_osBl0() throws Exception {
+    ArchiveStreamFactory factory = new ArchiveStreamFactory();
+    InputStream in = new ByteArrayInputStream(new byte[0]);
+    ArchiveInputStream result = factory.createArchiveInputStream("ARJ", in, null);
+    org.junit.Assert.assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateArchiveInputStreamNullArchiverName_ipon9() throws Exception {
+    ArchiveStreamFactory factory = new ArchiveStreamFactory();
+    InputStream in = new ByteArrayInputStream(new byte[0]);
+    try {
+    factory.createArchiveInputStream(null, in, null);
+    Assertions.fail();
+    } catch (IllegalArgumentException e) {
+    Assertions.assertNotNull(e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateArchiveInputStreamNullInputStream_TJkQ10() throws Exception {
+    ArchiveStreamFactory factory = new ArchiveStreamFactory();
+    try {
+    factory.createArchiveInputStream("AR", null, null);
+    Assertions.fail();
+    } catch (IllegalArgumentException e) {
+    Assertions.assertNotNull(e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateArchiveInputStreamZip_zTMB2_Btcz0() throws Exception {
+    ArchiveStreamFactory factory = new ArchiveStreamFactory();
+    InputStream in = new ByteArrayInputStream(new byte[0]);
+    ArchiveInputStream result = (ArchiveInputStream) factory.createArchiveInputStream("ZIP", in, null);
+    Assertions.assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCreateArchiveInputStreamCpio_VdaE6_DXHZ0() throws Exception {
+    ArchiveStreamFactory factory = new ArchiveStreamFactory();
+    InputStream in = new ByteArrayInputStream(new byte[0]);
+    ArchiveInputStream result = factory.createArchiveInputStream("CPio", in, null);
+    Assertions.assertNotNull(result);
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 4/7 passed
+
+TEST STATUS:
+- PASSED (4): testCreateArchiveInputStreamNullArchiverName_ipon9, testCreateArchiveInputStreamNullInputStream_TJkQ10, testCreateArchiveInputStreamZip_zTMB2_Btcz0, testCreateArchiveInputStreamCpio_VdaE6_DXHZ0
+- FAILED (0): none
+- ERRORS (3): testCreateArchiveInputStreamSevenZ_dHZR8, testCreateArchiveInputStreamUnknownArchiverName_FIhm11, testCreateArchiveInputStreamNullEncoding_wpjv12_osBl0
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ByteArrayInputStream -> java.io.ByteArrayInputStream
+//   IOException -> java.io.IOException
+//   InputStream -> java.io.InputStream
+//   OutputStream -> java.io.OutputStream
+//   AccessController -> java.security.AccessController
+//   PrivilegedAction -> java.security.PrivilegedAction
+//   Collections -> java.util.Collections
+//   Locale -> java.util.Locale
+//   ServiceLoader -> java.util.ServiceLoader
+//   Set -> java.util.Set
+//   SortedMap -> java.util.SortedMap
+//   TreeMap -> java.util.TreeMap
+//   ArArchiveInputStream -> org.apache.commons.compress.archivers.ar.ArArchiveInputStream
+//   ArArchiveOutputStream -> org.apache.commons.compress.archivers.ar.ArArchiveOutputStream
+//   ArjArchiveInputStream -> org.apache.commons.compress.archivers.arj.ArjArchiveInputStream
+//   CpioArchiveInputStream -> org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream
+//   CpioArchiveOutputStream -> org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream
+//   DumpArchiveInputStream -> org.apache.commons.compress.archivers.dump.DumpArchiveInputStream
+//   JarArchiveInputStream -> org.apache.commons.compress.archivers.jar.JarArchiveInputStream
+//   JarArchiveOutputStream -> org.apache.commons.compress.archivers.jar.JarArchiveOutputStream
+//   SevenZFile -> org.apache.commons.compress.archivers.sevenz.SevenZFile
+//   TarArchiveEntry -> org.apache.commons.compress.archivers.tar.TarArchiveEntry
+//   TarArchiveInputStream -> org.apache.commons.compress.archivers.tar.TarArchiveInputStream
+//   TarArchiveOutputStream -> org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
+//   ZipArchiveInputStream -> org.apache.commons.compress.archivers.zip.ZipArchiveInputStream
+//   ZipArchiveOutputStream -> org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream
+//   IOUtils -> org.apache.commons.compress.utils.IOUtils
+//   Sets -> org.apache.commons.compress.utils.Sets
+//   ArchiveStreamFactory -> org.apache.commons.compress.archivers.ArchiveStreamFactory
+
+// === Class: ArchiveStreamFactory ===
+// Fields (with actual visibility):
+    private static final int TAR_HEADER_SIZE;
+    private static final int TAR_TEST_ENTRY_COUNT;
+    private static final int DUMP_SIGNATURE_SIZE;
+    private static final int SIGNATURE_SIZE;
+    public static final ArchiveStreamFactory DEFAULT;
+    public static final String APK;
+    public static final String XAPK;
+    public static final String APKS;
+    public static final String APKM;
+    public static final String AR;
+    public static final String ARJ;
+    public static final String CPIO;
+    public static final String DUMP;
+    public static final String JAR;
+    public static final String TAR;
+
+// Constructors:
+public ArchiveStreamFactory();
+public ArchiveStreamFactory(String encoding);
+
+// Getter/Setter Methods (for test assertions):
+public SortedMap<String, ArchiveStreamProvider> getArchiveInputStreamProviders();
+public SortedMap<String, ArchiveStreamProvider> getArchiveOutputStreamProviders();
+public String getEntryEncoding();
+public Set<String> getInputStreamArchiveNames();
+public Set<String> getOutputStreamArchiveNames();
+public void setEntryEncoding(final String entryEncoding);
+
+// Internal Methods (full implementation for context):
+    public SortedMap<String, ArchiveStreamProvider> getArchiveInputStreamProviders() {
+        if (archiveInputStreamProviders == null) {
+            archiveInputStreamProviders = Collections.unmodifiableSortedMap(findAvailableArchiveInputStreamProviders());
+        }
+        return archiveInputStreamProviders;
+    }
+    private static String toKey(final String name) {
+        return name.toUpperCase(Locale.ROOT);
+    }
+
+// === External Class: ArchiveStreamProvider ===
+// Full import path: org.apache.commons.compress.archivers.ArchiveStreamProvider
+// Type: INTERFACE (cannot instantiate)
+// Method Signatures (used by target method):
+I createArchiveInputStream(String archiverName, InputStream inputStream, String encoding);
+
+// === External Class: ArchiveInputStream ===
+// Full import path: org.apache.commons.compress.archivers.ArchiveInputStream
+// Type: ABSTRACT CLASS
+// Fields (with actual visibility):
+    private static final int BYTE_MASK;
+    private final byte[] single;
+    private long bytesRead;
+    private Charset charset;
+// Constructors:
+public ArchiveInputStream();
+private ArchiveInputStream(InputStream inputStream, Charset charset);
+protected ArchiveInputStream(InputStream inputStream, String charsetName);
+// Public Getter Methods (for test assertions):
+public boolean canReadEntryData(ArchiveEntry archiveEntry);
+public long getBytesRead();
+public Charset getCharset();
+public int getCount();
+public E getNextEntry();
+
+// === Exception Class: ArchiveException ===
+// Constructors:
+public ArchiveException(String message);
+public ArchiveException(String message, Exception cause);
+
+
+TASK:
+Regenerate ONLY the method "createArchiveInputStream" OF CLASS "ArchiveStreamFactory" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public <I extends ArchiveInputStream<? extends ArchiveEntry>> I createArchiveInputStream(final String archiverName, final InputStream in, final String actualEncoding) throws ArchiveException {
+    // your implementation here
+}
+```
+
+- Package: org.apache.commons.compress.archivers
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "createArchiveInputStream"
+- Allowed imports: exactly those already present in ArchiveStreamFactory
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

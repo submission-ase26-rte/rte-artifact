@@ -1,0 +1,73 @@
+{
+  "method_id": 33,
+  "tested_method": "performTask",
+  "tested_class": "TradeAppServlet",
+  "project": "Daytrader",
+  "timestamp": "2026-01-27T18:54:39.261458",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\Daytrader\\Run-1\\src\\test\\java\\com\\ibm\\websphere\\samples\\daytrader\\web\\servlet\\Metodo33_unit_performTask_TradeAppServlet_Test.java",
+  "test_results": {
+    "success": false,
+    "tests_passed": 0,
+    "tests_total": 2,
+    "tests_failed": 2,
+    "line_coverage": 0.0,
+    "branch_coverage": 0.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testdoPost_Ngvi0 --\nERROR: java.util.concurrent.TimeoutException: testdoPost_Ngvi0() timed out after 1 second\nCaused by: org.junit.jupiter.api.AssertTimeoutPreemptively$ExecutionTimeoutException: Execution timed out in thread junit-timeout-thread-1\n--------------------------------------------------\nTEST: testDoPostIOException_DKYk1_YbQE0 --\nERROR: java.lang.ExceptionInInitializerError\nCaused by: java.util.MissingResourceException: Can't find bundle for base name javax.servlet.LocalStrings, locale it_IT\n... 6 more",
+    "test_info": {
+      "valid_tests": [],
+      "invalid_tests": [
+        "testdoPost_Ngvi0",
+        "testDoPostIOException_DKYk1_YbQE0"
+      ],
+      "failed_assert_tests": [],
+      "runtime_error_tests": [
+        "testdoPost_Ngvi0",
+        "testDoPostIOException_DKYk1_YbQE0"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 2,
+    "assertion_complexity": 0.119,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.0,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.2069,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 1.0,
+    "overall_naturalness_score": 0.8017
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.44483946457616386,
+    "string_similarity": 0.10269896193771626,
+    "token_similarity": 0.4365079365079365,
+    "ast_similarity": 0.0,
+    "embedding_similarity": 0.9053440093994141,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.5034965034965035,
+      "similar_blocks": 72,
+      "total_blocks": 286
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.47953040363623545,
+    "passes_threshold": false
+  },
+  "original_method": "  public void performTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {\n\n    String action = null;\n    String userID = null;\n    // String to create full dispatch path to TradeAppServlet w/ request\n    // Parameters\n\n    resp.setContentType(\"text/html\");\n\n    // Dyna - need status string - prepended to output\n    action = req.getParameter(\"action\");\n\n    ServletContext ctx = getServletConfig().getServletContext();\n\n    if (action == null) {\n      tsAction.doWelcome(ctx, req, resp, \"\");\n      return;\n    } else if (action.equals(\"login\")) {\n      userID = req.getParameter(\"uid\");\n      String passwd = req.getParameter(\"passwd\");\n      tsAction.doLogin(ctx, req, resp, userID, passwd);\n      return;\n    } else if (action.equals(\"register\")) {\n      userID = req.getParameter(\"user id\");\n      String passwd = req.getParameter(\"passwd\");\n      String cpasswd = req.getParameter(\"confirm passwd\");\n      String fullname = req.getParameter(\"Full Name\");\n      String ccn = req.getParameter(\"Credit Card Number\");\n      String money = req.getParameter(\"money\");\n      String email = req.getParameter(\"email\");\n      String smail = req.getParameter(\"snail mail\");\n      tsAction.doRegister(ctx, req, resp, userID, passwd, cpasswd, fullname, ccn, money, email, smail);\n      return;\n    }\n\n    // The rest of the operations require the user to be logged in -\n    // Get the Session and validate the user.\n    HttpSession session = req.getSession();\n    userID = (String) session.getAttribute(\"uidBean\");\n\n    if (userID == null) {\n      System.out.println(\"TradeAppServlet service error: User Not Logged in\");\n      tsAction.doWelcome(ctx, req, resp, \"User Not Logged in\");\n      return;\n    }\n    \n    // try http/2 push if we get here\n    // should be logged in and doing real work by this point\n    if (!action.equals(\"logout\") && TradeConfig.getWebInterface() == TradeConfig.JSP_Images_HTTP2) {\n      pushHeaderImages(req.newPushBuilder());\n    }\n    \n    if (action.equals(\"quotes\")) {\n      String symbols = req.getParameter(\"symbols\");\n      tsAction.doQuotes(ctx, req, resp, userID, symbols);\n    } else if (action.equals(\"buy\")) {\n      String symbol = req.getParameter(\"symbol\");\n      String quantity = req.getParameter(\"quantity\");\n      tsAction.doBuy(ctx, req, resp, userID, symbol, quantity);\n    } else if (action.equals(\"sell\")) {\n      int holdingID = Integer.parseInt(req.getParameter(\"holdingID\"));\n      tsAction.doSell(ctx, req, resp, userID, new Integer(holdingID));\n    } else if (action.equals(\"portfolio\") || action.equals(\"portfolioNoEdge\")) {\n      tsAction.doPortfolio(ctx, req, resp, userID, \"Portfolio as of \" + new java.util.Date());\n    } else if (action.equals(\"logout\")) {\n      tsAction.doLogout(ctx, req, resp, userID);\n    } else if (action.equals(\"home\")) {\n      tsAction.doHome(ctx, req, resp, userID, \"Ready to Trade\");\n    } else if (action.equals(\"account\")) {\n      tsAction.doAccount(ctx, req, resp, userID, \"\");\n    } else if (action.equals(\"update_profile\")) {      \n      String password = req.getParameter(\"password\");\n      String cpassword = req.getParameter(\"cpassword\");\n      String fullName = req.getParameter(\"fullname\");\n      String address = req.getParameter(\"address\");\n      String creditcard = req.getParameter(\"creditcard\");\n      String email = req.getParameter(\"email\");\n      tsAction.doAccountUpdate(ctx, req, resp, userID, password == null ? \"\" : password.trim(), cpassword == null ? \"\" : cpassword.trim(),\n          fullName == null ? \"\" : fullName.trim(), address == null ? \"\" : address.trim(), creditcard == null ? \"\" : creditcard.trim(),\n              email == null ? \"\" : email.trim());\n    } else if (action.equals(\"mksummary\")) {\n      tsAction.doMarketSummary(ctx, req, resp, userID);\n    } else {\n      System.out.println(\"TradeAppServlet: Invalid Action=\" + action);\n      tsAction.doWelcome(ctx, req, resp, \"TradeAppServlet: Invalid Action\" + action);\n    }\n  }",
+  "regenerated_method": "import java.io.IOException;\nimport javax.servlet.ServletException;\nimport javax.servlet.http.HttpServlet;\nimport javax.servlet.http.HttpServletRequest;\nimport javax.servlet.http.HttpServletResponse;\nimport javax.servlet.http.HttpSession;\n\npublic void performTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {\n    String action = req.getParameter(\"action\");\n    HttpSession session = req.getSession();\n\n    if (\"login\".equals(action)) {\n        String userID = req.getParameter(\"userID\");\n        String passwd = req.getParameter(\"passwd\");\n        tsAction.doLogin(ctx, req, resp, userID, passwd);\n        resp.setStatus(HttpServletResponse.SC_OK);\n        resp.setContentType(\"text/html\");\n    } else if (\"logout\".equals(action)) {\n        String userID = (String) session.getAttribute(\"userID\");\n        tsAction.doLogout(ctx, req, resp, userID);\n        resp.setStatus(HttpServletResponse.SC_OK);\n        resp.setContentType(\"text/html\");\n    } else if (\"register\".equals(action)) {\n        String userID = req.getParameter(\"userID\");\n        String passwd = req.getParameter(\"passwd\");\n        String fullName = req.getParameter(\"fullName\");\n        String ccn = req.getParameter(\"ccn\");\n        String email = req.getParameter(\"email\");\n        String address = req.getParameter(\"address\");\n        tsAction.doRegister(ctx, req, resp, userID, passwd, fullName, ccn, email, address);\n        resp.setStatus(HttpServletResponse.SC_OK);\n        resp.setContentType(\"text/html\");\n    } else if (\"account\".equals(action)) {\n        String userID = (String) session.getAttribute(\"userID\");\n        String results = req.getParameter(\"results\");\n        tsAction.doAccount(ctx, req, resp, userID, results);\n        resp.setStatus(HttpServletResponse.SC_OK);\n        resp.setContentType(\"text/html\");\n    } else if (\"portfolio\".equals(action)) {\n        String userID = (String) session.getAttribute(\"userID\");\n        String results = req.getParameter(\"results\");\n        tsAction.doPortfolio(ctx, req, resp, userID, results);\n        resp.setStatus(HttpServletResponse.SC_OK);\n        resp.setContentType(\"text/html\");\n    } else if (\"buy\".equals(action)) {\n        String userID = (String) session.getAttribute(\"userID\");\n        String symbol = req.getParameter(\"symbol\");\n        String quantity = req.getParameter(\"quantity\");\n        tsAction.doBuy(ctx, req, resp, userID, symbol, quantity);\n        resp.setStatus(HttpServletResponse.SC_OK);\n        resp.setContentType(\"text/html\");\n    } else if (\"sell\".equals(action)) {\n        String userID = (String) session.getAttribute(\"userID\");\n        Integer holdingID = Integer.parseInt(req.getParameter(\"holdingID\"));\n        tsAction.doSell(ctx, req, resp, userID, holdingID);\n        resp.setStatus(HttpServletResponse.SC_OK);\n        resp.setContentType(\"text/html\");\n    } else if (\"accountUpdate\".equals(action)) {\n        String userID = (String) session.getAttribute(\"userID\");\n        String password = req.getParameter(\"password\");\n        String cpassword = req.getParameter(\"cpassword\");\n        String fullName = req.getParameter(\"fullName\");\n        String address = req.getParameter(\"address\");\n        String creditcard = req.getParameter(\"creditcard\");\n        String email = req.getParameter(\"email\");\n        tsAction.doAccountUpdate(ctx, req, resp, userID, password, cpassword, fullName, address, creditcard, email);\n        resp.setStatus(HttpServletResponse.SC_OK);\n        resp.setContentType(\"text/html\");\n    } else {\n        resp.sendError(HttpServletResponse.SC_BAD_REQUEST);\n    }\n}",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6574370825640462,
+  "original_metrics": {
+    "loc": 87,
+    "sloc": 71,
+    "complexity": 24
+  }
+}

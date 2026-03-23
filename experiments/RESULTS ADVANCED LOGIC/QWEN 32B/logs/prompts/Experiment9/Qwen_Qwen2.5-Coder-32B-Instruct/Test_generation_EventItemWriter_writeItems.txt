@@ -1,0 +1,172 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package org.eclipse.cargotracker.interfaces.handling.file;
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   AbstractItemWriter -> jakarta.batch.api.chunk.AbstractItemWriter
+//   JobContext -> jakarta.batch.runtime.context.JobContext
+//   Dependent -> jakarta.enterprise.context.Dependent
+//   Inject -> jakarta.inject.Inject
+//   Named -> jakarta.inject.Named
+//   Transactional -> jakarta.transaction.Transactional
+//   List -> java.util.List
+//   ApplicationEvents -> org.eclipse.cargotracker.application.ApplicationEvents
+//   DateConverter -> org.eclipse.cargotracker.application.util.DateConverter
+//   HandlingEventRegistrationAttempt -> org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+//   EventItemWriter -> org.eclipse.cargotracker.interfaces.handling.file.EventItemWriter
+
+// === Class: EventItemWriter ===
+// Fields (with actual visibility):
+    private static final String ARCHIVE_DIRECTORY;
+    private JobContext jobContext;
+    private ApplicationEvents applicationEvents;
+
+// === External Class: ApplicationEvents ===
+// Full import path: org.eclipse.cargotracker.application.ApplicationEvents
+// Type: INTERFACE (cannot instantiate - use Mockito.mock(ApplicationEvents.class) instead)
+// Import paths:
+//   Cargo -> org.eclipse.cargotracker.domain.model.cargo.Cargo
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+//   HandlingEventRegistrationAttempt -> org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+// Method Signatures (used by target method):
+void receivedHandlingEventRegistrationAttempt(HandlingEventRegistrationAttempt attempt);
+
+// === External Class: DateConverter ===
+// Full import path: org.eclipse.cargotracker.application.util.DateConverter
+// Import paths:
+//   LocalDate -> java.time.LocalDate
+//   LocalDateTime -> java.time.LocalDateTime
+//   ZoneId -> java.time.ZoneId
+//   DateTimeFormatter -> java.time.format.DateTimeFormatter
+// Fields (with actual visibility):
+    public static final String DATE_FORMAT;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final String DATE_TIME_FORMAT;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final DateTimeFormatter DATE_FORMATTER;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final DateTimeFormatter DATE_TIME_FORMATTER;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+
+// Constructors:
+private DateConverter();
+
+// Method Signatures (used by target method):
+public static String toString(LocalDateTime dateTime);
+
+// Public Getter Methods (for test assertions):
+public static LocalDate toDate(String date);
+public static LocalDateTime toDateTime(String datetime);
+
+// === External Class: HandlingEventRegistrationAttempt ===
+// Full import path: org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   LocalDateTime -> java.time.LocalDateTime
+//   TrackingId -> org.eclipse.cargotracker.domain.model.cargo.TrackingId
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+//   UnLocode -> org.eclipse.cargotracker.domain.model.location.UnLocode
+// Fields (with actual visibility):
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private final LocalDateTime registrationTime;
+    private final LocalDateTime completionTime;
+    private final TrackingId trackingId;
+    private final VoyageNumber voyageNumber;
+    private final HandlingEvent type;
+    private final UnLocode unLocode;
+
+// Constructors:
+public HandlingEventRegistrationAttempt(LocalDateTime registrationDate, LocalDateTime completionDate, TrackingId trackingId, VoyageNumber voyageNumber, HandlingEvent type, UnLocode unLocode);
+
+
+// Public Getter Methods (for test assertions):
+public TrackingId getTrackingId();
+public VoyageNumber getVoyageNumber();
+public HandlingEvent getType();
+public UnLocode getUnLocode();
+public LocalDateTime getRegistrationTime();
+public LocalDateTime getCompletionTime();
+public String toString();
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+  @Override
+  @Transactional
+  public void writeItems(List<Object> items) throws Exception {
+    try (PrintWriter archive =
+            new PrintWriter(
+                    new BufferedWriter(
+                            new FileWriter(
+                                    jobContext.getProperties().getProperty(ARCHIVE_DIRECTORY)
+                                            + "/archive_"
+                                            + jobContext.getJobName()
+                                            + "_"
+                                            + jobContext.getInstanceId()
+                                            + ".csv",
+                                    true)))) {
+
+      items
+              .stream()
+              .map(item -> (HandlingEventRegistrationAttempt) item)
+              .forEach(
+                      attempt -> {
+                        applicationEvents.receivedHandlingEventRegistrationAttempt(attempt);
+                        archive.println(
+                                DateConverter.toString(attempt.getRegistrationTime())
+                                        + ","
+                                        + DateConverter.toString(attempt.getCompletionTime())
+                                        + ","
+                                        + attempt.getTrackingId()
+                                        + ","
+                                        + attempt.getVoyageNumber()
+                                        + ","
+                                        + attempt.getUnLocode()
+                                        + ","
+                                        + attempt.getType());
+                      });
+    }
+  }
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "writeItems" of class "EventItemWriter".
+
+REQUIREMENTS:
+- Test class name: EventItemWriter_writeItemsTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths that are:
+  - deterministically reachable from the method’s public API
+  - independent from hidden, external, or runtime-loaded data
+- Test error scenarios by asserting the actual runtime behavior
+  when invalid or null inputs are provided.
+- Do not assume defensive checks unless they are explicitly present.
+- Cover expected exceptions declared in the method signature if present
+- The target method throws Exception. Tests MUST properly handle or expect this exception in error scenarios.
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes or custom implementations.
+- Helper methods inside the test class are allowed if they do not reimplement production logic.
+- DO NOT use getter/setter methods that are not present in the provided class context
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing its actual behavior
+- You MAY mock DEPENDENCIES (constructor parameters, injected services) using @Mock, but NEVER the class under test
+- CRITICAL: DO NOT instantiate INTERFACES or ABSTRACT classes directly - use Mockito.mock(Interface.class) instead
+- DO NOT try to modify static final fields via ReflectionTestUtils - they are IMMUTABLE
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Use ONLY the import paths explicitly provided in the 'CORRECT IMPORT PATHS' section - do not guess or invent import paths.
+- Generate ONLY the test class without explanations or comments outside the code
+- For PRIVATE fields without public setters (e.g., @Inject, @Autowired), use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

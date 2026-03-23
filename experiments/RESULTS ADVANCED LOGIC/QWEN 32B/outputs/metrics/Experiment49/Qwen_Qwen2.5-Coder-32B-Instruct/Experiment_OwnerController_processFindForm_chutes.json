@@ -1,0 +1,241 @@
+{
+  "experiments": {
+    "version_": {
+      "tested_method": "processFindForm",
+      "similarity_threshold": 0.6884775539310862,
+      "passes_evaluation": true,
+      "timestamp": "2026-01-23T15:58:07.885165",
+      "executed_phases": {
+        "first_phase": true,
+        "second_phase": true
+      },
+      "metrics": {
+        "crystalbleu_similarity": 0.4976261641754108,
+        "string_similarity": 0.34257975034674065,
+        "token_similarity": 0.7560975609756098,
+        "ast_similarity": 0.8181818181818182,
+        "embedding_similarity": 0.9659164547920227,
+        "clone_detection": {
+          "exact_match": false,
+          "clone_percentage": 0.2545454545454545,
+          "similar_blocks": 7,
+          "total_blocks": 55
+        },
+        "weights": {
+          "crystalbleu_similarity": 0.2,
+          "string_similarity": 0.08,
+          "token_similarity": 0.15,
+          "ast_similarity": 0.22,
+          "embedding_similarity": 0.35
+        },
+        "overall_similarity": 0.7584170061863709,
+        "passes_threshold": true
+      },
+      "test_results": {
+        "original": {
+          "success": true,
+          "tests_passed": 4,
+          "tests_total": 4,
+          "tests_failed": 0,
+          "line_coverage": 100.0,
+          "branch_coverage": 100.0,
+          "has_compilation_errors": false,
+          "test_info": {
+            "valid_tests": [
+              "testProcessFindForm_NoOwnersFound",
+              "testProcessFindForm_OneOwnerFound",
+              "testProcessFindForm_MultipleOwnersFound",
+              "testProcessFindForm_NoLastName"
+            ],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          }
+        },
+        "regenerated": {
+          "success": true,
+          "tests_passed": 4,
+          "tests_total": 4,
+          "tests_failed": 0,
+          "line_coverage": 100.0,
+          "branch_coverage": 87.5,
+          "has_compilation_errors": false,
+          "test_info": {
+            "valid_tests": [
+              "testProcessFindForm_NoOwnersFound",
+              "testProcessFindForm_OneOwnerFound",
+              "testProcessFindForm_MultipleOwnersFound",
+              "testProcessFindForm_NoLastName"
+            ],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          }
+        }
+      },
+      "test_filtering": {},
+      "context": {
+        "dependency_selection": {
+          "active": false
+        }
+      },
+      "paths": {
+        "original_file": "./../JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "regenerated_file": "results/outputs\\Final_OwnerController_processFindForm.java"
+      },
+      "original_metrics": {
+        "loc": 25,
+        "sloc": 17,
+        "complexity": 4
+      },
+      "retry_history": [
+        {
+          "type": "initial_test_execution",
+          "test_results_originale": {
+            "tests_passed": 2,
+            "tests_total": 4,
+            "tests_failed": 2,
+            "line_coverage": 100.0,
+            "branch_coverage": 100.0,
+            "test_info": {
+              "valid_tests": [
+                "testProcessFindForm_NoOwnersFound",
+                "testProcessFindForm_OneOwnerFound"
+              ],
+              "invalid_tests": [
+                "testProcessFindForm_MultipleOwnersFound",
+                "testProcessFindForm_NoLastName"
+              ],
+              "failed_assert_tests": [
+                "testProcessFindForm_MultipleOwnersFound"
+              ],
+              "runtime_error_tests": [
+                "testProcessFindForm_NoLastName"
+              ]
+            }
+          }
+        },
+        {
+          "refinement_iteration": 1,
+          "overall_similarity": 0.7584170061863709,
+          "passes_threshold": true,
+          "similarity_metrics": {
+            "crystalbleu_similarity": 0.4976261641754108,
+            "string_similarity": 0.34257975034674065,
+            "token_similarity": 0.7560975609756098,
+            "ast_similarity": 0.8181818181818182,
+            "embedding_similarity": 0.9659164547920227,
+            "clone_detection": {
+              "exact_match": false,
+              "clone_percentage": 0.2545454545454545,
+              "similar_blocks": 7,
+              "total_blocks": 55
+            },
+            "weights": {
+              "crystalbleu_similarity": 0.2,
+              "string_similarity": 0.08,
+              "token_similarity": 0.15,
+              "ast_similarity": 0.22,
+              "embedding_similarity": 0.35
+            },
+            "overall_similarity": 0.7584170061863709,
+            "passes_threshold": true
+          },
+          "original_method": "\t@GetMapping(\"/owners\")\n\tpublic String processFindForm(@RequestParam(defaultValue = \"1\") int page, Owner owner, BindingResult result,\n\t\t\tModel model) {\n\t\t// allow parameterless GET request for /owners to return all records\n\t\tif (owner.getLastName() == null) {\n\t\t\towner.setLastName(\"\"); // empty string signifies broadest possible search\n\t\t}\n\n\t\t// find owners by last name\n\t\tPage<Owner> ownersResults = findPaginatedForOwnersLastName(page, owner.getLastName());\n\t\tif (ownersResults.isEmpty()) {\n\t\t\t// no owners found\n\t\t\tresult.rejectValue(\"lastName\", \"notFound\", \"not found\");\n\t\t\treturn \"owners/findOwners\";\n\t\t}\n\n\t\tif (ownersResults.getTotalElements() == 1) {\n\t\t\t// 1 owner found\n\t\t\towner = ownersResults.iterator().next();\n\t\t\treturn \"redirect:/owners/\" + owner.getId();\n\t\t}\n\n\t\t// multiple owners found\n\t\treturn addPaginationModel(page, model, ownersResults);\n\t}",
+          "regenerated_method": "public String processFindForm(@RequestParam(defaultValue = \"1\") int page, Owner owner, BindingResult result, Model model) {\n    String lastName = owner.getLastName();\n    if (lastName == null || lastName.trim().isEmpty()) {\n        result.rejectValue(\"lastName\", \"notFound\", \"not found\");\n        return \"owners/findOwners\";\n    }\n    Page<Owner> paginatedOwners = findPaginatedForOwnersLastName(page, lastName);\n    if (paginatedOwners.getTotalElements() == 0) {\n        result.rejectValue(\"lastName\", \"notFound\", \"not found\");\n        return \"owners/findOwners\";\n    } else if (paginatedOwners.getTotalElements() == 1) {\n        return \"redirect:/owners/\" + paginatedOwners.getContent().get(0).getId();\n    } else {\n        return addPaginationModel(page, model, paginatedOwners);\n    }\n}",
+          "test_results_originale": {
+            "tests_passed": 4,
+            "tests_total": 4,
+            "tests_failed": 0,
+            "line_coverage": 100.0,
+            "branch_coverage": 100.0,
+            "valid_tests": [
+              "testProcessFindForm_NoOwnersFound",
+              "testProcessFindForm_OneOwnerFound",
+              "testProcessFindForm_MultipleOwnersFound",
+              "testProcessFindForm_NoLastName"
+            ],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          },
+          "test_results_rigenerato": {
+            "tests_passed": 4,
+            "tests_total": 4,
+            "tests_failed": 0,
+            "line_coverage": 100.0,
+            "branch_coverage": 87.5,
+            "valid_tests": [
+              "testProcessFindForm_NoOwnersFound",
+              "testProcessFindForm_OneOwnerFound",
+              "testProcessFindForm_MultipleOwnersFound",
+              "testProcessFindForm_NoLastName"
+            ],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          },
+          "type": "refinement"
+        }
+      ],
+      "original_method_display": "\t@GetMapping(\"/owners\")\n\tpublic String processFindForm(@RequestParam(defaultValue = \"1\") int page, Owner owner, BindingResult result,\n\t\t\tModel model) {\n\t\t// allow parameterless GET request for /owners to return all records\n\t\tif (owner.getLastName() == null) {\n\t\t\towner.setLastName(\"\"); // empty string signifies broadest possible search\n\t\t}\n\n\t\t// find owners by last name\n\t\tPage<Owner> ownersResults = findPaginatedForOwnersLastName(page, owner.getLastName());\n\t\tif (ownersResults.isEmpty()) {\n\t\t\t// no owners found\n\t\t\tresult.rejectValue(\"lastName\", \"notFound\", \"not found\");\n\t\t\treturn \"owners/findOwners\";\n\t\t}\n\n\t\tif (ownersResults.getTotalElements() == 1) {\n\t\t\t// 1 owner found\n\t\t\towner = ownersResults.iterator().next();\n\t\t\treturn \"redirect:/owners/\" + owner.getId();\n\t\t}\n\n\t\t// multiple owners found\n\t\treturn addPaginationModel(page, model, ownersResults);\n\t}",
+      "regenerated_method_display": "public String processFindForm(@RequestParam(defaultValue = \"1\") int page, Owner owner, BindingResult result, Model model) {\n    String lastName = owner.getLastName();\n    if (lastName == null || lastName.trim().isEmpty()) {\n        result.rejectValue(\"lastName\", \"notFound\", \"not found\");\n        return \"owners/findOwners\";\n    }\n    Page<Owner> paginatedOwners = findPaginatedForOwnersLastName(page, lastName);\n    if (paginatedOwners.getTotalElements() == 0) {\n        result.rejectValue(\"lastName\", \"notFound\", \"not found\");\n        return \"owners/findOwners\";\n    } else if (paginatedOwners.getTotalElements() == 1) {\n        return \"redirect:/owners/\" + paginatedOwners.getContent().get(0).getId();\n    } else {\n        return addPaginationModel(page, model, paginatedOwners);\n    }\n}",
+      "token_usage": {
+        "test_generation": {
+          "input_tokens": 787,
+          "output_tokens": 878
+        },
+        "method_generation": {
+          "calls": 1,
+          "details": [
+            {
+              "input_tokens": 1723,
+              "output_tokens": 187,
+              "refinement_iteration": 0
+            }
+          ],
+          "total_input_tokens": 1723,
+          "total_output_tokens": 187
+        },
+        "test_refinement": {
+          "calls": 1,
+          "details": [
+            {
+              "input_tokens": 1987,
+              "output_tokens": 630,
+              "iteration": 1
+            }
+          ],
+          "total_input_tokens": 1987,
+          "total_output_tokens": 630
+        },
+        "totals": {
+          "total_input_tokens": 4497,
+          "total_output_tokens": 1695,
+          "total_tokens": 6192
+        }
+      },
+      "test_naturalness": {
+        "num_test_methods": 4,
+        "assertion_complexity": 0.291,
+        "pct_null_assertions": 0.0,
+        "pct_duplicate_assertions": 0.0,
+        "pct_exception_assertions": 0.0,
+        "pct_no_assertion": 0.0,
+        "naturalness_method_name": 0.768,
+        "pct_focal_method_covered": 1.0,
+        "diversity_literal_values": 0.6061,
+        "overall_naturalness_score": 0.8435
+      }
+    }
+  },
+  "general_info": {
+    "tested_class": "OwnerController",
+    "tested_method": "processFindForm",
+    "last_update": "2026-01-23T15:58:08.072651",
+    "description": "Test processFindForm(int page, Owner owner, BindingResult result, Model model) - High - Qwen/Qwen2.5-Coder-32B-Instruct",
+    "provider": "chutes",
+    "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
+    "similarity_threshold": 0.6884775539310862
+  }
+}

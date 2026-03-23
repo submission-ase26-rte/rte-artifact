@@ -1,0 +1,175 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.interfaces.handling.mobile;
+Class name (MUST be exactly): EventLogger_initTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.interfaces.handling.mobile;
+
+import jakarta.faces.model.SelectItem;
+import jakarta.inject.Inject;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import org.eclipse.cargotracker.domain.model.cargo.Cargo;
+import org.eclipse.cargotracker.domain.model.cargo.CargoRepository;
+import org.eclipse.cargotracker.domain.model.cargo.Delivery;
+import org.eclipse.cargotracker.domain.model.cargo.Itinerary;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.cargo.TransportStatus;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.Schedule;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class EventLogger_initTestGenerated {
+    @Mock
+    private CargoRepository cargoRepository;
+    @Mock
+    private LocationRepository locationRepository;
+    @Mock
+    private VoyageRepository voyageRepository;
+    @InjectMocks
+    private EventLogger eventLogger;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(eventLogger, "cargoRepository", cargoRepository);
+        ReflectionTestUtils.setField(eventLogger, "locationRepository", locationRepository);
+        ReflectionTestUtils.setField(eventLogger, "voyageRepository", voyageRepository);
+    }
+
+    @Test
+    public void testInitWithMultipleCargos() {
+        TrackingId trackingId1 = new TrackingId("123");
+        TrackingId trackingId2 = new TrackingId("456");
+        Cargo cargo1 = new Cargo(trackingId1, new Itinerary(new ArrayList<>()));
+        Cargo cargo2 = new Cargo(trackingId2, new Itinerary(new ArrayList<>()));
+        List<Cargo> cargos = new ArrayList<>();
+        cargos.add(cargo1);
+        cargos.add(cargo2);
+        when(cargoRepository.findAll()).thenReturn(cargos);
+
+        eventLogger.init();
+
+        List<SelectItem> trackingIds = eventLogger.getTrackingIds();
+        assertNotNull(trackingIds);
+        assertEquals(2, trackingIds.size());
+        assertEquals("123", trackingIds.get(0).getValue());
+        assertEquals("456", trackingIds.get(1).getValue());
+    }
+
+    @Test
+    public void testInitWithMultipleLocations() {
+        Location location1 = new Location(new UnLocode("LOC1"), "Location1");
+        Location location2 = new Location(new UnLocode("LOC2"), "Location2");
+        List<Location> locations = new ArrayList<>();
+        locations.add(location1);
+        locations.add(location2);
+        when(locationRepository.findAll()).thenReturn(locations);
+
+        eventLogger.init();
+
+        List<SelectItem> locationsList = eventLogger.getLocations();
+        assertNotNull(locationsList);
+        assertEquals(2, locationsList.size());
+        assertEquals("LOC1", locationsList.get(0).getValue());
+        assertEquals("LOC2", locationsList.get(1).getValue());
+        assertEquals("Location1 (LOC1)", locationsList.get(0).getLabel());
+        assertEquals("Location2 (LOC2)", locationsList.get(1).getLabel());
+    }
+
+    @Test
+    public void testInitWithMultipleVoyages() {
+        Voyage voyage1 = new Voyage(new VoyageNumber("V01"), new Schedule());
+        Voyage voyage2 = new Voyage(new VoyageNumber("V02"), new Schedule());
+        List<Voyage> voyages = new ArrayList<>();
+        voyages.add(voyage1);
+        voyages.add(voyage2);
+        when(voyageRepository.findAll()).thenReturn(voyages);
+
+        eventLogger.init();
+
+        List<SelectItem> voyagesList = eventLogger.getVoyages();
+        assertNotNull(voyagesList);
+        assertEquals(2, voyagesList.size());
+        assertEquals("V01", voyagesList.get(0).getValue());
+        assertEquals("V02", voyagesList.get(1).getValue());
+    }
+
+    @Test
+    public void testInitWithClaimedCargo() {
+        TrackingId trackingId = new TrackingId("123");
+        Cargo cargo = new Cargo(trackingId, new Itinerary(new ArrayList<>()));
+        Delivery delivery = new Delivery();
+        delivery.setTransportStatus(TransportStatus.CLAIMED);
+        cargo.setDelivery(delivery);
+        List<Cargo> cargos = new ArrayList<>();
+        cargos.add(cargo);
+        when(cargoRepository.findAll()).thenReturn(cargos);
+
+        eventLogger.init();
+
+        List<SelectItem> trackingIds = eventLogger.getTrackingIds();
+        assertNotNull(trackingIds);
+        assertEquals(0, trackingIds.size());
+    }
+
+    @Test
+    public void testInitWithUnroutedCargo() {
+        TrackingId trackingId = new TrackingId("123");
+        Cargo cargo = new Cargo(trackingId, new Itinerary(new ArrayList<>()));
+        List<Cargo> cargos = new ArrayList<>();
+        cargos.add(cargo);
+        when(cargoRepository.findAll()).thenReturn(cargos);
+
+        eventLogger.init();
+
+        List<SelectItem> trackingIds = eventLogger.getTrackingIds();
+        assertNotNull(trackingIds);
+        assertEquals(0, trackingIds.size());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[57] incompatible types: org.eclipse.cargotracker.domain.model.cargo.Itinerary cannot be converted to org.eclipse.cargotracker.domain.model.cargo.RouteSpecification
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[58] incompatible types: org.eclipse.cargotracker.domain.model.cargo.Itinerary cannot be converted to org.eclipse.cargotracker.domain.model.cargo.RouteSpecification
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[114] incompatible types: org.eclipse.cargotracker.domain.model.cargo.Itinerary cannot be converted to org.eclipse.cargotracker.domain.model.cargo.RouteSpecification
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[117] cannot find symbol
+  symbol:   method setDelivery(org.eclipse.cargotracker.domain.model.cargo.Delivery)
+  location: variable cargo of type org.eclipse.cargotracker.domain.model.cargo.Cargo
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_initTestGenerated.java:[132] incompatible types: org.eclipse.cargotracker.domain.model.cargo.Itinerary cannot be converted to org.eclipse.cargotracker.domain.model.cargo.RouteSpecification
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: EventLogger_initTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

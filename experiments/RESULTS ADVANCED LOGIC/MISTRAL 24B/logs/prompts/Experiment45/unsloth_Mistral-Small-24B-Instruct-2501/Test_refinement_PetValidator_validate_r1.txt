@@ -1,0 +1,220 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.springframework.samples.petclinic.owner;
+Class name (MUST be exactly): PetValidator_validateTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testValidate_NewPetWithNullType --
+ERROR: org.opentest4j.AssertionFailedError: expected: <1> but was: <2>
+--------------------------------------------------
+TEST: testValidate_NullBirthDate --
+ERROR: org.opentest4j.AssertionFailedError: expected: <1> but was: <2>
+--------------------------------------------------
+TEST: testValidate_InvalidName --
+ERROR: org.opentest4j.AssertionFailedError: expected: <1> but was: <2>
+--------------------------------------------------
+TEST: testValidate_ValidPet --
+ERROR: org.opentest4j.AssertionFailedError: expected: <0> but was: <2>
+
+TEST CODE TO FIX:
+package org.springframework.samples.petclinic.owner;
+
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PetValidator_validateTestGenerated {
+    @InjectMocks
+    private PetValidator petValidator;
+    @Mock
+    private Pet pet;
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+
+    @Test
+        public void testValidate_ValidPet() {
+            // Arrange
+            Errors errors = new BeanPropertyBindingResult(pet, "pet");
+            Set<Visit> visits = new LinkedHashSet<>();
+            PetType petType = new PetType();
+    
+            // Assume a valid Pet instance
+            // Mockito.when(pet.getName()).thenReturn("Valid Name");
+            // Mockito.when(pet.isNew()).thenReturn(false);
+            // Mockito.when(pet.getType()).thenReturn(petType);
+            // Mockito.when(pet.getBirthDate()).thenReturn(LocalDate.now());
+    
+            // Act
+            petValidator.validate(pet, errors);
+    
+            // Assert
+            assertEquals(0, errors.getErrorCount());
+        }
+
+    @Test
+        public void testValidate_InvalidName() {
+            // Arrange
+            Errors errors = new BeanPropertyBindingResult(pet, "pet");
+            // Mockito.when(pet.getName()).thenReturn("");
+    
+            // Act
+            petValidator.validate(pet, errors);
+    
+            // Assert
+            assertEquals(1, errors.getErrorCount());
+            assertEquals("required", errors.getFieldError("name").getCode());
+        }
+
+    @Test
+        public void testValidate_NewPetWithNullType() {
+            // Arrange
+            Errors errors = new BeanPropertyBindingResult(pet, "pet");
+            // Mockito.when(pet.isNew()).thenReturn(true);
+            // Mockito.when(pet.getType()).thenReturn(null);
+    
+            // Act
+            petValidator.validate(pet, errors);
+    
+            // Assert
+            assertEquals(1, errors.getErrorCount());
+            assertEquals("required", errors.getFieldError("type").getCode());
+        }
+
+    @Test
+        public void testValidate_NullBirthDate() {
+            // Arrange
+            Errors errors = new BeanPropertyBindingResult(pet, "pet");
+            // Mockito.when(pet.getBirthDate()).thenReturn(null);
+    
+            // Act
+            petValidator.validate(pet, errors);
+    
+            // Assert
+            assertEquals(1, errors.getErrorCount());
+            assertEquals("required", errors.getFieldError("birthDate").getCode());
+        }
+
+}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   StringUtils -> org.springframework.util.StringUtils
+//   Errors -> org.springframework.validation.Errors
+//   Validator -> org.springframework.validation.Validator
+//   PetValidator -> org.springframework.samples.petclinic.owner.PetValidator
+//   Pet -> org.springframework.samples.petclinic.owner.Pet
+
+// === Class: PetValidator ===
+// Fields (with actual visibility):
+    private static final String REQUIRED;
+
+// === External Class: Pet ===
+// Full import path: org.springframework.samples.petclinic.owner.Pet
+// Import paths:
+//   LocalDate -> java.time.LocalDate
+//   Collection -> java.util.Collection
+//   LinkedHashSet -> java.util.LinkedHashSet
+//   Set -> java.util.Set
+//   DateTimeFormat -> org.springframework.format.annotation.DateTimeFormat
+// Fields (with actual visibility):
+    private LocalDate birthDate;
+    private PetType type;
+    private Set visits;
+
+// Method Signatures (used by target method):
+public PetType getType();
+public LocalDate getBirthDate();
+
+// Public Getter Methods (for test assertions):
+public Collection<Visit> getVisits();
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+	@Override
+	public void validate(Object obj, Errors errors) {
+		Pet pet = (Pet) obj;
+		String name = pet.getName();
+		// name validation
+		if (!StringUtils.hasText(name)) { // NOT COVERED BY TESTS
+			errors.rejectValue("name", REQUIRED, REQUIRED);
+		}
+
+		// type validation
+		if (pet.isNew() && pet.getType() == null) { // NOT COVERED BY TESTS
+			errors.rejectValue("type", REQUIRED, REQUIRED); // NOT COVERED BY TESTS
+		}
+
+		// birth date validation
+		if (pet.getBirthDate() == null) { // NOT COVERED BY TESTS
+			errors.rejectValue("birthDate", REQUIRED, REQUIRED);
+		}
+	}
+
+
+COVERAGE ISSUES:
+Current line coverage: 88.89%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

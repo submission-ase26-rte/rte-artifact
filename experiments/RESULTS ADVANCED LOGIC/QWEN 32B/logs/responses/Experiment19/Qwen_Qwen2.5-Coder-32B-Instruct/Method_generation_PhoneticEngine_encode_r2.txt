@@ -1,0 +1,34 @@
+```java
+public String encode(String input, final Languages.LanguageSet languageSet) {
+    if (input == null) {
+        throw new NullPointerException("Input cannot be null");
+    }
+    if (languageSet == null) {
+        throw new NullPointerException("LanguageSet cannot be null");
+    }
+    if (input.isEmpty()) {
+        return "";
+    }
+
+    Map<String, List<Rule>> rules = Rule.getInstanceMap(nameType, ruleType, languageSet);
+    Map<String, List<Rule>> commonRules = Rule.getInstanceMap(nameType, ruleType, "common");
+    Map<String, List<Rule>> finalRules = Rule.getInstanceMap(nameType, ruleType, languageSet);
+
+    PhonemeBuilder phonemeBuilder = new PhonemeBuilder(new Phoneme("", Languages.ANY_LANGUAGE));
+    RulesApplication rulesApplication = new RulesApplication(rules, input, phonemeBuilder, 0, maxPhonemes);
+    rulesApplication.invoke();
+
+    phonemeBuilder = applyFinalRules(phonemeBuilder, commonRules);
+    phonemeBuilder = applyFinalRules(phonemeBuilder, finalRules);
+
+    Set<String> phonemes = phonemeBuilder.getPhonemes().stream()
+            .map(Phoneme::getPhonemeText)
+            .collect(Collectors.toSet());
+
+    if (concat) {
+        return join(new ArrayList<>(phonemes), " ");
+    } else {
+        return join(new ArrayList<>(phonemes), "-");
+    }
+}
+```

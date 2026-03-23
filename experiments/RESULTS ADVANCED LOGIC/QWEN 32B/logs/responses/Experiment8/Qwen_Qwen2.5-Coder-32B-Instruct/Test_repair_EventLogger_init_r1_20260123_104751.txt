@@ -1,0 +1,151 @@
+```java
+package org.eclipse.cargotracker.interfaces.handling.mobile;
+
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.model.SelectItem;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.domain.model.cargo.Cargo;
+import org.eclipse.cargotracker.domain.model.cargo.CargoRepository;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.cargo.TransportStatus;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.handling.HandlingHistory;
+import org.eclipse.cargotracker.domain.model.handling.HandlingService;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class EventLogger_initTestGenerated {
+
+    @Mock
+    private CargoRepository cargoRepository;
+
+    @Mock
+    private LocationRepository locationRepository;
+
+    @Mock
+    private VoyageRepository voyageRepository;
+
+    @Mock
+    private ApplicationEvents applicationEvents;
+
+    @Mock
+    private FacesContext context;
+
+    @Mock
+    private HandlingService handlingService;
+
+    @InjectMocks
+    private EventLogger eventLogger;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testInitWithNoCargos() {
+        when(cargoRepository.findAll()).thenReturn(new ArrayList<>());
+        when(locationRepository.findAll()).thenReturn(new ArrayList<>());
+        when(voyageRepository.findAll()).thenReturn(new ArrayList<>());
+
+        eventLogger.init();
+
+        assertTrue(eventLogger.getTrackingIds().isEmpty());
+        assertTrue(eventLogger.getLocations().isEmpty());
+        assertTrue(eventLogger.getVoyages().isEmpty());
+    }
+
+    @Test
+    public void testInitWithCargosAndLocationsAndVoyages() {
+        List<Cargo> cargos = new ArrayList<>();
+        Cargo cargo1 = new Cargo(new TrackingId("XYZ"), new HandlingHistory(new ArrayList<>()));
+        cargo1.getDelivery().setTransportStatus(TransportStatus.IN_PORT);
+        cargos.add(cargo1);
+
+        Cargo cargo2 = new Cargo(new TrackingId("ABC"), new HandlingHistory(new ArrayList<>()));
+        cargo2.getDelivery().setTransportStatus(TransportStatus.CLAIMED);
+        cargos.add(cargo2);
+
+        List<Location> locations = new ArrayList<>();
+        Location location1 = new Location(new UnLocode("USNYC"), "New York");
+        locations.add(location1);
+
+        List<Voyage> voyages = new ArrayList<>();
+        Voyage voyage1 = new Voyage(new VoyageNumber("0123"), new ArrayList<>());
+        voyages.add(voyage1);
+
+        when(cargoRepository.findAll()).thenReturn(cargos);
+        when(locationRepository.findAll()).thenReturn(locations);
+        when(voyageRepository.findAll()).thenReturn(voyages);
+
+        eventLogger.init();
+
+        assertEquals(2, eventLogger.getTrackingIds().size());
+        assertEquals("XYZ", ((SelectItem) eventLogger.getTrackingIds().get(0)).getValue());
+        assertEquals("ABC", ((SelectItem) eventLogger.getTrackingIds().get(1)).getValue());
+
+        assertEquals(1, eventLogger.getLocations().size());
+        assertEquals("USNYC (USNYC)", ((SelectItem) eventLogger.getLocations().get(0)).getLabel());
+
+        assertEquals(1, eventLogger.getVoyages().size());
+        assertEquals("0123", ((SelectItem) eventLogger.getVoyages().get(0)).getValue());
+    }
+
+    @Test
+    public void testInitWithNullCargos() {
+        when(cargoRepository.findAll()).thenReturn(null);
+        when(locationRepository.findAll()).thenReturn(new ArrayList<>());
+        when(voyageRepository.findAll()).thenReturn(new ArrayList<>());
+
+        eventLogger.init();
+
+        assertTrue(eventLogger.getTrackingIds().isEmpty());
+        assertTrue(eventLogger.getLocations().isEmpty());
+        assertTrue(eventLogger.getVoyages().isEmpty());
+    }
+
+    @Test
+    public void testInitWithNullLocations() {
+        when(cargoRepository.findAll()).thenReturn(new ArrayList<>());
+        when(locationRepository.findAll()).thenReturn(null);
+        when(voyageRepository.findAll()).thenReturn(new ArrayList<>());
+
+        eventLogger.init();
+
+        assertTrue(eventLogger.getTrackingIds().isEmpty());
+        assertTrue(eventLogger.getLocations().isEmpty());
+        assertTrue(eventLogger.getVoyages().isEmpty());
+    }
+
+    @Test
+    public void testInitWithNullVoyages() {
+        when(cargoRepository.findAll()).thenReturn(new ArrayList<>());
+        when(locationRepository.findAll()).thenReturn(new ArrayList<>());
+        when(voyageRepository.findAll()).thenReturn(null);
+
+        eventLogger.init();
+
+        assertTrue(eventLogger.getTrackingIds().isEmpty());
+        assertTrue(eventLogger.getLocations().isEmpty());
+        assertTrue(eventLogger.getVoyages().isEmpty());
+    }
+}
+```

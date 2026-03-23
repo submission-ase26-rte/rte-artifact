@@ -1,0 +1,42 @@
+```java
+public String asPath() {
+    if (id != null) {
+        return "id('" + id + "')";
+    }
+
+    if (node.getNodeType() == Node.DOCUMENT_NODE) {
+        return "";
+    }
+
+    String parentPath = "";
+    if (getParentPointer() != null) {
+        parentPath = getParentPointer().asPath();
+    }
+
+    if (node.getNodeType() == Node.ELEMENT_NODE) {
+        String localName = getLocalName(node);
+        String namespaceURI = getNamespaceURI();
+        if (namespaceURI != null) {
+            NamespaceResolver resolver = getNamespaceResolver();
+            if (resolver != null) {
+                String prefix = resolver.getPrefix(namespaceURI);
+                if (prefix != null) {
+                    localName = prefix + ":" + localName;
+                } else {
+                    return parentPath + "/node()[" + getRelativePositionOfElement() + "]";
+                }
+            }
+        }
+        int position = getRelativePositionByQName();
+        String nodePath = localName + "[" + position + "]";
+        return (parentPath.isEmpty() ? "/" : parentPath) + nodePath;
+    } else if (node.getNodeType() == Node.TEXT_NODE || node.getNodeType() == Node.CDATA_SECTION_NODE) {
+        return (parentPath.isEmpty() ? "/" : parentPath) + "text()[" + getRelativePositionOfTextNode() + "]";
+    } else if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
+        ProcessingInstruction pi = (ProcessingInstruction) node;
+        return (parentPath.isEmpty() ? "/" : parentPath) + "processing-instruction('" + pi.getTarget() + "')[" + getRelativePositionOfPI() + "]";
+    }
+
+    return "";
+}
+```

@@ -1,0 +1,39 @@
+package org.apache.commons.compress.archivers.cpio;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class CpioArchiveEntry_setInodeTestGenerated {
+
+    private CpioArchiveEntry cpioArchiveEntry;
+
+    @BeforeEach
+    public void setUp() {
+        cpioArchiveEntry = new CpioArchiveEntry((short) 0, "testName");
+    }
+
+    @Test
+    public void testSetInode_ValidInode() {
+        long inodeValue = 12345L;
+        cpioArchiveEntry.setInode(inodeValue);
+        assertEquals(inodeValue, cpioArchiveEntry.getInode());
+    }
+
+    @Test
+    public void testSetInode_NegativeInode() {
+        long inodeValue = -12345L;
+        cpioArchiveEntry.setInode(inodeValue);
+        assertEquals(inodeValue, cpioArchiveEntry.getInode());
+    }
+
+    @Test
+    public void testSetInode_ZeroInode() {
+        long inodeValue = 0L;
+        cpioArchiveEntry.setInode(inodeValue);
+        assertEquals(inodeValue, cpioArchiveEntry.getInode());
+    }
+}

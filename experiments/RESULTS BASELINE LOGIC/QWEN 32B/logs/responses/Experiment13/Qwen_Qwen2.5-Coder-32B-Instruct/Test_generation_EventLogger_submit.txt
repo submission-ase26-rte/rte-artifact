@@ -1,0 +1,142 @@
+```java
+package org.eclipse.cargotracker.interfaces.handling.mobile;
+
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.model.SelectItem;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.domain.model.cargo.Cargo;
+import org.eclipse.cargotracker.domain.model.cargo.CargoRepository;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEventRegistrationAttempt;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+public class EventLogger_submitTestGenerated {
+
+    @Mock
+    private CargoRepository cargoRepository;
+
+    @Mock
+    private LocationRepository locationRepository;
+
+    @Mock
+    private VoyageRepository voyageRepository;
+
+    @Mock
+    private ApplicationEvents applicationEvents;
+
+    @Mock
+    private FacesContext context;
+
+    @InjectMocks
+    private EventLogger eventLogger;
+
+    private LocalDateTime completionTime;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        completionTime = LocalDateTime.now();
+        eventLogger.setCompletionTime(completionTime);
+        eventLogger.setTrackingId("XYZ");
+        eventLogger.setLocation("SESTO");
+        eventLogger.setEventType(HandlingEvent.Type.LOAD);
+        eventLogger.setVoyageNumber("0100S");
+        ReflectionTestUtils.setField(eventLogger, "context", context);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        ReflectionTestUtils.setField(eventLogger, "context", null);
+    }
+
+    @Test
+    public void testSubmitWithVoyage() {
+        eventLogger.setEventType(HandlingEvent.Type.LOAD);
+        eventLogger.setVoyageNumber("0100S");
+
+        eventLogger.submit();
+
+        verify(applicationEvents, times(1)).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+        verify(context, times(1)).addMessage(null, new FacesMessage("Event submitted", ""));
+    }
+
+    @Test
+    public void testSubmitWithoutVoyage() {
+        eventLogger.setEventType(HandlingEvent.Type.UNLOAD);
+        eventLogger.setVoyageNumber(null);
+
+        eventLogger.submit();
+
+        verify(applicationEvents, times(1)).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+        verify(context, times(1)).addMessage(null, new FacesMessage("Event submitted", ""));
+    }
+
+    @Test
+    public void testSubmitWithNullTrackingId() {
+        eventLogger.setTrackingId(null);
+
+        assertThrows(NullPointerException.class, () -> eventLogger.submit());
+    }
+
+    @Test
+    public void testSubmitWithNullLocation() {
+        eventLogger.setLocation(null);
+
+        assertThrows(NullPointerException.class, () -> eventLogger.submit());
+    }
+
+    @Test
+    public void testSubmitWithNullEventType() {
+        eventLogger.setEventType(null);
+
+        assertThrows(NullPointerException.class, () -> eventLogger.submit());
+    }
+
+    @Test
+    public void testSubmitWithNullCompletionTime() {
+        eventLogger.setCompletionTime(null);
+
+        assertThrows(NullPointerException.class, () -> eventLogger.submit());
+    }
+
+    @Test
+    public void testSubmitWithVoyageRequiredButNullVoyageNumber() {
+        eventLogger.setEventType(HandlingEvent.Type.LOAD);
+        eventLogger.setVoyageNumber(null);
+
+        assertThrows(NullPointerException.class, () -> eventLogger.submit());
+    }
+
+    @Test
+    public void testSubmitWithVoyageNotRequiredAndVoyageNumber() {
+        eventLogger.setEventType(HandlingEvent.Type.UNLOAD);
+        eventLogger.setVoyageNumber("0100S");
+
+        eventLogger.submit();
+
+        verify(applicationEvents, times(1)).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+        verify(context, times(1)).addMessage(null, new FacesMessage("Event submitted", ""));
+    }
+}
+```

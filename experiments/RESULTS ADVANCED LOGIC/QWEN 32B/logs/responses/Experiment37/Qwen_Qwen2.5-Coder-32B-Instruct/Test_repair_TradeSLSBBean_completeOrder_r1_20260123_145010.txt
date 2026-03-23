@@ -1,0 +1,170 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.ejb3;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.RuntimeMode;
+import com.ibm.websphere.samples.daytrader.interfaces.Trace;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeEJB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.FinancialUtils;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import javax.ejb.EJBException;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeSLSBBean_completeOrderTestGenerated {
+
+    @Mock
+    private EntityManager entityManager;
+
+    @InjectMocks
+    private TradeSLSBBean tradeSLSBBean;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testCompleteOrder_BuyOrder_Success() throws Exception {
+        // Arrange
+        Integer orderID = 1;
+        BigDecimal price = new BigDecimal("100.00");
+        double quantity = 10.0;
+        OrderDataBean order = new OrderDataBean(orderID.toString(), "user1", "IBM", quantity, price, "open", false, false, null, null);
+        order.setOrderType("buy");
+
+        AccountDataBean account = new AccountDataBean(orderID, 1, 1, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), new BigDecimal("10000.00"), new BigDecimal("10000.00"), "user1");
+        QuoteDataBean quote = new QuoteDataBean("IBM", "IBM Corp", 1000000, price, price, price, price, 0.0);
+        HoldingDataBean holding = null;
+
+        order.setAccount(account);
+        order.setQuote(quote);
+        order.setHolding(holding);
+
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(order);
+        when(entityManager.merge(any(OrderDataBean.class))).thenReturn(order);
+
+        // Act
+        OrderDataBean result = tradeSLSBBean.completeOrder(orderID.toString(), false);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("closed", result.getOrderStatus());
+        assertNotNull(result.getCompletionDate());
+        assertNotNull(result.getHolding());
+    }
+
+    @Test
+    public void testCompleteOrder_SellOrder_Success() throws Exception {
+        // Arrange
+        Integer orderID = 1;
+        BigDecimal price = new BigDecimal("100.00");
+        double quantity = 10.0;
+        OrderDataBean order = new OrderDataBean(orderID.toString(), "user1", "IBM", quantity, price, "open", false, true, null, null);
+        order.setOrderType("sell");
+
+        AccountDataBean account = new AccountDataBean(orderID, 1, 1, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), new BigDecimal("10000.00"), new BigDecimal("10000.00"), "user1");
+        QuoteDataBean quote = new QuoteDataBean("IBM", "IBM Corp", 1000000, price, price, price, price, 0.0);
+        HoldingDataBean holding = new HoldingDataBean(orderID, quantity, price, new Timestamp(System.currentTimeMillis()), orderID.toString());
+
+        order.setAccount(account);
+        order.setQuote(quote);
+        order.setHolding(holding);
+
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(order);
+        when(entityManager.merge(any(OrderDataBean.class))).thenReturn(order);
+
+        // Act
+        OrderDataBean result = tradeSLSBBean.completeOrder(orderID.toString(), false);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("closed", result.getOrderStatus());
+        assertNotNull(result.getCompletionDate());
+        assertNull(result.getHolding());
+    }
+
+    @Test
+    public void testCompleteOrder_SellOrder_HoldingAlreadySold() throws Exception {
+        // Arrange
+        Integer orderID = 1;
+        BigDecimal price = new BigDecimal("100.00");
+        double quantity = 10.0;
+        OrderDataBean order = new OrderDataBean(orderID.toString(), "user1", "IBM", quantity, price, "open", false, true, null, null);
+        order.setOrderType("sell");
+
+        AccountDataBean account = new AccountDataBean(orderID, 1, 1, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), new BigDecimal("10000.00"), new BigDecimal("10000.00"), "user1");
+        QuoteDataBean quote = new QuoteDataBean("IBM", "IBM Corp", 1000000, price, price, price, price, 0.0);
+        HoldingDataBean holding = null;
+
+        order.setAccount(account);
+        order.setQuote(quote);
+        order.setHolding(holding);
+
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(order);
+        when(entityManager.merge(any(OrderDataBean.class))).thenReturn(order);
+
+        // Act
+        OrderDataBean result = tradeSLSBBean.completeOrder(orderID.toString(), false);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("cancelled", result.getOrderStatus());
+    }
+
+    @Test
+    public void testCompleteOrder_OrderAlreadyCompleted() throws Exception {
+        // Arrange
+        Integer orderID = 1;
+        BigDecimal price = new BigDecimal("100.00");
+        double quantity = 10.0;
+        OrderDataBean order = new OrderDataBean(orderID.toString(), "user1", "IBM", quantity, price, "closed", false, false, null, null);
+        order.setOrderType("buy");
+
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(order);
+
+        // Act & Assert
+        Exception exception = assertThrows(EJBException.class, () -> {
+            tradeSLSBBean.completeOrder(orderID.toString(), false);
+        });
+
+        assertEquals("Error: attempt to complete Order that is already completed\n" + order, exception.getMessage());
+    }
+
+    @Test
+    public void testCompleteOrder_OrderNotFound() throws Exception {
+        // Arrange
+        Integer orderID = 1;
+
+        when(entityManager.find(OrderDataBean.class, orderID)).thenReturn(null);
+
+        // Act & Assert
+        Exception exception = assertThrows(EJBException.class, () -> {
+            tradeSLSBBean.completeOrder(orderID.toString(), false);
+        });
+
+        assertEquals("Error: attempt to complete Order that is null\nnull", exception.getMessage());
+    }
+}
+```

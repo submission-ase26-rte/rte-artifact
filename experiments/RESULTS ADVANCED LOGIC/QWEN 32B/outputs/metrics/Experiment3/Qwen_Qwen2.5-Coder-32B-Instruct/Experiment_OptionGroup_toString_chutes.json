@@ -1,0 +1,289 @@
+{
+  "experiments": {
+    "version_": {
+      "tested_method": "toString",
+      "similarity_threshold": 0.6801029995663981,
+      "passes_evaluation": true,
+      "timestamp": "2026-01-23T10:12:56.555819",
+      "executed_phases": {
+        "first_phase": true,
+        "second_phase": true
+      },
+      "metrics": {
+        "crystalbleu_similarity": 0.31690712423640327,
+        "string_similarity": 0.6277742549143944,
+        "token_similarity": 0.6774193548387096,
+        "ast_similarity": 0.9333333333333333,
+        "embedding_similarity": 0.9667917490005493,
+        "clone_detection": {
+          "exact_match": false,
+          "clone_percentage": 0.6666666666666666,
+          "similar_blocks": 20,
+          "total_blocks": 60
+        },
+        "weights": {
+          "crystalbleu_similarity": 0.2,
+          "string_similarity": 0.08,
+          "token_similarity": 0.15,
+          "ast_similarity": 0.22,
+          "embedding_similarity": 0.35
+        },
+        "overall_similarity": 0.7589267139497642,
+        "passes_threshold": true
+      },
+      "test_results": {
+        "original": {
+          "success": true,
+          "tests_passed": 10,
+          "tests_total": 10,
+          "tests_failed": 0,
+          "line_coverage": 100.0,
+          "branch_coverage": 100.0,
+          "has_compilation_errors": false,
+          "test_info": {
+            "valid_tests": [
+              "testToStringWithNoOptions",
+              "testToStringWithSingleShortOption",
+              "testToStringWithMultipleOptions",
+              "testToStringWithOptionWithoutDescription",
+              "testToStringWithSingleLongOption",
+              "testToStringWithMixedOptions",
+              "testToStringWithLongOptionWithoutDescription",
+              "testToStringWithShortOptionWithoutDescription",
+              "testToStringWithOnlyShortOptions",
+              "testToStringWithOnlyLongOptions"
+            ],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          }
+        },
+        "regenerated": {
+          "success": true,
+          "tests_passed": 10,
+          "tests_total": 10,
+          "tests_failed": 0,
+          "line_coverage": 100.0,
+          "branch_coverage": 100.0,
+          "has_compilation_errors": false,
+          "test_info": {
+            "valid_tests": [
+              "testToStringWithNoOptions",
+              "testToStringWithSingleShortOption",
+              "testToStringWithMultipleOptions",
+              "testToStringWithOptionWithoutDescription",
+              "testToStringWithSingleLongOption",
+              "testToStringWithMixedOptions",
+              "testToStringWithLongOptionWithoutDescription",
+              "testToStringWithShortOptionWithoutDescription",
+              "testToStringWithOnlyShortOptions",
+              "testToStringWithOnlyLongOptions"
+            ],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          }
+        }
+      },
+      "test_filtering": {},
+      "context": {
+        "dependency_selection": {
+          "active": true,
+          "method": "structural",
+          "top_k": null,
+          "weights": null,
+          "selected_classes": [
+            {
+              "class": "Option",
+              "score": null,
+              "norm_score": null,
+              "rank": null
+            }
+          ],
+          "rankings": {},
+          "project_type_flags": {
+            "has_servlet": false,
+            "has_spring": false,
+            "has_jpa": false,
+            "has_ejb": false,
+            "has_cdi": false,
+            "has_jndi": false,
+            "has_static_utils": false
+          }
+        }
+      },
+      "paths": {
+        "original_file": "./../JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/main/java/org/apache/commons/cli/OptionGroup.java",
+        "regenerated_file": "results/outputs\\Final_OptionGroup_toString.java"
+      },
+      "original_metrics": {
+        "loc": 32,
+        "sloc": 25,
+        "complexity": 5
+      },
+      "retry_history": [
+        {
+          "type": "initial_test_execution",
+          "test_results_originale": {
+            "tests_passed": 4,
+            "tests_total": 7,
+            "tests_failed": 3,
+            "line_coverage": 88.88888888888889,
+            "branch_coverage": 87.5,
+            "test_info": {
+              "valid_tests": [
+                "testToStringWithNoOptions",
+                "testToStringWithSingleShortOption",
+                "testToStringWithMultipleOptions",
+                "testToStringWithOptionWithoutDescription"
+              ],
+              "invalid_tests": [
+                "testToStringWithSingleLongOption",
+                "testToStringWithMixedOptions",
+                "testToStringWithLongOptionWithoutDescription"
+              ],
+              "failed_assert_tests": [
+                "testToStringWithSingleLongOption",
+                "testToStringWithMixedOptions",
+                "testToStringWithLongOptionWithoutDescription"
+              ],
+              "runtime_error_tests": []
+            }
+          }
+        },
+        {
+          "refinement_iteration": 1,
+          "overall_similarity": 0.7589267139497642,
+          "passes_threshold": true,
+          "similarity_metrics": {
+            "crystalbleu_similarity": 0.31690712423640327,
+            "string_similarity": 0.6277742549143944,
+            "token_similarity": 0.6774193548387096,
+            "ast_similarity": 0.9333333333333333,
+            "embedding_similarity": 0.9667917490005493,
+            "clone_detection": {
+              "exact_match": false,
+              "clone_percentage": 0.6666666666666666,
+              "similar_blocks": 20,
+              "total_blocks": 60
+            },
+            "weights": {
+              "crystalbleu_similarity": 0.2,
+              "string_similarity": 0.08,
+              "token_similarity": 0.15,
+              "ast_similarity": 0.22,
+              "embedding_similarity": 0.35
+            },
+            "overall_similarity": 0.7589267139497642,
+            "passes_threshold": true
+          },
+          "original_method": "    /**\n     * Returns the stringified version of this OptionGroup.\n     *\n     * @return the stringified representation of this group\n     */\n    @Override\n    public String toString() {\n        final StringBuilder buff = new StringBuilder();\n        final Iterator<Option> iter = getOptions().iterator();\n        buff.append(\"[\");\n        while (iter.hasNext()) {\n            final Option option = iter.next();\n            if (option.getOpt() != null) {\n                buff.append(\"-\");\n                buff.append(option.getOpt());\n            } else {\n                buff.append(\"--\");\n                buff.append(option.getLongOpt());\n            }\n\n            if (option.getDescription() != null) {\n                buff.append(Char.SP);\n                buff.append(option.getDescription());\n            }\n\n            if (iter.hasNext()) {\n                buff.append(\", \");\n            }\n        }\n        buff.append(\"]\");\n        return buff.toString();\n    }",
+          "regenerated_method": "public String toString() {\n    if (optionMap.isEmpty()) {\n        return \"[]\";\n    }\n    StringBuilder buffer = new StringBuilder(\"[\");\n    Iterator<Option> it = getOptions().iterator();\n    while (it.hasNext()) {\n        Option option = it.next();\n        buffer.append(\"-\");\n        if (option.getLongOpt() != null) {\n            buffer.append(\"-\");\n            buffer.append(option.getLongOpt());\n        } else {\n            buffer.append(option.getOpt());\n        }\n        if (option.getDescription() != null) {\n            buffer.append(\" \");\n            buffer.append(option.getDescription());\n        }\n        if (it.hasNext()) {\n            buffer.append(\", \");\n        }\n    }\n    buffer.append(\"]\");\n    return buffer.toString();\n}",
+          "test_results_originale": {
+            "tests_passed": 10,
+            "tests_total": 10,
+            "tests_failed": 0,
+            "line_coverage": 100.0,
+            "branch_coverage": 100.0,
+            "valid_tests": [
+              "testToStringWithNoOptions",
+              "testToStringWithSingleShortOption",
+              "testToStringWithMultipleOptions",
+              "testToStringWithOptionWithoutDescription",
+              "testToStringWithSingleLongOption",
+              "testToStringWithMixedOptions",
+              "testToStringWithLongOptionWithoutDescription",
+              "testToStringWithShortOptionWithoutDescription",
+              "testToStringWithOnlyShortOptions",
+              "testToStringWithOnlyLongOptions"
+            ],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          },
+          "test_results_rigenerato": {
+            "tests_passed": 10,
+            "tests_total": 10,
+            "tests_failed": 0,
+            "line_coverage": 100.0,
+            "branch_coverage": 100.0,
+            "valid_tests": [
+              "testToStringWithNoOptions",
+              "testToStringWithSingleShortOption",
+              "testToStringWithMultipleOptions",
+              "testToStringWithOptionWithoutDescription",
+              "testToStringWithSingleLongOption",
+              "testToStringWithMixedOptions",
+              "testToStringWithLongOptionWithoutDescription",
+              "testToStringWithShortOptionWithoutDescription",
+              "testToStringWithOnlyShortOptions",
+              "testToStringWithOnlyLongOptions"
+            ],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          },
+          "type": "refinement"
+        }
+      ],
+      "original_method_display": "    /**\n     * Returns the stringified version of this OptionGroup.\n     *\n     * @return the stringified representation of this group\n     */\n    @Override\n    public String toString() {\n        final StringBuilder buff = new StringBuilder();\n        final Iterator<Option> iter = getOptions().iterator();\n        buff.append(\"[\");\n        while (iter.hasNext()) {\n            final Option option = iter.next();\n            if (option.getOpt() != null) {\n                buff.append(\"-\");\n                buff.append(option.getOpt());\n            } else {\n                buff.append(\"--\");\n                buff.append(option.getLongOpt());\n            }\n\n            if (option.getDescription() != null) {\n                buff.append(Char.SP);\n                buff.append(option.getDescription());\n            }\n\n            if (iter.hasNext()) {\n                buff.append(\", \");\n            }\n        }\n        buff.append(\"]\");\n        return buff.toString();\n    }",
+      "regenerated_method_display": "public String toString() {\n    if (optionMap.isEmpty()) {\n        return \"[]\";\n    }\n    StringBuilder buffer = new StringBuilder(\"[\");\n    Iterator<Option> it = getOptions().iterator();\n    while (it.hasNext()) {\n        Option option = it.next();\n        buffer.append(\"-\");\n        if (option.getLongOpt() != null) {\n            buffer.append(\"-\");\n            buffer.append(option.getLongOpt());\n        } else {\n            buffer.append(option.getOpt());\n        }\n        if (option.getDescription() != null) {\n            buffer.append(\" \");\n            buffer.append(option.getDescription());\n        }\n        if (it.hasNext()) {\n            buffer.append(\", \");\n        }\n    }\n    buffer.append(\"]\");\n    return buffer.toString();\n}",
+      "token_usage": {
+        "test_generation": {
+          "input_tokens": 1353,
+          "output_tokens": 522
+        },
+        "method_generation": {
+          "calls": 1,
+          "details": [
+            {
+              "input_tokens": 1843,
+              "output_tokens": 147,
+              "refinement_iteration": 0
+            }
+          ],
+          "total_input_tokens": 1843,
+          "total_output_tokens": 147
+        },
+        "test_refinement": {
+          "calls": 1,
+          "details": [
+            {
+              "input_tokens": 2244,
+              "output_tokens": 592,
+              "iteration": 1
+            }
+          ],
+          "total_input_tokens": 2244,
+          "total_output_tokens": 592
+        },
+        "totals": {
+          "total_input_tokens": 5440,
+          "total_output_tokens": 1261,
+          "total_tokens": 6701
+        }
+      },
+      "test_naturalness": {
+        "num_test_methods": 10,
+        "assertion_complexity": 0.3467,
+        "pct_null_assertions": 0.0,
+        "pct_duplicate_assertions": 0.0,
+        "pct_exception_assertions": 0.0,
+        "pct_no_assertion": 0.0,
+        "naturalness_method_name": 0.6862,
+        "pct_focal_method_covered": 1.0,
+        "diversity_literal_values": 0.4615,
+        "overall_naturalness_score": 0.7869
+      }
+    }
+  },
+  "general_info": {
+    "tested_class": "OptionGroup",
+    "tested_method": "toString",
+    "last_update": "2026-01-23T10:12:56.724032",
+    "description": "Test toString() - Medium - Qwen/Qwen2.5-Coder-32B-Instruct",
+    "provider": "chutes",
+    "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
+    "similarity_threshold": 0.6801029995663981
+  }
+}

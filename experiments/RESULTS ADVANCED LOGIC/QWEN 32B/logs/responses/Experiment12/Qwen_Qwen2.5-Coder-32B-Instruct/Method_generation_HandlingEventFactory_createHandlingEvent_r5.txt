@@ -1,0 +1,25 @@
+```java
+public HandlingEvent createHandlingEvent(LocalDateTime registrationTime, LocalDateTime completionTime, TrackingId trackingId, VoyageNumber voyageNumber, UnLocode unlocode, HandlingEvent.Type type) throws CannotCreateHandlingEventException {
+    try {
+        Cargo cargo = findCargo(trackingId);
+        Location location = findLocation(unlocode);
+        Voyage voyage = findVoyage(voyageNumber);
+
+        if (voyageNumber != null && voyage == null) {
+            throw new UnknownVoyageException(voyageNumber);
+        }
+
+        if (type.requiresVoyage() && voyage == null) {
+            throw new IllegalArgumentException("Voyage is required for this event type");
+        }
+
+        if (type.requiresVoyage()) {
+            return new HandlingEvent(cargo, completionTime, registrationTime, type, location, voyage);
+        } else {
+            return new HandlingEvent(cargo, completionTime, registrationTime, type, location);
+        }
+    } catch (UnknownCargoException | UnknownLocationException | UnknownVoyageException | IllegalArgumentException e) {
+        throw new CannotCreateHandlingEventException(e);
+    }
+}
+```

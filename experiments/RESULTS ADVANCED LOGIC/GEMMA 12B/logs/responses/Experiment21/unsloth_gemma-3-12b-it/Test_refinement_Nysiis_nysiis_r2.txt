@@ -1,0 +1,131 @@
+```java
+package org.apache.commons.codec.language;
+
+import java.util.regex.Pattern;
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.StringEncoder;
+import org.apache.commons.codec.language.Nysiis;
+import org.apache.commons.codec.language.SoundexUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Nysiis_nysiisTestGenerated {
+    private Nysiis nysiis;
+    @BeforeEach
+    void setUp() {
+        nysiis = new Nysiis();
+    }
+
+
+    @Test
+            void testNysiis_simpleCase1() {
+                assertEquals("MCC", nysiis.nysiis("MAC"));
+            }
+
+    @Test
+            void testNysiis_simpleCase2() {
+                assertEquals("NN", nysiis.nysiis("KN"));
+            }
+
+    @Test
+            void testNysiis_simpleCase4() {
+                assertEquals("FF", nysiis.nysiis("PH"));
+            }
+
+    @Test
+            void testNysiis_simpleCase5() {
+                assertEquals("SSS", nysiis.nysiis("SCH"));
+            }
+
+    @Test
+            void testNysiis_vowel() {
+                assertEquals("A", nysiis.nysiis("E"));
+            }
+
+    @Test
+            void testNysiis_withStrict() {
+                Nysiis strictNysiis = new Nysiis(true);
+                assertEquals("MCC", strictNysiis.nysiis("MAC"));
+                assertEquals("NN", strictNysiis.nysiis("KN"));
+                assertEquals("C", strictNysiis.nysiis("K"));
+                assertEquals("FF", strictNysiis.nysiis("PH"));
+                assertEquals("SSS", strictNysiis.nysiis("SCH"));
+            }
+
+    @Test
+            void testNysiis_longString() {
+                assertEquals("MCCNNCC", nysiis.nysiis("MACKNCC"));
+            }
+
+    @Test
+            void testNysiis_specialChars() {
+                assertEquals("MCC", nysiis.nysiis("mAc"));
+            }
+
+    @Test
+            void testNysiis_AYremoval() {
+                assertEquals("Y", nysiis.nysiis("AY"));
+            }
+
+    @Test
+            void testNysiis_Sremoval() {
+                assertEquals("MCC", nysiis.nysiis("MCS"));
+            }
+
+    @Test
+        void testNysiis_AYremoval_strict() {
+            Nysiis strictNysiis = new Nysiis(true);
+            assertEquals("Y", strictNysiis.nysiis("AY"));
+        }
+
+    @Test
+        void testNysiis_Aremoval_strict() {
+            Nysiis strictNysiis = new Nysiis(true);
+            assertEquals("MCC", strictNysiis.nysiis("MAC"));
+        }
+
+    @Test
+        void testNysiis_longString_strict() {
+            Nysiis strictNysiis = new Nysiis(true);
+            assertEquals("MCCNNCC", strictNysiis.nysiis("MACKNCC"));
+        }
+
+    @Test
+    void testNysiis_AYremoval_strict_test() {
+        Nysiis strictNysiis = new Nysiis(true);
+        assertEquals("Y", strictNysiis.nysiis("AY"));
+    }
+
+    @Test
+    void testNysiis_Aremoval_strict_test() {
+        Nysiis strictNysiis = new Nysiis(true);
+        assertEquals("MCC", strictNysiis.nysiis("MAC"));
+    }
+
+    @Test
+    void testNysiis_longString_strict_test() {
+        Nysiis strictNysiis = new Nysiis(true);
+        assertEquals("MCCNNCC", strictNysiis.nysiis("MACKNCC"));
+    }
+
+    @Test
+    void testNysiis_AYremoval_test() {
+        assertEquals("Y", nysiis.nysiis("AY"));
+    }
+
+    @Test
+    void testNysiis_Aremoval_test() {
+        assertEquals("MCC", nysiis.nysiis("MAC"));
+    }
+
+    @Test
+    void testNysiis_longString_test() {
+        assertEquals("MCCNNCC", nysiis.nysiis("MACKNCC"));
+    }
+
+}
+```

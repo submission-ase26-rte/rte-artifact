@@ -1,0 +1,298 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Filtered unit tests for method: toString()
+ * Original class: OptionGroup
+ * Tests that actually call the target method
+ */
+package org.apache.commons.cli;
+
+import java.util.Collection;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo3_unit_toString_OptionGroup_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_SingleOptionWithOpt_jqxt1() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt", "description"));
+    assertEquals("[-opt, description]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_SingleOptionWithoutOpt_FTIY2() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option(null, "description"));
+    assertEquals("[--description]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_MultipleOptionsWithOpt_CzGu3() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt1", "description1"));
+    optionGroup.getOptions().add(new Option("opt2", "description2"));
+    assertEquals("[-opt1, description1, -opt2, description2]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_MultipleOptionsWithoutOpt_CsuQ4() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option(null, "description1"));
+    optionGroup.getOptions().add(new Option(null, "description2"));
+    assertEquals("[--description1, --description2]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_MixedOptions_ZXYl5() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt1", "description1"));
+    optionGroup.getOptions().add(new Option(null, "description2"));
+    assertEquals("[-opt1, description1, --description2]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_OptionsWithDescription_eFzU6() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt1", "description1"));
+    optionGroup.getOptions().add(new Option(null, "description2 with space"));
+    assertEquals("[-opt1, description1, --description2 with space]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_OptionsWithCommaInDescription_VvyM8() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt1", "description, with, comma"));
+    assertEquals("[-opt1, description, with, comma]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_OptionsWithCommaInOpt_ZYrP9() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt, with, comma", "description"));
+    assertEquals("[-opt, with, comma, description]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_OptionsWithCommaInLongOpt_yUha10() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option(null, "description, with, comma"));
+    assertEquals("[--description, with, comma]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_OptionsWithMultipleCommas_LmLm11() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt, with, multiple, commas", "description, with, multiple, commas"));
+    assertEquals("[-opt, with, multiple, commas, description, with, multiple, commas]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_OptionsWithEscapedCommas_shgP12() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt,\\,with,comma", "description,\\,with,comma"));
+    assertEquals("[-opt,\\,with,comma, description,\\,with,comma]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_OptionsWithBackslashes_VegS13() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt,with\\backslash,comma", "description,with\\backslash,comma"));
+    assertEquals("[-opt,with\\backslash,comma, description,with\\backslash,comma]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_EmptyOptionGroup_dExk0() {
+    OptionGroup optionGroup = new OptionGroup();
+    assertEquals("[]", optionGroup.toString());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_EmptyOptions_aQQo0() {
+    OptionGroup optionGroup = new OptionGroup();
+    String result = optionGroup.toString();
+    assert result.equals("[]");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_SingleOption_ASuR1() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt", "description"));
+    String result = optionGroup.toString();
+    assert result.equals("[-opt description]");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_MultipleOptions_iHKA2() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("opt1", "description1"));
+    optionGroup.getOptions().add(new Option("opt2", "description2"));
+    String result = optionGroup.toString();
+    assert result.equals("[-opt1 description1, --opt2 description2]");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_SingleLongOption_wbWW3_QmRY1() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("o", "longOpt", true, "description"));
+    String result = optionGroup.toString();
+    assert result.equals("[--longOpt, description]");
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testToString_MultipleLongOptions_rGVF4_GbKq0() {
+    OptionGroup optionGroup = new OptionGroup();
+    optionGroup.getOptions().add(new Option("o1", "longOpt1", true, "description1"));
+    optionGroup.getOptions().add(new Option(null, "longOpt2", false, "description2"));
+    String result = optionGroup.toString();
+    assert result.equals("[--longOpt1 description1, --longOpt2 description2]");
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 2/18 passed
+
+TEST STATUS:
+- PASSED (2): testToString_EmptyOptionGroup_dExk0, testToString_EmptyOptions_aQQo0
+- FAILED (0): none
+- ERRORS (16): testToString_SingleOptionWithOpt_jqxt1, testToString_SingleOptionWithoutOpt_FTIY2, testToString_MultipleOptionsWithOpt_CzGu3, testToString_MultipleOptionsWithoutOpt_CsuQ4, testToString_MixedOptions_ZXYl5, testToString_OptionsWithDescription_eFzU6, testToString_OptionsWithCommaInDescription_VvyM8, testToString_OptionsWithCommaInOpt_ZYrP9, testToString_OptionsWithCommaInLongOpt_yUha10, testToString_OptionsWithMultipleCommas_LmLm11, testToString_OptionsWithEscapedCommas_shgP12, testToString_OptionsWithBackslashes_VegS13, testToString_SingleOption_ASuR1, testToString_MultipleOptions_iHKA2, testToString_SingleLongOption_wbWW3_QmRY1, testToString_MultipleLongOptions_rGVF4_GbKq0
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Serializable -> java.io.Serializable
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   LinkedHashMap -> java.util.LinkedHashMap
+//   Map -> java.util.Map
+//   OptionGroup -> org.apache.commons.cli.OptionGroup
+
+// === Class: OptionGroup ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final Map optionMap;
+    private String selected;
+    private boolean required;
+
+// Getter/Setter Methods (for test assertions):
+public Collection<String> getNames();
+public Collection<Option> getOptions();
+public String getSelected();
+public boolean isRequired();
+public void setRequired(final boolean required);
+public void setSelected(final Option option) throws AlreadySelectedException;
+
+// Internal Methods (full implementation for context):
+    public Collection<Option> getOptions() {
+        // the values are the collection of options
+        return optionMap.values();
+    }
+
+// === External Class: Option ===
+// Full import path: org.apache.commons.cli.Option
+// Fields (with actual visibility):
+    private static final Class DEFAULT_TYPE;
+    private int argCount;
+    private String argName;
+    private Converter converter;
+    private final DeprecatedAttributes deprecated;
+    private String description;
+    private String longOption;
+    private final String option;
+    private boolean optionalArg;
+    private boolean required;
+    private Class type;
+    private char valueSeparator;
+    package-private static final Option[] EMPTY_ARRAY;
+    private static final long serialVersionUID;
+    public static final int UNINITIALIZED;
+    public static final int UNLIMITED_VALUES;
+    private List values;
+    private char valuesep;
+// Constructors:
+private Builder(String option);
+private Option(Builder builder);
+public Option(String option, boolean hasArg, String description);
+public Option(String option, String description);
+public Option(String option, String longOption, boolean hasArg, String description);
+// Method Signatures (used by target method):
+public String getDescription();
+public String getLongOpt();
+public String getOpt();
+// Public Getter Methods (for test assertions):
+public Builder hasArg();
+public Builder hasArg(boolean hasArg);
+public Builder hasArgs();
+public String getArgName();
+public int getArgs();
+public Converter getConverter();
+public DeprecatedAttributes getDeprecated();
+public int getId();
+public String getKey();
+public Object getType();
+
+
+TASK:
+Regenerate ONLY the method "toString" OF CLASS "OptionGroup" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public String toString() {
+    // your implementation here
+}
+```
+
+- Package: org.apache.commons.cli
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "toString"
+- Allowed imports: exactly those already present in OptionGroup
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

@@ -1,0 +1,96 @@
+```java
+package org.springframework.samples.petclinic.owner;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+
+public class OwnerController_processFindFormTestGenerated {
+
+	@Configuration
+	static class TestConfig {
+		@Bean
+		public OwnerService ownerService() {
+			return Mockito.mock(OwnerService.class);
+		}
+
+		@Bean
+		public OwnerController ownerController(OwnerService ownerService) {
+			return new OwnerController(ownerService);
+		}
+	}
+
+	@Autowired
+	private OwnerController ownerController;
+
+	@Autowired
+	private OwnerService ownerService;
+
+	private MockMvc mockMvc;
+
+	@BeforeEach
+	public void setUp() {
+		mockMvc = MockMvcBuilders.standaloneSetup(ownerController).build();
+	}
+
+	@Test
+	public void testProcessFindForm_noOwnersFound() throws Exception {
+		Owner owner = new Owner("testLastName");
+		Page<Owner> emptyPage = PageImpl.of();
+		when(ownerService.findPaginatedForOwnersLastName(1, "testLastName")).thenReturn(emptyPage);
+
+		mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/owners").param("lastName", "testLastName"))
+				.andExpect(view().name("owners/findOwners"))
+				.andExpect(redirectedUrl().isEmpty());
+	}
+
+	@Test
+	public void testProcessFindForm_oneOwnerFound() throws Exception {
+		Owner owner = new Owner("testLastName");
+		owner.setId(1);
+		Page<Owner> pageWithOneOwner = PageImpl.of(owner);
+		when(ownerService.findPaginatedForOwnersLastName(1, "testLastName")).thenReturn(pageWithOneOwner);
+
+		mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/owners").param("lastName", "testLastName"))
+				.andExpect(redirectedUrl().endsWith("/owners/1"));
+	}
+
+	@Test
+	public void testProcessFindForm_multipleOwnersFound() throws Exception {
+		Owner owner1 = new Owner("testLastName");
+		owner1.setId(1);
+		Owner owner2 = new Owner("testLastName");
+		owner2.setId(2);
+		Page<Owner> pageWithMultipleOwners = PageImpl.of(owner1, owner2);
+		when(ownerService.findPaginatedForOwnersLastName(1, "testLastName")).thenReturn(pageWithMultipleOwners);
+
+		mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/owners").param("lastName", "testLastName"))
+				.andExpect(view().name("owners/findOwners"));
+	}
+
+	@Test
+	public void testProcessFindForm_noLastNameProvided() throws Exception {
+		Owner owner = new Owner();
+		Page<Owner> allOwnersPage = PageImpl.of(owner);
+		when(ownerService.findPaginatedForOwnersLastName(1, "")).thenReturn(allOwnersPage);
+
+		mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/owners"))
+				.andExpect(view().name("owners/findOwners"));
+	}
+
+}
+```

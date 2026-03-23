@@ -1,0 +1,29 @@
+```java
+package org.apache.commons.compress.archivers.ar;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.archivers.ar.ArArchiveInputStream;
+import org.apache.commons.compress.utils.ArchiveUtils;
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.compress.utils.ParsingUtils;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class ArArchiveInputStream_matchesTestGenerated {
+
+    @Test
+        void testMatches_nullSignature() throws IOException {
+            assertFalse(ArArchiveInputStream.matches(null, 8));
+        }
+
+}
+```

@@ -1,0 +1,332 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Extracted tests for method: updateConfig()
+ * Original class: TradeConfigJSF
+ * Source: ASTER GPT-4
+ */
+package com.ibm.websphere.samples.daytrader.web.jsf;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.util.concurrent.TimeUnit;
+import javax.faces.context.ExternalContext;
+import javax.servlet.http.HttpSession;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo36_updateConfig_TradeConfigJSF_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testUpdateConfigWithValidOrderProcessingMode_VfmU0_zpGz0_fid1() {
+    TradeConfigJSF tradeConfigJSF = new TradeConfigJSF();
+    tradeConfigJSF.setOrderProcessingMode("ValidMode");
+    tradeConfigJSF.setOrderProcessingModeList(new String[]{"ValidMode"}); // Assuming a setter method exists
+    tradeConfigJSF.updateConfig();
+    assertEquals("ValidMode", TradeConfig.getOrderProcessingModeNames()[TradeConfig.getOrderProcessingMode()]);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testUpdateConfigWithValidWebInterface_lcKM2_kgwp0_fid1() {
+    TradeConfigJSF tradeConfigJSF = new TradeConfigJSF();
+    tradeConfigJSF.setWebInterface("ValidInterface");
+    tradeConfigJSF.setWebInterfaceList(new String[]{"ValidInterface"});
+    tradeConfigJSF.updateConfig();
+    assertEquals("ValidInterface", TradeConfig.getWebInterfaceNames()[TradeConfig.getWebInterface()]);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testUpdateConfigWithValidOrderProcessingMode_VfmU0_zpGz0() {
+    TradeConfigJSF tradeConfigJSF = new TradeConfigJSF();
+    tradeConfigJSF.setOrderProcessingMode("ValidMode");
+    tradeConfigJSF.setOrderProcessingModeList(new String[]{"ValidMode"}); // Assuming a setter method exists
+    tradeConfigJSF.updateConfig();
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testUpdateConfigWithInvalidOrderProcessingMode_zwfu1_SrBp0() {
+    TradeConfigJSF tradeConfigJSF = new TradeConfigJSF();
+    tradeConfigJSF.setOrderProcessingMode("InvalidMode");
+    tradeConfigJSF.setOrderProcessingModeList(new String[]{"ValidMode"});
+    int initialMode = TradeConfig.getOrderProcessingMode();
+    tradeConfigJSF.updateConfig();
+    assertEquals(initialMode, TradeConfig.getOrderProcessingMode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testUpdateConfigWithValidWebInterface_lcKM2_kgwp0() {
+    TradeConfigJSF tradeConfigJSF = new TradeConfigJSF();
+    tradeConfigJSF.setWebInterface("JSP");
+    tradeConfigJSF.setWebInterfaceList(new String[]{"JSP"});
+    tradeConfigJSF.updateConfig();
+    assertEquals("JSP", TradeConfig.getWebInterfaceNames()[TradeConfig.getWebInterface()]);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testUpdateConfigWithInvalidWebInterface_ZgBP3_SrCm0() {
+    TradeConfigJSF tradeConfigJSF = new TradeConfigJSF();
+    tradeConfigJSF.setWebInterface("InvalidInterface");
+    tradeConfigJSF.setWebInterfaceList(new String[]{"ValidInterface"});
+    int initialInterface = TradeConfig.getWebInterface();
+    tradeConfigJSF.updateConfig();
+    assertEquals(initialInterface, TradeConfig.getWebInterface());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testUpdateConfigWithMaxUsers_sSWZ4_DTZz0() {
+    TradeConfigJSF tradeConfigJSF = new TradeConfigJSF();
+    tradeConfigJSF.setMaxUsers(1000);
+    tradeConfigJSF.updateConfig();
+    assertEquals(1000, TradeConfig.getMAX_USERS());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testUpdateConfigWithMarketSummaryInterval_djrP6_kNeg0() {
+    TradeConfigJSF tradeConfigJSF = new TradeConfigJSF();
+    tradeConfigJSF.setMarketSummaryInterval(15);
+    tradeConfigJSF.updateConfig();
+    assertEquals(15, TradeConfig.getMarketSummaryInterval());
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 6/8 passed
+
+TEST STATUS:
+- PASSED (6): testUpdateConfigWithValidOrderProcessingMode_VfmU0_zpGz0, testUpdateConfigWithInvalidOrderProcessingMode_zwfu1_SrBp0, testUpdateConfigWithValidWebInterface_lcKM2_kgwp0, testUpdateConfigWithInvalidWebInterface_ZgBP3_SrCm0, testUpdateConfigWithMaxUsers_sSWZ4_DTZz0, testUpdateConfigWithMarketSummaryInterval_djrP6_kNeg0
+- FAILED (2): testUpdateConfigWithValidOrderProcessingMode_VfmU0_zpGz0_fid1, testUpdateConfigWithValidWebInterface_lcKM2_kgwp0_fid1
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   RunStatsDataBean -> com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean
+//   TradeDirectDBUtils -> com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   RequestScoped -> javax.enterprise.context.RequestScoped
+//   ExternalContext -> javax.faces.context.ExternalContext
+//   Inject -> javax.inject.Inject
+//   Named -> javax.inject.Named
+//   HttpSession -> javax.servlet.http.HttpSession
+//   TradeConfigJSF -> com.ibm.websphere.samples.daytrader.web.jsf.TradeConfigJSF
+
+// === Class: TradeConfigJSF ===
+// Fields (with actual visibility):
+    private ExternalContext context;
+    package-private TradeDirectDBUtils dbUtils;
+    private String runtimeMode;
+    private String orderProcessingMode;
+    private int maxUsers;
+    private int maxQuotes;
+    private int marketSummaryInterval;
+    private String webInterface;
+    private int primIterations;
+    private int listQuotePriceChangeFrequency;
+    private boolean publishQuotePriceChange;
+    private boolean longRun;
+    private boolean displayOrderAlerts;
+    private String[] runtimeModeList;
+    private String[] orderProcessingModeList;
+
+// Getter/Setter Methods (for test assertions):
+public String getRuntimeMode();
+public void setRuntimeMode(String runtimeMode);
+public void setOrderProcessingMode(String orderProcessingMode);
+public String getOrderProcessingMode();
+public void setMaxUsers(int maxUsers);
+public int getMaxUsers();
+public int getMaxQuotes();
+public void setMarketSummaryInterval(int marketSummaryInterval);
+public int getMarketSummaryInterval();
+public void setPrimIterations(int primIterations);
+public int getPrimIterations();
+public void setPublishQuotePriceChange(boolean publishQuotePriceChange);
+public boolean isPublishQuotePriceChange();
+public void setListQuotePriceChangeFrequency(int listQuotePriceChangeFrequency);
+public int getListQuotePriceChangeFrequency();
+
+// Internal Methods (full implementation for context):
+  public void setResult(String result) {
+    this.result = result;
+  }
+
+// === External Class: TradeConfig ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.TradeConfig
+// Fields (with actual visibility):
+    private static String[] runTimeModeNames;
+    public static final int EJB3;
+    public static final int DIRECT;
+    public static final int SESSION_TO_DIRECT;
+    private static int runTimeMode;
+    private static String[] orderProcessingModeNames;
+    public static final int SYNCH;
+    public static final int ASYNCH;
+    public static final int ASYNCH_2PHASE;
+    private static int orderProcessingMode;
+    private static String[] accessModeNames;
+    public static final int STANDARD;
+    private static int accessMode;
+    private static String[] webInterfaceNames;
+    public static final int JSP;
+    public static final int JSP_Images;
+    public static final int JSP_Images_HTTP2;
+    private static int webInterface;
+    private static int MAX_USERS;
+    private static int MAX_QUOTES;
+    public static boolean JDBCDriverNeedsGlobalTransation;
+    public static String DATASOURCE;
+    public static int KEYBLOCKSIZE;
+    public static int QUOTES_PER_PAGE;
+    public static boolean RND_USER;
+    private static int MAX_HOLDINGS;
+    private static int count;
+    private static Object userID_count_semaphore;
+    private static int userID_count;
+    private static String hostName;
+    private static Random r0;
+    private static Random randomNumberGenerator;
+    public static final String newUserPrefix;
+    public static final int verifyPercent;
+    private static boolean updateQuotePrices;
+    private static int primIterations;
+    private static boolean longRun;
+    private static boolean publishQuotePriceChange;
+    private static int listQuotePriceChangeFrequency;
+    private static boolean displayOrderAlerts;
+    private static int marketSummaryInterval;
+    public static BigDecimal PENNY_STOCK_PRICE;
+    public static BigDecimal PENNY_STOCK_RECOVERY_MIRACLE_MULTIPLIER;
+    public static BigDecimal MAXIMUM_STOCK_PRICE;
+    public static BigDecimal MAXIMUM_STOCK_SPLIT_MULTIPLIER;
+    public static final int HOME_OP;
+    public static final int QUOTE_OP;
+    public static final int LOGIN_OP;
+    public static final int LOGOUT_OP;
+    public static final int REGISTER_OP;
+    public static final int ACCOUNT_OP;
+    public static final int PORTFOLIO_OP;
+    public static final int BUY_OP;
+    public static final int SELL_OP;
+    public static final int UPDATEACCOUNT_OP;
+    private static int[][] scenarioMixes;
+    private static char[] actions;
+    private static int sellDeficit;
+    public static final int WELCOME_PAGE;
+    public static final int REGISTER_PAGE;
+    public static final int PORTFOLIO_PAGE;
+    public static final int QUOTE_PAGE;
+    public static final int HOME_PAGE;
+    public static final int ACCOUNT_PAGE;
+    public static final int ORDER_PAGE;
+    public static final int CONFIG_PAGE;
+    public static final int STATS_PAGE;
+    public static final int MARKET_SUMMARY_PAGE;
+    public static String[][] webUI;
+    private static int scenarioCount;
+    private static final BigDecimal orderFee;
+    private static final BigDecimal cashFee;
+    private static final BigDecimal ONE;
+    private static ArrayList deck;
+    private static int card;
+// Method Signatures (used by target method):
+static public int getWebInterface();
+static public int getRunTimeMode();
+static public void setMAX_QUOTES(int mAX_QUOTES);
+static public String getOrderProcessingModeNames();
+static public void setPrimIterations(int iter);
+static public boolean getDisplayOrderAlerts();
+static public int getMarketSummaryInterval();
+static public void setLongRun(boolean longRun);
+static public String getWebInterfaceNames();
+static public void setWebInterface(int value);
+static public java getRunTimeModeNames();
+static public void setOrderProcessingMode(int value);
+static public void setMAX_USERS(int mAX_USERS);
+static public int getListQuotePriceChangeFrequency();
+static public void setListQuotePriceChangeFrequency(int value);
+static public boolean getLongRun();
+static public int getPrimIterations();
+static public void setPublishQuotePriceChange(boolean publishQuotePriceChange);
+static public int getMAX_QUOTES();
+static public void setDisplayOrderAlerts(boolean value);
+static public int getOrderProcessingMode();
+static public boolean getPublishQuotePriceChange();
+static public int getMAX_USERS();
+static public void setMarketSummaryInterval(int seconds);
+// Public Getter Methods (for test assertions):
+public static String getPage(int pageNumber);
+public static char getScenarioAction(boolean newUser);
+public static String getUserID();
+public static BigDecimal getOrderFee(String orderType);
+public static BigDecimal getRandomPriceChangeFactor();
+public static int getScenarioMixes();
+public static int getMAX_HOLDINGS();
+public static int getScenarioCount();
+public static boolean getJDBCDriverNeedsGlobalTransation();
+public static boolean getUpdateQuotePrices();
+
+// === External Class: Log ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.Log
+// Fields (with actual visibility):
+    private static final Logger log;
+// Method Signatures (used by target method):
+static public void error(String message);
+
+
+TASK:
+Regenerate ONLY the method "updateConfig" OF CLASS "TradeConfigJSF" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void updateConfig() {
+    // your implementation here
+}
+```
+
+- Package: com.ibm.websphere.samples.daytrader.web.jsf
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "updateConfig"
+- Allowed imports: exactly those already present in TradeConfigJSF
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

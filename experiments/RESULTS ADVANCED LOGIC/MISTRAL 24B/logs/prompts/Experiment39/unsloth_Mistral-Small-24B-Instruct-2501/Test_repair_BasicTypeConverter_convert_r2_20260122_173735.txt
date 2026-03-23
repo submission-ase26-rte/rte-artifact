@@ -1,0 +1,228 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.util;
+Class name (MUST be exactly): BasicTypeConverter_convertTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.jxpath.util;
+
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.util.BasicTypeConverter;
+import org.apache.commons.jxpath.util.TypeUtils;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class BasicTypeConverter_convertTestGenerated {
+
+    private BasicTypeConverter converter;
+
+    @BeforeEach
+    public void setUp() {
+        converter = new BasicTypeConverter();
+    }
+
+    @Test
+    public void testConvertNullToPrimitive() {
+        assertEquals(0, converter.convert(null, int.class));
+        assertEquals(0L, converter.convert(null, long.class));
+        assertEquals(0.0f, converter.convert(null, float.class));
+        assertEquals(0.0, converter.convert(null, double.class));
+        assertEquals(Boolean.FALSE, converter.convert(null, boolean.class));
+        assertEquals(Character.valueOf('\0'), converter.convert(null, char.class));
+        assertEquals(Byte.valueOf((byte) 0), converter.convert(null, byte.class));
+        assertEquals(Short.valueOf((short) 0), converter.convert(null, short.class));
+    }
+
+    @Test
+    public void testConvertObjectToObject() {
+        assertEquals("test", converter.convert("test", Object.class));
+        assertEquals(42, converter.convert(42, Object.class));
+    }
+
+    @Test
+    public void testConvertNodeSetToObject() {
+        NodeSet nodeSet = new NodeSet() {
+            @Override
+            public Iterator getValues() {
+                return Collections.emptyIterator();
+            }
+        };
+        nodeSet.add(new Pointer(null, null) {
+            @Override
+            public Object getValue() {
+                return null;
+            }
+        });
+        assertEquals(nodeSet.getValues(), converter.convert(nodeSet, Object.class));
+    }
+
+    @Test
+    public void testConvertPointerToObject() {
+        Pointer pointer = new Pointer(null, null) {
+            @Override
+            public Object getValue() {
+                return null;
+            }
+        };
+        assertEquals(pointer.getValue(), converter.convert(pointer, Object.class));
+    }
+
+    @Test
+    public void testConvertArrayToArray() {
+        Integer[] array = {1, 2, 3};
+        Integer[] result = (Integer[]) converter.convert(array, Integer[].class);
+        assertArrayEquals(array, result);
+    }
+
+    @Test
+    public void testConvertArrayToCollection() {
+        Integer[] array = {1, 2, 3};
+        Collection<Integer> result = (Collection<Integer>) converter.convert(array, List.class);
+        assertEquals(3, result.size());
+    }
+
+    @Test
+    public void testConvertCollectionToArray() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        Integer[] result = (Integer[]) converter.convert(list, Integer[].class);
+        assertArrayEquals(new Integer[]{1, 2, 3}, result);
+    }
+
+    @Test
+    public void testConvertCollectionToCollection() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        Collection<Integer> result = (Collection<Integer>) converter.convert(list, List.class);
+        assertEquals(3, result.size());
+    }
+
+    @Test
+    public void testConvertNodeSetToCollection() {
+        NodeSet nodeSet = new NodeSet() {
+            @Override
+            public Iterator getValues() {
+                return Collections.emptyIterator();
+            }
+        };
+        nodeSet.add(new Pointer(null, null) {
+            @Override
+            public Object getValue() {
+                return null;
+            }
+        });
+        Collection<Object> result = (Collection<Object>) converter.convert(nodeSet, List.class);
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    public void testConvertPointerToCollection() {
+        Pointer pointer = new Pointer(null, null) {
+            @Override
+            public Object getValue() {
+                return null;
+            }
+        };
+        Collection<Object> result = (Collection<Object>) converter.convert(pointer, List.class);
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    public void testConvertObjectToString() {
+        assertEquals("42", converter.convert(42, String.class));
+    }
+
+    @Test
+    public void testConvertBooleanToNumber() {
+        assertEquals(1, converter.convert(true, Integer.class));
+        assertEquals(0, converter.convert(false, Integer.class));
+    }
+
+    @Test
+    public void testConvertNumberToBoolean() {
+        assertEquals(Boolean.TRUE, converter.convert(1, Boolean.class));
+        assertEquals(Boolean.FALSE, converter.convert(0, Boolean.class));
+    }
+
+    @Test
+    public void testConvertStringToPrimitive() {
+        assertEquals(42, converter.convert("42", Integer.class));
+    }
+
+    @Test
+    public void testConvertUsingConverter() {
+        ConvertUtils.register(new Converter() {
+            @Override
+            public Object convert(Class type, Object value) {
+                return "converted";
+            }
+        }, String.class);
+        assertEquals("converted", converter.convert("test", String.class));
+    }
+
+    @Test
+    public void testConvertInvalidType() {
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert("test", Object.class));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[59] <anonymous org.apache.commons.jxpath.util.BasicTypeConverter_convertTestGenerated$1> is not abstract and does not override abstract method getValues() in org.apache.commons.jxpath.NodeSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[61] getValues() in <anonymous org.apache.commons.jxpath.util.BasicTypeConverter_convertTestGenerated$1> cannot implement getValues() in org.apache.commons.jxpath.NodeSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[60] method does not override or implement a method from a supertype
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[65] anonymous class implements interface; cannot have arguments
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[65] <anonymous org.apache.commons.jxpath.util.BasicTypeConverter_convertTestGenerated$2> is not abstract and does not override abstract method asPath() in org.apache.commons.jxpath.Pointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[65] cannot find symbol
+  symbol:   method add(<anonymous org.apache.commons.jxpath.Pointer>)
+  location: variable nodeSet of type org.apache.commons.jxpath.NodeSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[76] anonymous class implements interface; cannot have arguments
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[76] <anonymous org.apache.commons.jxpath.util.BasicTypeConverter_convertTestGenerated$3> is not abstract and does not override abstract method asPath() in org.apache.commons.jxpath.Pointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[121] <anonymous org.apache.commons.jxpath.util.BasicTypeConverter_convertTestGenerated$4> is not abstract and does not override abstract method getValues() in org.apache.commons.jxpath.NodeSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[123] getValues() in <anonymous org.apache.commons.jxpath.util.BasicTypeConverter_convertTestGenerated$4> cannot implement getValues() in org.apache.commons.jxpath.NodeSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[122] method does not override or implement a method from a supertype
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[127] anonymous class implements interface; cannot have arguments
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[127] <anonymous org.apache.commons.jxpath.util.BasicTypeConverter_convertTestGenerated$5> is not abstract and does not override abstract method asPath() in org.apache.commons.jxpath.Pointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[127] cannot find symbol
+  symbol:   method add(<anonymous org.apache.commons.jxpath.Pointer>)
+  location: variable nodeSet of type org.apache.commons.jxpath.NodeSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[139] anonymous class implements interface; cannot have arguments
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[139] <anonymous org.apache.commons.jxpath.util.BasicTypeConverter_convertTestGenerated$6> is not abstract and does not override abstract method asPath() in org.apache.commons.jxpath.Pointer
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: BasicTypeConverter_convertTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

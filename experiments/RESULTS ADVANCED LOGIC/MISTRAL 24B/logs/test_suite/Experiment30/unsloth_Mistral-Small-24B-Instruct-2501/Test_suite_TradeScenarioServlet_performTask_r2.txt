@@ -1,0 +1,320 @@
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Collections;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.MockedStatic;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeScenarioServlet_performTaskTestGenerated {
+    private TradeScenarioServlet tradeScenarioServlet;
+    private MockHttpServletRequest request;
+    private MockHttpServletResponse response;
+
+    @BeforeEach
+    public void setUp() {
+        tradeScenarioServlet = new TradeScenarioServlet();
+        request = new MockHttpServletRequest();
+        response = new MockHttpServletResponse();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        tradeScenarioServlet = null;
+        request = null;
+        response = null;
+    }
+
+    @Test
+    public void testPerformTask_withInvalidAction() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "x");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            assertThrows(ServletException.class, () -> tradeScenarioServlet.performTask(request, response));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withNoActionParameter() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            mockedTradeConfig.when(() -> TradeConfig.getScenarioAction(anyBoolean())).thenReturn('q');
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("symbol"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withActionA() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "a");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("account"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withActionH() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "h");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("home"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withActionL() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "l");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            mockedTradeConfig.when(() -> TradeConfig.incrementScenarioCount()).thenReturn(null);
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("login"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withActionO() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "o");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("logout"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withActionP() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "p");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("portfolio"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withActionS() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "s");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            mockedTradeConfig.when(() -> TradeConfig.rndSymbol()).thenReturn("symbol");
+            mockedTradeConfig.when(() -> TradeConfig.rndQuantity()).thenReturn(10.0f);
+            Collection<HoldingDataBean> holdings = Collections.singletonList(new HoldingDataBean(1, 10.0, BigDecimal.valueOf(100), new java.util.Date(), "symbol"));
+            request.setAttribute("holdingDataBeans", holdings);
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("portfolioNoEdge"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withActionB() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "b");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            mockedTradeConfig.when(() -> TradeConfig.rndSymbol()).thenReturn("symbol");
+            mockedTradeConfig.when(() -> TradeConfig.rndQuantity()).thenReturn(10.0f);
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("symbol"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withActionN() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "n");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("Hello"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withActionQ() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "q");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            mockedTradeConfig.when(() -> TradeConfig.rndSymbols()).thenReturn("symbol");
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("symbol"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withNullUserID() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "q");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn(null);
+            mockedTradeConfig.when(() -> TradeConfig.incrementScenarioCount()).thenReturn(null);
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("login"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withActionU() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "u");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("account"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withActionR() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "r");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            mockedTradeConfig.when(() -> TradeConfig.rndNewUserID()).thenReturn("newUserID");
+            mockedTradeConfig.when(() -> TradeConfig.rndFullName()).thenReturn("Full Name");
+            mockedTradeConfig.when(() -> TradeConfig.rndCreditCard()).thenReturn("Credit Card");
+            mockedTradeConfig.when(() -> TradeConfig.rndBalance()).thenReturn("Balance");
+            mockedTradeConfig.when(() -> TradeConfig.rndEmail(anyString())).thenReturn("email@example.com");
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("register"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withActionZ() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "z");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            mockedTradeConfig.when(() -> TradeConfig.rndSymbol()).thenReturn("symbol");
+            mockedTradeConfig.when(() -> TradeConfig.rndQuantity()).thenReturn(10.0f);
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("symbol"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withActionInvalidChar() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "x");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            assertThrows(ServletException.class, () -> tradeScenarioServlet.performTask(request, response));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withSessionError() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "q");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            doThrow(new Exception("Session error")).when(request).getSession(anyBoolean());
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("login"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withNullScenarioAction() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("symbol"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withActionEmpty() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            mockedTradeConfig.when(() -> TradeConfig.getScenarioAction(anyBoolean())).thenReturn('q');
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("symbol"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withActionNull() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            mockedTradeConfig.when(() -> TradeConfig.getScenarioAction(anyBoolean())).thenReturn('q');
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("symbol"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withNoUserIDInSession() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "a");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn(null);
+            mockedTradeConfig.when(() -> TradeConfig.incrementScenarioCount()).thenReturn(null);
+            tradeScenarioServlet.performTask(request, response);
+            assertEquals("text/html", response.getContentType());
+            assertTrue(response.getContentAsString().contains("login"));
+        }
+    }
+
+    @Test
+    public void testPerformTask_withPrintWriterError() throws ServletException, IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+            request.addParameter("action", "n");
+            mockedTradeConfig.when(() -> TradeConfig.getUserID()).thenReturn("testUserID");
+            doThrow(new IOException("PrintWriter error")).when(response).getOutputStream();
+            assertThrows(ServletException.class, () -> tradeScenarioServlet.performTask(request, response));
+        }
+    }
+
+}

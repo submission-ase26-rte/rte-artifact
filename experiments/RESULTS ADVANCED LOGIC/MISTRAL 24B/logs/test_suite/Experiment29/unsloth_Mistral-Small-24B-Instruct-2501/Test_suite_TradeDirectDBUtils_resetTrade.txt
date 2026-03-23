@@ -1,0 +1,107 @@
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.MDBStats;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class TradeDirectDBUtils_resetTradeTestGenerated {
+    private DataSource datasource;
+    private TradeDirectDBUtils tradeDirectDBUtils;
+
+    @BeforeEach
+    void setUp() {
+        datasource = mock(DataSource.class);
+        tradeDirectDBUtils = new TradeDirectDBUtils();
+        ReflectionTestUtils.setField(tradeDirectDBUtils, "datasource", datasource);
+    }
+
+    @AfterEach
+    void tearDown() {
+        tradeDirectDBUtils = null;
+    }
+
+    @Test
+    void testResetTradeDeleteAll() throws Exception {
+        try (MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class);
+             MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+
+            Connection conn = mock(Connection.class);
+            when(datasource.getConnection()).thenReturn(conn);
+            when(conn.prepareStatement(anyString())).thenReturn(mock(PreparedStatement.class));
+            when(conn.prepareStatement(anyString())).thenReturn(mock(PreparedStatement.class));
+
+            mockedMDBStats.when(MDBStats::getInstance).thenReturn(mock(MDBStats.class));
+            mockedLog.when(() -> Log.error(anyString(), any(Throwable.class))).thenReturn(null);
+
+            RunStatsDataBean result = tradeDirectDBUtils.resetTrade(true);
+
+            assertEquals(0, result.getTradeUserCount());
+            assertEquals(0, result.getNewUserCount());
+            assertEquals(0, result.getSumLoginCount());
+            assertEquals(0, result.getSumLogoutCount());
+            assertEquals(0, result.getHoldingCount());
+            assertEquals(0, result.getOrderCount());
+            assertEquals(0, result.getBuyOrderCount());
+            assertEquals(0, result.getSellOrderCount());
+            assertEquals(0, result.getCancelledOrderCount());
+            assertEquals(0, result.getOpenOrderCount());
+            assertEquals(0, result.getDeletedOrderCount());
+            assertEquals(0, result.getTradeStockCount());
+
+            verify(conn, times(1)).setAutoCommit(false);
+            verify(conn, times(1)).commit();
+            verify(conn, times(1)).close();
+        }
+    }
+
+    @Test
+    void testResetTradeNotDeleteAll() throws Exception {
+        try (MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class);
+             MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+
+            Connection conn = mock(Connection.class);
+            when(datasource.getConnection()).thenReturn(conn);
+            when(conn.prepareStatement(anyString())).thenReturn(mock(PreparedStatement.class));
+            when(conn.prepareStatement(anyString())).thenReturn(mock(PreparedStatement.class));
+
+            mockedMDBStats.when(MDBStats::getInstance).thenReturn(mock(MDBStats.class));
+            mockedLog.when(() -> Log.error(anyString(), any(Throwable.class))).thenReturn(null);
+
+            RunStatsDataBean result = tradeDirectDBUtils.resetTrade(false);
+
+            assertEquals(0, result.getTradeUserCount());
+            assertEquals(0, result.getNewUserCount());
+            assertEquals(0, result.getSumLoginCount());
+            assertEquals(0, result.getSumLogoutCount());
+            assertEquals(0, result.getHoldingCount());
+            assertEquals(0, result.getOrderCount());
+            assertEquals(0, result.getBuyOrderCount());
+            assertEquals(0, result.getSellOrderCount());
+            assertEquals(0, result.getCancelledOrderCount());
+            assertEquals(0, result.getOpenOrderCount());
+            assertEquals(0, result.getDeletedOrderCount());
+            assertEquals(0, result.getTradeStockCount());
+
+            verify(conn, times(1)).setAutoCommit(false);
+            verify(conn, times(1)).commit();
+            verify(conn, times(1)).close();
+        }
+    }
+}

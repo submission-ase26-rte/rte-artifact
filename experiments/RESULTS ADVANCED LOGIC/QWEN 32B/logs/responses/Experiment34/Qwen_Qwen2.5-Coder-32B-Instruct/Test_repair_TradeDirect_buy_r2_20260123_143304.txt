@@ -1,0 +1,287 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import javax.annotation.Resource;
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.MockedStatic;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeDirect_buyTestGenerated {
+
+    @InjectMocks
+    private TradeDirect tradeDirect;
+
+    @Mock
+    private DataSource datasource;
+
+    @Mock
+    private UserTransaction txn;
+
+    @Mock
+    private Connection conn;
+
+    @Mock
+    private PreparedStatement stmt;
+
+    @Mock
+    private ResultSet rs;
+
+    @Mock
+    private AccountDataBean accountData;
+
+    @Mock
+    private QuoteDataBean quoteData;
+
+    @Mock
+    private HoldingDataBean holdingData;
+
+    @Mock
+    private OrderDataBean orderData;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        MockitoAnnotations.openMocks(this);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(stmt.executeUpdate()).thenReturn(1);
+        when(tradeDirect.getAccountData(anyString())).thenReturn(accountData);
+        when(tradeDirect.getQuoteData(anyString())).thenReturn(quoteData);
+        when(tradeDirect.createOrder(accountData, quoteData, holdingData, anyString(), anyDouble())).thenReturn(orderData);
+        when(tradeDirect.getOrderData(anyInt())).thenReturn(orderData);
+    }
+
+    @Test
+    public void testBuy_SyncOrderProcessingMode() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.SYNCH).thenReturn(1);
+            tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.SYNCH);
+            verify(stmt, times(3)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, times(1)).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_AsyncOrderProcessingMode() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.ASYNCH).thenReturn(2);
+            tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.ASYNCH);
+            verify(stmt, times(3)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, times(1)).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_Async2PhaseOrderProcessingMode() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.ASYNCH_2PHASE).thenReturn(3);
+            tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.ASYNCH_2PHASE);
+            verify(stmt, times(3)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, times(1)).getOrderID();
+            verify(txn, times(1)).begin();
+            verify(txn, times(1)).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInCreateOrder() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.SYNCH).thenReturn(1);
+            when(tradeDirect.createOrder(accountData, quoteData, holdingData, anyString(), anyDouble())).thenThrow(new SQLException("Test Exception"));
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.SYNCH);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, times(2)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, never()).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInCreditAccountBalance() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.SYNCH).thenReturn(1);
+            doThrow(new SQLException("Test Exception")).when(stmt).executeUpdate();
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.SYNCH);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, times(2)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, times(1)).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInCompleteOrder() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.SYNCH).thenReturn(1);
+            doThrow(new SQLException("Test Exception")).when(stmt).executeUpdate();
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.SYNCH);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, times(2)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, times(1)).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInGetAccountData() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.SYNCH).thenReturn(1);
+            when(tradeDirect.getAccountData(anyString())).thenThrow(new SQLException("Test Exception"));
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.SYNCH);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, never()).executeUpdate();
+            verify(stmt, never()).executeQuery();
+            verify(orderData, never()).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInGetQuoteData() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.SYNCH).thenReturn(1);
+            when(tradeDirect.getQuoteData(anyString())).thenThrow(new SQLException("Test Exception"));
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.SYNCH);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, never()).executeUpdate();
+            verify(stmt, never()).executeQuery();
+            verify(orderData, never()).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInGetOrderData() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.SYNCH).thenReturn(1);
+            when(tradeDirect.getOrderData(anyInt())).thenThrow(new SQLException("Test Exception"));
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.SYNCH);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, times(3)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, times(1)).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInTransactionBegin() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.ASYNCH_2PHASE).thenReturn(3);
+            doThrow(new Exception("Test Exception")).when(txn).begin();
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.ASYNCH_2PHASE);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, never()).executeUpdate();
+            verify(stmt, never()).executeQuery();
+            verify(orderData, never()).getOrderID();
+            verify(txn, times(1)).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInTransactionCommit() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.ASYNCH_2PHASE).thenReturn(3);
+            doThrow(new Exception("Test Exception")).when(txn).commit();
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.ASYNCH_2PHASE);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, times(3)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, times(1)).getOrderID();
+            verify(txn, times(1)).begin();
+            verify(txn, times(1)).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+
+    @Test
+    public void testBuy_ExceptionInTransactionRollback() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            when(TradeConfig.SYNCH).thenReturn(1);
+            doThrow(new SQLException("Test Exception")).when(stmt).executeUpdate();
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.buy("user1", "symbol1", 10.0, TradeConfig.SYNCH);
+            });
+            assertEquals("Test Exception", exception.getCause().getMessage());
+            verify(stmt, times(2)).executeUpdate();
+            verify(stmt, times(1)).executeQuery();
+            verify(orderData, times(1)).getOrderID();
+            verify(txn, never()).begin();
+            verify(txn, never()).commit();
+            verify(txn, never()).rollback();
+        }
+    }
+}
+```

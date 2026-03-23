@@ -1,0 +1,781 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Extracted tests for method: parse(final Options options, final String[] arguments, final Properties properties, final boolean stopAtNonOption)
+ * Original class: DefaultParser
+ * Source: ASTER GPT-4
+ */
+package org.apache.commons.cli;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+import static org.mockito.Mockito.*;
+
+public class Metodo5_parse_DefaultParser_Test {
+
+    // [TRUNCATED: Showing 35/365 tests due to context limit]
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithNegativeNumberArgument_utqi0() throws ParseException {
+    Options options = mock(Options.class);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new HashSet<>());
+    String[] arguments = new String[] {"-123"};
+    Properties properties = new Properties();
+    DefaultParser parser = new DefaultParser();
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    assertNotNull(result);
+    verify(options).getRequiredOptions();
+    verify(options).getOptionGroups();
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithNegativeNumberArgument_gsFe0() throws ParseException {
+    Options options = mock(Options.class);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    DefaultParser parser = new DefaultParser();
+    String[] arguments = {"--option", "-123"};
+    Properties properties = new Properties();
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParse_withCurrentOptionAcceptsArgAndIsArgument_CsHL0() throws ParseException {
+    Options options = mock(Options.class);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    Option mockOption = mock(Option.class);
+    when(mockOption.acceptsArg()).thenReturn(true);
+    DefaultParser parser = new DefaultParser();
+    CommandLine cmd = mock(CommandLine.class);
+    CommandLine.Builder cmdBuilder = mock(CommandLine.Builder.class);
+    when(cmdBuilder.setDeprecatedHandler(any())).thenReturn(cmdBuilder);
+    when(cmdBuilder.build()).thenReturn(cmd);
+    String[] arguments = {"--option", "value"};
+    Properties properties = new Properties();
+    parser.parse(options, arguments, properties, false);
+    verify(mockOption).processValue("value");
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParse_withTokenStartingWithDashAndNotSingleDash_duzE1() throws ParseException {
+    Options options = mock(Options.class);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    DefaultParser parser = new DefaultParser();
+    CommandLine cmd = mock(CommandLine.class);
+    CommandLine.Builder cmdBuilder = mock(CommandLine.Builder.class);
+    when(cmdBuilder.setDeprecatedHandler(any())).thenReturn(cmdBuilder);
+    when(cmdBuilder.build()).thenReturn(cmd);
+    String[] arguments = {"-opt"};
+    Properties properties = new Properties();
+    parser.parse(options, arguments, properties, false);
+    verify(cmd, never()).addArg(anyString());
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParse_withNegativeNumberArgument_VyWK0() throws ParseException {
+    Options options = mock(Options.class);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    String[] arguments = new String[]{"-5"};
+    Properties properties = new Properties();
+    boolean stopAtNonOption = false;
+    DefaultParser parser = new DefaultParser();
+    CommandLine result = parser.parse(options, arguments, properties, stopAtNonOption);
+    assertEquals("-5", result.getArgs()[0]);
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithNegativeNumberArgument_ykbv0() throws ParseException {
+    Options options = mock(Options.class);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    when(options.hasShortOption(anyString())).thenReturn(false);
+    when(options.hasLongOption(anyString())).thenReturn(false);
+    DefaultParser parser = new DefaultParser();
+    String[] arguments = new String[]{"-1234"};
+    Properties properties = new Properties();
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    assertNotNull(result);
+    verify(options, times(1)).getRequiredOptions();
+    verify(options, times(1)).getOptionGroups();
+    verify(options, never()).hasShortOption(anyString());
+    verify(options, never()).hasLongOption(anyString());
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithCurrentOptionAcceptsArgAndIsArgument_zAWK0() throws ParseException {
+    Options options = mock(Options.class);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    Option mockOption = mock(Option.class);
+    when(mockOption.acceptsArg()).thenReturn(true);
+    DefaultParser parser = new DefaultParser();
+    String[] arguments = {"--option", "value"};
+    Properties properties = new Properties();
+    parser.currentOption = mockOption;
+    parser.cmd = mock(CommandLine.class);
+    parser.parse(options, arguments, properties, false);
+    verify(mockOption).processValue("value");
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithTokenStartingWithDashButNotSingleDash_HdyF1() throws ParseException {
+    Options options = mock(Options.class);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    DefaultParser parser = new DefaultParser();
+    String[] arguments = {"-opt"};
+    Properties properties = new Properties();
+    parser.cmd = mock(CommandLine.class);
+    parser.parse(options, arguments, properties, false);
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithOptionToken_spcS0() throws ParseException {
+    Options options = mock(Options.class);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    when(options.hasLongOption(anyString())).thenReturn(true);
+    when(options.hasShortOption(anyString())).thenReturn(true);
+    String[] arguments = {"--validOption"};
+    Properties properties = new Properties();
+    DefaultParser parser = new DefaultParser();
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    assertNotNull(result);
+    verify(options).hasLongOption("--validOption");
+    verify(options).hasShortOption("--validOption");
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParse_WithTokenStartingWithDashNotEqualsSingleDash_RlCT1() throws ParseException {
+    Options options = mock(Options.class);
+    Option mockOption = mock(Option.class);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    DefaultParser parser = new DefaultParser();
+    String[] arguments = {"-opt"};
+    Properties properties = new Properties();
+    when(options.getOption("-opt")).thenReturn(mockOption);
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    verify(options, times(1)).getOption("-opt");
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithTokenStartingWithDash_KVra1() throws ParseException {
+    Options options = mock(Options.class);
+    Option mockOption = mock(Option.class);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    DefaultParser parser = new DefaultParser();
+    String[] arguments = {"-opt"};
+    Properties properties = new Properties();
+    when(options.getOption("-opt")).thenReturn(mockOption);
+    when(mockOption.acceptsArg()).thenReturn(false);
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    verify(options).getOption("-opt");
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithCurrentOptionAcceptsArgAndIsArgument_kEMO0() throws ParseException {
+    Options options = mock(Options.class);
+    Option mockOption = mock(Option.class);
+    when(mockOption.acceptsArg()).thenReturn(true);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    DefaultParser parser = new DefaultParser();
+    String[] arguments = {"--option", "value"};
+    Properties properties = new Properties();
+    when(mockOption.acceptsArg()).thenReturn(true);
+    when(options.getOption("--option")).thenReturn(mockOption);
+    when(options.hasLongOption("--option")).thenReturn(true);
+    when(options.getMatchingOptions("--option")).thenReturn(Collections.singletonList("option"));
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    verify(mockOption).processValue("value");
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithTokenStartingWithDashButNotSingleDash_bwEU1() throws ParseException {
+    Options options = mock(Options.class);
+    Option mockOption = mock(Option.class);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    DefaultParser parser = new DefaultParser();
+    String[] arguments = {"-opt"};
+    Properties properties = new Properties();
+    when(options.hasShortOption("opt")).thenReturn(true);
+    when(options.getOption("opt")).thenReturn(mockOption);
+    when(mockOption.acceptsArg()).thenReturn(false);
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    verify(options).getOption("opt");
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithCurrentOptionAcceptsArg_uKtF0() throws ParseException {
+    Options options = mock(Options.class);
+    Option mockOption = mock(Option.class);
+    when(mockOption.acceptsArg()).thenReturn(true);
+    when(options.getOption(anyString())).thenReturn(mockOption);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    DefaultParser parser = new DefaultParser();
+    String[] arguments = {"--option", "value"};
+    CommandLine result = parser.parse(options, arguments, new Properties(), false);
+    verify(mockOption, times(1)).acceptsArg();
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithDashPrefixNotSingleDash_Ewys1() throws ParseException {
+    Options options = mock(Options.class);
+    Option mockOption = mock(Option.class);
+    when(options.getOption(anyString())).thenReturn(mockOption);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    DefaultParser parser = new DefaultParser();
+    String[] arguments = {"-opt"};
+    CommandLine result = parser.parse(options, arguments, new Properties(), false);
+    verify(options, times(1)).getOption("opt");
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithStripQuotesNull_jdzj0() throws ParseException {
+    DefaultParser parser = new DefaultParser();
+    Options options = new Options();
+    String[] arguments = {"--option", "\"value with quotes\""};
+    Properties properties = new Properties();
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    assertEquals("value with quotes", result.getOptionValue("option"));
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithStripQuotesFalse_gAQu1() throws ParseException {
+    DefaultParser parser = new DefaultParser(false);
+    Options options = new Options();
+    String[] arguments = {"--option", "\"value with quotes\""};
+    Properties properties = new Properties();
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    assertEquals("\"value with quotes\"", result.getOptionValue("option"));
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithCurrentOptionAcceptsArgAndIsArgument_rycB0() throws ParseException {
+    Options options = mock(Options.class);
+    Option mockOption = mock(Option.class);
+    when(mockOption.acceptsArg()).thenReturn(true);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    DefaultParser parser = new DefaultParser();
+    String[] arguments = {"--option", "value"};
+    Properties properties = new Properties();
+    when(options.hasOption("option")).thenReturn(true);
+    when(options.getOption("option")).thenReturn(mockOption);
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    assertNotNull(result);
+    verify(mockOption).processValue("value");
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithTokenStartingWithDashButNotSingleDash_OfwN1() throws ParseException {
+    Options options = mock(Options.class);
+    Option mockOption = mock(Option.class);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    DefaultParser parser = new DefaultParser();
+    String[] arguments = {"-opt"};
+    Properties properties = new Properties();
+    when(options.hasShortOption("opt")).thenReturn(true);
+    when(options.getOption("opt")).thenReturn(mockOption);
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    assertNotNull(result);
+    verify(options).getOption("opt");
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithTokenStartingWithDashButNotSingleDash_cINV1() throws ParseException {
+    Options options = mock(Options.class);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    DefaultParser parser = new DefaultParser();
+    String[] arguments = {"-opt"};
+    Properties properties = new Properties();
+    parser.parse(options, arguments, properties, false);
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithTokenStartingWithDash_hmIP1() throws ParseException {
+    Options options = mock(Options.class);
+    Option mockOption = mock(Option.class);
+    when(options.getOption(anyString())).thenReturn(mockOption);
+    when(options.hasShortOption(anyString())).thenReturn(true);
+    when(mockOption.acceptsArg()).thenReturn(false);
+    DefaultParser parser = new DefaultParser();
+    String[] arguments = new String[]{"-o"};
+    Properties properties = new Properties();
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    verify(options, times(1)).hasShortOption("o");
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParse_TokenStartsWithDashButNotSingleDash_limw1() throws ParseException {
+    Options options = mock(Options.class);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    String[] arguments = {"-opt"};
+    Properties properties = new Properties();
+    DefaultParser parser = new DefaultParser();
+    CommandLine cmd = mock(CommandLine.class);
+    parser.cmd = cmd;
+    parser.parse(options, arguments, properties, false);
+    verify(cmd, atLeastOnce()).getOptionValue(anyString());
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testOptionNotSelectedAndNotPresentInCmd_ChZd1() throws ParseException {
+    Options options = mock(Options.class);
+    Option opt = mock(Option.class);
+    when(options.getOption("option")).thenReturn(opt);
+    CommandLine cmd = mock(CommandLine.class);
+    when(cmd.hasOption("option")).thenReturn(false);
+    Properties properties = new Properties();
+    properties.setProperty("option", "true");
+    DefaultParser parser = new DefaultParser();
+    parser.parse(options, new String[]{}, properties, false);
+    verify(cmd).hasOption("option");
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testOptionValuesNull_kryX2() throws ParseException {
+    Options options = mock(Options.class);
+    Option opt = mock(Option.class);
+    when(options.getOption("option")).thenReturn(opt);
+    when(opt.hasArg()).thenReturn(true);
+    when(opt.getValues()).thenReturn(null);
+    Properties properties = new Properties();
+    properties.setProperty("option", "value");
+    DefaultParser parser = new DefaultParser();
+    parser.parse(options, new String[]{}, properties, false);
+    verify(opt).getValues();
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testHandleUnknownToken_qkEU0() throws ParseException {
+    Options options = new Options();
+    options.addOption("a", false, "option without an argument");
+    DefaultParser parser = new DefaultParser();
+    String[] arguments = {"--unknown"};
+    CommandLine cmd = parser.parse(options, arguments, new Properties(), false);
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParseWithTokenStartingWithDashNotEqualsDash_CINE1() throws ParseException {
+    Options options = mock(Options.class);
+    when(options.getRequiredOptions()).thenReturn(new ArrayList<>());
+    when(options.getOptionGroups()).thenReturn(new ArrayList<>());
+    DefaultParser parser = new DefaultParser();
+    String[] arguments = {"-opt"};
+    Properties properties = new Properties();
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParse_NullToken_WAUZ0() throws ParseException {
+    DefaultParser parser = new DefaultParser();
+    Options options = new Options();
+    String[] arguments = {null};
+    Properties properties = new Properties();
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    assertNotNull(result);
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParse_LongOptionWithoutEqualSign_wZCZ3() throws ParseException {
+    DefaultParser parser = new DefaultParser();
+    Options options = new Options();
+    options.addOption("opt", "option", true, "An option");
+    String[] arguments = {"--option"};
+    Properties properties = new Properties();
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    assertNotNull(result);
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParse_LongOptionWithPrefixAndNoDoubleDash_IfEE5() throws ParseException {
+    DefaultParser parser = new DefaultParser();
+    Options options = new Options();
+    options.addOption("o", "opt", true, "An option");
+    String[] arguments = {"-opt"};
+    Properties properties = new Properties();
+    CommandLine result = parser.parse(options, arguments, properties, false);
+    assertNotNull(result);
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParse_NullToken_ShouldNotBeShortOption_Gzin0() throws ParseException {
+    DefaultParser parser = new DefaultParser();
+    Options options = mock(Options.class);
+    String[] arguments = {null};
+    Properties properties = new Properties();
+    parser.parse(options, arguments, properties, false);
+    verify(options, never()).hasShortOption(anyString());
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParse_ShortOptionWithEquals_ShouldHandleShortOption_kEGg2() throws ParseException {
+    DefaultParser parser = new DefaultParser();
+    Options options = mock(Options.class);
+    String[] arguments = {"-a=value"};
+    Properties properties = new Properties();
+    when(options.hasShortOption("a")).thenReturn(true);
+    parser.parse(options, arguments, properties, false);
+    verify(options).hasShortOption("a");
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParse_ValidShortOption_ShouldReturnTrue_dSOI3() throws ParseException {
+    DefaultParser parser = new DefaultParser();
+    Options options = mock(Options.class);
+    String[] arguments = {"-a"};
+    Properties properties = new Properties();
+    when(options.hasShortOption("a")).thenReturn(true);
+    parser.parse(options, arguments, properties, false);
+    verify(options).hasShortOption("a");
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParse_MultipleShortOptionsConcatenated_ShouldHandleEach_wOxB4() throws ParseException {
+    DefaultParser parser = new DefaultParser();
+    Options options = mock(Options.class);
+    String[] arguments = {"-abc"};
+    Properties properties = new Properties();
+    when(options.hasShortOption("a")).thenReturn(true);
+    when(options.hasShortOption("b")).thenReturn(false);
+    when(options.hasShortOption("c")).thenReturn(true);
+    parser.parse(options, arguments, properties, false);
+    verify(options).hasShortOption("a");
+    verify(options).hasShortOption("b");
+    verify(options).hasShortOption("c");
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParse_NullToken_utys0_1() throws ParseException {
+    DefaultParser parser = new DefaultParser();
+    Options options = new Options();
+    String[] arguments = {null}; // Test input with null token
+    CommandLine result = parser.parse(options, arguments, new Properties(), false);
+    assertNotNull(result);}
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testParse_NullToken_utys0() throws ParseException {
+    DefaultParser parser = new DefaultParser();
+    Options options = new Options();
+    String[] arguments = {null}; // Test input with null token
+    CommandLine result = parser.parse(options, arguments, new Properties(), false);
+    assertNotNull(result);
+    assertTrue(result.getArgList().isEmpty()); // Expect no arguments processed
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 293/365 passed
+
+TEST STATUS:
+- PASSED (293): testParse_CoversIsOption_NZGs0_1, testParse_CoversIsOption_NZGs0_2, testParse_CoversIsOption_NZGs0_3, testOptionValueNotYesTrueOr1_pXhN3, testOptionWithEqualSignAcceptsArg_IfDl2, testOptionWithEqualSignDoesNotAcceptArg_xkqm3, testHandleOptionSelectsFirstMatchingOption_QgMi4, testHandleUnknownTokenWithNoMatchingOption_QPCf5, testParse_ShortToken_CGKw1, testParse_LongOptionWithEqualSign_vsFb2, testParse_LongOptionWithPrefixNotStartingWithDoubleDash_pyzZ4, testParse_EmptyToken_ShouldNotBeShortOption_UChx1, testParse_CoversIsOption_NZGs0, testParse_ShortToken_Dqcl1, testParse_LongOptionMatch_kMHv2, testParse_LongOptionWithEquals_uItu3, testParse_LongOptionPrefixWithoutDoubleDash_nZqb5, testParse_ShortToken_isCW1, testParse_OptionAcceptsArg_oukS4, testParse_ShortOptionWithEqualAndValue_sRnB6, testParseWithEmptyArguments_EMaL0_1, testParseWithEmptyArguments_EMaL0_2, testParseWithEmptyArguments_VXoG0, testParseWithUnknownOption_GmPr1, testParseWithValidOption_HDhS2, testParseWithProperties_knUj3, testParseWithLongOption_UpDR0, testParseWithShortOption_iVFg1, testParseWithStopAtNonOption_rUbD2_1, testParseWithStopAtNonOption_rUbD2_2, testParseWithProperties_CESv3, testParseWithLongOption_kQVp0, testParseWithShortOption_KbNk1, testParseWithStopAtNonOption_CXMo3_1, testParseWithStopAtNonOption_CXMo3_2, testParse_AllOptionsProvided_hIvA0_1, testParse_AllOptionsProvided_hIvA0_2, testParse_AllOptionsProvided_hIvA0_3, testParse_StopAtNonOption_faHc1_1, testParse_StopAtNonOption_faHc1_2, testParse_StopAtNonOption_faHc1_3, testParse_WithNegativeNumber_VrmN2_1, testParse_WithNegativeNumber_VrmN2_2, testParseWithLongOptionWithoutEqual_lbnS0, testParseWithLongOptionWithEqual_XJpa1, testParseWithShortOption_iwlG2, testParseWithNonOptionStop_ZrHs3_1, testParseWithNoArguments_dscQ0_1, testParseWithNoArguments_dscQ0_2, testParseWithUnknownOption_hcEv1, testParseWithValidLongOption_snBh2, testParseWithValidLongOptionAndEqualSign_LqIG3_1, testParseWithValidLongOptionAndEqualSign_LqIG3_2, testParseWithNoArgumentsAndNoProperties_UvUS0_1, testParseWithNoArgumentsAndNoProperties_UvUS0_2, testParseWithUnknownLongOption_gICQ1, testParseWithValidLongOptionAndProperty_HNZM3_1, testParseWithUnrecognizedOption_PEJw0_1, testParseWithAmbiguousOption_rBkg2_1, testParseWithUnknownOption_ZTwb1, testParseWithUnknownOption_agEg1, testParseWithUnknownOption_Aluf1, testParseWithRequiredOptionMissing_HRZF2, testParseWithPropertiesProvidingValues_zDqC3, testParseWithUnknownOption_nSgP2, testParseWithStopAtNonOption_tcdt3_1, testParseWithStopAtNonOption_tcdt3_2, testParseWithStopAtNonOption_tcdt3_3, testParseWithStopAtNonOption_tcdt3_4, testParseWithStopAtNonOption_tcdt3_5, testParseWithUnknownOption_gBtX2, testParseWithUnknownLongOption_IrLX1, testParseWithKnownLongOptionWithEqual_EWhU1, testParseWithUnknownOption_xBJJ1, testParseWithUnknownOption_qDqj1, testParseWithValidLongOptionWithEqualSign_Kgku2, testParseWithMultipleOptionsAndStopAtNonOption_DTfu3_1, testParseWithMultipleOptionsAndStopAtNonOption_DTfu3_2, testParseWithMultipleOptionsAndStopAtNonOption_DTfu3_3, testParseWithEmptyArgumentsAndNoProperties_fodu0_1, testParseWithEmptyArgumentsAndNoProperties_fodu0_2, testParseWithSingleLongOption_gipp1_1, testParseWithLongOptionAndValue_mNxB2_1, testParseWithLongOptionAndValue_mNxB2_2, testParseWithLongOptionAndValue_mNxB2_3, testParseWithMultipleOptionsAndStopAtNonOption_wiDB3_1, testParseWithMultipleOptionsAndStopAtNonOption_wiDB3_2, testParseWithMultipleOptionsAndStopAtNonOption_wiDB3_3, testParseWithMultipleOptionsAndStopAtNonOption_wiDB3_4, testParseWithMultipleOptionsAndStopAtNonOption_wiDB3_5, testParseWithLongOptionEquals_lhiQ0_1, testParseWithLongOptionEquals_lhiQ0_2, testParseWithUnknownOption_HuuX1, testParseWithShortOption_NmFz2, testParseWithProperties_JWRt3_1, testParseWithProperties_JWRt3_2, testParseWithLongOptionWithoutEqual_fsom0, testParseWithLongOptionWithEqual_oCPC1, testParseWithUnknownToken_YwWK2, testParseWithStopAtNonOption_zsNo3_1, testParseWithStopAtNonOption_zsNo3_2, testParseWithShortOption_trzd0, testParseWithLongOption_SVSU1, testParseWithOptionAndValue_UETl2_1, testParseWithOptionAndValue_UETl2_2, testParseWithMultipleOptions_LtVg3_1, testParseWithMultipleOptions_LtVg3_2, testParseWithMultipleOptions_LtVg3_3, testParseWithShortOption_WeTF0, testParseWithLongOptionAndArgument_dPMK1, testParseWithMultipleOptions_FWUI2_1, testParseWithMultipleOptions_FWUI2_2, testParseWithStopAtNonOption_sOqY3_1, testParseWithStopAtNonOption_sOqY3_2, testParseWithShortOption_bqID0, testParseWithLongOption_nHtg1, testParseWithOptionAndValue_Bmul2, testParseWithMultipleOptions_BFPs3_1, testParseWithMultipleOptions_BFPs3_2, testParseWithUnknownOption_JRtB1_1, testParseWithRequiredOptionsMissing_ymnh3_1, testParseWithUnknownOption_oCCr3, testParseWithUnrecognizedOption_IZCR0, testParseWithKnownOptionNoArgument_eFBc1, testParseWithOptionAndValue_FIaa2, testParseWithProperties_QUpy3, testParseWithUnknownOption_DwZf2, testParseWithUnknownOption_YfWs1, testParseWithUnrecognizedOption_kkfn0, testParseWithRecognizedOption_Rvjs1, testParseWithStopAtNonOption_QpUW2, testParseWithProperties_RcrX3, testParseWithUnknownOption_tnAL1, testParseWithRequiredOptionMissing_iENi3, testParseWithUnknownOption_DZfj1, testParseWithShortOption_NoGI0, testParseWithLongOption_WlTE1, testParseWithOptionAndValue_Owfk2, testParseWithOptionAndValue_IQrd2, testParseWithMultipleOptions_dAan3_1, testParseWithMultipleOptions_dAan3_2, testParseWithShortOption_njHy0, testParseWithLongOption_VMky1, testParseWithStopAtNonOption_yFZz3_1, testParseWithStopAtNonOption_yFZz3_2, testParseWithLongOptionAndEqualSign_KIut1, testParseWithUnknownOption_TJnU2, testParseWithProperties_UdIY3, testParseWithUnknownShortOption_qTPm0, testParseWithValidLongOptionWithEqualSign_BcbA1, testParseWithPropertiesAndStopAtNonOption_GEOx3, testParseWithUnknownOption_lyJA1, testParseWithUnknownOption_HKPV1, testParseWithUnrecognizedOption_gvDc0_1, testParseWithRequiredOptionProvided_JsYV1, testParseWithPropertiesProvidingValues_JkbE2, testParseWithMissingRequiredArguments_dspK1_1, testParseWithEmptyArgumentsAndEmptyProperties_DnQr0, testParseWithUnrecognizedOptionInProperties_sGst1, testParseWithValidOptionInProperties_dcfu2, testParseWithArgumentsAndStopAtNonOption_kQjW3, testParseWithEmptyArgumentsAndNoProperties_qgub0_1, testParseWithEmptyArgumentsAndNoProperties_qgub0_2, testParseWithUnrecognizedOptionInProperties_sBOf1, testParseWithValidOptionInProperties_quAu2_1, testParseWithValidOptionInProperties_quAu2_2, testParseWithPropertiesAndRequiredOptionNotProvided_ZfKW3, testParseWithEmptyArgumentsAndEmptyProperties_ZDqj0_1, testParseWithEmptyArgumentsAndEmptyProperties_ZDqj0_2, testParseWithUnrecognizedOptionInProperties_bhyz1, testParseWithValidOptionInProperties_vjuk2_1, testParseWithValidOptionInProperties_vjuk2_2, testParseWithArgumentsAndStopAtNonOption_ozdJ3_1, testParseWithArgumentsAndStopAtNonOption_ozdJ3_2, testParseWithArgumentsAndStopAtNonOption_ozdJ3_3, testParseWithArgumentsAndStopAtNonOption_ozdJ3_4, testParseWithUnrecognizedOptionInProperties_xgnB1, testParseWithValidOptionInProperties_fTsg3_1, testParseWithValidOptionInProperties_fTsg3_2, testParseWithValidOptionInProperties_fTsg3_3, testParseWithUnrecognizedOptionInProperties_EneI1, testParseWithUnrecognizedOptionInProperties_huOE1, testParseWithRequiredOptionsNotProvided_Tgrc2, testParseWithAllRequiredOptionsProvidedViaProperties_ANZz3_1, testParseWithAllRequiredOptionsProvidedViaProperties_ANZz3_2, testParseWithAllRequiredOptionsProvidedViaProperties_ANZz3_3, testParseStopAtNonOption_Kyax0_3, testParseWithEmptyArgumentsAndProperties_upFi0_1, testParseWithEmptyArgumentsAndProperties_upFi0_2, testParseWithEmptyArgumentsAndProperties_upFi0_3, testParseWithEmptyArguments_soTl0_wgOK0, testParseWithSingleLongOption_mFBS1_vTFW0, testParseWithStopAtNonOption_FUUs2_uaNR0, testParseWithProperties_hAon3_IEXA0, testParseWithEmptyArguments_ZKyf0_fdQS0, testParseWithNonOptionArguments_jCNU1_KjgU0, testParseWithOptionArguments_rZAq2_HANW0, testParseWithProperties_OMby3_UhzE0, testParseWithEmptyArguments_olyu0_rDIX0, testParseWithLongOption_xdvJ1_OPVy0, testParseWithShortOption_qdCy2_auWP0, testParseWithStopAtNonOption_yDWJ3_wvtf0, testParseWithShortOptions_wZHh0_zlEt0, testParseWithLongOptions_JgiQ1_HWKj0, testParseWithStopAtNonOption_aFXR2_AZXO0, testParseWithProperties_Myrk3_rdQD0, testParseWithUnknownToken_iKeW1_XwaB0, testParseWithProperties_MFtB3_eXyw0, testParseWithKnownOption_BxBq1_RTnG0, testParseWithStopAtNonOption_lgTo3_JZSY0, testParseWithNoArguments_Iqtb0_esHR0, testParseWithProperties_USJE3_uQXQ0, testParseWithNoArguments_rGRq0_IwBu0, testParseWithValidLongOption_tknF2_JPOO0, testParseWithPropertiesAndStopAtNonOption_xksN3_EsJA0, testParseWithEmptyArguments_snKr0_PpeD0, testParseWithLongOptionWithEqualSign_NpVc1_KboJ0, testParseWithStopAtNonOption_ciMs3_Vckg0, testParseWithValidLongOptionWithEqualSign_Rtmb2_WJGa0, testParseWithEmptyArguments_lDCG0_tcZy0, testParseWithValidLongOptionWithEqual_dNCv2_xwGT0, testParseWithMultipleOptionsAndStopAtNonOption_XpWx3_xRBM0, testParseWithEmptyArguments_XoXD0_xKBp0, testParseWithValidShortOption_vcRr1_RLcR0, testParseWithValidLongOption_wSjr2_ErDO0, testParseWithProperties_eoro2_FwNL0, testParseWithStopAtNonOption_syLz3_ZKKw0, testParseWithLongOption_ymPn0_PGJO0, testParseWithShortOptionAndValue_AShR1_tWKK0, testParseWithProperties_uJSb3_Ujhb0, testParseWithEmptyArguments_bvgU0_KtQK0, testParseWithValidLongOption_lfmR2_FUGr0, testParseWithProperties_xeHu3_fRIB0, testParseWithShortOption_rYGg0_govr0, testParseWithLongOption_FsjS1_CyYq0, testParseWithOptionAndValue_WNpQ2_CMCn0, testParseWithMultipleOptions_GIaz3_BCad0, testParseWithProperties_gmsg3_QsDk0, testParseWithShortOption_xwLo0_JaHk0, testParseWithLongOption_OWFh1_dlhR0, testParseWithOptionAndValue_NhHy2_sKEA0, testParseWithMultipleOptions_wABL3_ZvaS0, testParseWithValidLongOption_atfL2_gpFw0, testParseWithProperties_oNgh3_bfLu0, testParseWithSingleShortOptionAndValue_kRFx2_KzvN0, testParseWithOneOptionAndNoArguments_wYks1_LNAO0, testParseWithOneOptionAndArguments_EJLO2_ERGW0, testParseWithMultipleOptionsAndStopAtNonOption_kUjQ3_gFdm0, testParseWithLongOptionAndValue_FVtZ1_HiTG0, testParseWithMultipleOptionsAndStopAtNonOption_ZKqc2_ZIkY0, testParseWithPropertiesAndRequiredOptions_ldQk3_IedL0, testParseWithStopAtNonOption_LYHI1_XOEg0, testParseWithValidOptions_iQqE2_hGRP0, testParseWithProperties_eTec3_jNrU0, testParseWithRequiredArguments_TDQy0_HjzO0, testParseWithStopAtNonOption_LjTA3_pGZt0, testParseWithEmptyArguments_EMaL0, testParseWithStopAtNonOption_rUbD2, testParseWithStopAtNonOption_CXMo3, testParse_AllOptionsProvided_hIvA0, testParse_StopAtNonOption_faHc1, testParse_WithNegativeNumber_VrmN2, testParseWithValidLongOptionAndEqualSign_LqIG3, testParseWithNoArgumentsAndNoProperties_UvUS0, testParseWithUnrecognizedOption_PEJw0, testParseWithAmbiguousOption_rBkg2, testParseWithStopAtNonOption_tcdt3, testParseWithMultipleOptionsAndStopAtNonOption_DTfu3, testParseWithEmptyArgumentsAndNoProperties_fodu0, testParseWithSingleLongOption_gipp1, testParseWithLongOptionAndValue_mNxB2, testParseWithMultipleOptionsAndStopAtNonOption_wiDB3, testParseWithLongOptionEquals_lhiQ0, testParseWithProperties_JWRt3, testParseWithStopAtNonOption_zsNo3, testParseWithOptionAndValue_UETl2, testParseWithMultipleOptions_LtVg3, testParseWithMultipleOptions_FWUI2, testParseWithStopAtNonOption_sOqY3, testParseWithMultipleOptions_BFPs3, testParseWithUnknownOption_JRtB1, testParseWithMultipleOptions_dAan3, testParseWithStopAtNonOption_yFZz3, testParseWithUnrecognizedOption_gvDc0, testParseWithMissingRequiredArguments_dspK1, testParseWithEmptyArgumentsAndNoProperties_qgub0, testParseWithValidOptionInProperties_quAu2, testParseWithEmptyArgumentsAndEmptyProperties_ZDqj0, testParseWithValidOptionInProperties_vjuk2, testParseWithArgumentsAndStopAtNonOption_ozdJ3, testParseWithValidOptionInProperties_fTsg3, testParseWithAllRequiredOptionsProvidedViaProperties_ANZz3, testParseWithEmptyArgumentsAndProperties_upFi0
+- FAILED (23): testParseWithNonOptionStop_ZrHs3_2, testParseWithAmbiguousPartialMatchingLongOption_WhIh2, testParseWithValidLongOptionAndProperty_HNZM3_2, testParseWithAmbiguousPartialMatching_kkXA3, testParseWithUnrecognizedOption_bdlr0, testParseWithAmbiguousLongOption_uRXN2, testParseWithOptionAndProperties_vLGJ3, testParseWithUnknownOption_kRvg1, testParseWithMultipleOptionsIncludingUnknown_JWzr2, testParseWithRequiredOptionMissing_UzYy0, testParseStoppingAtNonOption_XpdY3, testParseWithRequiredOptionsMissing_qLQh2, testParseWithRequiredOptionsMissing_rIKk2, testParseStopAtNonOption_Kyax0_1, testParseStopAtNonOption_Kyax0_2, testParseWithValidOptionAndProperty_OJQQ2_gkzr0, testParseWithValidOptionAndProperties_bQYX2_ofuZ0, testParseWithPropertiesAndStopAtNonOption_ItHs3_eSiI0, testParseWithJavaProperty_gVuk2_LUIX0, testParseWithNonOptionStop_ZrHs3, testParseWithValidLongOptionAndProperty_HNZM3, testParseWithRequiredOptionsMissing_ymnh3, testParseStopAtNonOption_Kyax0
+- ERRORS (49): testParseWithNegativeNumberArgument_utqi0, testParseWithNegativeNumberArgument_gsFe0, testParse_withCurrentOptionAcceptsArgAndIsArgument_CsHL0, testParse_withTokenStartingWithDashAndNotSingleDash_duzE1, testParse_withNegativeNumberArgument_VyWK0, testParseWithNegativeNumberArgument_ykbv0, testParseWithCurrentOptionAcceptsArgAndIsArgument_zAWK0, testParseWithTokenStartingWithDashButNotSingleDash_HdyF1, testParseWithOptionToken_spcS0, testParse_WithTokenStartingWithDashNotEqualsSingleDash_RlCT1, testParseWithTokenStartingWithDash_KVra1, testParseWithCurrentOptionAcceptsArgAndIsArgument_kEMO0, testParseWithTokenStartingWithDashButNotSingleDash_bwEU1, testParseWithCurrentOptionAcceptsArg_uKtF0, testParseWithDashPrefixNotSingleDash_Ewys1, testParseWithStripQuotesNull_jdzj0, testParseWithStripQuotesFalse_gAQu1, testParseWithCurrentOptionAcceptsArgAndIsArgument_rycB0, testParseWithTokenStartingWithDashButNotSingleDash_OfwN1, testParseWithTokenStartingWithDashButNotSingleDash_cINV1, testParseWithTokenStartingWithDash_hmIP1, testParse_TokenStartsWithDashButNotSingleDash_limw1, testOptionNotSelectedAndNotPresentInCmd_ChZd1, testOptionValuesNull_kryX2, testHandleUnknownToken_qkEU0, testParseWithTokenStartingWithDashNotEqualsDash_CINE1, testParse_NullToken_WAUZ0, testParse_LongOptionWithoutEqualSign_wZCZ3, testParse_LongOptionWithPrefixAndNoDoubleDash_IfEE5, testParse_NullToken_ShouldNotBeShortOption_Gzin0, testParse_ShortOptionWithEquals_ShouldHandleShortOption_kEGg2, testParse_ValidShortOption_ShouldReturnTrue_dSOI3, testParse_MultipleShortOptionsConcatenated_ShouldHandleEach_wOxB4, testParse_NullToken_utys0_1, testParse_NullToken_utys0, testParse_LongOptionPrefix_fkTj4, testParse_NullToken_Omyt0, testParse_ShortOptionExists_ahoT0, testParse_HandleUnknownToken_dRad1, testParse_JavaProperty_paSQ5, testParse_HandleConcatenatedOptions_VLAq8, testParse_withOptionTokens_kFTe0, testContinueOnInvalidBooleanValue_LqbL4, testParseWithUnknownOption_Dulm2, testParse_WithProperties_msVO3_1, testParse_WithProperties_msVO3_2, testParseWithJavaPropertyOption_NEOI3, testParseWithJavaProperty_VDVS2, testParse_WithProperties_msVO3
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ArrayList -> java.util.ArrayList
+//   Enumeration -> java.util.Enumeration
+//   List -> java.util.List
+//   Properties -> java.util.Properties
+//   Consumer -> java.util.function.Consumer
+//   DefaultParser -> org.apache.commons.cli.DefaultParser
+
+// === Class: DefaultParser ===
+// Fields (with actual visibility):
+    private final boolean allowPartialMatching;
+    private final Consumer deprecatedHandler;
+    private final Boolean stripLeadingAndTrailingQuotes;
+    protected CommandLine cmd;
+    protected Options options;
+    protected boolean stopAtNonOption;
+    protected String currentToken;
+    protected Option currentOption;
+    protected boolean skipParsing;
+    protected List expectedOpts;
+
+// Constructors:
+private Builder();
+public DefaultParser();
+public DefaultParser(boolean allowPartialMatching);
+private DefaultParser(boolean allowPartialMatching, Boolean stripLeadingAndTrailingQuotes, Consumer deprecatedHandler);
+
+// Getter/Setter Methods (for test assertions):
+public Builder setAllowPartialMatching(final boolean allowPartialMatching);
+public Builder setDeprecatedHandler(final Consumer<Option> deprecatedHandler);
+public Builder setStripLeadingAndTrailingQuotes(final Boolean stripLeadingAndTrailingQuotes);
+private String getLongPrefix(final String token);
+private List<String> getMatchingLongOptions(final String token);
+private boolean isArgument(final String token);
+private boolean isJavaProperty(final String token);
+private boolean isLongOption(final String token);
+private boolean isNegativeNumber(final String token);
+private boolean isOption(final String token);
+private boolean isShortOption(final String token);
+
+// Internal Methods (full implementation for context):
+    private void handleProperties(final Properties properties) throws ParseException {
+        if (properties == null) {
+            return;
+        }
+        for (final Enumeration<?> e = properties.propertyNames(); e.hasMoreElements();) {
+            final String option = e.nextElement().toString();
+            final Option opt = options.getOption(option);
+            if (opt == null) {
+                throw new UnrecognizedOptionException("Default option wasn't defined", option);
+            }
+            // if the option is part of a group, check if another option of the group has been selected
+            final OptionGroup group = options.getOptionGroup(opt);
+            final boolean selected = group != null && group.getSelected() != null;
+            if (!cmd.hasOption(option) && !selected) {
+                // get the value from the properties
+                final String value = properties.getProperty(option);
+
+                if (opt.hasArg()) {
+                    if (opt.getValues() == null || opt.getValues().length == 0) {
+                        opt.processValue(stripLeadingAndTrailingQuotesDefaultOff(value));
+                    }
+                } else if (!("yes".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value) || "1".equalsIgnoreCase(value))) {
+                    // if the value is not yes, true or 1 then don't add the option to the CommandLine
+                    continue;
+                }
+                handleOption(opt);
+                currentOption = null;
+            }
+        }
+    }
+    private void checkRequiredArgs() throws ParseException {
+        if (currentOption != null && currentOption.requiresArg()) {
+            if (isJavaProperty(currentOption.getKey()) && currentOption.getValuesList().size() == 1) {
+                return;
+            }
+            throw new MissingArgumentException(currentOption);
+        }
+    }
+    protected void checkRequiredOptions() throws MissingOptionException {
+        // if there are required options that have not been processed
+        if (!expectedOpts.isEmpty()) {
+            throw new MissingOptionException(expectedOpts);
+        }
+    }
+    private void handleToken(final String token) throws ParseException {
+        currentToken = token;
+        if (skipParsing) {
+            cmd.addArg(token);
+        } else if ("--".equals(token)) {
+            skipParsing = true;
+        } else if (currentOption != null && currentOption.acceptsArg() && isArgument(token)) {
+            currentOption.processValue(stripLeadingAndTrailingQuotesDefaultOn(token));
+        } else if (token.startsWith("--")) {
+            handleLongOption(token);
+        } else if (token.startsWith("-") && !"-".equals(token)) {
+            handleShortAndLongOption(token);
+        } else {
+            handleUnknownToken(token);
+        }
+        if (currentOption != null && !currentOption.acceptsArg()) {
+            currentOption = null;
+        }
+    }
+
+// === External Class: Options ===
+// Full import path: org.apache.commons.cli.Options
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final Map shortOpts;
+    private final Map longOpts;
+    private final List requiredOpts;
+    private final Map optionGroups;
+// Method Signatures (used by target method):
+Collection getOptionGroups();
+public List getRequiredOptions();
+// Public Getter Methods (for test assertions):
+public List<String> getMatchingOptions(String opt);
+public Option getOption(String opt);
+public OptionGroup getOptionGroup(Option opt);
+public Collection<Option> getOptions();
+public boolean hasLongOption(String opt);
+public boolean hasOption(String opt);
+public boolean hasShortOption(String opt);
+public String toString();
+
+// === External Class: OptionGroup ===
+// Full import path: org.apache.commons.cli.OptionGroup
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final Map optionMap;
+    private String selected;
+    private boolean required;
+// Method Signatures (used by target method):
+public void setSelected(final Option option);
+// Public Getter Methods (for test assertions):
+public Collection<String> getNames();
+public Collection<Option> getOptions();
+public String getSelected();
+public boolean isRequired();
+public String toString();
+
+// === External Class: CommandLine ===
+// Full import path: org.apache.commons.cli.CommandLine
+// Fields (with actual visibility):
+    package-private static final Consumer DEPRECATED_HANDLER;
+    private final List args;
+    private final List options;
+    private final Consumer deprecatedHandler;
+    private static final long serialVersionUID;
+// Constructors:
+protected CommandLine();
+private CommandLine(List args, List options, Consumer deprecatedHandler);
+// Method Signatures (used by target method):
+public static Builder builder();
+// Public Getter Methods (for test assertions):
+public List<String> getArgList();
+public String getArgs();
+public Object getOptionObject(char opt);
+public Object getOptionObject(String opt);
+public Properties getOptionProperties(Option option);
+public Properties getOptionProperties(String opt);
+public Option getOptions();
+public String getOptionValue(char opt);
+public String getOptionValue(char opt, String defaultValue);
+public String getOptionValue(char opt, Supplier defaultValue);
+
+// === Exception Class: ParseException ===
+// Constructors:
+public ParseException(String message);
+public ParseException(Throwable e);
+
+
+TASK:
+Regenerate ONLY the method "parse" OF CLASS "DefaultParser" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public CommandLine parse(final Options options, final String[] arguments, final Properties properties, final boolean stopAtNonOption) throws ParseException {
+    // your implementation here
+}
+```
+
+- Package: org.apache.commons.cli
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "parse"
+- Allowed imports: exactly those already present in DefaultParser
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

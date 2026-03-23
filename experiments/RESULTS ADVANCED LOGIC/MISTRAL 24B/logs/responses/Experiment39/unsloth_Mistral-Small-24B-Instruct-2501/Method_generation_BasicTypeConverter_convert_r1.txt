@@ -1,0 +1,49 @@
+```java
+public Object convert(final Object object, final Class toType) {
+    if (object == null) {
+        return convertNullToPrimitive(toType);
+    }
+
+    if (toType.isPrimitive()) {
+        if (object instanceof Boolean) {
+            return convertBooleanToNumber((Boolean) object, toType);
+        }
+        if (object instanceof Number) {
+            return allocateNumber(toType, ((Number) object).doubleValue());
+        }
+        if (object instanceof String) {
+            return convertStringToPrimitive(object, toType);
+        }
+    } else if (toType.isAssignableFrom(object.getClass())) {
+        return object;
+    } else if (toType.isAssignableFrom(Collection.class)) {
+        if (object.getClass().isArray()) {
+            return new ArrayList(Arrays.asList((Object[]) object));
+        }
+        if (object instanceof Collection) {
+            return unmodifiableCollection((Collection) object);
+        }
+    } else if (toType.isArray()) {
+        Class componentType = toType.getComponentType();
+        if (componentType.isPrimitive()) {
+            throw new JXPathTypeConversionException("Cannot convert to primitive array type: " + toType);
+        }
+        if (object instanceof Collection) {
+            return ((Collection) object).toArray((Object[]) Array.newInstance(componentType, 0));
+        }
+        if (object.getClass().isArray()) {
+            return Arrays.copyOf((Object[]) object, ((Object[]) object).length, (Class<?>) toType);
+        }
+    }
+
+    if (ConvertUtils.canConvert(object, toType)) {
+        return ConvertUtils.convert(object, toType);
+    }
+
+    if (toType == String.class) {
+        return String.valueOf(object);
+    }
+
+    throw new JXPathTypeConversionException("Cannot convert " + object + " to " + toType);
+}
+```

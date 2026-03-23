@@ -1,0 +1,226 @@
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class BasicTypeConverter_convertTestGenerated {
+
+    private BasicTypeConverter converter;
+
+    @Mock
+    private NodeSet mockNodeSet;
+
+    @Mock
+    private Pointer mockPointer;
+
+    @Mock
+    private Converter mockConverter;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        converter = new BasicTypeConverter();
+        ConvertUtils.register(mockConverter, String.class);
+    }
+
+    @Test
+    public void testConvertNullToPrimitive() {
+        assertEquals(Boolean.FALSE, converter.convert(null, boolean.class));
+        assertEquals(Character.valueOf('\0'), converter.convert(null, char.class));
+        assertEquals(Byte.valueOf((byte) 0), converter.convert(null, byte.class));
+        assertEquals(Short.valueOf((short) 0), converter.convert(null, short.class));
+        assertEquals(Integer.valueOf(0), converter.convert(null, int.class));
+        assertEquals(Long.valueOf(0L), converter.convert(null, long.class));
+        assertEquals(Float.valueOf(0.0f), converter.convert(null, float.class));
+        assertEquals(Double.valueOf(0.0), converter.convert(null, double.class));
+    }
+
+    @Test
+    public void testConvertNullToObject() {
+        assertNull(converter.convert(null, Object.class));
+    }
+
+    @Test
+    public void testConvertObjectToObject() {
+        Object obj = new Object();
+        assertSame(obj, converter.convert(obj, Object.class));
+    }
+
+    @Test
+    public void testConvertNodeSetToObject() {
+        List<String> values = Collections.singletonList("value1");
+        when(mockNodeSet.getValues()).thenReturn(values);
+        assertSame(values, converter.convert(mockNodeSet, Object.class));
+    }
+
+    @Test
+    public void testConvertPointerToObject() {
+        Object value = new Object();
+        when(mockPointer.getValue()).thenReturn(value);
+        assertSame(value, converter.convert(mockPointer, Object.class));
+    }
+
+    @Test
+    public void testConvertCompatibleTypes() {
+        Integer intValue = 42;
+        assertSame(intValue, converter.convert(intValue, Integer.class));
+    }
+
+    @Test
+    public void testConvertArrayToArray() {
+        Integer[] intArray = {1, 2, 3};
+        assertArrayEquals(intArray, (Integer[]) converter.convert(intArray, Integer[].class));
+    }
+
+    @Test
+    public void testConvertArrayToCollection() {
+        Integer[] intArray = {1, 2, 3};
+        Collection<Integer> result = (Collection<Integer>) converter.convert(intArray, List.class);
+        assertTrue(result instanceof List);
+        assertEquals(Collections.singletonList(1), result);
+    }
+
+    @Test
+    public void testConvertArrayToSingleElement() {
+        Integer[] intArray = {1};
+        assertEquals(Integer.valueOf(1), converter.convert(intArray, Integer.class));
+    }
+
+    @Test
+    public void testConvertArrayToEmptyString() {
+        Integer[] intArray = {};
+        assertEquals("", converter.convert(intArray, String.class));
+    }
+
+    @Test
+    public void testConvertCollectionToArray() {
+        List<Integer> intList = Collections.singletonList(1);
+        assertArrayEquals(new Integer[]{1}, (Integer[]) converter.convert(intList, Integer[].class));
+    }
+
+    @Test
+    public void testConvertCollectionToCollection() {
+        List<Integer> intList = Collections.singletonList(1);
+        Collection<Integer> result = (Collection<Integer>) converter.convert(intList, List.class);
+        assertTrue(result instanceof List);
+        assertEquals(Collections.singletonList(1), result);
+    }
+
+    @Test
+    public void testConvertCollectionToSingleElement() {
+        List<Integer> intList = Collections.singletonList(1);
+        assertEquals(Integer.valueOf(1), converter.convert(intList, Integer.class));
+    }
+
+    @Test
+    public void testConvertCollectionToEmptyString() {
+        List<Integer> intList = Collections.emptyList();
+        assertEquals("", converter.convert(intList, String.class));
+    }
+
+    @Test
+    public void testConvertNodeSetToValues() {
+        List<String> values = Collections.singletonList("value1");
+        when(mockNodeSet.getValues()).thenReturn(values);
+        assertEquals(values, converter.convert(mockNodeSet, List.class));
+    }
+
+    @Test
+    public void testConvertPointerToValue() {
+        Object value = new Object();
+        when(mockPointer.getValue()).thenReturn(value);
+        assertSame(value, converter.convert(mockPointer, Object.class));
+    }
+
+    @Test
+    public void testConvertToString() {
+        Object obj = new Object();
+        assertEquals(obj.toString(), converter.convert(obj, String.class));
+    }
+
+    @Test
+    public void testConvertBooleanToNumber() {
+        assertEquals(Integer.valueOf(1), converter.convert(Boolean.TRUE, Integer.class));
+        assertEquals(Integer.valueOf(0), converter.convert(Boolean.FALSE, Integer.class));
+    }
+
+    @Test
+    public void testConvertNumberToBoolean() {
+        assertEquals(Boolean.TRUE, converter.convert(Integer.valueOf(1), Boolean.class));
+        assertEquals(Boolean.FALSE, converter.convert(Integer.valueOf(0), Boolean.class));
+    }
+
+    @Test
+    public void testConvertStringToPrimitive() {
+        assertEquals(Boolean.TRUE, converter.convert("true", Boolean.class));
+        assertEquals(Character.valueOf('a'), converter.convert("a", Character.class));
+        assertEquals(Byte.valueOf((byte) 1), converter.convert("1", Byte.class));
+        assertEquals(Short.valueOf((short) 1), converter.convert("1", Short.class));
+        assertEquals(Integer.valueOf(1), converter.convert("1", Integer.class));
+        assertEquals(Long.valueOf(1L), converter.convert("1", Long.class));
+        assertEquals(Float.valueOf(1.0f), converter.convert("1.0", Float.class));
+        assertEquals(Double.valueOf(1.0), converter.convert("1.0", Double.class));
+    }
+
+    @Test
+    public void testConvertUsingConverter() {
+        when(mockConverter.convert(String.class, "test")).thenReturn("converted");
+        assertEquals("converted", converter.convert("test", String.class));
+    }
+
+    @Test
+    public void testConvertUnsupportedType() {
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert(new Object(), String.class));
+    }
+
+    @Test
+    public void testConvertUnsupportedArrayType() {
+        Object[] array = {new Object()};
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert(array, Integer[].class));
+    }
+
+    @Test
+    public void testConvertUnsupportedCollectionType() {
+        List<Object> list = Collections.singletonList(new Object());
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert(list, Integer[].class));
+    }
+
+    @Test
+    public void testConvertUnsupportedNodeSetType() {
+        List<Object> values = Collections.singletonList(new Object());
+        when(mockNodeSet.getValues()).thenReturn(values);
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert(mockNodeSet, Integer[].class));
+    }
+
+    @Test
+    public void testConvertUnsupportedPointerType() {
+        Object value = new Object();
+        when(mockPointer.getValue()).thenReturn(value);
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert(mockPointer, Integer[].class));
+    }
+}

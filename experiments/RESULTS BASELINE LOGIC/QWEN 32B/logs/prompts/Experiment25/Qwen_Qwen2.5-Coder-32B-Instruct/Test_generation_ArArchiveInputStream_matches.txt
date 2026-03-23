@@ -1,0 +1,98 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package org.apache.commons.compress.archivers.ar;
+
+PROJECT CONTEXT:
+// === Imports of ArArchiveInputStream ===
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.utils.ArchiveUtils;
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.compress.utils.ParsingUtils;
+
+// === Class: ArArchiveInputStream ===
+// Fields:
+    private int NAME_OFFSET;
+    private int NAME_LEN;
+    private int LAST_MODIFIED_OFFSET;
+    private int LAST_MODIFIED_LEN;
+    private int USER_ID_OFFSET;
+    private int USER_ID_LEN;
+    private int GROUP_ID_OFFSET;
+    private int GROUP_ID_LEN;
+    private int FILE_MODE_OFFSET;
+    private int FILE_MODE_LEN;
+    private int LENGTH_OFFSET;
+    private int LENGTH_LEN;
+    private String BSD_LONGNAME_PREFIX;
+    private int BSD_LONGNAME_PREFIX_LEN;
+    private Pattern BSD_LONGNAME_PATTERN;
+    private String GNU_STRING_TABLE_NAME;
+    private Pattern GNU_LONGNAME_PATTERN;
+    private long offset;
+    private boolean closed;
+    private ArArchiveEntry currentEntry;
+    private byte namebuffer;
+    private long entryOffset;
+    private byte metaData;
+
+// Constructors:
+public ArArchiveInputStream(InputStream inputStream);
+
+// Getter/Setter Methods (for test assertions):
+private static boolean isBSDLongName(final String name);
+private static boolean isGNUStringTable(final String name);
+private String getBSDLongName(final String bsdLongName) throws IOException;
+private String getExtendedName(final int offset) throws IOException;
+public ArArchiveEntry getNextArEntry() throws IOException;
+public ArArchiveEntry getNextEntry() throws IOException;
+private boolean isGNULongName(final String name);
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+    /**
+     * Checks if the signature matches ASCII "!&lt;arch&gt;" followed by a single LF control character
+     *
+     * @param signature the bytes to check
+     * @param length    the number of bytes to check
+     * @return true, if this stream is an Ar archive stream, false otherwise
+     */
+    public static boolean matches(final byte[] signature, final int length) {
+        // 3c21 7261 6863 0a3e
+
+        return length >= 8 && signature[0] == 0x21 && signature[1] == 0x3c && signature[2] == 0x61 && signature[3] == 0x72 && signature[4] == 0x63
+                && signature[5] == 0x68 && signature[6] == 0x3e && signature[7] == 0x0a;
+    }
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "matches" of class "ArArchiveInputStream".
+
+REQUIREMENTS:
+- Test class name: ArArchiveInputStream_matchesTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths, edge cases, and boundary conditions
+- Test both valid inputs and error scenarios (null values, empty collections, invalid arguments)
+- Cover expected exceptions declared in the method signature
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- DO NOT use getter/setter methods that are not present in the provided class context
+- DO NOT mock the target class
+- Generate ONLY the test class without explanations or comments outside the code
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

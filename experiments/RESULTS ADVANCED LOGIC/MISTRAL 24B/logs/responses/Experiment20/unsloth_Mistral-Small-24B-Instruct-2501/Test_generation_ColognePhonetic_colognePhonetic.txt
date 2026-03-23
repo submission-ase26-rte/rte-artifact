@@ -1,0 +1,101 @@
+```java
+package org.apache.commons.codec.language;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class ColognePhonetic_colognePhoneticTestGenerated {
+
+    private ColognePhonetic colognePhonetic;
+
+    @BeforeEach
+    public void setUp() {
+        colognePhonetic = new ColognePhonetic() {
+            @Override
+            public char[] copyData(int start, int length) {
+                return new char[0];
+            }
+        };
+    }
+
+    @Test
+    public void testColognePhonetic_NullInput() {
+        assertNull(colognePhonetic.colognePhonetic(null));
+    }
+
+    @Test
+    public void testColognePhonetic_EmptyInput() {
+        assertEquals("", colognePhonetic.colognePhonetic(""));
+    }
+
+    @Test
+    public void testColognePhonetic_SimpleInput() {
+        assertEquals("0", colognePhonetic.colognePhonetic("A"));
+        assertEquals("1", colognePhonetic.colognePhonetic("B"));
+        assertEquals("3", colognePhonetic.colognePhonetic("F"));
+        assertEquals("4", colognePhonetic.colognePhonetic("G"));
+        assertEquals("8", colognePhonetic.colognePhonetic("S"));
+        assertEquals("0", colognePhonetic.colognePhonetic("U"));
+        assertEquals("0", colognePhonetic.colognePhonetic("Y"));
+    }
+
+    @Test
+    public void testColognePhonetic_MultipleCharacters() {
+        assertEquals("1342", colognePhonetic.colognePhonetic("BFPQ"));
+        assertEquals("88", colognePhonetic.colognePhonetic("SS"));
+        assertEquals("031", colognePhonetic.colognePhonetic("AEF"));
+        assertEquals("384", colognePhonetic.colognePhonetic("FSD"));
+        assertEquals("484", colognePhonetic.colognePhonetic("GXG"));
+        assertEquals("447", colognePhonetic.colognePhonetic("GRR"));
+        assertEquals("358", colognePhonetic.colognePhonetic("FIL"));
+        assertEquals("222", colognePhonetic.colognePhonetic("DTT"));
+    }
+
+    @Test
+    public void testColognePhonetic_NumericAndSpecialCharacters() {
+        assertEquals("0", colognePhonetic.colognePhonetic("12345"));
+        assertEquals("0", colognePhonetic.colognePhonetic("!@#$%"));
+        assertEquals("0", colognePhonetic.colognePhonetic("A1B2C3"));
+    }
+
+    @Test
+    public void testColognePhonetic_UpperCaseInput() {
+        assertEquals("0", colognePhonetic.colognePhonetic("A"));
+        assertEquals("3", colognePhonetic.colognePhonetic("F"));
+        assertEquals("4", colognePhonetic.colognePhonetic("G"));
+        assertEquals("8", colognePhonetic.colognePhonetic("S"));
+    }
+
+    @Test
+    public void testColognePhonetic_LowerCaseInput() {
+        assertEquals("0", colognePhonetic.colognePhonetic("a"));
+        assertEquals("3", colognePhonetic.colognePhonetic("f"));
+        assertEquals("4", colognePhonetic.colognePhonetic("g"));
+        assertEquals("8", colognePhonetic.colognePhonetic("s"));
+    }
+
+    @Test
+    public void testColognePhonetic_UmlautCharacters() {
+        assertEquals("0", colognePhonetic.colognePhonetic("Ä"));
+        assertEquals("0", colognePhonetic.colognePhonetic("Ö"));
+        assertEquals("0", colognePhonetic.colognePhonetic("Ü"));
+    }
+
+    @Test
+    public void testColognePhonetic_Eszett() {
+        assertEquals("88", colognePhonetic.colognePhonetic("ß"));
+    }
+
+    @Test
+    public void testColognePhonetic_MixedCharacters() {
+        assertEquals("031065", colognePhonetic.colognePhonetic("AEFML"));
+        assertEquals("0310658", colognePhonetic.colognePhonetic("AEFMLS"));
+        assertEquals("03106584", colognePhonetic.colognePhonetic("AEFMLSG"));
+        assertEquals("031065848", colognePhonetic.colognePhonetic("AEFMLSGX"));
+    }
+}
+```

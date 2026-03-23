@@ -1,0 +1,98 @@
+package org.springframework.samples.petclinic.owner;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PetValidator_validateTestGenerated {
+
+    @InjectMocks
+    private PetValidator petValidator;
+
+    @Mock
+    private Pet pet;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testValidate_ValidPet() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        Set<Visit> visits = new LinkedHashSet<>();
+        PetType petType = new PetType();
+
+        // Assume a valid Pet instance
+        // Mockito.when(pet.getName()).thenReturn("Valid Name");
+        // Mockito.when(pet.isNew()).thenReturn(false);
+        // Mockito.when(pet.getType()).thenReturn(petType);
+        // Mockito.when(pet.getBirthDate()).thenReturn(LocalDate.now());
+
+        // Act
+        petValidator.validate(pet, errors);
+
+        // Assert
+        assertEquals(0, errors.getErrorCount());
+    }
+
+    @Test
+    public void testValidate_InvalidName() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        // Mockito.when(pet.getName()).thenReturn("");
+
+        // Act
+        petValidator.validate(pet, errors);
+
+        // Assert
+        assertEquals(1, errors.getErrorCount());
+        assertEquals("required", errors.getFieldError("name").getCode());
+    }
+
+    @Test
+    public void testValidate_NewPetWithNullType() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        // Mockito.when(pet.isNew()).thenReturn(true);
+        // Mockito.when(pet.getType()).thenReturn(null);
+
+        // Act
+        petValidator.validate(pet, errors);
+
+        // Assert
+        assertEquals(1, errors.getErrorCount());
+        assertEquals("required", errors.getFieldError("type").getCode());
+    }
+
+    @Test
+    public void testValidate_NullBirthDate() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        // Mockito.when(pet.getBirthDate()).thenReturn(null);
+
+        // Act
+        petValidator.validate(pet, errors);
+
+        // Assert
+        assertEquals(1, errors.getErrorCount());
+        assertEquals("required", errors.getFieldError("birthDate").getCode());
+    }
+
+}

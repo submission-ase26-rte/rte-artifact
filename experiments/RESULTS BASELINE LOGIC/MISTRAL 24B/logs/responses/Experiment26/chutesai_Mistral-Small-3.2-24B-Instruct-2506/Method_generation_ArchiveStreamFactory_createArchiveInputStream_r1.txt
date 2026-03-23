@@ -1,0 +1,38 @@
+```java
+public <I extends ArchiveInputStream<? extends ArchiveEntry>> I createArchiveInputStream(final String archiverName, final InputStream in, final String actualEncoding) throws ArchiveException {
+    if (archiverName == null) {
+        throw new IllegalArgumentException("archiverName must not be null");
+    }
+    if (in == null) {
+        throw new IllegalArgumentException("input stream must not be null");
+    }
+
+    final String key = toKey(archiverName);
+    final ArchiveStreamProvider archiveStreamProvider = getArchiveInputStreamProviders().get(key);
+    if (archiveStreamProvider != null) {
+        return archiveStreamProvider.createArchiveInputStream(archiverName, in, actualEncoding);
+    }
+
+    switch (archiverName) {
+        case AR:
+            return (I) new ArArchiveInputStream(in);
+        case ARJ:
+            return (I) new ArjArchiveInputStream(in);
+        case ZIP:
+            return (I) new ZipArchiveInputStream(in, actualEncoding);
+        case TAR:
+            return (I) new TarArchiveInputStream(in, actualEncoding);
+        case JAR:
+        case APK:
+            return (I) new JarArchiveInputStream(in, actualEncoding);
+        case CPIO:
+            return (I) new CpioArchiveInputStream(in, actualEncoding);
+        case DUMP:
+            return (I) new DumpArchiveInputStream(in, actualEncoding);
+        case SEVEN_Z:
+            throw new StreamingNotSupportedException("7z");
+        default:
+            throw new ArchiveException("No ArchiveStreamProvider found for " + archiverName);
+    }
+}
+```

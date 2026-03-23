@@ -1,0 +1,467 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.compress.archivers;
+Class name (MUST be exactly): ArchiveStreamFactory_createArchiveOutputStreamTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testCreateArchiveOutputStreamWithUnknownArchiver --
+ERROR: org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <org.apache.commons.compress.archivers.ArchiveException> but was: <java.util.ServiceConfigurationError>
+Caused by: java.util.ServiceConfigurationError: org.apache.commons.compress.archivers.ArchiveStreamProvider: Provider org.apache.commons.compress.archivers.TestArchiveStreamProvider not found
+... 8 more
+--------------------------------------------------
+TEST: testCreateArchiveOutputStreamWithCustomProvider --
+ERROR: java.util.ServiceConfigurationError: org.apache.commons.compress.archivers.ArchiveStreamProvider: Provider org.apache.commons.compress.archivers.TestArchiveStreamProvider not found
+
+TEST CODE TO FIX:
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import org.apache.commons.compress.archivers.ar.ArArchiveOutputStream;
+import org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream;
+import org.apache.commons.compress.archivers.jar.JarArchiveOutputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.utils.Sets;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArchiveStreamFactory_createArchiveOutputStreamTestGenerated {
+    private ArchiveStreamFactory factory;
+    private OutputStream outputStream;
+    @Mock
+    private ArchiveStreamProvider mockProvider;
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        factory = new ArchiveStreamFactory();
+        outputStream = new ByteArrayOutputStream();
+    }
+
+
+    @Test
+        void testCreateArchiveOutputStreamWithUnknownArchiver() {
+            assertThrows(ArchiveException.class, () -> factory.createArchiveOutputStream("UNKNOWN", outputStream, "UTF-8"));
+        }
+
+    @Test
+        void testCreateArchiveOutputStreamWithCustomProvider() throws ArchiveException {
+            SortedMap<String, ArchiveStreamProvider> providers = new TreeMap<>();
+            providers.put(ArchiveStreamFactory.ZIP, mockProvider);
+            factory.getArchiveOutputStreamProviders().putAll(providers);
+    
+            when(mockProvider.createArchiveOutputStream("ZIP", outputStream, "UTF-8")).thenReturn(mock(ArchiveOutputStream.class));
+    
+            ArchiveOutputStream<?> result = factory.createArchiveOutputStream("ZIP", outputStream, "UTF-8");
+            assertNotNull(result);
+            verify(mockProvider).createArchiveOutputStream("ZIP", outputStream, "UTF-8");
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    void testCreateArchiveOutputStreamWithNullArchiverName() {}
+    @Test
+    void testCreateArchiveOutputStreamWithNullOutputStream() {}
+    @Test
+    void testCreateArchiveOutputStreamWithAr() {}
+    @Test
+    void testCreateArchiveOutputStreamWithZipAndEncoding() {}
+    @Test
+    void testCreateArchiveOutputStreamWithZipWithoutEncoding() {}
+    @Test
+    void testCreateArchiveOutputStreamWithTarAndEncoding() {}
+    @Test
+    void testCreateArchiveOutputStreamWithTarWithoutEncoding() {}
+    @Test
+    void testCreateArchiveOutputStreamWithJarAndEncoding() {}
+    @Test
+    void testCreateArchiveOutputStreamWithJarWithoutEncoding() {}
+    @Test
+    void testCreateArchiveOutputStreamWithCpioAndEncoding() {}
+    @Test
+    void testCreateArchiveOutputStreamWithCpioWithoutEncoding() {}
+    @Test
+    void testCreateArchiveOutputStreamWithSevenZ() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ByteArrayInputStream -> java.io.ByteArrayInputStream
+//   IOException -> java.io.IOException
+//   InputStream -> java.io.InputStream
+//   OutputStream -> java.io.OutputStream
+//   AccessController -> java.security.AccessController
+//   PrivilegedAction -> java.security.PrivilegedAction
+//   Collections -> java.util.Collections
+//   Locale -> java.util.Locale
+//   ServiceLoader -> java.util.ServiceLoader
+//   Set -> java.util.Set
+//   SortedMap -> java.util.SortedMap
+//   TreeMap -> java.util.TreeMap
+//   ArArchiveInputStream -> org.apache.commons.compress.archivers.ar.ArArchiveInputStream
+//   ArArchiveOutputStream -> org.apache.commons.compress.archivers.ar.ArArchiveOutputStream
+//   ArjArchiveInputStream -> org.apache.commons.compress.archivers.arj.ArjArchiveInputStream
+//   CpioArchiveInputStream -> org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream
+//   CpioArchiveOutputStream -> org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream
+//   DumpArchiveInputStream -> org.apache.commons.compress.archivers.dump.DumpArchiveInputStream
+//   JarArchiveInputStream -> org.apache.commons.compress.archivers.jar.JarArchiveInputStream
+//   JarArchiveOutputStream -> org.apache.commons.compress.archivers.jar.JarArchiveOutputStream
+//   SevenZFile -> org.apache.commons.compress.archivers.sevenz.SevenZFile
+//   TarArchiveEntry -> org.apache.commons.compress.archivers.tar.TarArchiveEntry
+//   TarArchiveInputStream -> org.apache.commons.compress.archivers.tar.TarArchiveInputStream
+//   TarArchiveOutputStream -> org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
+//   ZipArchiveInputStream -> org.apache.commons.compress.archivers.zip.ZipArchiveInputStream
+//   ZipArchiveOutputStream -> org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream
+//   IOUtils -> org.apache.commons.compress.utils.IOUtils
+//   Sets -> org.apache.commons.compress.utils.Sets
+//   ArchiveStreamFactory -> org.apache.commons.compress.archivers.ArchiveStreamFactory
+//   ArchiveStreamProvider -> org.apache.commons.compress.archivers.ArchiveStreamProvider
+//   ArchiveOutputStream -> org.apache.commons.compress.archivers.ArchiveOutputStream
+
+// === Class: ArchiveStreamFactory ===
+// Fields (with actual visibility):
+    private static final int TAR_HEADER_SIZE;
+    private static final int TAR_TEST_ENTRY_COUNT;
+    private static final int DUMP_SIGNATURE_SIZE;
+    private static final int SIGNATURE_SIZE;
+    public static final ArchiveStreamFactory DEFAULT;
+    public static final String APK;
+    public static final String XAPK;
+    public static final String APKS;
+    public static final String APKM;
+    public static final String AR;
+    public static final String ARJ;
+    public static final String CPIO;
+    public static final String DUMP;
+    public static final String JAR;
+    public static final String TAR;
+    public static final String ZIP;
+    public static final String SEVEN_Z;
+    private String entryEncoding;
+    private SortedMap archiveInputStreamProviders;
+    private SortedMap archiveOutputStreamProviders;
+
+// Constructors:
+public ArchiveStreamFactory();
+public ArchiveStreamFactory(String encoding);
+
+// Getter/Setter Methods (for test assertions):
+public SortedMap<String, ArchiveStreamProvider> getArchiveInputStreamProviders();
+public SortedMap<String, ArchiveStreamProvider> getArchiveOutputStreamProviders();
+public String getEntryEncoding();
+public Set<String> getInputStreamArchiveNames();
+public Set<String> getOutputStreamArchiveNames();
+public void setEntryEncoding(final String entryEncoding);
+
+// Internal Methods (full implementation for context):
+    public SortedMap<String, ArchiveStreamProvider> getArchiveOutputStreamProviders() {
+        if (archiveOutputStreamProviders == null) {
+            archiveOutputStreamProviders = Collections.unmodifiableSortedMap(findAvailableArchiveOutputStreamProviders());
+        }
+        return archiveOutputStreamProviders;
+    }
+    private static String toKey(final String name) {
+        return name.toUpperCase(Locale.ROOT);
+    }
+
+// === External Class: ZipArchiveOutputStream ===
+// Full import path: org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream
+// Import paths:
+//   ByteArrayOutputStream -> java.io.ByteArrayOutputStream
+//   File -> java.io.File
+//   IOException -> java.io.IOException
+//   InputStream -> java.io.InputStream
+//   OutputStream -> java.io.OutputStream
+// Fields (with actual visibility):
+    private CurrentEntry entry;
+    private long localDataStart;
+    private long dataStart;
+    private long bytesRead;
+    private boolean causedUseOfZip64;
+    private boolean hasWritten;
+    private final long offset;
+    private final boolean usesDataDescriptor;
+    public static final UnicodeExtraFieldPolicy ALWAYS;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final UnicodeExtraFieldPolicy NEVER;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final UnicodeExtraFieldPolicy NOT_ENCODEABLE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private final String name;
+    package-private static final int BUFFER_SIZE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int LFH_SIG_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int LFH_VERSION_NEEDED_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int LFH_GPB_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int LFH_METHOD_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int LFH_TIME_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int LFH_CRC_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int LFH_COMPRESSED_SIZE_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int LFH_ORIGINAL_SIZE_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int LFH_FILENAME_LENGTH_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int LFH_EXTRA_LENGTH_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int LFH_FILENAME_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_SIG_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_VERSION_MADE_BY_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_VERSION_NEEDED_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_GPB_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_METHOD_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_TIME_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_CRC_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_COMPRESSED_SIZE_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_ORIGINAL_SIZE_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_FILENAME_LENGTH_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_EXTRA_LENGTH_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_COMMENT_LENGTH_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_DISK_NUMBER_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_INTERNAL_ATTRIBUTES_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_EXTERNAL_ATTRIBUTES_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_LFH_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int CFH_FILENAME_OFFSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int DEFLATED;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int DEFAULT_COMPRESSION;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int STORED;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    package-private static final Charset DEFAULT_CHARSET;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int EFS_FLAG;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final byte[] ZERO;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final byte[] LZERO;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final byte[] ONE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    package-private static final byte[] LFH_SIG;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    package-private static final byte[] DD_SIG;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    package-private static final byte[] CFH_SIG;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    package-private static final byte[] EOCD_SIG;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    package-private static final byte[] ZIP64_EOCD_SIG;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    package-private static final byte[] ZIP64_EOCD_LOC_SIG;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    protected boolean finished;
+    private String comment;
+    private int level;
+    private boolean hasCompressionLevelChanged;
+    private int method;
+    private final List entries;
+    private final StreamCompressor streamCompressor;
+    private long cdOffset;
+    private long cdLength;
+    private long cdDiskNumberStart;
+    private long eocdLength;
+    private final Map metaData;
+    private Charset charset;
+    private ZipEncoding zipEncoding;
+    protected final Deflater def;
+    private final OutputStream outputStream;
+    private boolean useUTF8Flag;
+    private boolean fallbackToUTF8;
+    private UnicodeExtraFieldPolicy createUnicodeExtraFields;
+    private boolean hasUsedZip64;
+    private Zip64Mode zip64Mode;
+    private final byte[] copyBuffer;
+    private final boolean isSplitZip;
+    private final Map numberOfCDInDiskData;
+
+// Constructors:
+private CurrentEntry(ZipArchiveEntry entry);
+private EntryMetaData(long offset, boolean usesDataDescriptor);
+private UnicodeExtraFieldPolicy(String n);
+public ZipArchiveOutputStream(File file);
+public ZipArchiveOutputStream(File file, long zipSplitSize);
+public ZipArchiveOutputStream(OutputStream out);
+public ZipArchiveOutputStream(Path path, long zipSplitSize);
+public ZipArchiveOutputStream(Path file, OpenOption options);
+public ZipArchiveOutputStream(SeekableByteChannel channel);
+
+// Method Signatures (used by target method):
+private void setEncoding(final Charset encoding);
+
+// Public Getter Methods (for test assertions):
+public String toString();
+public boolean canWriteEntryData(ArchiveEntry ae);
+public long getBytesWritten();
+public String getEncoding();
+public boolean isSeekable();
+
+// === External Class: ArchiveStreamProvider ===
+// Full import path: org.apache.commons.compress.archivers.ArchiveStreamProvider
+// Type: INTERFACE (cannot instantiate - use Mockito.mock(ArchiveStreamProvider.class) instead)
+// Import paths:
+//   InputStream -> java.io.InputStream
+//   OutputStream -> java.io.OutputStream
+//   Set -> java.util.Set
+// Method Signatures (used by target method):
+O createArchiveOutputStream(String archiverName, OutputStream outputStream, String encoding);
+
+// === External Class: ArchiveOutputStream ===
+// Full import path: org.apache.commons.compress.archivers.ArchiveOutputStream
+// Type: ABSTRACT CLASS (cannot instantiate directly - use Mockito.mock() or anonymous subclass)
+// Import paths:
+//   File -> java.io.File
+//   IOException -> java.io.IOException
+//   OutputStream -> java.io.OutputStream
+//   LinkOption -> java.nio.file.LinkOption
+//   Path -> java.nio.file.Path
+// Fields (with actual visibility):
+    package-private static final int BYTE_MASK;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private final byte[] oneByte;
+    private long bytesWritten;
+
+
+// Public Getter Methods (for test assertions):
+public boolean canWriteEntryData(ArchiveEntry archiveEntry);
+public long getBytesWritten();
+public int getCount();
+
+
+// === Exception Class: ArchiveException ===
+// NOTE: The target method throws this exception.
+// Constructors:
+public ArchiveException(String message);
+public ArchiveException(String message, Exception cause);
+
+
+EXCEPTION HANDLING IN TESTS - Use ONE of these patterns:
+Pattern 1 (for tests that EXPECT the exception to be thrown):
+```java
+@Test
+void testMethodThrowsArchiveException() {
+assertThrows(ArchiveException.class, () -> targetMethod(...));
+}
+```
+
+
+Pattern 2 (for tests where exception should NOT occur):
+```java
+@Test
+void testMethodSucceeds() throws ArchiveException {
+// Call method directly - exception propagates if thrown
+result = targetMethod(...);
+assertNotNull(result);
+}
+```
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        factory = new ArchiveStreamFactory();
+        outputStream = new ByteArrayOutputStream();
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public <O extends ArchiveOutputStream<? extends ArchiveEntry>> O createArchiveOutputStream(final String archiverName, final OutputStream out,
+            final String actualEncoding) throws ArchiveException {
+        if (archiverName == null) {
+            throw new IllegalArgumentException("Archiver name must not be null.");
+        }
+        if (out == null) {
+            throw new IllegalArgumentException("OutputStream must not be null.");
+        }
+
+        if (AR.equalsIgnoreCase(archiverName)) {
+            return (O) new ArArchiveOutputStream(out);
+        }
+        if (ZIP.equalsIgnoreCase(archiverName)) {
+            final ZipArchiveOutputStream zip = new ZipArchiveOutputStream(out);
+            if (actualEncoding != null) {
+                zip.setEncoding(actualEncoding);
+            }
+            return (O) zip;
+        }
+        if (TAR.equalsIgnoreCase(archiverName)) {
+            if (actualEncoding != null) {
+                return (O) new TarArchiveOutputStream(out, actualEncoding);
+            }
+            return (O) new TarArchiveOutputStream(out);
+        }
+        if (JAR.equalsIgnoreCase(archiverName)) {
+            if (actualEncoding != null) {
+                return (O) new JarArchiveOutputStream(out, actualEncoding);
+            }
+            return (O) new JarArchiveOutputStream(out);
+        }
+        if (CPIO.equalsIgnoreCase(archiverName)) {
+            if (actualEncoding != null) {
+                return (O) new CpioArchiveOutputStream(out, actualEncoding);
+            }
+            return (O) new CpioArchiveOutputStream(out);
+        }
+        if (SEVEN_Z.equalsIgnoreCase(archiverName)) { // NOT COVERED BY TESTS
+            throw new StreamingNotSupportedException(SEVEN_Z);
+        }
+
+        final ArchiveStreamProvider archiveStreamProvider = getArchiveOutputStreamProviders().get(toKey(archiverName)); // NOT COVERED BY TESTS
+        if (archiveStreamProvider != null) { // NOT COVERED BY TESTS
+            return archiveStreamProvider.createArchiveOutputStream(archiverName, out, actualEncoding); // NOT COVERED BY TESTS
+        }
+
+        throw new ArchiveException("Archiver: " + archiverName + " not found."); // NOT COVERED BY TESTS
+    }
+
+
+COVERAGE ISSUES:
+Current line coverage: 86.21%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

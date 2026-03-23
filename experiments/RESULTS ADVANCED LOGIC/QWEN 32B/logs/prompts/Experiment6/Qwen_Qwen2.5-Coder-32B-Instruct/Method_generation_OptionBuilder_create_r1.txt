@@ -1,0 +1,326 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.springframework.test.util.ReflectionTestUtils;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class OptionBuilder_createTestGenerated {
+
+    @BeforeEach
+    public void setUp() {
+        // Reset OptionBuilder before each test
+        ReflectionTestUtils.invokeMethod(OptionBuilder.class, "reset");
+    }
+
+    @AfterEach
+    public void tearDown() {
+        // Reset OptionBuilder after each test
+        ReflectionTestUtils.invokeMethod(OptionBuilder.class, "reset");
+    }
+
+    @Test
+    public void testCreateWithValidShortOption() {
+        // Arrange
+        String opt = "a";
+        String description = "Option A";
+        OptionBuilder.withDescription(description);
+        // Act
+        Option option = OptionBuilder.create(opt);
+        // Assert
+        assertEquals(opt, option.getOpt());
+        assertEquals(description, option.getDescription());
+        assertNull(option.getLongOpt());
+        assertFalse(option.isRequired());
+        assertFalse(option.hasOptionalArg());
+        assertEquals(Option.UNINITIALIZED, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals((char) 0, option.getValueSeparator());
+        assertNull(option.getArgName());
+    }
+
+    @Test
+    public void testCreateWithLongOption() {
+        // Arrange
+        String opt = "a";
+        String longOpt = "alpha";
+        OptionBuilder.withLongOpt(longOpt);
+        // Act
+        Option option = OptionBuilder.create(opt);
+        // Assert
+        assertEquals(longOpt, option.getLongOpt());
+    }
+
+    @Test
+    public void testCreateWithRequiredOption() {
+        // Arrange
+        String opt = "a";
+        OptionBuilder.isRequired();
+        // Act
+        Option option = OptionBuilder.create(opt);
+        // Assert
+        assertTrue(option.isRequired());
+    }
+
+    @Test
+    public void testCreateWithOptionalArg() {
+        // Arrange
+        String opt = "a";
+        OptionBuilder.hasOptionalArg();
+        // Act
+        Option option = OptionBuilder.create(opt);
+        // Assert
+        assertTrue(option.hasOptionalArg());
+    }
+
+    @Test
+    public void testCreateWithArgCount() {
+        // Arrange
+        String opt = "a";
+        int argCount = 2;
+        OptionBuilder.hasArgs(argCount);
+        // Act
+        Option option = OptionBuilder.create(opt);
+        // Assert
+        assertEquals(argCount, option.getArgs());
+    }
+
+    @Test
+    public void testCreateWithType() {
+        // Arrange
+        String opt = "a";
+        Class type = Integer.class;
+        OptionBuilder.withType(type);
+        // Act
+        Option option = OptionBuilder.create(opt);
+        // Assert
+        assertEquals(type, option.getType());
+    }
+
+    @Test
+    public void testCreateWithValueSeparator() {
+        // Arrange
+        String opt = "a";
+        char valueSeparator = ',';
+        OptionBuilder.withValueSeparator(valueSeparator);
+        // Act
+        Option option = OptionBuilder.create(opt);
+        // Assert
+        assertEquals(valueSeparator, option.getValueSeparator());
+    }
+
+    @Test
+    public void testCreateWithArgName() {
+        // Arrange
+        String opt = "a";
+        String argName = "argName";
+        OptionBuilder.withArgName(argName);
+        // Act
+        Option option = OptionBuilder.create(opt);
+        // Assert
+        assertEquals(argName, option.getArgName());
+    }
+
+    @Test
+    public void testCreateWithInvalidShortOption() {
+        // Arrange
+        String opt = "ab"; // Invalid short option
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            OptionBuilder.create(opt);
+        });
+        assertNotNull(exception);
+    }
+
+    @Test
+    public void testCreateWithNullShortOption() {
+        // Arrange
+        String opt = null; // Null short option
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            OptionBuilder.create(opt);
+        });
+        assertNotNull(exception);
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 0.00%
+- Tests: 8/10 passed
+
+TEST STATUS:
+- PASSED (8): testCreateWithValidShortOption, testCreateWithLongOption, testCreateWithRequiredOption, testCreateWithOptionalArg, testCreateWithArgCount, testCreateWithType, testCreateWithValueSeparator, testCreateWithArgName
+- FAILED (2): testCreateWithInvalidShortOption, testCreateWithNullShortOption
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   OptionBuilder -> org.apache.commons.cli.OptionBuilder
+//   Option -> org.apache.commons.cli.Option
+//   TypeHandler -> org.apache.commons.cli.TypeHandler
+
+// === Class: OptionBuilder ===
+// Fields (with actual visibility):
+    private static String longOption;
+    private static String description;
+    private static String argName;
+    private static boolean required;
+    private static int argCount;
+    private static Class type;
+    private static boolean optionalArg;
+    private static char valueSeparator;
+    private static final OptionBuilder INSTANCE;
+
+// Constructors:
+private OptionBuilder();
+
+// Getter/Setter Methods (for test assertions):
+public static OptionBuilder isRequired();
+public static OptionBuilder isRequired(final boolean newRequired);
+
+// Internal Methods (full implementation for context):
+    private static void reset() {
+        description = null;
+        argName = null;
+        longOption = null;
+        type = String.class;
+        required = false;
+        argCount = Option.UNINITIALIZED;
+        optionalArg = false;
+        valueSeparator = (char) 0;
+    }
+
+// === External Class: Option ===
+// Full import path: org.apache.commons.cli.Option
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   Objects -> java.util.Objects
+// Fields (with actual visibility):
+    private static final Class DEFAULT_TYPE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private int argCount;
+    private String argName;
+    private Converter converter;
+    private final DeprecatedAttributes deprecated;
+    private String description;
+    private String longOption;
+    private final String option;
+    private boolean optionalArg;
+    private boolean required;
+    private Class type;
+    private char valueSeparator;
+    package-private static final Option[] EMPTY_ARRAY;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int UNINITIALIZED;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int UNLIMITED_VALUES;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private List values;
+    private char valuesep;
+
+// Constructors:
+private Builder(String option);
+private Option(Builder builder);
+public Option(String option, boolean hasArg, String description);
+public Option(String option, String description);
+public Option(String option, String longOption, boolean hasArg, String description);
+
+// Method Signatures (used by target method):
+public void setLongOpt(final String longOpt);
+public void setArgName(final String argName);
+public void setValueSeparator(final char sep);
+public void setConverter(final Converter converter);
+public void setOptionalArg(final boolean optionalArg);
+public void setRequired(final boolean required);
+public void setType(final Class type);
+public void setArgs(final int num);
+
+// Public Getter Methods (for test assertions):
+public Builder hasArg();
+public Builder hasArg(boolean hasArg);
+public Builder hasArgs();
+public String getArgName();
+public int getArgs();
+public Converter getConverter();
+public DeprecatedAttributes getDeprecated();
+public String getDescription();
+public int getId();
+public String getKey();
+public String getLongOpt();
+public String getOpt();
+public Object getType();
+public String getValue();
+public String getValue(int index);
+
+// === External Class: TypeHandler ===
+// Full import path: org.apache.commons.cli.TypeHandler
+// Import paths:
+//   File -> java.io.File
+//   FileInputStream -> java.io.FileInputStream
+//   BigDecimal -> java.math.BigDecimal
+//   BigInteger -> java.math.BigInteger
+//   URL -> java.net.URL
+// Fields (with actual visibility):
+    private static final TypeHandler DEFAULT;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final int HEX_RADIX;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private final Map converterMap;
+
+// Constructors:
+public TypeHandler();
+public TypeHandler(Map converterMap);
+
+// Method Signatures (used by target method):
+static public TypeHandler getDefault();
+
+// Public Getter Methods (for test assertions):
+public Converter<T> getConverter(Class clazz);
+
+
+TASK:
+Regenerate ONLY the method "create" OF CLASS "OptionBuilder" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public static Option create(final String opt) throws IllegalArgumentException {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.cli
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "create"
+– Allowed imports: exactly those already present in OptionBuilder
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

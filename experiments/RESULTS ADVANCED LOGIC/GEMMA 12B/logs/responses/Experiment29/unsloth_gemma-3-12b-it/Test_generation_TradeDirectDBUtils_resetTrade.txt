@@ -1,0 +1,144 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeDB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeJDBC;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.MDBStats;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+
+public class TradeDirectDBUtils_resetTradeTestGenerated {
+
+    @Mock
+    private DataSource datasource;
+    @Mock
+    private TradeServices ts;
+    @Mock
+    private Log log;
+    @Mock
+    private MDBStats mdbStats;
+
+    private TradeDirectDBUtils tradeDirectDBUtils;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        tradeDirectDBUtils = new TradeDirectDBUtils(datasource, ts);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        // Reset mocks after each test to avoid interference
+        reset(datasource, ts, log, mdbStats);
+    }
+
+    @Test
+    public void testResetTradeDeleteAll() throws Exception {
+        // Arrange
+        when(datasource.getConnection()).thenReturn(mock(Connection.class));
+        Connection mockConn = mock(Connection.class);
+        when(mockConn.prepareStatement(anyString())).thenReturn(mock(PreparedStatement.class));
+
+        // Act
+        RunStatsDataBean result = tradeDirectDBUtils.resetTrade(true);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(0, result.getTradeUserCount());
+        assertEquals(0, result.getNewUserCount());
+        assertEquals(0, result.getSumLoginCount());
+        assertEquals(0, result.getSumLogoutCount());
+        assertEquals(0, result.getHoldingCount());
+        assertEquals(0, result.getOrderCount());
+        assertEquals(0, result.getBuyOrderCount());
+        assertEquals(0, result.getSellOrderCount());
+        assertEquals(0, result.getCancelledOrderCount());
+        assertEquals(0, result.getOpenOrderCount());
+        assertEquals(0, result.getDeletedOrderCount());
+        assertEquals(0, result.getTradeStockCount());
+
+        verify(datasource).getConnection();
+        verify(mockConn).prepareStatement("delete from quoteejb");
+        verify(mockConn).prepareStatement("delete from accountejb");
+        verify(mockConn).prepareStatement("delete from accountprofileejb");
+        verify(mockConn).prepareStatement("delete from holdingejb");
+        verify(mockConn).prepareStatement("delete from orderejb");
+        //verify(mockConn).prepareStatement("delete from keygenejb"); //commented out as per instructions
+        verify(mockConn, times(5)).close();
+    }
+
+    @Test
+    public void testResetTradeWithoutDeleteAll() throws Exception {
+        // Arrange
+        when(datasource.getConnection()).thenReturn(mock(Connection.class));
+        Connection mockConn = mock(Connection.class);
+        when(mockConn.prepareStatement(anyString())).thenReturn(mock(PreparedStatement.class));
+        when(mockConn.prepareStatement("delete from holdingejb where holdingejb.account_accountid is null")).thenReturn(mock(PreparedStatement.class));
+
+        // Act
+        RunStatsDataBean result = tradeDirectDBUtils.resetTrade(false);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(0, result.getTradeUserCount());
+        assertEquals(0, result.getNewUserCount());
+        assertEquals(0, result.getSumLoginCount());
+        assertEquals(0, result.getSumLogoutCount());
+        assertEquals(0, result.getHoldingCount());
+        assertEquals(0, result.getOrderCount());
+        assertEquals(0, result.getBuyOrderCount());
+        assertEquals(0, result.getSellOrderCount());
+        assertEquals(0, result.getCancelledOrderCount());
+        assertEquals(0, result.getOpenOrderCount());
+        assertEquals(0, result.getDeletedOrderCount());
+        assertEquals(0, result.getTradeStockCount());
+
+        verify(datasource).getConnection();
+        verify(mockConn).prepareStatement("delete from holdingejb where holdingejb.account_accountid is null");
+        verify(mockConn).prepareStatement("delete from accountprofileejb where userid like 'ru:%'");
+        verify(mockConn).prepareStatement("delete from orderejb where account_accountid in (select accountid from accountejb a where a.profile_userid like 'ru:%')");
+        verify(mockConn).prepareStatement("delete from holdingejb where account_accountid in (select accountid from accountejb a where a.profile_userid like 'ru:%')");
+        verify(mockConn).prepareStatement("delete from accountejb where profile_userid like 'ru:%'");
+        verify(mockConn).prepareStatement("select count(accountid) as \"tradeUserCount\" from accountejb a where a.profile_userid like 'uid:%'");
+        verify(mockConn).prepareStatement("select count(symbol) as \"tradeStockCount\" from quoteejb a where a.symbol like 's:%'");
+        verify(mockConn).prepareStatement("select sum(loginCount) as \"sumLoginCount\", sum(logoutCount) as \"sumLogoutCount\" from accountejb a where  a.profile_userID like 'uid:%'");
+        verify(mockConn).prepareStatement("update accountejb set logoutCount=0,loginCount=0 where profile_userID like 'uid:%'");
+        verify(mockConn).prepareStatement("select count(holdingid) as \"holdingCount\" from holdingejb h where h.account_accountid in (select accountid from accountejb a where a.profile_userid like 'uid:%')");
+        verify(mockConn).prepareStatement("select count(orderid) as \"orderCount\" from orderejb o where o.account_accountid in (select accountid from accountejb a where a.profile_userid like 'uid:%')");
+        verify(mockConn).prepareStatement("select count(orderid) \"buyOrderCount\"from orderejb o where (o.account_accountid in (select accountid from accountejb a where a.profile_userid like 'uid:%')) AND (o.orderType='buy')");
+        verify(mockConn).prepareStatement("select count(orderid) \"sellOrderCount\"from orderejb o where (o.account_accountid in (select accountid from accountejb a where a.profile_userid like 'uid:%')) AND (o.orderType='sell')");
+        verify(mockConn).prepareStatement("delete from orderejb where orderStatus='cancelled'");
+        verify(mockConn).prepareStatement("select count(orderid) \"openOrderCount\"from orderejb o where (o.account_accountid in (select accountid from accountejb a where a.profile_userid like 'uid:%')) AND (o.orderStatus='open')");
+        verify(mockConn).prepareStatement("delete from orderejb where holding_holdingid is null");
+        verify(mockConn, times(16)).close();
+    }
+
+    @Test
+    public void testResetTradeException() throws Exception {
+        // Arrange
+        when(datasource.getConnection()).thenThrow(new SQLException("Connection failed"));
+
+        // Act & Assert
+        assertThrows(SQLException.class, () -> tradeDirectDBUtils.resetTrade(true));
+    }
+}
+```

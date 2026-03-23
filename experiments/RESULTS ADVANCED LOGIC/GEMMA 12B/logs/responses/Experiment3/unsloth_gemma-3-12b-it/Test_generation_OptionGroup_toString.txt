@@ -1,0 +1,96 @@
+```java
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import org.apache.commons.cli.OptionGroup;
+import org.apache.commons.cli.Option;
+
+public class OptionGroup_toStringTestGenerated {
+
+    @Test
+    public void testToString_emptyOptionGroup() {
+        OptionGroup group = new OptionGroup();
+        assertEquals("[]", group.toString());
+    }
+
+    @Test
+    public void testToString_singleOption() {
+        Option option = new Option("a", false, "Option a");
+        OptionGroup group = new OptionGroup();
+        group.setSelected(option);
+        assertEquals("[a]", group.toString());
+    }
+
+    @Test
+    public void testToString_singleLongOption() {
+        Option option = new Option("","longopt", false, "Long Option");
+        option.setLongOpt("longopt");
+        OptionGroup group = new OptionGroup();
+        group.setSelected(option);
+        assertEquals("[--longopt]", group.toString());
+    }
+
+    @Test
+    public void testToString_multipleOptions() {
+        Option option1 = new Option("a", false, "Option a");
+        Option option2 = new Option("b", false, "Option b");
+        OptionGroup group = new OptionGroup();
+        group.setSelected(option1);
+        group.setSelected(option2);
+        assertEquals("[a, b]", group.toString());
+    }
+
+    @Test
+    public void testToString_multipleOptionsWithLongOptions() {
+        Option option1 = new Option("a", false, "Option a");
+        Option option2 = new Option("","longopt", false, "Long Option");
+        option2.setLongOpt("longopt");
+        OptionGroup group = new OptionGroup();
+        group.setSelected(option1);
+        group.setSelected(option2);
+        assertEquals("[a, --longopt]", group.toString());
+    }
+
+    @Test
+    public void testToString_optionsWithDescriptions() {
+        Option option1 = new Option("a", false, "Option a");
+        Option option2 = new Option("b", false, "Option b");
+        OptionGroup group = new OptionGroup();
+        group.setSelected(option1);
+        group.setSelected(option2);
+        assertEquals("[a, b]", group.toString());
+    }
+
+    @Test
+    public void testToString_longOptionsWithDescriptions() {
+        Option option1 = new Option("","longopt1", false, "Long Option 1");
+        option1.setLongOpt("longopt1");
+        Option option2 = new Option("","longopt2", false, "Long Option 2");
+        option2.setLongOpt("longopt2");
+        OptionGroup group = new OptionGroup();
+        group.setSelected(option1);
+        group.setSelected(option2);
+        assertEquals("[--longopt1, --longopt2]", group.toString());
+    }
+
+    @Test
+    public void testToString_mixedOptions() {
+        Option option1 = new Option("a", false, "Option a");
+        Option option2 = new Option("","longopt", false, "Long Option");
+        option2.setLongOpt("longopt");
+        OptionGroup group = new OptionGroup();
+        group.setSelected(option1);
+        group.setSelected(option2);
+        assertEquals("[a, --longopt]", group.toString());
+    }
+
+    private void assertEquals(String expected, String actual) {
+        org.junit.jupiter.api.Assertions.assertEquals(expected, actual);
+    }
+}
+```

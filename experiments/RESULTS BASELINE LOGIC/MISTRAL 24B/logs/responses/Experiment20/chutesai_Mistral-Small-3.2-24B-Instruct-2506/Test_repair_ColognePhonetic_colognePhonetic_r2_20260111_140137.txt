@@ -1,0 +1,150 @@
+```java
+package org.apache.commons.codec.language;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class ColognePhonetic_colognePhoneticTestGenerated {
+
+    private final ColognePhonetic phonetic = new ColognePhonetic() {
+        @Override
+        public char[] copyData(int start, int length) {
+            return new char[0];
+        }
+
+        @Override
+        public String colognePhonetic(String input) {
+            return ColognePhonetic.super.colognePhonetic(input);
+        }
+
+        @Override
+        public boolean isEncodeEqual(String string1, String string2) {
+            return ColognePhonetic.super.isEncodeEqual(string1, string2);
+        }
+    };
+
+    @Test
+    void testColognePhonetic_NullInput() {
+        assertNull(phonetic.colognePhonetic(null));
+    }
+
+    @Test
+    void testColognePhonetic_EmptyString() {
+        assertEquals("", phonetic.colognePhonetic(""));
+    }
+
+    @Test
+    void testColognePhonetic_AllNonAlphabetic() {
+        assertEquals("", phonetic.colognePhonetic("123!@#"));
+    }
+
+    @Test
+    void testColognePhonetic_Vowels() {
+        assertTrue(phonetic.isEncodeEqual("A", "0"));
+        assertTrue(phonetic.isEncodeEqual("E", "0"));
+        assertTrue(phonetic.isEncodeEqual("I", "0"));
+        assertTrue(phonetic.isEncodeEqual("O", "0"));
+        assertTrue(phonetic.isEncodeEqual("U", "0"));
+        assertTrue(phonetic.isEncodeEqual("Y", "0"));
+    }
+
+    @Test
+    void testColognePhonetic_BandP() {
+        assertTrue(phonetic.isEncodeEqual("B", "1"));
+        assertTrue(phonetic.isEncodeEqual("P", "1"));
+        assertTrue(phonetic.isEncodeEqual("PH", "1"));
+        assertTrue(phonetic.isEncodeEqual("BP", "11"));
+    }
+
+    @Test
+    void testColognePhonetic_DandT() {
+        assertTrue(phonetic.isEncodeEqual("D", "2"));
+        assertTrue(phonetic.isEncodeEqual("T", "2"));
+        assertTrue(phonetic.isEncodeEqual("DT", "22"));
+        assertTrue(phonetic.isEncodeEqual("DC", "2"));
+        assertTrue(phonetic.isEncodeEqual("TS", "28"));
+    }
+
+    @Test
+    void testColognePhonetic_FPVW() {
+        assertTrue(phonetic.isEncodeEqual("F", "3"));
+        assertTrue(phonetic.isEncodeEqual("P", "3"));
+        assertTrue(phonetic.isEncodeEqual("V", "3"));
+        assertTrue(phonetic.isEncodeEqual("W", "3"));
+        assertTrue(phonetic.isEncodeEqual("FPVW", "3333"));
+    }
+
+    @Test
+    void testColognePhonetic_GKQ() {
+        assertTrue(phonetic.isEncodeEqual("G", "4"));
+        assertTrue(phonetic.isEncodeEqual("K", "4"));
+        assertTrue(phonetic.isEncodeEqual("Q", "4"));
+        assertTrue(phonetic.isEncodeEqual("GKQ", "444"));
+    }
+
+    @Test
+    void testColognePhonetic_X() {
+        assertTrue(phonetic.isEncodeEqual("X", "48"));
+        assertTrue(phonetic.isEncodeEqual("CX", "448"));
+        assertTrue(phonetic.isEncodeEqual("KX", "48"));
+        assertTrue(phonetic.isEncodeEqual("QX", "48"));
+    }
+
+    @Test
+    void testColognePhonetic_SZ() {
+        assertTrue(phonetic.isEncodeEqual("S", "8"));
+        assertTrue(phonetic.isEncodeEqual("Z", "8"));
+        assertTrue(phonetic.isEncodeEqual("SZ", "88"));
+    }
+
+    @Test
+    void testColognePhonetic_C() {
+        assertTrue(phonetic.isEncodeEqual("C", "4"));
+        assertTrue(phonetic.isEncodeEqual("CA", "40"));
+        assertTrue(phonetic.isEncodeEqual("CS", "8"));
+        assertTrue(phonetic.isEncodeEqual("CZ", "8"));
+        assertTrue(phonetic.isEncodeEqual("CH", "8"));
+    }
+
+    @Test
+    void testColognePhonetic_DTX() {
+        assertTrue(phonetic.isEncodeEqual("D", "2"));
+        assertTrue(phonetic.isEncodeEqual("T", "2"));
+        assertTrue(phonetic.isEncodeEqual("X", "48"));
+    }
+
+    @Test
+    void testColognePhonetic_R() {
+        assertTrue(phonetic.isEncodeEqual("R", "7"));
+        assertTrue(phonetic.isEncodeEqual("RR", "77"));
+    }
+
+    @Test
+    void testColognePhonetic_L() {
+        assertTrue(phonetic.isEncodeEqual("L", "5"));
+        assertTrue(phonetic.isEncodeEqual("LL", "55"));
+    }
+
+    @Test
+    void testColognePhonetic_MN() {
+        assertTrue(phonetic.isEncodeEqual("M", "6"));
+        assertTrue(phonetic.isEncodeEqual("N", "6"));
+        assertTrue(phonetic.isEncodeEqual("MN", "66"));
+    }
+
+    @Test
+    void testColognePhonetic_H() {
+        assertEquals("", phonetic.colognePhonetic("H"));
+        assertTrue(phonetic.isEncodeEqual("HA", "0"));
+    }
+
+    @Test
+    void testColognePhonetic_MixedCharacters() {
+        assertTrue(phonetic.isEncodeEqual("BERLIN", "16454"));
+        assertTrue(phonetic.isEncodeEqual("K&ouml;LN", "44454"));
+        assertTrue(phonetic.isEncodeEqual("STRASSE", "82882"));
+    }
+}
+```

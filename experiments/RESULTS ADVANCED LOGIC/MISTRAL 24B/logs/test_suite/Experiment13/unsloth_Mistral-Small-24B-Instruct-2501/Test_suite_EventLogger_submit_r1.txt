@@ -1,0 +1,105 @@
+package org.eclipse.cargotracker.interfaces.handling.mobile;
+
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import java.time.LocalDateTime;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.springframework.test.util.ReflectionTestUtils;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class EventLogger_submitTestGenerated {
+    @Mock
+    private ApplicationEvents applicationEvents;
+    @Mock
+    private FacesContext facesContext;
+    @Mock
+    private FacesMessage facesMessage;
+    @Spy
+    @InjectMocks
+    private EventLogger eventLogger;
+    private AutoCloseable closeable;
+
+    @BeforeEach
+    void setUp() {
+        closeable = MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(eventLogger, "applicationEvents", applicationEvents);
+        ReflectionTestUtils.setField(eventLogger, "context", facesContext);
+        eventLogger.setTrackingId("trackingId123");
+        eventLogger.setLocation("USNYC");
+        eventLogger.setEventType(HandlingEvent.Type.LOAD);
+        eventLogger.setVoyageNumber("voyage123");
+        eventLogger.setCompletionTime(LocalDateTime.now());
+        eventLogger.getTrackingIds();
+        eventLogger.getLocations();
+        eventLogger.getVoyages();
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
+    }
+
+    @Test
+    void testSubmitWithNullTrackingId() {
+        eventLogger.setTrackingId(null);
+        assertThrows(NullPointerException.class, eventLogger::submit);
+    }
+
+    @Test
+    void testSubmitWithNullLocation() {
+        eventLogger.setLocation(null);
+        assertThrows(NullPointerException.class, eventLogger::submit);
+    }
+
+    @Test
+    void testSubmitWithNullEventType() {
+        eventLogger.setEventType(null);
+        assertThrows(NullPointerException.class, eventLogger::submit);
+    }
+
+    @Test
+    void testSubmitWithNullVoyageNumber() {
+        eventLogger.setVoyageNumber(null);
+        assertThrows(NullPointerException.class, eventLogger::submit);
+    }
+
+    @Test
+    void testSubmitWithNullCompletionTime() {
+        eventLogger.setCompletionTime(null);
+        assertThrows(NullPointerException.class, eventLogger::submit);
+    }
+
+    @Test
+    void testSubmitWithVoyageRequired() {
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+        eventLogger.setEventType(type);
+        eventLogger.submit();
+        verify(applicationEvents, times(1)).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+        verify(facesContext, times(1)).addMessage(eq(null), any(FacesMessage.class));
+    }
+
+    @Test
+    void testSubmitWithoutVoyageRequired() {
+        HandlingEvent.Type type = HandlingEvent.Type.RECEIVE;
+        eventLogger.setEventType(type);
+        eventLogger.submit();
+        verify(applicationEvents, times(1)).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+        verify(facesContext, times(1)).addMessage(eq(null), any(FacesMessage.class));
+    }
+
+}

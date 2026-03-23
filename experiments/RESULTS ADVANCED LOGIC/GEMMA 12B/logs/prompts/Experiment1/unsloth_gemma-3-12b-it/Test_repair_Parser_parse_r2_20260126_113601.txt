@@ -1,0 +1,225 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): Parser_parseTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.cli;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Properties;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.Parser;
+import org.apache.commons.cli.ParseException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Parser_parseTestGenerated {
+
+    @Test
+    void testParseWithValidOptionsAndArguments() throws ParseException {
+        Options options = new Options();
+        options.addOption("a", false, "Option a");
+        options.addOption("b", true, "Option b");
+
+        Parser parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+        };
+
+        CommandLine cmd = parser.parse(options, new String[]{"-a", "value_for_a", "-b", "value_for_b"}, new Properties(), false);
+
+        assertTrue(cmd.hasOption("a"));
+        assertEquals("value_for_a", cmd.getOptionValue("a"));
+        assertTrue(cmd.hasOption("b"));
+        assertEquals("value_for_b", cmd.getOptionValue("b"));
+    }
+
+    @Test
+    void testParseWithRequiredOptionMissing() {
+        Options options = new Options();
+        Option requiredOption = new Option("r", false, "Required option");
+        requiredOption.setRequired(true);
+        options.addOption(requiredOption);
+
+        Parser parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+        };
+
+        assertThrows(MissingOptionException.class, () -> parser.parse(options, new String[]{"-a", "value_for_a"}, new Properties(), false));
+    }
+
+    @Test
+    void testParseWithProperties() throws ParseException {
+        Options options = new Options();
+        options.addOption("p", true, "Option p");
+
+        Parser parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+        };
+
+        Properties properties = new Properties();
+        properties.setProperty("p", "value_from_properties");
+
+        CommandLine cmd = parser.parse(options, new String[]{}, new Properties(), false);
+
+        assertTrue(cmd.hasOption("p"));
+        assertEquals("value_from_properties", cmd.getOptionValue("p"));
+    }
+
+    @Test
+    void testParseWithStopAtNonOption() throws ParseException {
+        Options options = new Options();
+        options.addOption("a", false, "Option a");
+
+        Parser parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+        };
+
+        CommandLine cmd = parser.parse(options, new String[]{"-a", "value_for_a", "extra_argument"}, new Properties(), true);
+
+        assertTrue(cmd.hasOption("a"));
+        assertEquals("value_for_a", cmd.getOptionValue("a"));
+        assertEquals("extra_argument", cmd.getArgs()[0]);
+    }
+
+    @Test
+    void testParseWithUnrecognizedOption() {
+        Options options = new Options();
+        options.addOption("a", false, "Option a");
+
+        Parser parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+        };
+
+        assertThrows(UnrecognizedOptionException.class, () -> parser.parse(options, new String[]{"-c", "value_for_c"}, new Properties(), false));
+    }
+
+    @Test
+    void testParseWithNullArguments() {
+        Options options = new Options();
+        options.addOption("a", false, "Option a");
+
+        Parser parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+        };
+
+        CommandLine cmd = parser.parse(options, null, new Properties(), false);
+        assertEquals(0, cmd.getArgs().length);
+    }
+
+    @Test
+    void testParseWithEmptyArguments() throws ParseException {
+        Options options = new Options();
+        options.addOption("a", false, "Option a");
+
+        Parser parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+        };
+
+        CommandLine cmd = parser.parse(options, new String[]{}, new Properties(), false);
+        assertFalse(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithDoubleDash() throws ParseException {
+        Options options = new Options();
+        options.addOption("a", false, "Option a");
+
+        Parser parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+        };
+
+        CommandLine cmd = parser.parse(options, new String[]{"-a", "value_for_a", "--"}, new Properties(), false);
+
+        assertTrue(cmd.hasOption("a"));
+        assertEquals("value_for_a", cmd.getOptionValue("a"));
+        assertEquals(1, cmd.getArgs().length);
+        assertEquals("", cmd.getArgs()[0]);
+    }
+
+    @Test
+    void testParseWithDoubleDashAndArgs() throws ParseException {
+        Options options = new Options();
+        options.addOption("a", false, "Option a");
+
+        Parser parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+        };
+
+        CommandLine cmd = parser.parse(options, new String[]{"-a", "value_for_a", "--", "extra_argument"}, new Properties(), false);
+
+        assertTrue(cmd.hasOption("a"));
+        assertEquals("value_for_a", cmd.getOptionValue("a"));
+        assertEquals(1, cmd.getArgs().length);
+        assertEquals("extra_argument", cmd.getArgs()[0]);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[128] unreported exception org.apache.commons.cli.ParseException; must be caught or declared to be thrown
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: Parser_parseTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations
+
+IMPORTANT: The target class "Parser" is ABSTRACT and cannot be instantiated directly.
+- DO NOT use Mockito to mock the class itself (unless you need a partial mock).
+- INSTANTIATE using this REAL ANONYMOUS SUBCLASS template (copy exactly):
+```java
+new Parser() {
+    @Override
+    public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+        return arguments;
+    }
+
+}
+```
+- DO NOT create custom concrete subclasses files.
+- DO NOT invent classes that do not exist in the codebase.

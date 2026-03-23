@@ -1,0 +1,67 @@
+```java
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Method;
+import org.apache.commons.jxpath.ExpressionContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.util.MethodLookupUtils;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class MethodLookupUtils_lookupMethodTestGenerated {
+
+    @Test
+    public void testLookupMethod_nullParameters() {
+        assertNull(MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", null));
+    }
+
+    @Test
+    public void testLookupMethod_emptyParameters() {
+        assertNull(MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[0]));
+    }
+
+    @Test
+    public void testLookupMethod_nullFirstParameter() {
+        assertNull(MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{null}));
+    }
+
+    @Test
+    public void testLookupMethod_nonMatchingFirstParameter() {
+        assertNull(MethodLookupUtils.lookupMethod(String.class, "dummyMethod", new Object[]{new ExpressionContext()}));
+    }
+
+    @Test
+    public void testLookupMethod_exactMatch() {
+        Method method = MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{new ExpressionContext(), "param"});
+        assertNotNull(method);
+        assertEquals("dummyMethod", method.getName());
+        assertEquals(2, method.getParameterCount());
+    }
+
+    @Test
+    public void testLookupMethod_ambiguousMethodCall() {
+        assertThrows(JXPathException.class, () -> {
+            MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{new ExpressionContext(), 123});
+        });
+    }
+
+    @Test
+    public void testLookupMethod_withTypeConversion() {
+        Method method = MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{new ExpressionContext(), 123});
+        assertNotNull(method);
+        assertEquals("dummyMethod", method.getName());
+        assertEquals(2, method.getParameterCount());
+    }
+
+    @Test
+    public void testLookupMethod_noSuchMethod() {
+        assertNull(MethodLookupUtils.lookupMethod(targetClass, "nonExistentMethod", new Object[]{new ExpressionContext(), "param"}));
+    }
+
+    @Test
+    public void testLookupMethod_staticMethod() {
+        Method method = MethodLookupUtils.lookupMethod(targetClass, "staticMethod", new Object[]{new ExpressionContext(), "param"});
+        assertNull(method);
+    }
+}

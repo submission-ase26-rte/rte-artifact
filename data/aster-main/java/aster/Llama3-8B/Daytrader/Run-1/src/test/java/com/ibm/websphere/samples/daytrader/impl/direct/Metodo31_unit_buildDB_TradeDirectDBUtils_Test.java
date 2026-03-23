@@ -1,0 +1,58 @@
+/**
+ * Filtered unit tests for method: buildDB(java.io.PrintWriter out, InputStream ddlFile)
+ * Original class: TradeDirectDBUtils
+ * Tests that actually call the target method
+ */
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+public class Metodo31_unit_buildDB_TradeDirectDBUtils_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testbuildDB() throws Exception {
+        DataSource datasource = mock(DataSource.class);
+        Connection connection = mock(Connection.class);
+        PreparedStatement preparedstatement = mock(PreparedStatement.class);
+        ResultSet resultset = mock(ResultSet.class);
+        TradeDirectDBUtils tradedirectdbutils = new TradeDirectDBUtils();
+        when(preparedstatement.executeQuery()).thenReturn(resultset);
+        when(connection.prepareStatement(any(String.class))).thenReturn(preparedstatement);
+        when(datasource.getConnection()).thenReturn(connection);
+        when(resultset.next()).thenReturn(true).thenReturn(false);
+        java.io.PrintWriter out = mock(java.io.PrintWriter.class);
+        InputStream ddlFile = mock(InputStream.class);
+        tradedirectdbutils.buildDB(out, ddlFile);
+        verify(out, times(1)).println("TradeBuildDB: Building DayTrader Database...");
+        verify(out, times(1)).println("TradeBuildDB: **** Creating 100 Quotes ****");
+        verify(out, times(1)).println("TradeBuildDB: **** Registering 100 Users **** ");
+        verify(out, times(1)).println("</BODY>");
+    }
+}

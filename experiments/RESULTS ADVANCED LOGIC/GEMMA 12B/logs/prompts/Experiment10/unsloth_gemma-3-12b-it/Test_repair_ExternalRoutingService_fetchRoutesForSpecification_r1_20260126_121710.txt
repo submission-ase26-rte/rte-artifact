@@ -1,0 +1,170 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.infrastructure.routing;
+Class name (MUST be exactly): ExternalRoutingService_fetchRoutesForSpecificationTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.infrastructure.routing;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import org.eclipse.cargotracker.domain.model.cargo.Itinerary;
+import org.eclipse.cargotracker.domain.model.cargo.Leg;
+import org.eclipse.cargotracker.domain.model.cargo.RouteSpecification;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.eclipse.cargotracker.domain.service.RoutingService;
+import org.eclipse.pathfinder.api.TransitEdge;
+import org.eclipse.pathfinder.api.TransitPath;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ExternalRoutingService_fetchRoutesForSpecificationTestGenerated {
+
+  private ExternalRoutingService externalRoutingService;
+  private Logger logger;
+  private String graphTraversalUrl;
+  private WebTarget graphTraversalResource;
+  private LocationRepository locationRepository;
+  private VoyageRepository voyageRepository;
+
+  @BeforeEach
+  public void setUp() {
+    logger = Mockito.mock(Logger.class);
+    graphTraversalUrl = "http://localhost:8080/routing";
+    graphTraversalResource = Mockito.mock(WebTarget.class);
+    locationRepository = Mockito.mock(LocationRepository.class);
+    voyageRepository = Mockito.mock(VoyageRepository.class);
+
+    externalRoutingService =
+        new ExternalRoutingService(
+            logger,
+            graphTraversalUrl,
+            graphTraversalResource,
+            locationRepository,
+            voyageRepository);
+  }
+
+  @Test
+  public void fetchRoutesForSpecification_validSpecification_returnsRoutes() {
+    Location origin = new Location("originUnLocode");
+    Location destination = new Location("destinationUnLocode");
+    LocalDate arrivalDeadline = LocalDate.now();
+    RouteSpecification routeSpecification =
+        new RouteSpecification(origin, destination, arrivalDeadline);
+
+    TransitPath transitPath1 = new TransitPath(new ArrayList<>());
+    TransitPath transitPath2 = new TransitPath(new ArrayList<>());
+
+    when(graphTraversalResource.queryParam("origin", "originUnLocode")
+            .queryParam("destination", "destinationUnLocode")
+            .request(MediaType.APPLICATION_JSON_TYPE)
+            .get(Mockito.any(new GenericType<List<TransitPath>>() {
+            })))
+        .thenReturn(List.of(transitPath1, transitPath2));
+
+    Itinerary itinerary1 = externalRoutingService.toItinerary(transitPath1);
+    Itinerary itinerary2 = externalRoutingService.toItinerary(transitPath2);
+
+    when(routeSpecification.isSatisfiedBy(Mockito.any(Itinerary.class)))
+        .thenReturn(true);
+
+    List<Itinerary> itineraries =
+        externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+
+    assertEquals(2, itineraries.size());
+  }
+
+  @Test
+  public void fetchRoutesForSpecification_specificationWithUnsatisfiedItinerary_returnsEmptyList() {
+    Location origin = new Location("originUnLocode");
+    Location destination = new Location("destinationUnLocode");
+    LocalDate arrivalDeadline = LocalDate.now();
+    RouteSpecification routeSpecification =
+        new RouteSpecification(origin, destination, arrivalDeadline);
+
+    TransitPath transitPath1 = new TransitPath(new ArrayList<>());
+    TransitPath transitPath2 = new TransitPath(new ArrayList<>());
+
+    when(graphTraversalResource.queryParam("origin", "originUnLocode")
+            .queryParam("destination", "destinationUnLocode")
+            .request(MediaType.APPLICATION_JSON_TYPE)
+            .get(Mockito.any(new GenericType<List<TransitPath>>() {
+            })))
+        .thenReturn(List.of(transitPath1, transitPath2));
+
+    Itinerary itinerary1 = externalRoutingService.toItinerary(transitPath1);
+    Itinerary itinerary2 = externalRoutingService.toItinerary(transitPath2);
+
+    when(routeSpecification.isSatisfiedBy(itinerary1)).thenReturn(false);
+    when(routeSpecification.isSatisfiedBy(itinerary2)).thenReturn(true);
+
+    List<Itinerary> itineraries =
+        externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+
+    assertEquals(1, itineraries.size());
+  }
+
+  @Test
+  public void fetchRoutesForSpecification_noRoutesFound_returnsEmptyList() {
+    Location origin = new Location("originUnLocode");
+    Location destination = new Location("destinationUnLocode");
+    LocalDate arrivalDeadline = LocalDate.now();
+    RouteSpecification routeSpecification =
+        new RouteSpecification(origin, destination, arrivalDeadline);
+
+    when(graphTraversalResource.queryParam("origin", "originUnLocode")
+            .queryParam("destination", "destinationUnLocode")
+            .request(MediaType.APPLICATION_JSON_TYPE)
+            .get(Mockito.any(new GenericType<List<TransitPath>>() {
+            })))
+        .thenReturn(new ArrayList<>());
+
+    List<Itinerary> itineraries =
+        externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+
+    assertEquals(0, itineraries.size());
+  }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/infrastructure/routing/ExternalRoutingService_fetchRoutesForSpecificationTestGenerated.java:[45] cannot find symbol
+  symbol:   class LocationRepository
+  location: class org.eclipse.cargotracker.infrastructure.routing.ExternalRoutingService_fetchRoutesForSpecificationTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: ExternalRoutingService_fetchRoutesForSpecificationTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

@@ -1,0 +1,30 @@
+```java
+@PostConstruct
+public void init() {
+    List<Cargo> cargos = cargoRepository.findAll();
+    if (cargos != null) {
+        this.trackingIds.clear();
+        for (Cargo cargo : cargos) {
+            if (cargo.getItinerary() != null && !cargo.getItinerary().getLegs().isEmpty()) {
+                this.trackingIds.add(new SelectItem(cargo.getTrackingId().toString(), cargo.getTrackingId().toString()));
+            }
+        }
+    }
+
+    List<Location> locations = locationRepository.findAll();
+    if (locations != null) {
+        this.locations.clear();
+        for (Location location : locations) {
+            this.locations.add(new SelectItem(location.getName() + " (" + location.getUnLocode() + ")", location.getUnLocode().toString()));
+        }
+    }
+
+    List<Voyage> voyages = voyageRepository.findAll();
+    if (voyages != null) {
+        this.voyages.clear();
+        for (Voyage voyage : voyages) {
+            this.voyages.add(new SelectItem(voyage.getVoyageNumber().toString(), voyage.getVoyageNumber().toString()));
+        }
+    }
+}
+```

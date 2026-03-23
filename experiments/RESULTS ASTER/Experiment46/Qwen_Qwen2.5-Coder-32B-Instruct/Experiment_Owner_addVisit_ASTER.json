@@ -1,0 +1,84 @@
+{
+  "method_id": 46,
+  "tested_method": "addVisit",
+  "tested_class": "Owner",
+  "project": "Petclinic",
+  "timestamp": "2026-02-03T13:33:33.470597",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\GPT-4 - ASTER\\Petclinic\\Run-1\\src\\test\\java\\org\\springframework\\samples\\petclinic\\owner\\Metodo46_addVisit_Owner_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 4,
+    "tests_total": 9,
+    "tests_failed": 5,
+    "line_coverage": 16.666666666666664,
+    "branch_coverage": 0.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testAddVisitWithInvalidPetId_PWEs2 --\nERROR: java.util.concurrent.TimeoutException: testAddVisitWithInvalidPetId_PWEs2() timed out after 1 second\nCaused by: org.junit.jupiter.api.AssertTimeoutPreemptively$ExecutionTimeoutException: Execution timed out in thread junit-timeout-thread-1\n--------------------------------------------------\nTEST: testAddVisitWithValidPetIdAndVisit_BAPS3 --\nERROR: java.util.concurrent.TimeoutException: testAddVisitWithValidPetIdAndVisit_BAPS3() timed out after 1 second\nCaused by: org.junit.jupiter.api.AssertTimeoutPreemptively$ExecutionTimeoutException: Execution timed out in thread junit-timeout-thread-5\n--------------------------------------------------\nTEST: testAddVisitCompletesSuccessfully_UicO5 --\nERROR: org.mockito.exceptions.misusing.MissingMethodInvocationException:\nwhen() requires an argument which has to be 'a method call on a mock'.\nFor example:\nwhen(mock.getArticles()).thenReturn(articles);\nAlso, this error might show up because:\n1. you stub either of: final/private/native/equals()/hashCode() methods.\nThose methods *cannot* be stubbed/verified.\nMocking methods declared on non-public parent classes is not supported.\n2. inside when() you don't call method on mock but on some other object.\n--------------------------------------------------\nTEST: testAddVisitWithPetIdAndVisitNotNull_eKHL4_1 --\nERROR: org.mockito.exceptions.misusing.MissingMethodInvocationException:\nwhen() requires an argument which has to be 'a method call on a mock'.\nFor example:\nwhen(mock.getArticles()).thenReturn(articles);\nAlso, this error might show up because:\n1. you stub either of: final/private/native/equals()/hashCode() methods.\nThose methods *cannot* be stubbed/verified.\nMocking methods declared on non-public parent classes is not supported.\n2. inside when() you don't call method on mock but on some other object.\n--------------------------------------------------\nTEST: testAddVisitWithPetIdAndVisitNotNull_eKHL4_2 --\nERROR: org.mockito.exceptions.misusing.MissingMethodInvocationException:\nwhen() requires an argument which has to be 'a method call on a mock'.\nFor example:\nwhen(mock.getArticles()).thenReturn(articles);\nAlso, this error might show up because:\n1. you stub either of: final/private/native/equals()/hashCode() methods.\nThose methods *cannot* be stubbed/verified.\nMocking methods declared on non-public parent classes is not supported.\n2. inside when() you don't call method on mock but on some other object.",
+    "test_info": {
+      "valid_tests": [
+        "testAddVisitWithNullPetId_ZVRz0",
+        "testAddVisitWithNullVisit_XKmJ1",
+        "testAddVisitWithNullPetId_KWRc0_1",
+        "testAddVisitWithNullPetId_KWRc0"
+      ],
+      "invalid_tests": [
+        "testAddVisitWithInvalidPetId_PWEs2",
+        "testAddVisitWithValidPetIdAndVisit_BAPS3",
+        "testAddVisitWithPetIdAndVisitNotNull_eKHL4_1",
+        "testAddVisitWithPetIdAndVisitNotNull_eKHL4_2",
+        "testAddVisitCompletesSuccessfully_UicO5"
+      ],
+      "failed_assert_tests": [],
+      "runtime_error_tests": [
+        "testAddVisitWithInvalidPetId_PWEs2",
+        "testAddVisitWithValidPetIdAndVisit_BAPS3",
+        "testAddVisitWithPetIdAndVisitNotNull_eKHL4_1",
+        "testAddVisitWithPetIdAndVisitNotNull_eKHL4_2",
+        "testAddVisitCompletesSuccessfully_UicO5"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 9,
+    "assertion_complexity": 0.1458,
+    "pct_null_assertions": 0.2222,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.2222,
+    "pct_no_assertion": 0.1111,
+    "naturalness_method_name": 0.628,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.5217,
+    "overall_naturalness_score": 0.7569
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.8597216076754878,
+    "string_similarity": 0.7946127946127947,
+    "token_similarity": 0.8181818181818182,
+    "ast_similarity": 0.7142857142857143,
+    "embedding_similarity": 0.9731827974319458,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.7,
+      "similar_blocks": 7,
+      "total_blocks": 20
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.855997454075432,
+    "passes_threshold": true
+  },
+  "original_method": "\tpublic void addVisit(Integer petId, Visit visit) {\n\n\t\tAssert.notNull(petId, \"Pet identifier must not be null!\");\n\t\tAssert.notNull(visit, \"Visit must not be null!\");\n\n\t\tPet pet = getPet(petId);\n\n\t\tAssert.notNull(pet, \"Invalid Pet identifier!\");\n\n\t\tpet.addVisit(visit);\n\t}",
+  "regenerated_method": "public void addVisit(Integer petId, Visit visit) {\n    Assert.notNull(petId, \"Pet identifier must not be null!\");\n    Assert.notNull(visit, \"Visit must not be null!\");\n    Pet pet = getPet(petId);\n    if (pet == null) {\n        throw new IllegalArgumentException(\"Invalid Pet identifier!\");\n    }\n    pet.addVisit(visit);\n}",
+  "passes_evaluation": true,
+  "similarity_threshold": 0.7,
+  "original_metrics": {
+    "loc": 11,
+    "sloc": 7,
+    "complexity": 1
+  }
+}

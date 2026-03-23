@@ -1,0 +1,120 @@
+```java
+    public Object convert(final Object object, final Class toType) {
+        if (object == null) {
+            if (toType == Boolean.class) {
+                return null;
+            }
+            if (toType == String.class) {
+                return "";
+            }
+            if (toType == Integer.class) {
+                return 0;
+            }
+            if (toType == Long.class) {
+                return 0L;
+            }
+            if (toType == Double.class) {
+                return 0.0;
+            }
+            if (toType == Float.class) {
+                return 0.0f;
+            }
+            if (toType == Short.class) {
+                return (short) 0;
+            }
+            if (toType == Byte.class) {
+                return (byte) 0;
+            }
+            if (toType == Character.class) {
+                return '\0';
+            }
+            if (toType == boolean.class) {
+                return Boolean.FALSE;
+            }
+            if (toType == char.class) {
+                return Character.valueOf('\0');
+            }
+            if (toType == byte.class) {
+                return Byte.valueOf((byte) 0);
+            }
+            if (toType == short.class) {
+                return Short.valueOf((short) 0);
+            }
+            if (toType == int.class) {
+                return Integer.valueOf(0);
+            }
+            if (toType == long.class) {
+                return Long.valueOf(0L);
+            }
+            if (toType == float.class) {
+                return Float.valueOf(0.0f);
+            }
+            if (toType == double.class) {
+                return Double.valueOf(0.0);
+            }
+
+            return null;
+        }
+
+        if (toType == String.class) {
+            return object.toString();
+        }
+
+        if (toType == Boolean.class) {
+            if (object instanceof Number) {
+                return ((Number) object).doubleValue() != 0.0;
+            }
+            return convertStringToPrimitive(object, Boolean.class);
+        }
+
+        if (toType == Integer.class) {
+            return convertStringToPrimitive(object, Integer.class);
+        }
+
+        if (object instanceof Pointer) {
+            return ((Pointer) object).getValue();
+        }
+
+        if (toType == Number.class) {
+            if (object instanceof Boolean) {
+                return 1;
+            }
+            return convertStringToPrimitive(object, Number.class);
+        }
+
+        if (toType == Collection.class) {
+            if (object instanceof Object[]) {
+                return new ArrayList((Collection<?>) java.util.Arrays.asList((Object[]) object));
+            }
+            if (object instanceof int[]) {
+                return new ArrayList((Collection<?>) java.util.Arrays.asList((int[]) object));
+            }
+            return convertStringToPrimitive(object, Collection.class);
+
+        }
+
+        if (toType.isArray()) {
+            if (object instanceof Collection) {
+                Collection collection = (Collection) object;
+                Class componentType = toType.getComponentType();
+                if (componentType == int.class) {
+                    int[] array = new int[collection.size()];
+                    int i = 0;
+                    for (Object o : collection) {
+                        array[i++] = (Integer) convertStringToPrimitive(o, Integer.class);
+                    }
+                    return array;
+                }
+                if (componentType == Integer.class) {
+                    Integer[] array = new Integer[collection.size()];
+                    int i = 0;
+                    for (Object o : collection) {
+                        array[i++] = (Integer) convertStringToPrimitive(o, Integer.class);
+                    }
+                    return array;
+                }
+            }
+        }
+        throw new JXPathTypeConversionException("Cannot convert " + object + " to " + toType);
+    }
+```

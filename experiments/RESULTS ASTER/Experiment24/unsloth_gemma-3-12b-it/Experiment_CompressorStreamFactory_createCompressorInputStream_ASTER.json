@@ -1,0 +1,67 @@
+{
+  "method_id": 24,
+  "tested_method": "createCompressorInputStream",
+  "tested_class": "CompressorStreamFactory",
+  "project": "Compress",
+  "timestamp": "2026-01-27T18:45:26.156957",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\Compress\\Run-1\\src\\test\\java\\org\\apache\\commons\\compress\\compressors\\Metodo24_unit_createCompressorInputStream_CompressorStreamFactory_Test.java",
+  "test_results": {
+    "success": false,
+    "tests_passed": 0,
+    "tests_total": 0,
+    "tests_failed": 0,
+    "line_coverage": 0.0,
+    "branch_coverage": 0.0,
+    "has_compilation_errors": true,
+    "compilation_errors": null,
+    "test_info": {
+      "valid_tests": [],
+      "invalid_tests": [],
+      "failed_assert_tests": [],
+      "runtime_error_tests": []
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 0,
+    "assertion_complexity": 0.0,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.0,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.0,
+    "pct_focal_method_covered": 0.0,
+    "diversity_literal_values": 0.0,
+    "overall_naturalness_score": 0.0
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.012026305849144926,
+    "string_similarity": 0.13612313612313612,
+    "token_similarity": 0.26436781609195403,
+    "ast_similarity": 0.11666666666666667,
+    "embedding_similarity": 0.8202545642852783,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.13496932515337423,
+      "similar_blocks": 11,
+      "total_blocks": 163
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.36570604863998707,
+    "passes_threshold": false
+  },
+  "original_method": "    public CompressorInputStream createCompressorInputStream(final String name, final InputStream in, final boolean actualDecompressConcatenated)\n            throws CompressorException {\n        if (name == null || in == null) {\n            throw new IllegalArgumentException(\"Compressor name and stream must not be null.\");\n        }\n\n        try {\n\n            if (GZIP.equalsIgnoreCase(name)) {\n                return new GzipCompressorInputStream(in, actualDecompressConcatenated);\n            }\n\n            if (BZIP2.equalsIgnoreCase(name)) {\n                return new BZip2CompressorInputStream(in, actualDecompressConcatenated);\n            }\n\n            if (BROTLI.equalsIgnoreCase(name)) {\n                if (!BrotliUtils.isBrotliCompressionAvailable()) {\n                    throw new CompressorException(\"Brotli compression is not available.\" + YOU_NEED_BROTLI_DEC);\n                }\n                return new BrotliCompressorInputStream(in);\n            }\n\n            if (XZ.equalsIgnoreCase(name)) {\n                if (!XZUtils.isXZCompressionAvailable()) {\n                    throw new CompressorException(\"XZ compression is not available.\" + YOU_NEED_XZ_JAVA);\n                }\n                return new XZCompressorInputStream(in, actualDecompressConcatenated, memoryLimitInKb);\n            }\n\n            if (ZSTANDARD.equalsIgnoreCase(name)) {\n                if (!ZstdUtils.isZstdCompressionAvailable()) {\n                    throw new CompressorException(\"Zstandard compression is not available.\" + YOU_NEED_ZSTD_JNI);\n                }\n                return new ZstdCompressorInputStream(in);\n            }\n\n            if (LZMA.equalsIgnoreCase(name)) {\n                if (!LZMAUtils.isLZMACompressionAvailable()) {\n                    throw new CompressorException(\"LZMA compression is not available\" + YOU_NEED_XZ_JAVA);\n                }\n                return new LZMACompressorInputStream(in, memoryLimitInKb);\n            }\n\n            if (PACK200.equalsIgnoreCase(name)) {\n                return new Pack200CompressorInputStream(in);\n            }\n\n            if (SNAPPY_RAW.equalsIgnoreCase(name)) {\n                return new SnappyCompressorInputStream(in);\n            }\n\n            if (SNAPPY_FRAMED.equalsIgnoreCase(name)) {\n                return new FramedSnappyCompressorInputStream(in);\n            }\n\n            if (Z.equalsIgnoreCase(name)) {\n                return new ZCompressorInputStream(in, memoryLimitInKb);\n            }\n\n            if (DEFLATE.equalsIgnoreCase(name)) {\n                return new DeflateCompressorInputStream(in);\n            }\n\n            if (DEFLATE64.equalsIgnoreCase(name)) {\n                return new Deflate64CompressorInputStream(in);\n            }\n\n            if (LZ4_BLOCK.equalsIgnoreCase(name)) {\n                return new BlockLZ4CompressorInputStream(in);\n            }\n\n            if (LZ4_FRAMED.equalsIgnoreCase(name)) {\n                return new FramedLZ4CompressorInputStream(in, actualDecompressConcatenated);\n            }\n\n        } catch (final IOException e) {\n            throw new CompressorException(\"Could not create CompressorInputStream.\", e);\n        }\n        final CompressorStreamProvider compressorStreamProvider = getCompressorInputStreamProviders().get(toKey(name));\n        if (compressorStreamProvider != null) {\n            return compressorStreamProvider.createCompressorInputStream(name, in, actualDecompressConcatenated);\n        }\n\n        throw new CompressorException(\"Compressor: \" + name + \" not found.\");\n    }",
+  "regenerated_method": "public CompressorInputStream createCompressorInputStream(final String name, final InputStream in, final boolean actualDecompressConcatenated) throws CompressorException {\n        SortedMap<String, CompressorStreamProvider> providers = getCompressorInputStreamProviders();\n        String key = toKey(name);\n        CompressorStreamProvider provider = providers.get(key);\n        if (provider == null) {\n            throw new CompressorException(\"No compressor stream provider found for name: \" + name);\n        }\n        return provider.createCompressorInputStream(name, in, actualDecompressConcatenated);\n    }",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6580575454631372,
+  "original_metrics": {
+    "loc": 86,
+    "sloc": 69,
+    "complexity": 30
+  }
+}

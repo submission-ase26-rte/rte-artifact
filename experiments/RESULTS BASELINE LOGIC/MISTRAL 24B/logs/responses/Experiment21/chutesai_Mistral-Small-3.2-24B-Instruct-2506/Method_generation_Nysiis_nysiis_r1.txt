@@ -1,0 +1,58 @@
+```java
+public String nysiis(String str) {
+    if (str == null) {
+        return null;
+    }
+
+    if (str.isEmpty()) {
+        return "";
+    }
+
+    String cleanStr = SoundexUtils.clean(str.trim());
+
+    if (cleanStr.length() == 1) {
+        return cleanStr.toUpperCase();
+    }
+
+    StringBuilder encoded = new StringBuilder();
+    char[] chars = cleanStr.toUpperCase().toCharArray();
+    char prev = ' ';
+    char curr = chars[0];
+    encoded.append(curr);
+
+    for (int i = 1; i < chars.length; i++) {
+        char next = (i < chars.length - 1) ? chars[i + 1] : ' ';
+        char aNext = (i < chars.length - 2) ? chars[i + 2] : ' ';
+        char transcode = transcodeRemaining(prev, curr, next, aNext);
+
+        if (transcode != 0) {
+            if (encoded.length() > 0 && encoded.charAt(encoded.length() - 1) != transcode) {
+                encoded.append(transcode);
+            }
+        }
+
+        prev = curr;
+        curr = next;
+    }
+
+    String result = encoded.toString();
+
+    // Handle special cases for ending patterns
+    if (result.length() > 2) {
+        char lastChar = result.charAt(result.length() - 1);
+        char secondLastChar = result.charAt(result.length() - 2);
+
+        if ((lastChar == 'S' && secondLastChar == 'S') ||
+            (lastChar == 'A' && secondLastChar == 'Y') ||
+            (lastChar == 'A' && secondLastChar == 'A')) {
+            result = result.substring(0, result.length() - 1);
+        }
+    }
+
+    if (strict && result.length() > TRUE_LENGTH) {
+        result = result.substring(0, TRUE_LENGTH);
+    }
+
+    return result;
+}
+```

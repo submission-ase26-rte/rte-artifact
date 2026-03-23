@@ -1,0 +1,73 @@
+{
+  "method_id": 46,
+  "tested_method": "addVisit",
+  "tested_class": "Owner",
+  "project": "Petclinic",
+  "timestamp": "2026-01-27T19:05:22.087507",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\Petclinic\\Run-1\\src\\test\\java\\org\\springframework\\samples\\petclinic\\owner\\Metodo46_unit_addVisit_Owner_Test.java",
+  "test_results": {
+    "success": false,
+    "tests_passed": 0,
+    "tests_total": 2,
+    "tests_failed": 2,
+    "line_coverage": 50.0,
+    "branch_coverage": 0.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testAddVisit_dkvM0 --\nERROR: java.lang.IllegalArgumentException: Invalid Pet identifier!\n--------------------------------------------------\nTEST: testAddVisit_PetIdNotNull_VisitNotNull_zDVb2_ImdZ1 --\nERROR: java.lang.IllegalArgumentException: Invalid Pet identifier!",
+    "test_info": {
+      "valid_tests": [],
+      "invalid_tests": [
+        "testAddVisit_PetIdNotNull_VisitNotNull_zDVb2_ImdZ1",
+        "testAddVisit_dkvM0"
+      ],
+      "failed_assert_tests": [],
+      "runtime_error_tests": [
+        "testAddVisit_PetIdNotNull_VisitNotNull_zDVb2_ImdZ1",
+        "testAddVisit_dkvM0"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 2,
+    "assertion_complexity": 0.0,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.0,
+    "pct_no_assertion": 1.0,
+    "naturalness_method_name": 0.6271,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.0,
+    "overall_naturalness_score": 0.5318
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.20076931806804546,
+    "string_similarity": 0.5414634146341464,
+    "token_similarity": 0.5789473684210527,
+    "ast_similarity": 0.42857142857142855,
+    "embedding_similarity": 0.929374635219574,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.15384615384615385,
+      "similar_blocks": 1,
+      "total_blocks": 13
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.5898798786600639,
+    "passes_threshold": false
+  },
+  "original_method": "\tpublic void addVisit(Integer petId, Visit visit) {\n\n\t\tAssert.notNull(petId, \"Pet identifier must not be null!\");\n\t\tAssert.notNull(visit, \"Visit must not be null!\");\n\n\t\tPet pet = getPet(petId);\n\n\t\tAssert.notNull(pet, \"Invalid Pet identifier!\");\n\n\t\tpet.addVisit(visit);\n\t}",
+  "regenerated_method": "public void addVisit(Integer petId, Visit visit) {\n    Pet pet = getPet(petId);\n    if (pet != null) {\n        pet.addVisit(visit);\n    }\n}",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.7,
+  "original_metrics": {
+    "loc": 11,
+    "sloc": 7,
+    "complexity": 1
+  }
+}

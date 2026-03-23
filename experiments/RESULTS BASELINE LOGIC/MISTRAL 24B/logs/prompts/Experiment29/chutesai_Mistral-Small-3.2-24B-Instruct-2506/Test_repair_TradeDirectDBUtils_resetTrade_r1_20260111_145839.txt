@@ -1,0 +1,196 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.direct;
+Class name (MUST be exactly): TradeDirectDBUtils_resetTradeTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import javax.sql.DataSource;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.MDBStats;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class TradeDirectDBUtils_resetTradeTestGenerated {
+
+    @Mock
+    private DataSource datasource;
+
+    @Mock
+    private Connection conn;
+
+    @Mock
+    private PreparedStatement stmt;
+
+    @Mock
+    private ResultSet rs;
+
+    @InjectMocks
+    private TradeDirectDBUtils tradeDirectDBUtils;
+
+    private AutoCloseable closeable;
+
+    @BeforeEach
+    void setUp() {
+        closeable = MockedStatic.openStatic(Log.class);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
+    }
+
+    @Test
+    void testResetTrade_DeleteAllTrue() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class)) {
+
+            // Setup mocks
+            mockedMDBStats.when(MDBStats::getInstance).thenReturn(mock(MDBStats.class));
+            doNothing().when(MDBStats.getInstance()).reset();
+            when(datasource.getConnection()).thenReturn(conn);
+            when(conn.setAutoCommit(false)).thenReturn(conn);
+            when(tradeDirectDBUtils.getStatement(conn, anyString())).thenReturn(stmt);
+            when(stmt.executeUpdate()).thenReturn(0);
+            doNothing().when(stmt).close();
+            doNothing().when(rs).close();
+            doNothing().when(conn).commit();
+            doNothing().when(conn).close();
+
+            // Execute
+            RunStatsDataBean result = tradeDirectDBUtils.resetTrade(true);
+
+            // Verify
+            assertNotNull(result);
+            verify(stmt, times(5)).executeUpdate();
+            verify(stmt, times(5)).close();
+            verify(conn).commit();
+            verify(conn).close();
+        }
+    }
+
+    @Test
+    void testResetTrade_DeleteAllFalse() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class)) {
+
+            // Setup mocks
+            mockedMDBStats.when(MDBStats::getInstance).thenReturn(mock(MDBStats.class));
+            doNothing().when(MDBStats.getInstance()).reset();
+            when(datasource.getConnection()).thenReturn(conn);
+            when(conn.setAutoCommit(false)).thenReturn(conn);
+            when(tradeDirectDBUtils.getStatement(conn, anyString())).thenReturn(stmt);
+            when(stmt.executeUpdate()).thenReturn(0);
+            when(rs.next()).thenReturn(true);
+            when(rs.getInt(anyString())).thenReturn(0);
+            doNothing().when(stmt).close();
+            doNothing().when(rs).close();
+            doNothing().when(conn).commit();
+            doNothing().when(conn).close();
+
+            // Execute
+            RunStatsDataBean result = tradeDirectDBUtils.resetTrade(false);
+
+            // Verify
+            assertNotNull(result);
+            verify(stmt, times(14)).executeUpdate();
+            verify(stmt, times(14)).close();
+            verify(rs, times(11)).next();
+            verify(rs, times(11)).getInt(anyString());
+            verify(conn).commit();
+            verify(conn).close();
+        }
+    }
+
+    @Test
+    void testResetTrade_ExceptionOccurs() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class)) {
+
+            // Setup mocks
+            mockedMDBStats.when(MDBStats::getInstance).thenReturn(mock(MDBStats.class));
+            doNothing().when(MDBStats.getInstance()).reset();
+            when(datasource.getConnection()).thenReturn(conn);
+            when(conn.setAutoCommit(false)).thenReturn(conn);
+            when(tradeDirectDBUtils.getStatement(conn, anyString())).thenThrow(new Exception("Test exception"));
+
+            // Verify exception is thrown
+            assertThrows(Exception.class, () -> tradeDirectDBUtils.resetTrade(false));
+
+            verify(Log.error(any(Exception.class), anyString()));
+            verify(conn).rollback();
+        }
+    }
+
+    @Test
+    void testResetTrade_ConnectionException() throws Exception {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class);
+             MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class)) {
+
+            // Setup mocks
+            mockedMDBStats.when(MDBStats::getInstance).thenReturn(mock(MDBStats.class));
+            doNothing().when(MDBStats.getInstance()).reset();
+            when(datasource.getConnection()).thenThrow(new Exception("Connection failed"));
+
+            // Verify exception is thrown
+            assertThrows(Exception.class, () -> tradeDirectDBUtils.resetTrade(false));
+
+            verify(Log.error(any(Exception.class), anyString()));
+        }
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirectDBUtils_resetTradeTestGenerated.java:[52] cannot find symbol
+  symbol:   method openStatic(java.lang.Class<com.ibm.websphere.samples.daytrader.util.Log>)
+  location: interface org.mockito.MockedStatic
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirectDBUtils_resetTradeTestGenerated.java:[69] 'void' type not allowed here
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirectDBUtils_resetTradeTestGenerated.java:[70] getStatement(java.sql.Connection,java.lang.String) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirectDBUtils_resetTradeTestGenerated.java:[98] 'void' type not allowed here
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirectDBUtils_resetTradeTestGenerated.java:[99] getStatement(java.sql.Connection,java.lang.String) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirectDBUtils_resetTradeTestGenerated.java:[131] 'void' type not allowed here
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirectDBUtils_resetTradeTestGenerated.java:[132] getStatement(java.sql.Connection,java.lang.String) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirectDBUtils_resetTradeTestGenerated.java:[137] 'void' type not allowed here
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirectDBUtils_resetTradeTestGenerated.java:[155] 'void' type not allowed here
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- For static method calls, ensure mockStatic is properly closed (use try-with-resources)
+- Keep the SAME class name: TradeDirectDBUtils_resetTradeTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

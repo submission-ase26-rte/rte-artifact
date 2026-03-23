@@ -1,0 +1,89 @@
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.util.concurrent.Future;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class TradeDirect_buyTestGenerated {
+
+    private TradeDirect tradeDirect;
+    private DataSource dataSource;
+    private UserTransaction userTransaction;
+
+    @BeforeEach
+    void setUp() {
+        dataSource = mock(DataSource.class);
+        userTransaction = mock(UserTransaction.class);
+        tradeDirect = new TradeDirect();
+        ReflectionTestUtils.setField(tradeDirect, "datasource", dataSource);
+        ReflectionTestUtils.setField(tradeDirect, "txn", userTransaction);
+    }
+
+    @AfterEach
+    void tearDown() {
+        tradeDirect = null;
+        dataSource = null;
+        userTransaction = null;
+    }
+
+    @Test
+    void testBuy_NullUserID() throws Exception {
+        String userID = null;
+        String symbol = "TEST";
+        double quantity = 10;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        assertThrows(Exception.class, () -> tradeDirect.buy(userID, symbol, quantity, orderProcessingMode));
+    }
+
+    @Test
+    void testBuy_NullSymbol() throws Exception {
+        String userID = "testUser";
+        String symbol = null;
+        double quantity = 10;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        assertThrows(Exception.class, () -> tradeDirect.buy(userID, symbol, quantity, orderProcessingMode));
+    }
+
+    @Test
+    void testBuy_NegativeQuantity() throws Exception {
+        String userID = "testUser";
+        String symbol = "TEST";
+        double quantity = -10;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        assertThrows(Exception.class, () -> tradeDirect.buy(userID, symbol, quantity, orderProcessingMode));
+    }
+
+    @Test
+    void testBuy_InvalidOrderProcessingMode() throws Exception {
+        String userID = "testUser";
+        String symbol = "TEST";
+        double quantity = 10;
+        int orderProcessingMode = 999; // Invalid mode
+
+        assertThrows(Exception.class, () -> tradeDirect.buy(userID, symbol, quantity, orderProcessingMode));
+    }
+}

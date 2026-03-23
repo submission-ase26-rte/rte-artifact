@@ -1,0 +1,377 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language;
+Class name (MUST be exactly): Nysiis_nysiisTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testNysiisBasicCase --
+ERROR: org.opentest4j.AssertionFailedError: expected: <MCC> but was: <MC>
+--------------------------------------------------
+TEST: testNysiisStrictMode --
+ERROR: org.opentest4j.AssertionFailedError: expected: <MCC> but was: <MC>
+--------------------------------------------------
+TEST: testNysiisComplexCase --
+ERROR: org.opentest4j.AssertionFailedError: expected: <MCC> but was: <MC>
+--------------------------------------------------
+TEST: testNysiisTranscodeRemaining --
+ERROR: java.lang.IllegalArgumentException: Could not find field 'transcodeRemaining' of type [null] on target object [org.apache.commons.codec.language.Nysiis@2a4b6ffc] or target class [class org.apache.commons.codec.language.Nysiis]
+
+TEST CODE TO FIX:
+package org.apache.commons.codec.language;
+
+import java.util.regex.Pattern;
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.StringEncoder;
+import org.apache.commons.codec.language.SoundexUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.function.ThrowingConsumer;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Nysiis_nysiisTestGenerated {
+    private Nysiis nysiis;
+    private Nysiis strictNysiis;
+    @BeforeEach
+    void setUp() {
+        nysiis = new Nysiis();
+        strictNysiis = new Nysiis(true);
+    }
+
+
+    @Test
+        void testNysiisBasicCase() {
+            assertEquals("MCC", nysiis.nysiis("MAC"));
+            assertEquals("NN", nysiis.nysiis("KN"));
+            assertEquals("C", nysiis.nysiis("K"));
+            assertEquals("FF", nysiis.nysiis("PH"));
+            assertEquals("SSS", nysiis.nysiis("SCH"));
+            assertEquals("Y", nysiis.nysiis("EE"));
+            assertEquals("Y", nysiis.nysiis("IE"));
+            assertEquals("D", nysiis.nysiis("DT"));
+            assertEquals("D", nysiis.nysiis("RT"));
+            assertEquals("D", nysiis.nysiis("RD"));
+            assertEquals("D", nysiis.nysiis("NT"));
+            assertEquals("D", nysiis.nysiis("ND"));
+        }
+
+    @Test
+        void testNysiisComplexCase() {
+            assertEquals("MCC", nysiis.nysiis("MAC"));
+            assertEquals("MCC", nysiis.nysiis("MACK"));
+            assertEquals("MCC", nysiis.nysiis("MACKE"));
+            assertEquals("F", nysiis.nysiis("F"));
+            assertEquals("FF", nysiis.nysiis("PH"));
+            assertEquals("FF", nysiis.nysiis("PF"));
+            assertEquals("FF", nysiis.nysiis("FFF"));
+            assertEquals("M", nysiis.nysiis("M"));
+            assertEquals("M", nysiis.nysiis("MA"));
+            assertEquals("M", nysiis.nysiis("MAIN"));
+            assertEquals("M", nysiis.nysiis("MAN"));
+            assertEquals("M", nysiis.nysiis("MANN"));
+            assertEquals("M", nysiis.nysiis("MANNY"));
+            assertEquals("M", nysiis.nysiis("MANNY"));
+        }
+
+    @Test
+        void testNysiisStrictMode() {
+            assertEquals("MCC", strictNysiis.nysiis("MAC"));
+            assertEquals("MCC", strictNysiis.nysiis("MACK"));
+            assertEquals("MCC", strictNysiis.nysiis("MACKE"));
+            assertEquals("F", strictNysiis.nysiis("F"));
+            assertEquals("FF", strictNysiis.nysiis("PH"));
+            assertEquals("FF", strictNysiis.nysiis("PF"));
+            assertEquals("FF", strictNysiis.nysiis("FFF"));
+            assertEquals("M", strictNysiis.nysiis("M"));
+            assertEquals("M", strictNysiis.nysiis("MA"));
+            assertEquals("M", strictNysiis.nysiis("MAIN"));
+            assertEquals("M", strictNysiis.nysiis("MAN"));
+            assertEquals("M", strictNysiis.nysiis("MANN"));
+            assertEquals("M", strictNysiis.nysiis("MANNY"));
+            assertEquals("M", strictNysiis.nysiis("MANNY"));
+        }
+
+    @Test
+        void testNysiisTranscodeRemaining() {
+            ReflectionTestUtils.setField(nysiis, "transcodeRemaining", null);
+    
+            assertArrayEquals(new char[]{'A'}, (char[]) ReflectionTestUtils.getField(nysiis, "transcodeRemaining"));
+            assertArrayEquals(new char[]{'A'}, (char[]) ReflectionTestUtils.getField(nysiis, "transcodeRemaining"));
+            assertArrayEquals(new char[]{'A'}, (char[]) ReflectionTestUtils.getField(nysiis, "transcodeRemaining"));
+            assertArrayEquals(new char[]{'A'}, (char[]) ReflectionTestUtils.getField(nysiis, "transcodeRemaining"));
+            assertArrayEquals(new char[]{'A'}, (char[]) ReflectionTestUtils.getField(nysiis, "transcodeRemaining"));
+            assertArrayEquals(new char[]{'G'}, (char[]) ReflectionTestUtils.getField(nysiis, "transcodeRemaining"));
+            assertArrayEquals(new char[]{'S'}, (char[]) ReflectionTestUtils.getField(nysiis, "transcodeRemaining"));
+            assertArrayEquals(new char[]{'N'}, (char[]) ReflectionTestUtils.getField(nysiis, "transcodeRemaining"));
+            assertArrayEquals(new char[]{'C'}, (char[]) ReflectionTestUtils.getField(nysiis, "transcodeRemaining"));
+            assertArrayEquals(new char[]{'C'}, (char[]) ReflectionTestUtils.getField(nysiis, "transcodeRemaining"));
+            assertArrayEquals(new char[]{'N'}, (char[]) ReflectionTestUtils.getField(nysiis, "transcodeRemaining"));
+            assertArrayEquals(new char[]{'N'}, (char[]) ReflectionTestUtils.getField(nysiis, "transcodeRemaining"));
+            assertArrayEquals(new char[]{'N'}, (char[]) ReflectionTestUtils.getField(nysiis, "transcodeRemaining"));
+            assertArrayEquals(new char[]{'S'}, (char[]) ReflectionTestUtils.getField(nysiis, "transcodeRemaining"));
+            assertArrayEquals(new char[]{'F'}, (char[]) ReflectionTestUtils.getField(nysiis, "transcodeRemaining"));
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    void testNysiisNullInput() {}
+    @Test
+    void testNysiisEmptyString() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Pattern -> java.util.regex.Pattern
+//   EncoderException -> org.apache.commons.codec.EncoderException
+//   StringEncoder -> org.apache.commons.codec.StringEncoder
+//   Nysiis -> org.apache.commons.codec.language.Nysiis
+//   SoundexUtils -> org.apache.commons.codec.language.SoundexUtils
+
+// === Class: Nysiis ===
+// Fields (with actual visibility):
+    private static final char[] CHARS_A;
+    private static final char[] CHARS_AF;
+    private static final char[] CHARS_C;
+    private static final char[] CHARS_FF;
+    private static final char[] CHARS_G;
+    private static final char[] CHARS_N;
+    private static final char[] CHARS_NN;
+    private static final char[] CHARS_S;
+    private static final char[] CHARS_SSS;
+    private static final Pattern PAT_MAC;
+    private static final Pattern PAT_KN;
+    private static final Pattern PAT_K;
+    private static final Pattern PAT_PH_PF;
+    private static final Pattern PAT_SCH;
+    private static final Pattern PAT_EE_IE;
+    private static final Pattern PAT_DT_ETC;
+    private static final char SPACE;
+    private static final int TRUE_LENGTH;
+    private final boolean strict;
+
+// Constructors:
+public Nysiis();
+public Nysiis(boolean strict);
+
+// Getter/Setter Methods (for test assertions):
+private static boolean isVowel(final char c);
+public boolean isStrict();
+
+// Internal Methods (full implementation for context):
+    private static char[] transcodeRemaining(final char prev, final char curr, final char next, final char aNext) {
+        // 1. EV -> AF
+        if (curr == 'E' && next == 'V') {
+            return CHARS_AF;
+        }
+
+        // A, E, I, O, U -> A
+        if (isVowel(curr)) {
+            return CHARS_A;
+        }
+
+        // 2. Q -> G, Z -> S, M -> N
+
+        // 3. KN -> NN else K -> C
+        switch (curr) {
+        case 'Q':
+            return CHARS_G;
+        case 'Z':
+            return CHARS_S;
+        case 'M':
+            return CHARS_N;
+        case 'K':
+            if (next == 'N') {
+                return CHARS_NN;
+            }
+            return CHARS_C;
+        default:
+            break;
+        }
+
+        // 4. SCH -> SSS
+        if (curr == 'S' && next == 'C' && aNext == 'H') {
+            return CHARS_SSS;
+        }
+
+        // PH -> FF
+        if (curr == 'P' && next == 'H') {
+            return CHARS_FF;
+        }
+
+        // 5. H -> If previous or next is a non vowel, previous.
+        if (curr == 'H' && (!isVowel(prev) || !isVowel(next))) {
+            return new char[] { prev };
+        }
+
+        // 6. W -> If previous is vowel, previous.
+        if (curr == 'W' && isVowel(prev)) {
+            return new char[] { prev };
+        }
+
+        return new char[] { curr };
+    }
+    public boolean isStrict() {
+        return this.strict;
+    }
+
+// === External Class: SoundexUtils ===
+// Full import path: org.apache.commons.codec.language.SoundexUtils
+// Import paths:
+//   EncoderException -> org.apache.commons.codec.EncoderException
+//   StringEncoder -> org.apache.commons.codec.StringEncoder
+// Method Signatures (used by target method):
+static String clean(final String str);
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() {
+        nysiis = new Nysiis();
+        strictNysiis = new Nysiis(true);
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+    /**
+     * Retrieves the NYSIIS code for a given String object.
+     *
+     * @param str
+     *            String to encode using the NYSIIS algorithm
+     * @return A NYSIIS code for the String supplied
+     */
+    public String nysiis(String str) {
+        if (str == null) {
+            return null;
+        }
+
+        // Use the same clean rules as Soundex
+        str = SoundexUtils.clean(str);
+
+        if (str.isEmpty()) {
+            return str;
+        }
+
+        // Translate first characters of name:
+        // MAC -> MCC, KN -> NN, K -> C, PH | PF -> FF, SCH -> SSS
+        str = PAT_MAC.matcher(str).replaceFirst("MCC");
+        str = PAT_KN.matcher(str).replaceFirst("NN");
+        str = PAT_K.matcher(str).replaceFirst("C");
+        str = PAT_PH_PF.matcher(str).replaceFirst("FF");
+        str = PAT_SCH.matcher(str).replaceFirst("SSS");
+
+        // Translate last characters of name:
+        // EE -> Y, IE -> Y, DT | RT | RD | NT | ND -> D
+        str = PAT_EE_IE.matcher(str).replaceFirst("Y");
+        str = PAT_DT_ETC.matcher(str).replaceFirst("D");
+
+        // First character of key = first character of name.
+        final StringBuilder key = new StringBuilder(str.length());
+        key.append(str.charAt(0));
+
+        // Transcode remaining characters, incrementing by one character each time
+        final char[] chars = str.toCharArray();
+        final int len = chars.length;
+
+        for (int i = 1; i < len; i++) {
+            final char next = i < len - 1 ? chars[i + 1] : SPACE;
+            final char aNext = i < len - 2 ? chars[i + 2] : SPACE; // NOT COVERED BY TESTS
+            final char[] transcoded = transcodeRemaining(chars[i - 1], chars[i], next, aNext);
+            System.arraycopy(transcoded, 0, chars, i, transcoded.length);
+
+            // only append the current char to the key if it is different from the last one
+            if (chars[i] != chars[i - 1]) {
+                key.append(chars[i]);
+            }
+        }
+
+        if (key.length() > 1) { // NOT COVERED BY TESTS
+            char lastChar = key.charAt(key.length() - 1);
+
+            // If last character is S, remove it.
+            if (lastChar == 'S') { // NOT COVERED BY TESTS
+                key.deleteCharAt(key.length() - 1); // NOT COVERED BY TESTS
+                lastChar = key.charAt(key.length() - 1); // NOT COVERED BY TESTS
+            }
+
+            if (key.length() > 2) { // NOT COVERED BY TESTS
+                final char last2Char = key.charAt(key.length() - 2); // NOT COVERED BY TESTS
+                // If last characters are AY, replace with Y.
+                if (last2Char == 'A' && lastChar == 'Y') { // NOT COVERED BY TESTS
+                    key.deleteCharAt(key.length() - 2); // NOT COVERED BY TESTS
+                }
+            }
+
+            // If last character is A, remove it.
+            if (lastChar == 'A') { // NOT COVERED BY TESTS
+                key.deleteCharAt(key.length() - 1); // NOT COVERED BY TESTS
+            }
+        }
+
+        final String string = key.toString();
+        return this.isStrict() ? string.substring(0, Math.min(TRUE_LENGTH, string.length())) : string; // NOT COVERED BY TESTS
+    }
+
+
+COVERAGE ISSUES:
+Current line coverage: 83.33%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

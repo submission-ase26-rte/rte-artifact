@@ -1,0 +1,141 @@
+```java
+package org.apache.commons.codec.digest;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Md5Crypt_md5CryptTestGenerated {
+
+    private static final String APR1_PREFIX = "$apr1$";
+    private static final int BLOCKSIZE = 16;
+    private static final String MD5_PREFIX = "$md5$";
+    private static final int ROUNDS = 4;
+    private static final String B64T_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    private static final char[] B64T_ARRAY = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
+
+    private Random mockRandom;
+
+    @BeforeEach
+    void setUp() {
+        mockRandom = mock(Random.class);
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mockRandom = null;
+    }
+
+    @Test
+    void testMd5CryptWithNullSalt() {
+        byte[] keyBytes = "test".getBytes(StandardCharsets.UTF_8);
+        String prefix = "$apr1$";
+        String result = Md5Crypt.md5Crypt(keyBytes, null, prefix, mockRandom);
+        assertNotNull(result);
+        assertTrue(result.startsWith(prefix));
+        assertTrue(result.contains("$"));
+    }
+
+    @Test
+    void testMd5CryptWithValidSalt() {
+        byte[] keyBytes = "test".getBytes(StandardCharsets.UTF_8);
+        String salt = "$apr1$saltvalue";
+        String prefix = "$apr1$";
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, prefix, mockRandom);
+        assertNotNull(result);
+        assertTrue(result.startsWith(prefix));
+        assertTrue(result.contains(salt));
+        assertTrue(result.contains("$"));
+    }
+
+    @Test
+    void testMd5CryptWithInvalidSalt() {
+        byte[] keyBytes = "test".getBytes(StandardCharsets.UTF_8);
+        String salt = "invalid_salt";
+        String prefix = "$apr1$";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, salt, prefix, mockRandom);
+        });
+        assertEquals("Invalid salt value: " + salt, exception.getMessage());
+    }
+
+    @Test
+    void testMd5CryptWithPrefixChange() {
+        byte[] keyBytes = "test".getBytes(StandardCharsets.UTF_8);
+        String salt = "$md5$saltvalue";
+        String prefix = "$apr1$";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, salt, prefix, mockRandom);
+        });
+        assertEquals("Invalid salt value: " + salt, exception.getMessage());
+    }
+
+    @Test
+    void testMd5CryptWithEmptyKey() {
+        byte[] keyBytes = "".getBytes(StandardCharsets.UTF_8);
+        String salt = "$apr1$saltvalue";
+        String prefix = "$apr1$";
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, prefix, mockRandom);
+        assertNotNull(result);
+        assertTrue(result.startsWith(prefix));
+        assertTrue(result.contains(salt));
+        assertTrue(result.contains("$"));
+    }
+
+    @Test
+    void testMd5CryptWithLongKey() {
+        byte[] keyBytes = "thisisalongkey".getBytes(StandardCharsets.UTF_8);
+        String salt = "$apr1$saltvalue";
+        String prefix = "$apr1$";
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, prefix, mockRandom);
+        assertNotNull(result);
+        assertTrue(result.startsWith(prefix));
+        assertTrue(result.contains(salt));
+        assertTrue(result.contains("$"));
+    }
+
+    @Test
+    void testMd5CryptWithDifferentPrefixes() {
+        byte[] keyBytes = "test".getBytes(StandardCharsets.UTF_8);
+        String salt = "$apr1$saltvalue";
+        String prefix1 = "$apr1$";
+        String prefix2 = "$md5$";
+
+        String result1 = Md5Crypt.md5Crypt(keyBytes, salt, prefix1, mockRandom);
+        String result2 = Md5Crypt.md5Crypt(keyBytes, salt, prefix2, mockRandom);
+
+        assertNotNull(result1);
+        assertNotNull(result2);
+
+        assertNotEquals(result1, result2);
+    }
+
+    @Test
+    void testMd5CryptWithRandomSaltGeneration() {
+        when(mockRandom.nextBytes(any())).thenReturn(new byte[8]);
+
+        byte[] keyBytes = "test".getBytes(StandardCharsets.UTF_8);
+        String prefix = "$apr1$";
+        String result = Md5Crypt.md5Crypt(keyBytes, null, prefix, mockRandom);
+
+        assertNotNull(result);
+        assertTrue(result.startsWith(prefix));
+        assertTrue(result.contains("$"));
+    }
+}
+```

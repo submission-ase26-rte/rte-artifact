@@ -1,0 +1,196 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.compress.archivers.cpio;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class CpioArchiveEntry_setInodeTestGenerated {
+
+    private CpioArchiveEntry entry;
+
+    @BeforeEach
+    public void setUp() {
+        entry = new CpioArchiveEntry("testFile");
+    }
+
+    @Test
+    public void testSetInode_PositiveValue() {
+        entry.setInode(12345L);
+        assertEquals(12345L, entry.getInode());
+    }
+
+    @Test
+    public void testSetInode_ZeroValue() {
+        entry.setInode(0L);
+        assertEquals(0L, entry.getInode());
+    }
+
+    @Test
+    public void testSetInode_NegativeValue() {
+        entry.setInode(-12345L);
+        assertEquals(-12345L, entry.getInode());
+    }
+
+    @Test
+    public void testSetInode_MaxValue() {
+        entry.setInode(Long.MAX_VALUE);
+        assertEquals(Long.MAX_VALUE, entry.getInode());
+    }
+
+    @Test
+    public void testSetInode_MinValue() {
+        entry.setInode(Long.MIN_VALUE);
+        assertEquals(Long.MIN_VALUE, entry.getInode());
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 0.00%
+- Tests: 5/5 passed
+
+TEST STATUS:
+- PASSED (5): testSetInode_PositiveValue, testSetInode_ZeroValue, testSetInode_NegativeValue, testSetInode_MaxValue, testSetInode_MinValue
+- FAILED (0): none
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// === Imports of CpioArchiveEntry ===
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
+import java.util.Date;
+import java.util.Objects;
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.utils.ExactMath;
+import org.apache.commons.compress.utils.TimeUtils;
+
+// === Class: CpioArchiveEntry ===
+// Fields:
+    private short fileFormat;
+    private int headerSize;
+    private int alignmentBoundary;
+    private long chksum;
+    private long filesize;
+    private long gid;
+    private long inode;
+    private long maj;
+    private long min;
+    private long mode;
+    private long mtime;
+    private String name;
+    private long nlink;
+    private long rmaj;
+    private long rmin;
+    private long uid;
+
+// Constructors:
+public CpioArchiveEntry(File inputFile, String entryName);
+public CpioArchiveEntry(Path inputPath, String entryName, LinkOption options);
+public CpioArchiveEntry(short format);
+public CpioArchiveEntry(short format, File inputFile, String entryName);
+public CpioArchiveEntry(short format, Path inputPath, String entryName, LinkOption options);
+public CpioArchiveEntry(short format, String name);
+public CpioArchiveEntry(short format, String name, long size);
+public CpioArchiveEntry(String name);
+public CpioArchiveEntry(String name, long size);
+
+// Getter/Setter Methods (for test assertions):
+public int getAlignmentBoundary();
+public long getChksum();
+public int getDataPadCount();
+public long getDevice();
+public long getDeviceMaj();
+public long getDeviceMin();
+public short getFormat();
+public long getGID();
+public int getHeaderPadCount();
+public int getHeaderPadCount(final Charset charset);
+public int getHeaderPadCount(final long nameSize);
+public int getHeaderSize();
+public long getInode();
+public Date getLastModifiedDate();
+public long getMode();
+public String getName();
+public long getNumberOfLinks();
+public long getRemoteDevice();
+public long getRemoteDeviceMaj();
+public long getRemoteDeviceMin();
+public long getSize();
+public long getTime();
+public long getUID();
+public boolean isBlockDevice();
+public boolean isCharacterDevice();
+public boolean isDirectory();
+public boolean isNetwork();
+public boolean isPipe();
+public boolean isRegularFile();
+public boolean isSocket();
+public boolean isSymbolicLink();
+public void setChksum(final long chksum);
+public void setDevice(final long device);
+public void setDeviceMaj(final long maj);
+public void setDeviceMin(final long min);
+public void setGID(final long gid);
+public void setInode(final long inode);
+public void setMode(final long mode);
+public void setName(final String name);
+public void setNumberOfLinks(final long nlink);
+public void setRemoteDevice(final long device);
+public void setRemoteDeviceMaj(final long rmaj);
+public void setRemoteDeviceMin(final long rmin);
+public void setSize(final long size);
+public void setTime(final FileTime time);
+public void setTime(final long time);
+public void setUID(final long uid);
+
+
+TASK:
+Regenerate ONLY the method "setInode" OF CLASS "CpioArchiveEntry" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void setInode(final long inode) {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.compress.archivers.cpio
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in CpioArchiveEntry
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

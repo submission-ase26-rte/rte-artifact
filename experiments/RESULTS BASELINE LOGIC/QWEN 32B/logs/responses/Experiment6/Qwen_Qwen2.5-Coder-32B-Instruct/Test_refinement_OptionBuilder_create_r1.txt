@@ -1,0 +1,60 @@
+```java
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class OptionBuilder_createTestGenerated {
+    @BeforeEach
+    public void setUp() {
+        // No need to reset OptionBuilder as it is not accessible
+    }
+
+    @AfterEach
+    public void tearDown() {
+        // No need to reset OptionBuilder as it is not accessible
+    }
+
+    @Test
+    public void testCreateWithMinimalValidOption() {
+        String opt = "b";
+        Option option = OptionBuilder.create(opt);
+
+        assertNotNull(option);
+        assertEquals(opt, option.getOpt());
+        assertNull(option.getDescription());
+        assertNull(option.getLongOpt());
+        assertFalse(option.isRequired());
+        assertFalse(option.hasArg());
+        assertNull(option.getType());
+        assertEquals('=', option.getValueSeparator());
+        assertNull(option.getArgName());
+    }
+
+    @Test
+    public void testCreateWithNullOption() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            OptionBuilder.create(null);
+        });
+    }
+
+    @Test
+    public void testCreateWithMultipleCharactersOption() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            OptionBuilder.create("abc");
+        });
+    }
+
+    @Test
+    public void testCreateWithSpecialCharacterOption() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            OptionBuilder.create("@");
+        });
+    }
+}
+```

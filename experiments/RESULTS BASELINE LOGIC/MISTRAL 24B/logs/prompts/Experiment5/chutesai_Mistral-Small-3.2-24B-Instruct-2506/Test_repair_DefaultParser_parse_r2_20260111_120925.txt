@@ -1,0 +1,214 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): DefaultParser_parseTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.cli;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Properties;
+import java.util.function.Consumer;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class DefaultParser_parseTestGenerated {
+    @Mock
+    private Options mockOptions;
+
+    @Mock
+    private OptionGroup mockOptionGroup;
+
+    @Mock
+    private Option mockOption;
+
+    @Mock
+    private CommandLine mockCommandLine;
+
+    @Mock
+    private Consumer<Option> mockDeprecatedHandler;
+
+    private DefaultParser parser;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        parser = new DefaultParser(true, Boolean.TRUE, mockDeprecatedHandler);
+        parser.options = mockOptions;
+    }
+
+    @AfterEach
+    void tearDown() {
+        parser = null;
+    }
+
+    @Test
+    void testParseWithValidArguments() throws ParseException {
+        String[] arguments = {"-a", "value1", "-b", "value2"};
+        Properties properties = new Properties();
+        when(mockOptions.getRequiredOptions()).thenReturn(new ArrayList<Option>());
+        when(mockOptions.getOptionGroups()).thenReturn(Collections.singletonList(mockOptionGroup));
+        when(CommandLine.builder()).thenReturn(mock(CommandLine.Builder.class));
+        when(mock(CommandLine.Builder.class).setDeprecatedHandler(mockDeprecatedHandler)).thenReturn(mock(CommandLine.Builder.class));
+        when(mock(CommandLine.Builder.class).build()).thenReturn(mockCommandLine);
+
+        CommandLine result = parser.parse(mockOptions, arguments, properties, true);
+
+        assertNotNull(result);
+        verify(mockOptionGroup).setSelected(null);
+        verify(CommandLine.builder()).setDeprecatedHandler(mockDeprecatedHandler);
+        verify(mock(CommandLine.Builder.class).build());
+    }
+
+    @Test
+    void testParseWithNullArguments() throws ParseException {
+        String[] arguments = null;
+        Properties properties = new Properties();
+        when(mockOptions.getRequiredOptions()).thenReturn(new ArrayList<Option>());
+        when(mockOptions.getOptionGroups()).thenReturn(Collections.singletonList(mockOptionGroup));
+        when(CommandLine.builder()).thenReturn(mock(CommandLine.Builder.class));
+        when(mock(CommandLine.Builder.class).setDeprecatedHandler(mockDeprecatedHandler)).thenReturn(mock(CommandLine.Builder.class));
+        when(mock(CommandLine.Builder.class).build()).thenReturn(mockCommandLine);
+
+        CommandLine result = parser.parse(mockOptions, arguments, properties, true);
+
+        assertNotNull(result);
+        verify(mockOptionGroup).setSelected(null);
+        verify(CommandLine.builder()).setDeprecatedHandler(mockDeprecatedHandler);
+        verify(mock(CommandLine.Builder.class).build());
+    }
+
+    @Test
+    void testParseWithEmptyArguments() throws ParseException {
+        String[] arguments = {};
+        Properties properties = new Properties();
+        when(mockOptions.getRequiredOptions()).thenReturn(new ArrayList<Option>());
+        when(mockOptions.getOptionGroups()).thenReturn(Collections.singletonList(mockOptionGroup));
+        when(CommandLine.builder()).thenReturn(mock(CommandLine.Builder.class));
+        when(mock(CommandLine.Builder.class).setDeprecatedHandler(mockDeprecatedHandler)).thenReturn(mock(CommandLine.Builder.class));
+        when(mock(CommandLine.Builder.class).build()).thenReturn(mockCommandLine);
+
+        CommandLine result = parser.parse(mockOptions, arguments, properties, true);
+
+        assertNotNull(result);
+        verify(mockOptionGroup).setSelected(null);
+        verify(CommandLine.builder()).setDeprecatedHandler(mockDeprecatedHandler);
+        verify(mock(CommandLine.Builder.class).build());
+    }
+
+    @Test
+    void testParseWithStopAtNonOptionFalse() {
+        String[] arguments = {"-a", "value1", "invalid"};
+        Properties properties = new Properties();
+        when(mockOptions.getRequiredOptions()).thenReturn(new ArrayList<Option>());
+        when(mockOptions.getOptionGroups()).thenReturn(Collections.singletonList(mockOptionGroup));
+        when(CommandLine.builder()).thenReturn(mock(CommandLine.Builder.class));
+        when(mock(CommandLine.Builder.class).setDeprecatedHandler(mockDeprecatedHandler)).thenReturn(mock(CommandLine.Builder.class));
+        when(mock(CommandLine.Builder.class).build()).thenReturn(mockCommandLine);
+
+        assertThrows(ParseException.class, () -> {
+            parser.parse(mockOptions, arguments, properties, false);
+        });
+    }
+
+    @Test
+    void testParseWithRequiredOptions() throws ParseException {
+        ArrayList<Option> requiredOptions = new ArrayList<>();
+        requiredOptions.add(mockOption);
+        when(mockOptions.getRequiredOptions()).thenReturn(requiredOptions);
+        when(mockOptions.getOptionGroups()).thenReturn(Collections.singletonList(mockOptionGroup));
+        when(CommandLine.builder()).thenReturn(mock(CommandLine.Builder.class));
+        when(mock(CommandLine.Builder.class).setDeprecatedHandler(mockDeprecatedHandler)).thenReturn(mock(CommandLine.Builder.class));
+        when(mock(CommandLine.Builder.class).build()).thenReturn(mockCommandLine);
+
+        assertThrows(ParseException.class, () -> {
+            parser.parse(mockOptions, new String[]{}, new Properties(), true);
+        });
+    }
+
+    @Test
+    void testParseWithNullOptions() {
+        String[] arguments = {"-a", "value1"};
+        Properties properties = new Properties();
+
+        assertThrows(NullPointerException.class, () -> {
+            parser.parse(null, arguments, properties, true);
+        });
+    }
+
+    @Test
+    void testParseWithNullProperties() throws ParseException {
+        String[] arguments = {"-a", "value1"};
+        when(mockOptions.getRequiredOptions()).thenReturn(new ArrayList<Option>());
+        when(mockOptions.getOptionGroups()).thenReturn(Collections.singletonList(mockOptionGroup));
+        when(CommandLine.builder()).thenReturn(mock(CommandLine.Builder.class));
+        when(mock(CommandLine.Builder.class).setDeprecatedHandler(mockDeprecatedHandler)).thenReturn(mock(CommandLine.Builder.class));
+        when(mock(CommandLine.Builder.class).build()).thenReturn(mockCommandLine);
+
+        CommandLine result = parser.parse(mockOptions, arguments, null, true);
+
+        assertNotNull(result);
+        verify(mockOptionGroup).setSelected(null);
+        verify(CommandLine.builder()).setDeprecatedHandler(mockDeprecatedHandler);
+        verify(mock(CommandLine.Builder.class).build());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/DefaultParser_parseTestGenerated.java:[40] constructor DefaultParser in class org.apache.commons.cli.DefaultParser cannot be applied to given types;
+  required: boolean,java.lang.Boolean,java.util.function.Consumer<org.apache.commons.cli.Option>
+  found:    boolean,java.lang.Boolean,java.util.function.Consumer<org.apache.commons.cli.Option>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/DefaultParser_parseTestGenerated.java:[53] no suitable method found for thenReturn(java.util.ArrayList<org.apache.commons.cli.Option>)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.util.List<capture#1 of ?>) is not applicable
+  (argument mismatch; java.util.ArrayList<org.apache.commons.cli.Option> cannot be converted to java.util.List<capture#1 of ?>)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.util.List<capture#1 of ?>,java.util.List<capture#1 of ?>...) is not applicable
+  (argument mismatch; java.util.ArrayList<org.apache.commons.cli.Option> cannot be converted to java.util.List<capture#1 of ?>)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/DefaultParser_parseTestGenerated.java:[71] no suitable method found for thenReturn(java.util.ArrayList<org.apache.commons.cli.Option>)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.util.List<capture#2 of ?>) is not applicable
+  (argument mismatch; java.util.ArrayList<org.apache.commons.cli.Option> cannot be converted to java.util.List<capture#2 of ?>)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.util.List<capture#2 of ?>,java.util.List<capture#2 of ?>...) is not applicable
+  (argument mismatch; java.util.ArrayList<org.apache.commons.cli.Option> cannot be converted to java.util.List<capture#2 of ?>)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/DefaultParser_parseTestGenerated.java:[89] no suitable method found for thenReturn(java.util.ArrayList<org.apache.commons.cli.Option>)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.util.List<capture#3 of ?>) is not applicable
+  (argument mismatch; java.util.ArrayList<org.apache.commons.cli.Option> cannot be converted to java.util.List<capture#3 of ?>)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.util.List<capture#3 of ?>,java.util.List<capture#3 of ?>...) is not applicable
+  (argument mismatch; java.util.ArrayList<org.apache.commons.cli.Option> cannot be converted to java.util.List<capture#3 of ?>)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/DefaultParser_parseTestGenerated.java:[107] no suitable method found for thenReturn(java.util.ArrayList<org.apache.commons.cli.Option>)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.util.List<capture#4 of ?>) is not applicable
+  (argument mismatch; java.util.ArrayList<org.apache.commons.cli.Option> cannot be converted to java.util.List<capture#4 of ?>)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.util.List<capture#4 of ?>,java.util.List<capture#4 of ?>...) is not applicable
+  (argument mismatch; java.util.ArrayList<org.apache.commons.cli.Option> cannot be converted to java.util.List<capture#4 of ?>)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/DefaultParser_parseTestGenerated.java:[122] no suitable method found for thenReturn(java.util.ArrayList<org.apache.commons.cli.Option>)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.util.List<capture#5 of ?>) is not applicable
+  (argument mismatch; java.util.ArrayList<org.apache.commons.cli.Option> cannot be converted to java.util.List<capture#5 of ?>)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.util.List<capture#5 of ?>,java.util.List<capture#5 of ?>...) is not applicable
+  (argument mismatch; java.util.ArrayList<org.apache.commons.cli.Option> cannot be converted to java.util.List<capture#5 of ?>)
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/DefaultParser_parseTestGenerated.java:[146] no suitable method found for thenReturn(java.util.ArrayList<org.apache.commons.cli.Option>)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.util.List<capture#6 of ?>) is not applicable
+  (argument mismatch; java.util.ArrayList<org.apache.commons.cli.Option> cannot be converted to java.util.List<capture#6 of ?>)
+  method org.mockito.stubbing.OngoingStubbing.thenReturn(java.util.List<capture#6 of ?>,java.util.List<capture#6 of ?>...) is not applicable
+  (argument mismatch; java.util.ArrayList<org.apache.commons.cli.Option> cannot be converted to java.util.List<capture#6 of ?>)
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: DefaultParser_parseTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

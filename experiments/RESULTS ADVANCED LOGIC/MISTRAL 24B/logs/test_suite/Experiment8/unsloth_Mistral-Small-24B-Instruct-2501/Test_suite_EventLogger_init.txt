@@ -1,0 +1,93 @@
+package org.eclipse.cargotracker.interfaces.handling.mobile;
+
+import jakarta.inject.Inject;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.eclipse.cargotracker.domain.model.cargo.Cargo;
+import org.eclipse.cargotracker.domain.model.cargo.CargoRepository;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.cargo.TransportStatus;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.domain.model.voyage.Schedule;
+import org.eclipse.cargotracker.domain.model.cargo.Itinerary;
+import org.eclipse.cargotracker.domain.model.cargo.Delivery;
+import jakarta.faces.model.SelectItem;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class EventLogger_initTestGenerated {
+
+    @Mock
+    private CargoRepository cargoRepository;
+
+    @Mock
+    private LocationRepository locationRepository;
+
+    @Mock
+    private VoyageRepository voyageRepository;
+
+    @InjectMocks
+    private EventLogger eventLogger;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(eventLogger, "cargoRepository", cargoRepository);
+        ReflectionTestUtils.setField(eventLogger, "locationRepository", locationRepository);
+        ReflectionTestUtils.setField(eventLogger, "voyageRepository", voyageRepository);
+    }
+
+    @Test
+    public void testInitWithNoCargo() {
+        when(cargoRepository.findAll()).thenReturn(new ArrayList<>());
+
+        eventLogger.init();
+
+        List<SelectItem> trackingIds = eventLogger.getTrackingIds();
+        assertNotNull(trackingIds);
+        assertEquals(0, trackingIds.size());
+    }
+
+    @Test
+    public void testInitWithNoLocations() {
+        List<Cargo> cargos = new ArrayList<>();
+        when(cargoRepository.findAll()).thenReturn(cargos);
+        when(locationRepository.findAll()).thenReturn(new ArrayList<>());
+
+        eventLogger.init();
+
+        List<SelectItem> locationsList = eventLogger.getLocations();
+        assertNotNull(locationsList);
+        assertEquals(0, locationsList.size());
+    }
+
+    @Test
+    public void testInitWithNoVoyages() {
+        List<Cargo> cargos = new ArrayList<>();
+        when(cargoRepository.findAll()).thenReturn(cargos);
+        when(voyageRepository.findAll()).thenReturn(new ArrayList<>());
+
+        eventLogger.init();
+
+        List<SelectItem> voyagesList = eventLogger.getVoyages();
+        assertNotNull(voyagesList);
+        assertEquals(0, voyagesList.size());
+    }
+}

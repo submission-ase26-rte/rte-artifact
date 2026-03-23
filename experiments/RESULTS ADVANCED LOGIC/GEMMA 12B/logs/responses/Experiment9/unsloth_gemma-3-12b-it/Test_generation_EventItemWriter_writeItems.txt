@@ -1,0 +1,94 @@
+```java
+package org.eclipse.cargotracker.interfaces.handling.file;
+
+import jakarta.batch.api.chunk.AbstractItemWriter;
+import jakarta.batch.runtime.context.JobContext;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.application.util.DateConverter;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.cargo.VoyageNumber;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+class EventItemWriter_writeItemsTestGenerated {
+
+    private EventItemWriter eventItemWriter;
+    private JobContext jobContext;
+    private ApplicationEvents applicationEvents;
+
+    @BeforeEach
+    void setUp() {
+        jobContext = Mockito.mock(JobContext.class);
+        applicationEvents = Mockito.mock(ApplicationEvents.class);
+
+        eventItemWriter = new EventItemWriter(jobContext, applicationEvents);
+    }
+
+    @Test
+    void writeItems_validItems_writesToArchive() throws Exception {
+        when(jobContext.getProperties().getProperty("ARCHIVE_DIRECTORY")).thenReturn("/tmp/archive");
+        List<Object> items = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
+        items.add(new HandlingEventRegistrationAttempt(now, now.plusHours(1), new TrackingId("123"), new VoyageNumber("Voyage1"), HandlingEvent.LOADED, new UnLocode("UNLOC1")));
+
+        eventItemWriter.writeItems(items);
+
+        verify(applicationEvents).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+    }
+
+    @Test
+    void writeItems_emptyList_doesNothing() throws Exception {
+        when(jobContext.getProperties().getProperty("ARCHIVE_DIRECTORY")).thenReturn("/tmp/archive");
+        List<Object> items = new ArrayList<>();
+
+        eventItemWriter.writeItems(items);
+
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+    }
+
+    @Test
+    void writeItems_nullItemsList_throwsException() {
+        when(jobContext.getProperties().getProperty("ARCHIVE_DIRECTORY")).thenReturn("/tmp/archive");
+        List<Object> items = null;
+
+        assertThrows(NullPointerException.class, () -> eventItemWriter.writeItems(items));
+
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+    }
+
+    @Test
+    void writeItems_invalidItemType_handlesException() throws Exception {
+        when(jobContext.getProperties().getProperty("ARCHIVE_DIRECTORY")).thenReturn("/tmp/archive");
+        List<Object> items = new ArrayList<>();
+        items.add("Not a HandlingEventRegistrationAttempt");
+
+        eventItemWriter.writeItems(items);
+
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+    }
+
+    @Test
+    void writeItems_archiveDirectoryNull_throwsException() throws Exception {
+        when(jobContext.getProperties().getProperty("ARCHIVE_DIRECTORY")).thenReturn(null);
+        List<Object> items = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
+        items.add(new HandlingEventRegistrationAttempt(now, now.plusHours(1), new TrackingId("123"), new VoyageNumber("Voyage1"), HandlingEvent.LOADED, new UnLocode("UNLOC1")));
+
+        assertThrows(NullPointerException.class, () -> eventItemWriter.writeItems(items));
+    }
+}
+```

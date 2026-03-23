@@ -1,0 +1,367 @@
+/**
+ * Filtered unit tests for method: asPath()
+ * Original class: DOMNodePointer
+ * Tests that actually call the target method
+ */
+package org.apache.commons.jxpath.ri.model.dom;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.jxpath.AbstractFactory;
+import org.apache.commons.jxpath.JXPathAbstractFactoryException;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.ri.NamespaceResolver;
+import org.apache.commons.jxpath.ri.QName;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.compiler.ProcessingInstructionTest;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.apache.commons.jxpath.ri.model.VariablePointer;
+import org.apache.commons.jxpath.ri.model.dom.DOMNodePointer;
+import org.apache.commons.jxpath.util.TypeUtils;
+import org.jdom.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.w3c.dom.*;
+import org.w3c.dom.Node;
+import org.w3c.dom.ProcessingInstruction;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+public class Metodo44_unit_asPath_DOMNodePointer_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ParentIsNotNull_VxQf14_QWMV0() {
+    Node nodeMock = mock(Node.class);
+    when(nodeMock.getParentNode()).thenReturn(nodeMock);
+    DOMNodePointer domnodepointer = new DOMNodePointer(nodeMock, Locale.US, "id");
+    assertEquals(domnodepointer.asPath(), domnodepointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_PI_Node_nWwP3() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.PROCESSING_INSTRUCTION_NODE);
+    when(((ProcessingInstruction) node).getTarget()).thenReturn("target");
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/processing-instruction('target')[1]", domNodePointer.asPath());
+    }
+
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_PI_Node_reYF2() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.PROCESSING_INSTRUCTION_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/processing-instruction('target')[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testasPath_ProcessingInstructionNode_ZUTX0() throws Exception {
+    Node node = mock(Node.class);
+    Node parentNode = mock(Node.class);
+    VariablePointer variablePointer = mock(VariablePointer.class);
+    QName qName = mock(QName.class);
+    DOMNodePointer domnodepointer = new DOMNodePointer(parentNode, Locale.US, null);
+    when(node.getNodeType()).thenReturn(Node.PROCESSING_INSTRUCTION_NODE);
+    when(((ProcessingInstruction) node).getTarget()).thenReturn("target");
+    String expectedPath = "/processing-instruction('target')[relativePosition]";
+    assertEquals(expectedPath, domnodepointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_jMuq0_fid1() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    when(node.getPreviousSibling()).thenReturn(null);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/prefix:localName[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_PreviousSibling_jnPa1_fid1() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    Node previousSibling = mock(Node.class);
+    when(previousSibling.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    when(node.getPreviousSibling()).thenReturn(previousSibling);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/prefix:localName[2]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_TextNode_gvTr2_fid1() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.TEXT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/text()[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_DocumentNode_Fvdp4() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.DOCUMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("", domNodePointer.asPath());
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_cKiF0_fid1() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/prefix:localName[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_NoPrefix_XyxE1_fid1() {
+    QName name = new QName("localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/localName[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_RelativePosition_xXRS5_fid1() {
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    when(node.getPreviousSibling()).thenReturn(null);
+    DOMNodePointer domNodePointer = new DOMNodePointer(null, node);
+    assertEquals("/localName[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_RelativePositionSibling_uffs6_fid1() {
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    Node sibling = mock(Node.class);
+    when(node.getPreviousSibling()).thenReturn(sibling);
+    when(sibling.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(null, node);
+    assertEquals("/localName[2]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_RelativePositionSiblingText_VTsL7_fid1() {
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    Node sibling = mock(Node.class);
+    when(node.getPreviousSibling()).thenReturn(sibling);
+    when(sibling.getNodeType()).thenReturn(Node.TEXT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(null, node);
+    assertEquals("/localName[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_NoNamespace_fSJF4_fid1() {
+    QName name = new QName(null, "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/localName[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_RelativePosition_wVNK7_fid1() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    when(node.getPreviousSibling()).thenReturn(mock(Node.class));
+    when(node.getPreviousSibling().getNodeType()).thenReturn(Node.TEXT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/prefix:localName[2]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_PreviousSibling_XkRR1_fid1() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    Node previousSibling = mock(Node.class);
+    when(previousSibling.getNodeType()).thenReturn(Node.PROCESSING_INSTRUCTION_NODE);
+    when(node.getPreviousSibling()).thenReturn(previousSibling);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/prefix:localName[2]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_Id_yANe6_ZGFB0_fid1() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    String id = "someId";
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("id('someId')", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_PreviousSibling_jnPa1() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    Node previousSibling = mock(Node.class);
+    when(previousSibling.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    when(node.getPreviousSibling()).thenReturn(previousSibling);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("$prefix:localName", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_TextNode_gvTr2() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.TEXT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("$prefix:localName/text()[1]", domNodePointer.asPath());
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_TextNode_flpP2() {
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.TEXT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(null, node);
+    assertEquals("/text()[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_DocumentNode_DkKG4() {
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.DOCUMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(null, node);
+    assertEquals("", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_RelativePositionSibling_uffs6() {
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    Node sibling = mock(Node.class);
+    when(node.getPreviousSibling()).thenReturn(sibling);
+    when(sibling.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(null, node);
+    assertEquals("", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_RelativePositionSiblingText_VTsL7() {
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    Node sibling = mock(Node.class);
+    when(node.getPreviousSibling()).thenReturn(sibling);
+    when(sibling.getNodeType()).thenReturn(Node.TEXT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(null, node);
+    assertEquals("", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_NoNamespace_fSJF4() {
+    QName name = new QName(null, "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("$localName", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_NullId_hjPl5() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("$prefix:localName", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_RelativePosition_wVNK7() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    when(node.getPreviousSibling()).thenReturn(mock(Node.class));
+    when(node.getPreviousSibling().getNodeType()).thenReturn(Node.TEXT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("$prefix:localName", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_qgtx0() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    when(node.getPreviousSibling()).thenReturn(null);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("$prefix:localName", domNodePointer.asPath());
+    }
+
+}

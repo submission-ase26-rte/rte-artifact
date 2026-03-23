@@ -1,0 +1,333 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language.bm;
+Class name (MUST be exactly): PhoneticEngine_encodeTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.codec.language.bm;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+import org.apache.commons.codec.language.bm.Languages.LanguageSet;
+import org.apache.commons.codec.language.bm.Languages;
+import org.apache.commons.codec.language.bm.NameType;
+import org.apache.commons.codec.language.bm.PhoneticEngine;
+import org.apache.commons.codec.language.bm.Rule.Phoneme;
+import org.apache.commons.codec.language.bm.Rule;
+import org.apache.commons.codec.language.bm.RuleType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class PhoneticEngine_encodeTestGenerated {
+    private PhoneticEngine phoneticEngine;
+    @BeforeEach
+    void setUp() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, false);
+    }
+
+
+    @Test
+    void testEncodeNullLanguageSet() {
+        String input = "John";
+        LanguageSet languageSet = null;
+        assertThrows(NullPointerException.class, () -> phoneticEngine.encode(input, languageSet));
+    }
+
+    @Test
+    void testEncodeWithDPrimePrefix() {
+        String input = "d'John";
+        String encoded = phoneticEngine.encode(input, new HashSet<>());
+        assertEquals("(-(" + phoneticEngine.encode("John") + "))", encoded);
+    }
+
+    @Test
+    void testEncodeWithGenericPrefix() {
+        String input = "McJohn";
+        String encoded = phoneticEngine.encode(input, new HashSet<>());
+        assertEquals("(-(" + phoneticEngine.encode("John") + "))", encoded);
+    }
+
+    @Test
+    void testEncodeSephardicNameWithPrefix() {
+        phoneticEngine = new PhoneticEngine(NameType.SEPHARDIC, RuleType.RULES, false);
+        String input = "BenJohn";
+        String encoded = phoneticEngine.encode(input, new HashSet<>());
+        assertEquals("John", encoded);
+    }
+
+    @Test
+    void testEncodeAshkenaziNameWithPrefix() {
+        phoneticEngine = new PhoneticEngine(NameType.ASHKENAZI, RuleType.RULES, false);
+        String input = "BenJohn";
+        String encoded = phoneticEngine.encode(input, new HashSet<>());
+        assertEquals("Ben-John", encoded);
+    }
+
+    @Test
+    void testEncodeConcatMode() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, true);
+        String input = "John Doe";
+        String encoded = phoneticEngine.encode(input, new HashSet<>());
+        assertEquals("John Doe", encoded);
+    }
+
+    @Test
+    void testEncodeMultipleWords() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, false);
+        String input = "John Doe";
+        String encoded = phoneticEngine.encode(input, new HashSet<>());
+        assertEquals("-(" + phoneticEngine.encode("John") + ") - (" + phoneticEngine.encode("Doe") + ")", encoded);
+    }
+
+    @Test
+    void testEncodeEmptyString() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, false);
+        String input = "";
+        String encoded = phoneticEngine.encode(input, new HashSet<>());
+        assertEquals("", encoded);
+    }
+
+    @Test
+    void testEncodeSingleCharacterString() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, false);
+        String input = "J";
+        String encoded = phoneticEngine.encode(input, new HashSet<>());
+        assertEquals(encoded);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[50] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[57] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[65] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[73] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[81] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[89] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[97] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[105] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[106] no suitable method found for assertEquals(java.lang.String)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Object,java.lang.Object,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Object,java.lang.Object,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Object,java.lang.Object) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Character,java.lang.Character,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Character,char,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(char,java.lang.Character,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(char,char,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Character,java.lang.Character,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Character,char,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(char,java.lang.Character,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(char,char,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Character,java.lang.Character) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Character,char) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(char,java.lang.Character) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(char,char) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(double,double,double,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(double,double,double,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(double,double,double) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Double,java.lang.Double,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Double,double,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(double,java.lang.Double,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(double,double,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Double,java.lang.Double,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Double,double,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(double,java.lang.Double,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(double,double,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Double,java.lang.Double) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Double,double) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(double,java.lang.Double) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(double,double) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(float,float,float,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(float,float,float,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(float,float,float) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Float,java.lang.Float,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Float,float,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(float,java.lang.Float,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(float,float,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Float,java.lang.Float,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Float,float,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(float,java.lang.Float,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(float,float,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Float,java.lang.Float) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Float,float) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(float,java.lang.Float) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(float,float) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Long,java.lang.Long,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Long,long,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(long,java.lang.Long,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(long,long,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Long,java.lang.Long,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Long,long,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(long,java.lang.Long,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(long,long,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Long,java.lang.Long) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Long,long) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(long,java.lang.Long) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(long,long) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Integer,java.lang.Integer,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Integer,int,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(int,java.lang.Integer,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(int,int,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Integer,java.lang.Integer,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Integer,int,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(int,java.lang.Integer,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(int,int,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Integer,java.lang.Integer) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Integer,int) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(int,java.lang.Integer) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(int,int) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Byte,java.lang.Byte,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Byte,byte,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(byte,java.lang.Byte,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(byte,byte,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Byte,java.lang.Byte,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Byte,byte,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(byte,java.lang.Byte,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(byte,byte,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Byte,java.lang.Byte) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Byte,byte) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(byte,java.lang.Byte) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(byte,byte) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Short,java.lang.Short,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Short,short,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(short,java.lang.Short,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(short,short,java.util.function.Supplier<java.lang.String>) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Short,java.lang.Short,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Short,short,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(short,java.lang.Short,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(short,short,java.lang.String) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Short,java.lang.Short) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(java.lang.Short,short) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(short,java.lang.Short) is not applicable
+  (actual and formal argument lists differ in length)
+  method org.junit.jupiter.api.Assertions.assertEquals(short,short) is not applicable
+  (actual and formal argument lists differ in length)
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: PhoneticEngine_encodeTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

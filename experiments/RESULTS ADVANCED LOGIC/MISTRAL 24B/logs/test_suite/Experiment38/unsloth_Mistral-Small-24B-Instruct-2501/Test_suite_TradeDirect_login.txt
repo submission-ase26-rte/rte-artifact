@@ -1,0 +1,150 @@
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.MarketSummaryUpdate;
+import com.ibm.websphere.samples.daytrader.interfaces.QuotePriceChange;
+import com.ibm.websphere.samples.daytrader.interfaces.RuntimeMode;
+import com.ibm.websphere.samples.daytrader.interfaces.Trace;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeDB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeEJB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeJDBC;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeSession2Direct;
+import com.ibm.websphere.samples.daytrader.util.Diagnostics;
+import com.ibm.websphere.samples.daytrader.util.FinancialUtils;
+import com.ibm.websphere.samples.daytrader.util.KeyBlock;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.MDBStats;
+import com.ibm.websphere.samples.daytrader.util.RecentQuotePriceChangeList;
+import com.ibm.websphere.samples.daytrader.util.TimerStat;
+import com.ibm.websphere.samples.daytrader.util.TraceInterceptor;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import com.ibm.websphere.samples.daytrader.util.TradeRunTimeModeLiteral;
+import org.junit.jupiter.api.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import javax.annotation.Resource;
+import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.enterprise.event.Event;
+import javax.enterprise.event.NotificationOptions;
+import javax.inject.Inject;
+import javax.jms.JMSContext;
+import javax.jms.JMSException;
+import javax.jms.Queue;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.TextMessage;
+import javax.jms.Topic;
+import javax.jms.TopicConnectionFactory;
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.concurrent.Future;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@DisplayName("TradeDirect login Test")
+public class TradeDirect_loginTestGenerated {
+
+    private TradeDirect tradeDirect;
+    private DataSource dataSource;
+    private UserTransaction userTransaction;
+    private ManagedExecutorService managedExecutorService;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        dataSource = mock(DataSource.class);
+        userTransaction = mock(UserTransaction.class);
+        managedExecutorService = mock(ManagedExecutorService.class);
+
+        tradeDirect = new TradeDirect();
+        ReflectionTestUtils.setField(tradeDirect, "datasource", dataSource);
+        ReflectionTestUtils.setField(tradeDirect, "txn", userTransaction);
+        ReflectionTestUtils.setField(tradeDirect, "mes", managedExecutorService);
+    }
+
+    @Test
+    @DisplayName("Test successful login")
+    void testSuccessfulLogin() throws Exception {
+        String userID = "testUser";
+        String password = "testPassword";
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+
+        when(dataSource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true).thenReturn(false);
+        when(rs.getString("passwd")).thenReturn(password);
+        when(rs.getInt("accountID")).thenReturn(1);
+        when(rs.getInt("loginCount")).thenReturn(0);
+        when(rs.getInt("logoutCount")).thenReturn(0);
+        when(rs.getTimestamp("lastLogin")).thenReturn(new Timestamp(System.currentTimeMillis()));
+        when(rs.getTimestamp("creationDate")).thenReturn(new Timestamp(System.currentTimeMillis()));
+        when(rs.getBigDecimal("balance")).thenReturn(BigDecimal.ZERO);
+        when(rs.getBigDecimal("openBalance")).thenReturn(BigDecimal.ZERO);
+        when(rs.getString("profile_userID")).thenReturn(userID);
+
+        AccountDataBean accountData = tradeDirect.login(userID, password);
+        assertNotNull(accountData);
+        verify(conn, times(1)).commit();
+    }
+
+    @Test
+    @DisplayName("Test login with incorrect password")
+    void testLoginWithIncorrectPassword() {
+        String userID = "testUser";
+        String password = "wrongPassword";
+
+        try (MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class)) {
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.login(userID, password);
+            });
+            assertTrue(exception.getMessage().contains("Incorrect password"));
+            mockedLog.verify(() -> Log.error(anyString()), times(1));
+        }
+    }
+
+    @Test
+    @DisplayName("Test login with SQL exception")
+    void testLoginWithSQLException() throws SQLException {
+        String userID = "testUser";
+        String password = "testPassword";
+        Connection conn = mock(Connection.class);
+        when(dataSource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenThrow(new SQLException("SQL Error"));
+
+        try (MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class)) {
+            Exception exception = assertThrows(Exception.class, () -> {
+                tradeDirect.login(userID, password);
+            });
+            assertTrue(exception.getMessage().contains("SQL Error"));
+            mockedLog.verify(() -> Log.error(anyString()), times(1));
+        }
+    }
+
+    @AfterEach
+    void tearDown() {
+        tradeDirect = null;
+    }
+}

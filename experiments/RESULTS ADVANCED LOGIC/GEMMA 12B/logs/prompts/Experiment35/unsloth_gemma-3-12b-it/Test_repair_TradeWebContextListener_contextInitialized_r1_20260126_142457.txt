@@ -1,0 +1,213 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.web.servlet;
+Class name (MUST be exactly): TradeWebContextListener_contextInitializedTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
+
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.logging.Logger;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import javax.servlet.ServletContextEvent;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeWebContextListener_contextInitializedTestGenerated {
+
+  private TradeWebContextListener listener;
+  @MockedStatic(Log.class)
+  private MockedStatic<Log> mockLog;
+
+  @BeforeEach
+  public void setUp() {
+    listener = new TradeWebContextListener();
+  }
+
+  @Test
+  public void testContextInitialized_propertiesLoadedSuccessfully() throws Exception {
+    ServletContextEvent event = mockServletContextEvent();
+    Properties properties = new Properties();
+    properties.setProperty("runtimeMode", "1");
+    properties.setProperty("orderProcessingMode", "1");
+    properties.setProperty("maxUsers", "10");
+    properties.setProperty("maxQuotes", "100");
+    properties.setProperty("publishQuotePriceChange", "true");
+    properties.setProperty("displayOrderAlerts", "true");
+    properties.setProperty("webInterface", "1");
+    properties.setProperty("listQuotePriceChangeFrequency", "60");
+    properties.setProperty("primIterations", "10");
+    properties.setProperty("marketSummaryInterval", "300");
+    properties.setProperty("longRun", "false");
+
+    InputStream inputStream = mockInputStream(properties);
+
+    try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+      listener.contextInitialized(event);
+
+      verify(mockedTradeConfig).setRunTimeMode(1);
+      verify(mockedTradeConfig).setOrderProcessingMode(1);
+      verify(mockedTradeConfig).setMAX_USERS(10);
+      verify(mockedTradeConfig).setMAX_QUOTES(100);
+      verify(mockedTradeConfig).setPublishQuotePriceChange(true);
+      verify(mockedTradeConfig).setDisplayOrderAlerts(true);
+      verify(mockedTradeConfig).setWebInterface(1);
+      verify(mockedTradeConfig).setListQuotePriceChangeFrequency(60);
+      verify(mockedTradeConfig).setPrimIterations(10);
+      verify(mockedTradeConfig).setMarketSummaryInterval(300);
+      verify(mockedTradeConfig).setLongRun(false);
+      mockLog.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect");
+    }
+  }
+
+  @Test
+  public void testContextInitialized_propertiesNotFound() {
+    ServletContextEvent event = mockServletContextEvent();
+
+    try {
+      listener.contextInitialized(event);
+    } catch (Exception e) {
+      // Expected behavior: properties file not found
+      return;
+    }
+    assertThrows(Exception.class, () -> listener.contextInitialized(event));
+  }
+
+
+  @Test
+  public void testContextInitialized_envVariablesOverrideProperties() throws Exception {
+      ServletContextEvent event = mockServletContextEvent();
+
+      try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+        listener.contextInitialized(event);
+
+        verify(mockedTradeConfig).setRunTimeMode(2);
+        verify(mockedTradeConfig).setOrderProcessingMode(2);
+        verify(mockedTradeConfig).setMAX_USERS(20);
+        verify(mockedTradeConfig).setMAX_QUOTES(200);
+        verify(mockedTradeConfig).setPublishQuotePriceChange(false);
+        verify(mockedTradeConfig).setDisplayOrderAlerts(false);
+        verify(mockedTradeConfig).setWebInterface(2);
+        verify(mockedTradeConfig).setListQuotePriceChangeFrequency(120);
+        verify(mockedTradeConfig).setPrimIterations(20);
+        verify(mockedTradeConfig).setMarketSummaryInterval(600);
+        verify(mockedTradeConfig).setLongRun(true);
+        mockLog.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect");
+      }
+
+  }
+
+  private ServletContextEvent mockServletContextEvent() {
+    return mock(ServletContextEvent.class);
+  }
+
+  private InputStream mockInputStream(Properties properties) {
+    return new java.io.ByteArrayInputStream(properties.toString().getBytes());
+  }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[25] incompatible types: org.mockito.MockedStatic cannot be converted to java.lang.annotation.Annotation
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[54] cannot find symbol
+  symbol:   method setRunTimeMode(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[55] cannot find symbol
+  symbol:   method setOrderProcessingMode(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[56] cannot find symbol
+  symbol:   method setMAX_USERS(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[57] cannot find symbol
+  symbol:   method setMAX_QUOTES(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[58] cannot find symbol
+  symbol:   method setPublishQuotePriceChange(boolean)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[59] cannot find symbol
+  symbol:   method setDisplayOrderAlerts(boolean)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[60] cannot find symbol
+  symbol:   method setWebInterface(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[61] cannot find symbol
+  symbol:   method setListQuotePriceChangeFrequency(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[62] cannot find symbol
+  symbol:   method setPrimIterations(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[63] cannot find symbol
+  symbol:   method setMarketSummaryInterval(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[64] cannot find symbol
+  symbol:   method setLongRun(boolean)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[65] cannot find symbol
+  symbol:   method trace(java.lang.String)
+  location: variable mockLog of type org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.Log>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[90] cannot find symbol
+  symbol:   method setRunTimeMode(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[91] cannot find symbol
+  symbol:   method setOrderProcessingMode(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[92] cannot find symbol
+  symbol:   method setMAX_USERS(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[93] cannot find symbol
+  symbol:   method setMAX_QUOTES(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[94] cannot find symbol
+  symbol:   method setPublishQuotePriceChange(boolean)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[95] cannot find symbol
+  symbol:   method setDisplayOrderAlerts(boolean)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[96] cannot find symbol
+  symbol:   method setWebInterface(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[97] cannot find symbol
+  symbol:   method setListQuotePriceChangeFrequency(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[98] cannot find symbol
+  symbol:   method setPrimIterations(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[99] cannot find symbol
+  symbol:   method setMarketSummaryInterval(int)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[100] cannot find symbol
+  symbol:   method setLongRun(boolean)
+  location: interface org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[101] cannot find symbol
+  symbol:   method trace(java.lang.String)
+  location: variable mockLog of type org.mockito.MockedStatic<com.ibm.websphere.samples.daytrader.util.Log>
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/servlet/TradeWebContextListener_contextInitializedTestGenerated.java:[107] cannot find symbol
+  symbol:   method mock(java.lang.Class<javax.servlet.ServletContextEvent>)
+  location: class com.ibm.websphere.samples.daytrader.web.servlet.TradeWebContextListener_contextInitializedTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- DO NOT mock javax.servlet classes directly (ServletOutputStream, etc.) - use MockHttpServletRequest/Response from spring-test instead
+- For static method calls, ensure mockStatic is properly closed (use try-with-resources)
+- Keep the SAME class name: TradeWebContextListener_contextInitializedTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

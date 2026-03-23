@@ -1,0 +1,281 @@
+ROLE:
+You are an expert Java developer. Task: improve coverage.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.util;
+Class name (MUST be exactly): MethodLookupUtils_lookupMethodTestGenerated
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+Test class structure (reference):
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Method;
+import org.apache.commons.jxpath.ExpressionContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.util.MethodLookupUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class MethodLookupUtils_lookupMethodTestGenerated {
+    private static Method method;
+    private static Class<?> targetClass;
+    @BeforeEach
+    public void setup() {
+        // Dummy class for testing
+        class Dummy {
+            public void dummyMethod(ExpressionContext context, String param) {}
+            public void dummyMethod(ExpressionContext context, Integer param) {}
+        }
+        targetClass = Dummy.class;
+    }
+
+
+}
+
+Valid test signatures:
+    @Test
+    public void testLookupMethod_nullParameters() {}
+    @Test
+    public void testLookupMethod_emptyParameters() {}
+    @Test
+    public void testLookupMethod_nullFirstParameter() {}
+}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Constructor -> java.lang.reflect.Constructor
+//   Method -> java.lang.reflect.Method
+//   Modifier -> java.lang.reflect.Modifier
+//   Arrays -> java.util.Arrays
+//   ExpressionContext -> org.apache.commons.jxpath.ExpressionContext
+//   JXPathException -> org.apache.commons.jxpath.JXPathException
+//   MethodLookupUtils -> org.apache.commons.jxpath.util.MethodLookupUtils
+//   TypeUtils -> org.apache.commons.jxpath.util.TypeUtils
+
+// === Class: MethodLookupUtils ===
+// Fields (with actual visibility):
+    private static final int NO_MATCH;
+    private static final int APPROXIMATE_MATCH;
+    private static final int EXACT_MATCH;
+
+// Internal Methods (full implementation for context):
+    private static int matchType(final Class expected, final Object object) {
+        if (object == null) {
+            return APPROXIMATE_MATCH;
+        }
+
+        final Class actual = object.getClass();
+
+        if (expected.equals(actual)) {
+            return EXACT_MATCH;
+        }
+        if (expected.isAssignableFrom(actual)) {
+            return EXACT_MATCH;
+        }
+
+        if (TypeUtils.canConvert(object, expected)) {
+            return APPROXIMATE_MATCH;
+        }
+
+        return NO_MATCH;
+    }
+    private static int matchParameterTypes(
+        final Class[] types,
+        final Object[] parameters) {
+        int pi = 0;
+        if (types.length >= 1
+            && ExpressionContext.class.isAssignableFrom(types[0])) {
+            pi++;
+        }
+        final int length = parameters == null ? 0 : parameters.length;
+        if (types.length != length + pi) {
+            return NO_MATCH;
+        }
+        int totalMatch = EXACT_MATCH;
+        for (int i = 0; i < length; i++) {
+            final int match = matchType(types[i + pi], parameters[i]);
+            if (match == NO_MATCH) {
+                return NO_MATCH;
+            }
+            if (match < totalMatch) {
+                totalMatch = match;
+            }
+        }
+        return totalMatch;
+    }
+
+// === External Class: TypeUtils ===
+// Full import path: org.apache.commons.jxpath.util.TypeUtils
+// Import paths:
+//   HashMap -> java.util.HashMap
+// Fields (with actual visibility):
+    private static TypeConverter typeConverter;
+    private static final HashMap PRIMITIVE_TYPE_MAP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+
+// Method Signatures (used by target method):
+static public Object convert(final Object object, final Class toType);
+
+// Public Getter Methods (for test assertions):
+public static TypeConverter getTypeConverter();
+public static boolean canConvert(Object object, Class toType);
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    public void setup() {
+        // Dummy class for testing
+        class Dummy {
+            public void dummyMethod(ExpressionContext context, String param) {}
+            public void dummyMethod(ExpressionContext context, Integer param) {}
+        }
+        targetClass = Dummy.class;
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+    /**
+     * Look up a method.
+     * @param targetClass owning class
+     * @param name method name
+     * @param parameters method parameters
+     * @return Method found if any
+     */
+    public static Method lookupMethod(
+        Class targetClass,
+        final String name,
+        final Object[] parameters) {
+        if (parameters == null // NOT COVERED BY TESTS
+            || parameters.length < 1
+            || parameters[0] == null) {
+            return null;
+        }
+
+        if (matchType(targetClass, parameters[0]) == NO_MATCH) { // NOT COVERED BY TESTS
+            return null; // NOT COVERED BY TESTS
+        }
+
+        targetClass = TypeUtils.convert(parameters[0], targetClass).getClass(); // NOT COVERED BY TESTS
+
+        boolean tryExact = true; // NOT COVERED BY TESTS
+        final int count = parameters.length - 1; // NOT COVERED BY TESTS
+        final Class[] types = new Class[count]; // NOT COVERED BY TESTS
+        final Object[] arguments = new Object[count]; // NOT COVERED BY TESTS
+        for (int i = 0; i < count; i++) { // NOT COVERED BY TESTS
+            final Object param = parameters[i + 1]; // NOT COVERED BY TESTS
+            arguments[i] = param; // NOT COVERED BY TESTS
+            if (param != null) { // NOT COVERED BY TESTS
+                types[i] = param.getClass(); // NOT COVERED BY TESTS
+            }
+            else {
+                types[i] = null; // NOT COVERED BY TESTS
+                tryExact = false; // NOT COVERED BY TESTS
+            }
+        }
+
+        Method method = null; // NOT COVERED BY TESTS
+
+        if (tryExact) { // NOT COVERED BY TESTS
+            // First - without type conversion
+            try {
+                method = targetClass.getMethod(name, types); // NOT COVERED BY TESTS
+                if (method != null // NOT COVERED BY TESTS
+                    && !Modifier.isStatic(method.getModifiers())) { // NOT COVERED BY TESTS
+                    return method; // NOT COVERED BY TESTS
+                }
+            }
+            catch (final NoSuchMethodException ignore) { // NOPMD
+                // Ignore
+            }
+        }
+
+        int currentMatch = 0; // NOT COVERED BY TESTS
+        boolean ambiguous = false; // NOT COVERED BY TESTS
+
+        // Then - with type conversion
+        final Method[] methods = targetClass.getMethods(); // NOT COVERED BY TESTS
+        for (final Method method2 : methods) { // NOT COVERED BY TESTS
+            if (!Modifier.isStatic(method2.getModifiers()) // NOT COVERED BY TESTS
+                && method2.getName().equals(name)) { // NOT COVERED BY TESTS
+                final int match = // NOT COVERED BY TESTS
+                    matchParameterTypes( // NOT COVERED BY TESTS
+                        method2.getParameterTypes(), // NOT COVERED BY TESTS
+                        arguments);
+                if (match != NO_MATCH) { // NOT COVERED BY TESTS
+                    if (match > currentMatch) { // NOT COVERED BY TESTS
+                        method = method2; // NOT COVERED BY TESTS
+                        currentMatch = match; // NOT COVERED BY TESTS
+                        ambiguous = false; // NOT COVERED BY TESTS
+                    }
+                    else if (match == currentMatch) {
+                        ambiguous = true; // NOT COVERED BY TESTS
+                    }
+                }
+            }
+        }
+        if (ambiguous) { // NOT COVERED BY TESTS
+            throw new JXPathException("Ambiguous method call: " + name); // NOT COVERED BY TESTS
+        }
+        return method; // NOT COVERED BY TESTS
+    }
+
+
+COVERAGE ANALYSIS:
+ STATUS: All tests are currently PASSING and there are NO compilation errors.
+  ISSUE: The test suite does not meet the minimum coverage threshold.
+
+COVERAGE METRICS:
+- Current line coverage: 4.65%
+- Target line coverage: 100%
+
+YOUR TASK:
+You MUST add NEW test cases to improve coverage from 4.65% to 100%.
+
+The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. 
+Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+IMPORTANT: Maintain all existing passing tests - do NOT modify or remove them. Only ADD new test cases.
+
+
+
+INSTRUCTIONS:
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

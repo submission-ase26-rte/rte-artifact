@@ -1,0 +1,156 @@
+```java
+package org.apache.commons.codec.language.bm;
+
+import org.apache.commons.codec.language.bm.Rule;
+import org.apache.commons.codec.language.bm.Rule.Phoneme;
+import org.apache.commons.codec.language.bm.Rule.RuleType;
+import org.apache.commons.codec.language.bm.PhonemeBuilder;
+import org.apache.commons.codec.language.bm.RulesApplication;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class PhoneticEngine_encodeTestGenerated {
+
+    @Mock
+    private PhonemeBuilder mockPhonemeBuilder;
+
+    @Mock
+    private Phoneme mockPhoneme;
+
+    @Mock
+    private RulesApplication mockRulesApplication;
+
+    @Mock
+    private Map<String, List<Rule>> mockRulesMap;
+
+    @Mock
+    private List<Rule> mockRulesList;
+
+    private PhoneticEngine phoneticEngine;
+    private Languages.LanguageSet languageSet;
+
+    @BeforeEach
+    void setUp() {
+        languageSet = new Languages.LanguageSet() {};
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, false);
+    }
+
+    @AfterEach
+    void tearDown() {
+        reset(mockPhonemeBuilder, mockPhoneme, mockRulesApplication, mockRulesMap, mockRulesList);
+    }
+
+    @Test
+    void testEncodeWithDPrefix() {
+        String input = "d'angelo";
+        String expected = "(*)-(dangelo)";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithGenericPrefix() {
+        String input = "van houten";
+        String expected = "(houten)-(van houten)";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithSephardicName() {
+        PhoneticEngine sephardicEngine = new PhoneticEngine(NameType.SEPHARDIC, RuleType.RULES, false);
+        String input = "o'brien";
+        String expected = "brien";
+        String result = sephardicEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithAshkenaziName() {
+        PhoneticEngine ashkenaziEngine = new PhoneticEngine(NameType.ASHKENAZI, RuleType.RULES, false);
+        String input = "van der waals";
+        String expected = "waals";
+        String result = ashkenaziEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithSingleWord() {
+        String input = "test";
+        String expected = "test";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithMultiWord() {
+        String input = "john doe";
+        String expected = "joe-doe";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithConcat() {
+        PhoneticEngine concatEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, true);
+        String input = "john doe";
+        String expected = "johndoe";
+        String result = concatEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithEmptyInput() {
+        String input = "";
+        String expected = "";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithNullInput() {
+        assertThrows(NullPointerException.class, () -> phoneticEngine.encode(null, languageSet));
+    }
+
+    @Test
+    void testEncodeWithNullLanguageSet() {
+        String input = "test";
+        assertThrows(NullPointerException.class, () -> phoneticEngine.encode(input, null));
+    }
+
+    @Test
+    void testEncodeWithSpecialCharacters() {
+        String input = "john-doe";
+        String expected = "joe-doe";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testEncodeWithUnreachableNameType() {
+        PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, false);
+        String input = "test";
+        ReflectionTestUtils.setField(engine, "nameType", null);
+        assertThrows(IllegalStateException.class, () -> engine.encode(input, languageSet));
+    }
+}
+```

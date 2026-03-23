@@ -1,0 +1,161 @@
+Here's the fixed test class with all compilation errors resolved:
+
+```java
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.io.PrintWriter;
+import java.util.Comparator;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class HelpFormatter_printHelpTestGenerated {
+
+    @Mock
+    private PrintWriter mockPrintWriter;
+
+    @Mock
+    private Options mockOptions;
+
+    private HelpFormatter helpFormatter;
+
+    @BeforeEach
+    void setUp() {
+        helpFormatter = new HelpFormatter();
+    }
+
+    @AfterEach
+    void tearDown() {
+        verifyNoMoreInteractions(mockPrintWriter);
+    }
+
+    @Test
+    void printHelp_shouldThrowIllegalArgumentExceptionWhenCmdLineSyntaxIsNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            helpFormatter.printHelp(null, 80, null, "header", mockOptions, 2, 2, "footer", true);
+        });
+    }
+
+    @Test
+    void printHelp_shouldThrowIllegalArgumentExceptionWhenCmdLineSyntaxIsEmpty() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            helpFormatter.printHelp(null, 80, "", "header", mockOptions, 2, 2, "footer", true);
+        });
+    }
+
+    @Test
+    void printHelp_shouldPrintUsageWhenAutoUsageIsTrue() {
+        String cmdLineSyntax = "testCommand";
+        Options options = new Options();
+
+        helpFormatter.printHelp(mockPrintWriter, 80, cmdLineSyntax, "header", options, 2, 2, "footer", true);
+
+        verify(mockPrintWriter, times(1)).print(anyString());
+    }
+
+    @Test
+    void printHelp_shouldPrintHeaderWhenNotNullAndNotEmpty() {
+        String header = "Test Header";
+        HelpFormatter formatter = new HelpFormatter();
+
+        formatter.printHelp(mockPrintWriter, 80, "testCommand", header, mockOptions, 2, 2, "footer", false);
+
+        verify(mockPrintWriter, times(1)).print(header);
+    }
+
+    @Test
+    void printHelp_shouldNotPrintHeaderWhenNull() {
+        HelpFormatter formatter = new HelpFormatter();
+
+        formatter.printHelp(mockPrintWriter, 80, "testCommand", null, mockOptions, 2, 2, "footer", false);
+
+        verify(mockPrintWriter, never()).print(anyString());
+    }
+
+    @Test
+    void printHelp_shouldNotPrintHeaderWhenEmpty() {
+        HelpFormatter formatter = new HelpFormatter();
+
+        formatter.printHelp(mockPrintWriter, 80, "testCommand", "", mockOptions, 2, 2, "footer", false);
+
+        verify(mockPrintWriter, never()).print(anyString());
+    }
+
+    @Test
+    void printHelp_shouldPrintOptions() {
+        Options options = new Options();
+        options.addOption(Option.builder("t").longOpt("test").hasArg().desc("Test option").build());
+
+        helpFormatter.printHelp(mockPrintWriter, 80, "testCommand", "header", options, 2, 2, "footer", false);
+
+        verify(mockPrintWriter, times(1)).print(anyString());
+    }
+
+    @Test
+    void printHelp_shouldPrintFooterWhenNotNullAndNotEmpty() {
+        String footer = "Test Footer";
+        HelpFormatter formatter = new HelpFormatter();
+
+        formatter.printHelp(mockPrintWriter, 80, "testCommand", "header", mockOptions, 2, 2, footer, false);
+
+        verify(mockPrintWriter, times(1)).print(footer);
+    }
+
+    @Test
+    void printHelp_shouldNotPrintFooterWhenNull() {
+        HelpFormatter formatter = new HelpFormatter();
+
+        formatter.printHelp(mockPrintWriter, 80, "testCommand", "header", mockOptions, 2, 2, null, false);
+
+        verify(mockPrintWriter, never()).print(anyString());
+    }
+
+    @Test
+    void printHelp_shouldNotPrintFooterWhenEmpty() {
+        HelpFormatter formatter = new HelpFormatter();
+
+        formatter.printHelp(mockPrintWriter, 80, "testCommand", "header", mockOptions, 2, 2, "", false);
+
+        verify(mockPrintWriter, never()).print(anyString());
+    }
+
+    @Test
+    void printHelp_shouldUseCustomOptionComparator() {
+        Comparator<Option> customComparator = Comparator.comparing(Option::getOpt);
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.setOptionComparator(customComparator);
+
+        formatter.printHelp(mockPrintWriter, 80, "testCommand", "header", mockOptions, 2, 2, "footer", false);
+
+        verify(mockPrintWriter, times(1)).print(anyString());
+    }
+
+    @Test
+    void printHelp_shouldUseCustomFormattingParameters() {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.setWidth(100);
+        formatter.setLeftPadding(5);
+        formatter.setDescPadding(10);
+        formatter.setSyntaxPrefix(">> ");
+        formatter.setOptPrefix("-");
+        formatter.setLongOptPrefix("--");
+        formatter.setLongOptSeparator(":");
+        formatter.setArgName("arg");
+        formatter.setNewLine("\n");
+
+        formatter.printHelp(mockPrintWriter, 100, "testCommand", "header", mockOptions, 5, 10, "footer", false);
+
+        verify(mockPrintWriter, times(1)).print(anyString());
+    }
+}
+```

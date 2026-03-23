@@ -1,0 +1,173 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.direct;
+Class name (MUST be exactly): TradeDirect_loginTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeDirect_loginTestGenerated {
+
+    @Mock
+    private DataSource datasource;
+
+    @Mock
+    private UserTransaction txn;
+
+    @Mock
+    private Connection connection;
+
+    @Mock
+    private PreparedStatement preparedStatement;
+
+    @Mock
+    private ResultSet resultSet;
+
+    @Spy
+    @InjectMocks
+    private TradeDirect tradeDirect;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        MockitoAnnotations.openMocks(this);
+        when(datasource.getConnection()).thenReturn(connection);
+        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        tradeDirect.releaseConn(connection);
+    }
+
+    @Test
+    public void testLoginSuccess() throws Exception {
+        when(resultSet.next()).thenReturn(true);
+        when(resultSet.getString("passwd")).thenReturn("password");
+        when(resultSet.getInt("accountID")).thenReturn(1);
+        when(resultSet.getInt("loginCount")).thenReturn(0);
+        when(resultSet.getInt("logoutCount")).thenReturn(0);
+        when(resultSet.getTimestamp("lastLogin")).thenReturn(new Timestamp(new Date().getTime()));
+        when(resultSet.getTimestamp("creationDate")).thenReturn(new Timestamp(new Date().getTime()));
+        when(resultSet.getBigDecimal("balance")).thenReturn(new BigDecimal("1000.00"));
+        when(resultSet.getBigDecimal("openBalance")).thenReturn(new BigDecimal("1000.00"));
+        when(resultSet.getString("profileID")).thenReturn("user1");
+
+        AccountDataBean accountData = tradeDirect.login("user1", "password");
+
+        assertNotNull(accountData);
+        assertEquals("user1", accountData.getProfileID());
+        assertEquals(new BigDecimal("1000.00"), accountData.getBalance());
+    }
+
+    @Test
+    public void testLoginFailure_UserNotFound() throws Exception {
+        when(resultSet.next()).thenReturn(false);
+
+        Exception exception = assertThrows(javax.ejb.FinderException.class, () -> {
+            tradeDirect.login("user1", "password");
+        });
+
+        assertEquals("Cannot find account foruser1", exception.getMessage());
+    }
+
+    @Test
+    public void testLoginFailure_IncorrectPassword() throws Exception {
+        when(resultSet.next()).thenReturn(true);
+        when(resultSet.getString("passwd")).thenReturn("wrongpassword");
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            tradeDirect.login("user1", "password");
+        });
+
+        assertEquals("TradeDirect:Login failure for user: user1\n\tIncorrect password-->user1:password", exception.getMessage());
+    }
+
+    @Test
+    public void testLoginFailure_SQLException() throws Exception {
+        when(resultSet.next()).thenReturn(true);
+        when(resultSet.getString("passwd")).thenReturn("password");
+        when(preparedStatement.executeQuery()).thenThrow(new SQLException("SQL Error"));
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            tradeDirect.login("user1", "password");
+        });
+
+        assertEquals("TradeDirect:login -- error logging in user", exception.getMessage());
+    }
+
+    @Test
+    public void testLoginFailure_CommitException() throws Exception {
+        when(resultSet.next()).thenReturn(true);
+        when(resultSet.getString("passwd")).thenReturn("password");
+        doThrow(new SQLException("Commit Error")).when(connection).commit();
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            tradeDirect.login("user1", "password");
+        });
+
+        assertEquals("TradeDirect:login -- error logging in user", exception.getMessage());
+    }
+
+    @Test
+    public void testLoginFailure_RollbackException() throws Exception {
+        when(resultSet.next()).thenReturn(true);
+        when(resultSet.getString("passwd")).thenReturn("password");
+        doThrow(new SQLException("Rollback Error")).when(connection).rollback();
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            tradeDirect.login("user1", "password");
+        });
+
+        assertEquals("TradeDirect:login -- error logging in user", exception.getMessage());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirect_loginTestGenerated.java:[62] releaseConn(java.sql.Connection) has private access in com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: TradeDirect_loginTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

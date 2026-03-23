@@ -1,0 +1,45 @@
+```java
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public static Options parsePattern(final String pattern) {
+    Options options = new Options();
+    if (pattern == null || pattern.isEmpty()) {
+        return options;
+    }
+
+    int i = 0;
+    while (i < pattern.length()) {
+        char c = pattern.charAt(i);
+        if (c == '!') {
+            i++;
+            if (i < pattern.length()) {
+                Option option = new Builder(String.valueOf(pattern.charAt(i))).required(true).build();
+                options.addOption(option);
+                i++;
+            }
+        } else if (c == '%') {
+            i++;
+            if (i < pattern.length()) {
+                Option option = new Builder(String.valueOf(pattern.charAt(i))).type(PatternOptionBuilder.NUMBER_VALUE).build();
+                options.addOption(option);
+                i++;
+            }
+        } else if (c == '/') {
+            i++;
+            if (i < pattern.length()) {
+                Option option = new Builder(String.valueOf(pattern.charAt(i))).type(PatternOptionBuilder.URL_VALUE).build();
+                options.addOption(option);
+                i++;
+            }
+        } else {
+            Option option = new Builder(String.valueOf(c)).build();
+            options.addOption(option);
+            i++;
+        }
+    }
+
+    return options;
+}
+```

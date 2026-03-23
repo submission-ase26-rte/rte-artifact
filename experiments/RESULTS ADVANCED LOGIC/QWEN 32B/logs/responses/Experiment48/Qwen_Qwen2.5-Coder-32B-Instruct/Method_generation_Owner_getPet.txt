@@ -1,0 +1,16 @@
+```java
+public Pet getPet(String name, boolean ignoreNew) {
+    if (name == null || name.trim().isEmpty()) {
+        return null;
+    }
+    for (Pet pet : getPets()) {
+        if (pet.getName().equalsIgnoreCase(name)) {
+            if (ignoreNew && pet.isNew()) {
+                return null;
+            }
+            return pet;
+        }
+    }
+    return null;
+}
+```

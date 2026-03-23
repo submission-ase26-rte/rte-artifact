@@ -1,0 +1,170 @@
+```java
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class OptionBuilder_createTestGenerated {
+
+    @BeforeEach
+    public void setUp() {
+        // Reset OptionBuilder before each test
+        OptionBuilder.reset();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        // Reset OptionBuilder after each test
+        OptionBuilder.reset();
+    }
+
+    @Test
+    public void testCreateWithValidShortOption() {
+        // Arrange
+        String opt = "a";
+        String description = "Option A";
+        OptionBuilder.withDescription(description);
+
+        // Act
+        Option option = OptionBuilder.create(opt);
+
+        // Assert
+        assertEquals(opt, option.getOpt());
+        assertEquals(description, option.getDescription());
+        assertNull(option.getLongOpt());
+        assertFalse(option.isRequired());
+        assertFalse(option.hasOptionalArg());
+        assertEquals(Option.UNINITIALIZED, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals((char) 0, option.getValueSeparator());
+        assertNull(option.getArgName());
+    }
+
+    @Test
+    public void testCreateWithLongOption() {
+        // Arrange
+        String opt = "a";
+        String longOpt = "alpha";
+        OptionBuilder.withLongOpt(longOpt);
+
+        // Act
+        Option option = OptionBuilder.create(opt);
+
+        // Assert
+        assertEquals(longOpt, option.getLongOpt());
+    }
+
+    @Test
+    public void testCreateWithRequiredOption() {
+        // Arrange
+        String opt = "a";
+        OptionBuilder.isRequired();
+
+        // Act
+        Option option = OptionBuilder.create(opt);
+
+        // Assert
+        assertTrue(option.isRequired());
+    }
+
+    @Test
+    public void testCreateWithOptionalArg() {
+        // Arrange
+        String opt = "a";
+        OptionBuilder.hasOptionalArg();
+
+        // Act
+        Option option = OptionBuilder.create(opt);
+
+        // Assert
+        assertTrue(option.hasOptionalArg());
+    }
+
+    @Test
+    public void testCreateWithArgCount() {
+        // Arrange
+        String opt = "a";
+        int argCount = 2;
+        OptionBuilder.hasArgs(argCount);
+
+        // Act
+        Option option = OptionBuilder.create(opt);
+
+        // Assert
+        assertEquals(argCount, option.getArgs());
+    }
+
+    @Test
+    public void testCreateWithType() {
+        // Arrange
+        String opt = "a";
+        Class type = Integer.class;
+        OptionBuilder.withType(type);
+
+        // Act
+        Option option = OptionBuilder.create(opt);
+
+        // Assert
+        assertEquals(type, option.getType());
+    }
+
+    @Test
+    public void testCreateWithValueSeparator() {
+        // Arrange
+        String opt = "a";
+        char valueSeparator = ',';
+        OptionBuilder.withValueSeparator(valueSeparator);
+
+        // Act
+        Option option = OptionBuilder.create(opt);
+
+        // Assert
+        assertEquals(valueSeparator, option.getValueSeparator());
+    }
+
+    @Test
+    public void testCreateWithArgName() {
+        // Arrange
+        String opt = "a";
+        String argName = "argName";
+        OptionBuilder.withArgName(argName);
+
+        // Act
+        Option option = OptionBuilder.create(opt);
+
+        // Assert
+        assertEquals(argName, option.getArgName());
+    }
+
+    @Test
+    public void testCreateWithInvalidShortOption() {
+        // Arrange
+        String opt = "ab"; // Invalid short option
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            OptionBuilder.create(opt);
+        });
+        assertNotNull(exception);
+    }
+
+    @Test
+    public void testCreateWithNullShortOption() {
+        // Arrange
+        String opt = null; // Null short option
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            OptionBuilder.create(opt);
+        });
+        assertNotNull(exception);
+    }
+}
+```

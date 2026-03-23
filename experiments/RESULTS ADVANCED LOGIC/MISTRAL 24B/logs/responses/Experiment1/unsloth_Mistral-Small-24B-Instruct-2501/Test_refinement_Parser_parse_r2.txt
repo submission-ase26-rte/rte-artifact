@@ -1,0 +1,115 @@
+```java
+package org.apache.commons.cli;
+
+import java.util.Properties;
+import org.apache.commons.cli.ParseException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Parser_parseTestGenerated {
+    private Parser parser;
+    private Options options;
+    private Properties properties;
+
+    @BeforeEach
+    void setUp() {
+        parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+        };
+        options = new Options();
+        properties = new Properties();
+    }
+
+    @Test
+    void testParseWithSingleDashStopAtNonOption() throws ParseException {
+        String[] arguments = {"-", "extraArg"};
+        CommandLine result = parser.parse(options, arguments, properties, false);
+        assertNotNull(result);
+        assertEquals("[-, extraArg]", result.getArgList().toString());
+    }
+
+    @Test
+    void testParseWithDoubleDash() throws ParseException {
+        String[] arguments = {"--", "extraArg"};
+        CommandLine result = parser.parse(options, arguments, properties, false);
+        assertNotNull(result);
+        assertEquals("[--, extraArg]", result.getArgList().toString());
+    }
+
+    @Test
+    void testParseWithOptionGroup() throws ParseException {
+        Option opt1 = new Option("a", "option1");
+        Option opt2 = new Option("b", "option2");
+        OptionGroup group = new OptionGroup();
+        group.addOption(opt1);
+        group.addOption(opt2);
+        options.addOptionGroup(group);
+
+        properties.setProperty("a", "value1");
+        CommandLine result = parser.parse(options, new String[]{"-a", "value1"}, properties, false);
+        assertNotNull(result);
+        assertEquals("[option1]", result.getArgList().toString());
+        assertEquals("value1", result.getOptionValue("a"));
+    }
+
+    @Test
+    void testParseWithStopAtNonOption() throws ParseException {
+        String[] arguments = {"-a", "value", "extraArg"};
+        options.addOption(new Option("a", true, "description"));
+        CommandLine result = parser.parse(options, arguments, properties, true);
+        assertNotNull(result);
+        assertEquals("[extraArg]", result.getArgList().toString());
+    }
+
+    @Test
+    void testParseWithUnrecognizedOption() {
+        assertThrows(ParseException.class, () -> {
+            String[] arguments = {"-x"};
+            parser.parse(options, arguments, properties, false);
+        });
+    }
+
+    @Test
+    void testParseWithDoubleDashStopAtNonOption() throws ParseException {
+        String[] arguments = {"--", "extraArg"};
+        CommandLine result = parser.parse(options, arguments, properties, true);
+        assertNotNull(result);
+        assertEquals("[extraArg]", result.getArgList().toString());
+    }
+
+    @Test
+    void testParseWithOptionNotInGroup() throws ParseException {
+        Option opt1 = new Option("a", "option1");
+        Option opt2 = new Option("b", "option2");
+        OptionGroup group = new OptionGroup();
+        group.addOption(opt1);
+        options.addOptionGroup(group);
+        options.addOption(opt2);
+
+        CommandLine result = parser.parse(options, new String[]{"-b"}, properties, false);
+        assertNotNull(result);
+        assertEquals("[option2]", result.getArgList().toString());
+    }
+
+    @Test
+    void testParseWithOptionInGroup() throws ParseException {
+        Option opt1 = new Option("a", "option1");
+        Option opt2 = new Option("b", "option2");
+        OptionGroup group = new OptionGroup();
+        group.addOption(opt1);
+        group.addOption(opt2);
+        options.addOptionGroup(group);
+
+        CommandLine result = parser.parse(options, new String[]{"-a"}, properties, false);
+        assertNotNull(result);
+        assertEquals("[option1]", result.getArgList().toString());
+    }
+}
+```

@@ -1,0 +1,220 @@
+package org.apache.commons.codec.digest;
+
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class UnixCrypt_cryptTestGenerated {
+    private SecureRandom secureRandom;
+
+    @BeforeEach
+    public void setUp() {
+        secureRandom = new SecureRandom();
+    }
+
+    @Test
+    public void testCryptWithValidSalt() {
+        String original = "password";
+        String salt = "ab";
+        String expected = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        String actual = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testCryptWithNullSalt() {
+        String original = "password";
+        String actual = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), null);
+        assertEquals(13, actual.length());
+        assertTrue(Pattern.matches("^[a-zA-Z0-9./]{2}.*$", actual));
+    }
+
+    @Test
+    public void testCryptWithInvalidSalt() {
+        String original = "password";
+        String invalidSalt = "!$";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), invalidSalt);
+        });
+        assertEquals("Invalid salt value: " + invalidSalt, exception.getMessage());
+    }
+
+    @Test
+    public void testCryptWithEmptyOriginal() {
+        String original = "";
+        String salt = "ab";
+        String actual = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        assertEquals(13, actual.length());
+    }
+
+    @Test
+    public void testCryptWithEmptySalt() {
+        String original = "password";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), "");
+        });
+        assertEquals("Invalid salt value: ", exception.getMessage());
+    }
+
+    @Test
+    public void testCryptWithShortOriginal() {
+        String original = "p";
+        String salt = "ab";
+        String actual = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        assertEquals(13, actual.length());
+    }
+
+    @Test
+    public void testCryptWithLongOriginal() {
+        String original = "ThisIsAVeryLongPassword";
+        String salt = "ab";
+        String actual = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        assertEquals(13, actual.length());
+    }
+
+    @Test
+    public void testCryptWithSpecialCharactersInSalt() {
+        String original = "password";
+        String salt = "./";
+        String actual = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        assertEquals(13, actual.length());
+    }
+
+    @Test
+    public void testCryptWithValidSalt_specificLength() {
+        String original = "password";
+        String salt = "ab";
+        String actual = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        assertEquals(13, actual.length());
+    }
+
+    @Test
+    public void testCryptWithValidSalt_specificSalt() {
+        String original = "password";
+        String salt = "ab";
+        String expected = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        String actual = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        assertEquals(expected.substring(0, 2), salt);
+    }
+
+    @Test
+    public void testCryptWithNullSalt_specificSaltLength() {
+        String original = "password";
+        String actual = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), null);
+        assertEquals(2, actual.length() - 11);
+    }
+
+    @Test
+    public void testCryptWithEmptyOriginal_specificOutputLength() {
+        String original = "";
+        String salt = "ab";
+        String actual = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        assertEquals(13, actual.length());
+    }
+
+    @Test
+    public void testCryptWithEmptySalt_specificExceptionMessage() {
+        String original = "password";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), "");
+        });
+        assertEquals("Invalid salt value: ", exception.getMessage());
+    }
+
+    @Test
+    public void testCryptWithShortOriginal_specificOutputLength() {
+        String original = "p";
+        String salt = "ab";
+        String actual = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        assertEquals(13, actual.length());
+    }
+
+    @Test
+    public void testCryptWithLongOriginal_specificOutputLength() {
+        String original = "ThisIsAVeryLongPassword";
+        String salt = "ab";
+        String actual = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        assertEquals(13, actual.length());
+    }
+
+    @Test
+    public void testCryptWithSpecialCharactersInSalt_specificOutputLength() {
+        String original = "password";
+        String salt = "./";
+        String actual = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        assertEquals(13, actual.length());
+    }
+
+    @Test
+    public void testCryptWithSingleCharacterSalt() {
+        String original = "password";
+        String salt = "a";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        });
+        assertEquals("Invalid salt value: a", exception.getMessage());
+    }
+
+    @Test
+    public void testCryptWithNonAlphanumericSalt() {
+        String original = "password";
+        String salt = "!!";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        });
+        assertEquals("Invalid salt value: !!", exception.getMessage());
+    }
+
+    @Test
+    public void testCryptWithUppercaseSalt() {
+        String original = "password";
+        String salt = "AB";
+        String actual = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        assertEquals("AB", actual.substring(0, 2));
+    }
+
+    @Test
+    public void testCryptWithNumericSalt() {
+        String original = "password";
+        String salt = "12";
+        String actual = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        assertEquals("12", actual.substring(0, 2));
+    }
+
+    @Test
+    public void testCryptWithSpecialCharacterSalt() {
+        String original = "password";
+        String salt = "./";
+        String actual = UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        assertEquals("./", actual.substring(0, 2));
+    }
+
+    @Test
+    public void testCryptWithInvalidSalt_specificExceptionMessage() {
+        String original = "password";
+        String invalidSalt = "!$";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), invalidSalt);
+        });
+        assertEquals("Invalid salt value: !$", exception.getMessage());
+    }
+
+    @Test
+    public void testCryptWithThreeCharacterSalt() {
+        String original = "password";
+        String salt = "abc";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            UnixCrypt.crypt(original.getBytes(StandardCharsets.UTF_8), salt);
+        });
+        assertEquals("Invalid salt value: abc", exception.getMessage());
+    }
+
+}

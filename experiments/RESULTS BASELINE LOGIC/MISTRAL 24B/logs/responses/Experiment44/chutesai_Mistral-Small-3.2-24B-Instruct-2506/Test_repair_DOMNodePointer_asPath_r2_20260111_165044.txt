@@ -1,0 +1,205 @@
+```java
+package org.apache.commons.jxpath.ri.model.dom;
+
+import org.apache.commons.jxpath.JXPathAbstractFactoryException;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.ri.Compiler;
+import org.apache.commons.jxpath.ri.NamespaceResolver;
+import org.apache.commons.jxpath.ri.QName;
+import org.apache.commons.jxpath.ri.compiler.NodeNameTest;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.compiler.NodeTypeTest;
+import org.apache.commons.jxpath.ri.compiler.ProcessingInstructionTest;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.apache.commons.jxpath.util.TypeUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Comment;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.ProcessingInstruction;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class DOMNodePointer_asPathTestGenerated {
+
+    private NodePointer mockParent;
+    private Node mockNode;
+    private DOMNodePointer domNodePointer;
+    private Locale mockLocale;
+
+    @BeforeEach
+    void setUp() {
+        mockParent = mock(NodePointer.class);
+        mockNode = mock(Node.class);
+        mockLocale = mock(Locale.class);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mockParent = null;
+        mockNode = null;
+        domNodePointer = null;
+        mockLocale = null;
+    }
+
+    @Test
+    void testAsPath_WithId() {
+        String testId = "testId";
+        domNodePointer = new DOMNodePointer(mockNode, mockLocale, testId);
+        when(mockNode.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+
+        String path = domNodePointer.asPath();
+        assertEquals("id('" + testId + "')", path);
+    }
+
+    @Test
+    void testAsPath_WithElementNode_NoNamespace() {
+        domNodePointer = new DOMNodePointer(mockParent, mockNode);
+        when(mockNode.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(DOMNodePointer.getLocalName(mockNode)).thenReturn("testElement");
+        when(domNodePointer.getNamespaceURI()).thenReturn(null);
+        ReflectionTestUtils.setField(domNodePointer, "relativePositionByQName", 1);
+
+        String path = domNodePointer.asPath();
+        assertEquals("/testElement[1]", path);
+    }
+
+    @Test
+    void testAsPath_WithElementNode_WithNamespace() {
+        domNodePointer = new DOMNodePointer(mockParent, mockNode);
+        when(mockNode.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(DOMNodePointer.getLocalName(mockNode)).thenReturn("testElement");
+        when(domNodePointer.getNamespaceURI()).thenReturn("http://example.com/ns");
+        NamespaceResolver mockResolver = mock(NamespaceResolver.class);
+        when(mockResolver.getPrefix("http://example.com/ns")).thenReturn("ns");
+        when(domNodePointer.getNamespaceResolver()).thenReturn(mockResolver);
+        ReflectionTestUtils.setField(domNodePointer, "relativePositionByQName", 1);
+
+        String path = domNodePointer.asPath();
+        assertEquals("/ns:testElement[1]", path);
+    }
+
+    @Test
+    void testAsPath_WithElementNode_NoPrefix() {
+        domNodePointer = new DOMNodePointer(mockParent, mockNode);
+        when(mockNode.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(DOMNodePointer.getLocalName(mockNode)).thenReturn("testElement");
+        when(domNodePointer.getNamespaceURI()).thenReturn("http://example.com/ns");
+        NamespaceResolver mockResolver = mock(NamespaceResolver.class);
+        when(mockResolver.getPrefix("http://example.com/ns")).thenReturn(null);
+        when(domNodePointer.getNamespaceResolver()).thenReturn(mockResolver);
+        ReflectionTestUtils.setField(domNodePointer, "relativePositionOfElement", 1);
+
+        String path = domNodePointer.asPath();
+        assertEquals("/node()[1]", path);
+    }
+
+    @Test
+    void testAsPath_WithTextNode() {
+        domNodePointer = new DOMNodePointer(mockParent, mockNode);
+        when(mockNode.getNodeType()).thenReturn(Node.TEXT_NODE);
+        ReflectionTestUtils.setField(domNodePointer, "relativePositionOfTextNode", 1);
+
+        String path = domNodePointer.asPath();
+        assertEquals("/text()[1]", path);
+    }
+
+    @Test
+    void testAsPath_WithCDATASectionNode() {
+        domNodePointer = new DOMNodePointer(mockParent, mockNode);
+        when(mockNode.getNodeType()).thenReturn(Node.CDATA_SECTION_NODE);
+        ReflectionTestUtils.setField(domNodePointer, "relativePositionOfTextNode", 1);
+
+        String path = domNodePointer.asPath();
+        assertEquals("/text()[1]", path);
+    }
+
+    @Test
+    void testAsPath_WithProcessingInstructionNode() {
+        domNodePointer = new DOMNodePointer(mockParent, mockNode);
+        ProcessingInstruction mockPI = mock(ProcessingInstruction.class);
+        when(mockNode.getNodeType()).thenReturn(Node.PROCESSING_INSTRUCTION_NODE);
+        when(mockNode instanceof ProcessingInstruction).thenReturn(true);
+        when(mockNode).thenReturn(mockPI);
+        when(mockPI.getTarget()).thenReturn("xml-stylesheet");
+        ReflectionTestUtils.setField(domNodePointer, "relativePositionOfPI", 1);
+
+        String path = domNodePointer.asPath();
+        assertEquals("/processing-instruction('xml-stylesheet')[1]", path);
+    }
+
+    @Test
+    void testAsPath_WithDocumentNode() {
+        domNodePointer = new DOMNodePointer(mockParent, mockNode);
+        when(mockNode.getNodeType()).thenReturn(Node.DOCUMENT_NODE);
+
+        String path = domNodePointer.asPath();
+        assertEquals("", path);
+    }
+
+    @Test
+    void testAsPath_WithOtherNodeType() {
+        domNodePointer = new DOMNodePointer(mockParent, mockNode);
+        when(mockNode.getNodeType()).thenReturn(Node.COMMENT_NODE);
+
+        String path = domNodePointer.asPath();
+        assertEquals("", path);
+    }
+
+    @Test
+    void testAsPath_WithParent() {
+        domNodePointer = new DOMNodePointer(mockParent, mockNode);
+        when(mockParent.asPath()).thenReturn("/parent");
+        when(mockNode.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(DOMNodePointer.getLocalName(mockNode)).thenReturn("testElement");
+        when(domNodePointer.getNamespaceURI()).thenReturn(null);
+        ReflectionTestUtils.setField(domNodePointer, "relativePositionByQName", 1);
+
+        String path = domNodePointer.asPath();
+        assertEquals("/parent/testElement[1]", path);
+    }
+
+    @Test
+    void testAsPath_WithParentAndNoSlash() {
+        domNodePointer = new DOMNodePointer(mockParent, mockNode);
+        when(mockParent.asPath()).thenReturn("parent");
+        when(mockNode.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(DOMNodePointer.getLocalName(mockNode)).thenReturn("testElement");
+        when(domNodePointer.getNamespaceURI()).thenReturn(null);
+        ReflectionTestUtils.setField(domNodePointer, "relativePositionByQName", 1);
+
+        String path = domNodePointer.asPath();
+        assertEquals("parent/testElement[1]", path);
+    }
+
+    @Test
+    void testAsPath_WithEmptyParentPath() {
+        domNodePointer = new DOMNodePointer(mockParent, mockNode);
+        when(mockParent.asPath()).thenReturn("");
+        when(mockNode.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(DOMNodePointer.getLocalName(mockNode)).thenReturn("testElement");
+        when(domNodePointer.getNamespaceURI()).thenReturn(null);
+        ReflectionTestUtils.setField(domNodePointer, "relativePositionByQName", 1);
+
+        String path = domNodePointer.asPath();
+        assertEquals("/testElement[1]", path);
+    }
+}
+```

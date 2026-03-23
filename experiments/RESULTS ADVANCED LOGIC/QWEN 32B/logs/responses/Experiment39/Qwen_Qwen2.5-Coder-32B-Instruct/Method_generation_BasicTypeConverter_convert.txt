@@ -1,0 +1,98 @@
+```java
+public Object convert(final Object object, final Class toType) {
+    if (object == null) {
+        if (toType.isPrimitive()) {
+            return convertNullToPrimitive(toType);
+        }
+        return null;
+    }
+    if (toType.isInstance(object)) {
+        return object;
+    }
+    if (object instanceof NodeSet) {
+        NodeSet nodeSet = (NodeSet) object;
+        List values = nodeSet.getValues();
+        if (toType == Object.class) {
+            return values;
+        }
+        if (toType == List.class) {
+            return values;
+        }
+        if (values.size() == 1) {
+            return convert(values.get(0), toType);
+        }
+        if (values.isEmpty()) {
+            return "";
+        }
+    }
+    if (object instanceof Pointer) {
+        Pointer pointer = (Pointer) object;
+        Object value = pointer.getValue();
+        if (toType == Object.class) {
+            return value;
+        }
+        return convert(value, toType);
+    }
+    if (object instanceof Collection) {
+        Collection collection = (Collection) object;
+        if (toType.isArray()) {
+            Object array = Array.newInstance(toType.getComponentType(), collection.size());
+            int i = 0;
+            for (Object item : collection) {
+                Array.set(array, i++, convert(item, toType.getComponentType()));
+            }
+            return array;
+        }
+        if (toType == Collection.class || toType.isInstance(collection)) {
+            return collection;
+        }
+        if (collection.size() == 1) {
+            return convert(collection.iterator().next(), toType);
+        }
+        if (collection.isEmpty()) {
+            return "";
+        }
+    }
+    if (object.getClass().isArray()) {
+        if (toType.isArray()) {
+            int length = Array.getLength(object);
+            Object array = Array.newInstance(toType.getComponentType(), length);
+            for (int i = 0; i < length; i++) {
+                Array.set(array, i, convert(Array.get(object, i), toType.getComponentType()));
+            }
+            return array;
+        }
+        if (toType == Collection.class) {
+            Collection result = allocateCollection(ArrayList.class);
+            int length = Array.getLength(object);
+            for (int i = 0; i < length; i++) {
+                result.add(convert(Array.get(object, i), Object.class));
+            }
+            return result;
+        }
+        if (Array.getLength(object) == 1) {
+            return convert(Array.get(object, 0), toType);
+        }
+        if (Array.getLength(object) == 0) {
+            return "";
+        }
+    }
+    if (toType == String.class) {
+        return object.toString();
+    }
+    if (object instanceof Boolean && Number.class.isAssignableFrom(toType)) {
+        return ((Boolean) object) ? Integer.valueOf(1) : Integer.valueOf(0);
+    }
+    if (Number.class.isAssignableFrom(object.getClass()) && toType == Boolean.class) {
+        Number number = (Number) object;
+        return number.intValue() != 0 ? Boolean.TRUE : Boolean.FALSE;
+    }
+    if (object instanceof String) {
+        return convertStringToPrimitive(object, toType);
+    }
+    if (ConvertUtils.lookup(toType) != null) {
+        return ConvertUtils.convert(object, toType);
+    }
+    throw new JXPathTypeConversionException("Cannot convert " + object.getClass().getName() + " to " + toType.getName());
+}
+```

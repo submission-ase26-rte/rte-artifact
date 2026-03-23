@@ -1,0 +1,76 @@
+```java
+public static String md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) {
+    if (keyBytes == null) {
+        throw new NullPointerException("Key bytes must not be null");
+    }
+    if (salt == null) {
+        StringBuilder saltBuilder = new StringBuilder(prefix);
+        for (int i = 0; i < 8; i++) {
+            saltBuilder.append(B64.B64T_ARRAY[random.nextInt(64)]);
+        }
+        return md5Crypt(keyBytes, saltBuilder.toString(), prefix, random);
+    }
+    if (salt.length() < 2) {
+        throw new IllegalArgumentException("Invalid salt value: " + salt);
+    }
+    if (!salt.startsWith(prefix)) {
+        throw new IllegalArgumentException("Invalid salt value: " + salt);
+    }
+    String saltPart = salt.substring(prefix.length());
+    if (saltPart.length() > 8) {
+        saltPart = saltPart.substring(0, 8);
+    }
+    if (!saltPart.matches("[a-zA-Z0-9./]*")) {
+        throw new IllegalArgumentException("Invalid salt value: " + salt);
+    }
+    MessageDigest md = DigestUtils.getMd5Digest();
+    md.update(keyBytes);
+    md.update(salt.getBytes(StandardCharsets.UTF_8));
+    byte[] ctx = md.digest();
+    md.reset();
+    md.update(keyBytes);
+    md.update(prefix.getBytes(StandardCharsets.UTF_8));
+    md.update(saltPart.getBytes(StandardCharsets.UTF_8));
+    for (int i = keyBytes.length; i > 0; i -= 16) {
+        md.update(ctx, 0, i > 16 ? 16 : i);
+    }
+    for (int i = keyBytes.length; i > 0; i >>= 1) {
+        if ((i & 1) == 1) {
+            md.update((byte) 0);
+        } else {
+            md.update(keyBytes[0]);
+        }
+    }
+    ctx = md.digest();
+    for (int i = 0; i < 1000; i++) {
+        md.reset();
+        if ((i & 1) == 1) {
+            md.update(keyBytes);
+        } else {
+            md.update(ctx);
+        }
+        if (i % 3 != 0) {
+            md.update(saltPart.getBytes(StandardCharsets.UTF_8));
+        }
+        if (i % 7 != 0) {
+            md.update(keyBytes);
+        }
+        if ((i & 1) == 1) {
+            md.update(ctx);
+        } else {
+            md.update(keyBytes);
+        }
+        ctx = md.digest();
+    }
+    StringBuilder result = new StringBuilder(prefix);
+    result.append(saltPart);
+    result.append("$");
+    B64.b64from24bit(ctx[0], ctx[6], ctx[12], 4, result);
+    B64.b64from24bit(ctx[1], ctx[7], ctx[13], 4, result);
+    B64.b64from24bit(ctx[2], ctx[8], ctx[14], 4, result);
+    B64.b64from24bit(ctx[3], ctx[9], ctx[15], 4, result);
+    B64.b64from24bit(ctx[4], ctx[10], ctx[5], 4, result);
+    B64.b64from24bit((byte) 0, (byte) 0, ctx[11], 2, result);
+    return result.toString();
+}
+```

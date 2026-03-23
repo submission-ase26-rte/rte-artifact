@@ -1,0 +1,26 @@
+```java
+public OrderDataBean sell(String userID, Integer holdingID, int orderProcessingMode) throws Exception {
+    Connection conn = null;
+    try {
+        conn = getConn();
+        HoldingDataBean holdingData = getHoldingData(conn, holdingID);
+        if (holdingData == null) {
+            throw new Exception("Holding not found for holdingID: " + holdingID);
+        }
+        QuoteDataBean quoteData = getQuoteData(conn, holdingData.getQuoteID().getSymbol());
+        AccountDataBean accountData = getAccountData(conn, userID);
+        double quantity = holdingData.getQuantity();
+        OrderDataBean orderData = createOrder(accountData, quoteData, holdingData, "sell", quantity);
+        removeHolding(conn, holdingID);
+        creditAccountBalance(conn, accountData, quoteData.getPrice().multiply(new BigDecimal(quantity)));
+        commit(conn);
+        return orderData;
+    } catch (Exception e) {
+        Log.error("TradeDirect:sell -- error selling holding", e);
+        rollBack(conn, e);
+        throw e;
+    } finally {
+        releaseConn(conn);
+    }
+}
+```

@@ -1,0 +1,25 @@
+```java
+public void registerHandlingEvent(LocalDateTime completionTime, TrackingId trackingId, VoyageNumber voyageNumber, UnLocode unLocode, HandlingEvent.Type type) throws CannotCreateHandlingEventException {
+    if (completionTime == null) {
+        throw new NullPointerException("Completion time cannot be null");
+    }
+    if (trackingId == null) {
+        throw new NullPointerException("Tracking ID cannot be null");
+    }
+    if (voyageNumber == null) {
+        throw new NullPointerException("Voyage number cannot be null");
+    }
+    if (unLocode == null) {
+        throw new NullPointerException("UnLocode cannot be null");
+    }
+    if (type == null) {
+        throw new NullPointerException("Handling event type cannot be null");
+    }
+
+    LocalDateTime registrationTime = LocalDateTime.now();
+    HandlingEvent event = handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unLocode, type);
+    handlingEventRepository.store(event);
+    applicationEvents.cargoWasHandled(event);
+    logger.info("Registered handling event");
+}
+```

@@ -1,0 +1,112 @@
+package org.apache.commons.codec.digest;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.apache.commons.codec.digest.B64;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.digest.Md5Crypt;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Md5Crypt_md5CryptTestGenerated {
+    private SecureRandom secureRandom;
+    private Random random;
+
+    @BeforeEach
+    public void setUp() {
+        secureRandom = new SecureRandom();
+        random = new Random();
+    }
+
+    @Test
+    public void testMd5CryptWithEmptySalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "";
+        String prefix = "$1$";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+        });
+        assertEquals("Invalid salt value: ", exception.getMessage());
+    }
+
+    @Test
+    public void testMd5CryptWithNullSalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String prefix = "$1$";
+        String result = Md5Crypt.md5Crypt(keyBytes, null, prefix, random);
+        assertNotNull(result);
+        assertTrue(result.startsWith(prefix));
+        assertEquals(34, result.length());
+    }
+
+    @Test
+    public void testMd5CryptWithValidSalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "$1$abcdefgh";
+        String prefix = "$1$";
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+        assertNotNull(result);
+        assertTrue(result.startsWith(prefix));
+        assertEquals(34, result.length());
+    }
+
+    @Test
+    public void testMd5CryptWithSecureRandom() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String prefix = "$1$";
+        String result = Md5Crypt.md5Crypt(keyBytes, null, prefix, secureRandom);
+        assertNotNull(result);
+        assertTrue(result.startsWith(prefix));
+        assertEquals(34, result.length());
+    }
+
+    @Test
+    public void testMd5CryptWithEmptyKey() {
+        byte[] keyBytes = new byte[0];
+        String prefix = "$1$";
+        String result = Md5Crypt.md5Crypt(keyBytes, null, prefix, random);
+        assertNotNull(result);
+        assertTrue(result.startsWith(prefix));
+        assertEquals(34, result.length());
+    }
+
+    @Test
+    public void testMd5CryptWithInvalidSalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "$1$invalid";
+        String prefix = "$1$";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+        });
+        assertEquals("Invalid salt value: " + salt, exception.getMessage());
+    }
+
+    @Test
+    public void testMd5CryptWithNullKey() {
+        byte[] keyBytes = null;
+        String prefix = "$1$";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, null, prefix, random);
+        });
+        assertEquals("source cannot be null", exception.getMessage());
+    }
+
+    @Test
+    public void testMd5CryptWithNullRandom() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String prefix = "$1$";
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, null, prefix, null);
+        });
+        assertEquals("random cannot be null", exception.getMessage());
+    }
+
+}

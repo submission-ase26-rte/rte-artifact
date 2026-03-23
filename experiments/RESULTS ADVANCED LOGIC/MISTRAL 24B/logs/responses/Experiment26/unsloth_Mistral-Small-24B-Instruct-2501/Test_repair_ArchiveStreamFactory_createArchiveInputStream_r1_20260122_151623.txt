@@ -1,0 +1,87 @@
+```java
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
+import java.nio.charset.UnsupportedCharsetException;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.ArchiveStreamProvider;
+import org.apache.commons.compress.archivers.StreamingNotSupportedException;
+import org.apache.commons.compress.archivers.ar.ArArchiveInputStream;
+import org.apache.commons.compress.archivers.arj.ArjArchiveInputStream;
+import org.apache.commons.compress.archivers.dump.DumpArchiveInputStream;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArchiveStreamFactory_createArchiveInputStreamTestGenerated {
+
+    private static final ArchiveStreamFactory factory = new ArchiveStreamFactory();
+
+    @Test
+    void testCreateArchiveInputStreamSEVEN_Z() {
+        InputStream inputStream = new ByteArrayInputStream(new byte[0]);
+        assertThrows(IllegalArgumentException.class, () ->
+                factory.createArchiveInputStream("SEVEN_Z", inputStream, null));
+    }
+
+    @Test
+    void testCreateArchiveInputStreamDUMP() throws ArchiveException {
+        InputStream inputStream = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream result = factory.createArchiveInputStream("DUMP", inputStream, null);
+        assertNotNull(result);
+        assertTrue(result instanceof DumpArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamDUMPWithEncoding() throws ArchiveException {
+        InputStream inputStream = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream result = factory.createArchiveInputStream("DUMP", inputStream, "UTF-8");
+        assertNotNull(result);
+        assertTrue(result instanceof DumpArchiveInputStream);
+        assertEquals("UTF-8", ((DumpArchiveInputStream) result).getCharset().name());
+    }
+
+    @Test
+    void testCreateArchiveInputStreamARJWithEncoding() throws ArchiveException {
+        InputStream inputStream = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream result = factory.createArchiveInputStream("ARJ", inputStream, "UTF-8");
+        assertNotNull(result);
+        assertTrue(result instanceof ArjArchiveInputStream);
+        assertEquals("UTF-8", ((ArjArchiveInputStream) result).getCharset().name());
+    }
+
+    @Test
+    void testCreateArchiveInputStreamUnknownArchiver() {
+        InputStream inputStream = new ByteArrayInputStream(new byte[0]);
+        assertThrows(IllegalArgumentException.class, () ->
+                factory.createArchiveInputStream("UNKNOWN", inputStream, null));
+    }
+
+    @Test
+    void testCreateArchiveInputStreamARJ() throws ArchiveException {
+        InputStream inputStream = new ByteArrayInputStream(new byte[0]);
+        ArchiveInputStream result = factory.createArchiveInputStream("ARJ", inputStream, null);
+        assertNotNull(result);
+        assertTrue(result instanceof ArjArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamNotSupported() {
+        assertThrows(StreamingNotSupportedException.class, () ->
+                factory.createArchiveInputStream("SEVEN_Z", new ByteArrayInputStream(new byte[0]), null));
+    }
+
+    @Test
+    void testCreateArchiveInputStreamUnknownProvider() {
+        assertThrows(ArchiveException.class, () ->
+                factory.createArchiveInputStream("UNKNOWN_PROVIDER", new ByteArrayInputStream(new byte[0]), null));
+    }
+}
+```

@@ -1,0 +1,78 @@
+```java
+package org.apache.commons.compress.archivers.cpio;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
+import java.util.Date;
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.utils.ExactMath;
+import org.apache.commons.compress.utils.TimeUtils;
+import java.nio.file.LinkOption;
+
+class CpioArchiveEntry_setInodeTestGenerated {
+    @Test
+    void testSetInodeWithValidInput() {
+        CpioArchiveEntry entry = new CpioArchiveEntry((short) 0, "test.txt");
+        long newInode = 42L;
+        entry.setInode(newInode);
+        assertEquals(newInode, entry.getInode());
+    }
+
+    @Test
+    void testSetInodeWithZero() {
+        CpioArchiveEntry entry = new CpioArchiveEntry((short) 0, "test.txt");
+        entry.setInode(0L);
+        assertEquals(0L, entry.getInode());
+    }
+
+    @Test
+    void testSetInodeWithNegativeValue() {
+        CpioArchiveEntry entry = new CpioArchiveEntry((short) 0, "test.txt");
+        long negativeInode = -1L;
+        entry.setInode(negativeInode);
+        assertEquals(negativeInode, entry.getInode());
+    }
+
+    @Test
+    void testSetInodeWithMaxLongValue() {
+        CpioArchiveEntry entry = new CpioArchiveEntry((short) 0, "test.txt");
+        long maxLong = Long.MAX_VALUE;
+        entry.setInode(maxLong);
+        assertEquals(maxLong, entry.getInode());
+    }
+
+    @Test
+    void testSetInodeWithMinLongValue() {
+        CpioArchiveEntry entry = new CpioArchiveEntry((short) 0, "test.txt");
+        long minLong = Long.MIN_VALUE;
+        entry.setInode(minLong);
+        assertEquals(minLong, entry.getInode());
+    }
+
+    @Test
+    void testSetInodeWithFileConstructor() {
+        File inputFile = mock(File.class);
+        when(inputFile.getName()).thenReturn("test.txt");
+        CpioArchiveEntry entry = new CpioArchiveEntry(inputFile, "entryName");
+        long newInode = 12345L;
+        entry.setInode(newInode);
+        assertEquals(newInode, entry.getInode());
+    }
+
+    @Test
+    void testSetInodeWithPathConstructor() throws IOException {
+        Path inputPath = mock(Path.class);
+        when(inputPath.toString()).thenReturn("test.txt");
+        CpioArchiveEntry entry = new CpioArchiveEntry(inputPath, "entryName", null);
+        long newInode = 54321L;
+        entry.setInode(newInode);
+        assertEquals(newInode, entry.getInode());
+    }
+}
+```

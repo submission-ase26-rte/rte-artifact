@@ -1,0 +1,76 @@
+{
+  "method_id": 6,
+  "tested_method": "create",
+  "tested_class": "OptionBuilder",
+  "project": "CLI",
+  "timestamp": "2026-01-27T18:27:20.335286",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\CLI\\Run-1\\src\\test\\java\\org\\apache\\commons\\cli\\Metodo6_unit_create_OptionBuilder_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 4,
+    "tests_total": 5,
+    "tests_failed": 1,
+    "line_coverage": 100.0,
+    "branch_coverage": 0.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testCreateOptionWithValueSeparator_AwDq5_BBhS1_fid1 --\nERROR: org.opentest4j.AssertionFailedError: expected: <-> but was: <\u0000>",
+    "test_info": {
+      "valid_tests": [
+        "testCreateOption_Fwpy0",
+        "testCreateWithLongOption_Cymk0",
+        "testCreateOptionWithOptionalArg_pIoM4_DhJO1",
+        "testCreateOptionWithValueSeparator_AwDq5_BBhS1"
+      ],
+      "invalid_tests": [
+        "testCreateOptionWithValueSeparator_AwDq5_BBhS1_fid1"
+      ],
+      "failed_assert_tests": [
+        "testCreateOptionWithValueSeparator_AwDq5_BBhS1_fid1"
+      ],
+      "runtime_error_tests": []
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 5,
+    "assertion_complexity": 0.4,
+    "pct_null_assertions": 0.4,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.0,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.7019,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.0,
+    "overall_naturalness_score": 0.6455
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.7137348463377696,
+    "string_similarity": 0.3789308176100629,
+    "token_similarity": 0.6666666666666666,
+    "ast_similarity": 0.8,
+    "embedding_similarity": 0.954853892326355,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.25,
+      "similar_blocks": 6,
+      "total_blocks": 48
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.7832602969905832,
+    "passes_threshold": true
+  },
+  "original_method": "    public static Option create(final String opt) throws IllegalArgumentException {\n        Option option;\n        try {\n            // create the option\n            option = new Option(opt, description);\n\n            // set the option properties\n            option.setLongOpt(longOption);\n            option.setRequired(required);\n            option.setOptionalArg(optionalArg);\n            option.setArgs(argCount);\n            option.setType(type);\n            option.setConverter(TypeHandler.getDefault().getConverter(type));\n            option.setValueSeparator(valueSeparator);\n            option.setArgName(argName);\n        } finally {\n            // reset the OptionBuilder properties\n            OptionBuilder.reset();\n        }\n\n        // return the Option instance\n        return option;\n    }",
+  "regenerated_method": "@SuppressWarnings(\"unchecked\")\n    public static Option create(final String opt) throws IllegalArgumentException {\n        Option option = new Option(opt);\n        option.setLongOpt(longOption);\n        option.setArgName(argName);\n        option.setDescription(description);\n        option.setRequired(required);\n        option.setType(type);\n        option.setOptionalArg(optionalArg);\n        option.setValueSeparator(valueSeparator);\n        option.setArgs(argCount);\n        if (converterMap != null) {\n            option.setConverter(converterMap.get(type));\n        }\n        return option;\n    }",
+  "passes_evaluation": true,
+  "similarity_threshold": 0.6884775539310862,
+  "original_metrics": {
+    "loc": 23,
+    "sloc": 17,
+    "complexity": 1
+  }
+}

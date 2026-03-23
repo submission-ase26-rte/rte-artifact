@@ -1,0 +1,125 @@
+package org.springframework.samples.petclinic.owner;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.Errors;
+
+import java.time.LocalDate;
+
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class PetValidator_validateTestGenerated {
+
+    @InjectMocks
+    private PetValidator petValidator;
+
+    @Mock
+    private Errors errors;
+
+    @Mock
+    private Pet pet;
+
+    @Mock
+    private PetType petType;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(petValidator, "REQUIRED", "required");
+    }
+
+    @Test
+    void testValidate_NameEmpty() {
+        when(pet.getName()).thenReturn("");
+        when(pet.isNew()).thenReturn(true);
+        when(pet.getType()).thenReturn(petType);
+        when(pet.getBirthDate()).thenReturn(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verify(errors).rejectValue("name", "required", "required");
+        verifyNoMoreInteractions(errors);
+    }
+
+    @Test
+    void testValidate_NameNull() {
+        when(pet.getName()).thenReturn(null);
+        when(pet.isNew()).thenReturn(true);
+        when(pet.getType()).thenReturn(petType);
+        when(pet.getBirthDate()).thenReturn(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verify(errors).rejectValue("name", "required", "required");
+        verifyNoMoreInteractions(errors);
+    }
+
+    @Test
+    void testValidate_TypeNull_NewPet() {
+        when(pet.getName()).thenReturn("Buddy");
+        when(pet.isNew()).thenReturn(true);
+        when(pet.getType()).thenReturn(null);
+        when(pet.getBirthDate()).thenReturn(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verify(errors).rejectValue("type", "required", "required");
+        verifyNoMoreInteractions(errors);
+    }
+
+    @Test
+    void testValidate_TypeNotNull_NewPet() {
+        when(pet.getName()).thenReturn("Buddy");
+        when(pet.isNew()).thenReturn(true);
+        when(pet.getType()).thenReturn(petType);
+        when(pet.getBirthDate()).thenReturn(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verifyNoInteractions(errors);
+    }
+
+    @Test
+    void testValidate_TypeNull_ExistingPet() {
+        when(pet.getName()).thenReturn("Buddy");
+        when(pet.isNew()).thenReturn(false);
+        when(pet.getType()).thenReturn(null);
+        when(pet.getBirthDate()).thenReturn(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verifyNoInteractions(errors);
+    }
+
+    @Test
+    void testValidate_BirthDateNull() {
+        when(pet.getName()).thenReturn("Buddy");
+        when(pet.isNew()).thenReturn(true);
+        when(pet.getType()).thenReturn(petType);
+        when(pet.getBirthDate()).thenReturn(null);
+
+        petValidator.validate(pet, errors);
+
+        verify(errors).rejectValue("birthDate", "required", "required");
+        verifyNoMoreInteractions(errors);
+    }
+
+    @Test
+    void testValidate_AllValid() {
+        when(pet.getName()).thenReturn("Buddy");
+        when(pet.isNew()).thenReturn(true);
+        when(pet.getType()).thenReturn(petType);
+        when(pet.getBirthDate()).thenReturn(LocalDate.now());
+
+        petValidator.validate(pet, errors);
+
+        verifyNoInteractions(errors);
+    }
+}

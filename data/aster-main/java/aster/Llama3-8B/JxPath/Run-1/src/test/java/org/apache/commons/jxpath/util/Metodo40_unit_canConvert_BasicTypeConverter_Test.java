@@ -1,0 +1,226 @@
+/**
+ * Filtered unit tests for method: canConvert(final Object object, final Class toType)
+ * Original class: BasicTypeConverter
+ * Tests that actually call the target method
+ */
+package org.apache.commons.jxpath.util;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo40_unit_canConvert_BasicTypeConverter_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testPointer_ULlg7_wDxQ0() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    Object pointer = new Object();
+    assertTrue(converter.canConvert(pointer, String.class));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertNonConvertibleObject_cJnQ15() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(new Object(), Double.class);
+    Assertions.assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertNonConvertibleCollection_Huvv17() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(Arrays.asList(1, 2, 3), Double.class);
+    Assertions.assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertNonConvertiblePrimitiveBoolean_axke20() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(true, Double.class);
+    Assertions.assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertNonConvertiblePrimitiveNumber_QBqU21() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(1, Double.class);
+    Assertions.assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertPrimitiveNodeSet_HaMS12_hqva1() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(JXPathContext.newContext(new Object()).getValue("true"), boolean.class);
+    Assertions.assertTrue(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertNonConvertibleNodeSet_mOXW18_EFBq0() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(Arrays.asList("test"), Double.class);
+    Assertions.assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertNonConvertiblePointer_dOxj19_THJg0() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert("test", Double.class);
+    Assertions.assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertNull_lIPO0() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(null, String.class);
+    Assertions.assertTrue(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertString_GmJX1() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert("test", String.class);
+    Assertions.assertTrue(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertBoolean_jnni2() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(true, Boolean.class);
+    Assertions.assertTrue(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertNumber_jsga3() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(1, Integer.class);
+    Assertions.assertTrue(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertCollection_StDp5() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(Arrays.asList(1, 2, 3), List.class);
+    Assertions.assertTrue(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertPrimitiveBoolean_Txwp8() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(true, boolean.class);
+    Assertions.assertTrue(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertPrimitiveNumber_rBZv9() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(1, int.class);
+    Assertions.assertTrue(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertPrimitiveCollection_SuDm11() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(Arrays.asList(true, false), List.class);
+    Assertions.assertTrue(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertObject_FUos14() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(new Object(), Object.class);
+    Assertions.assertTrue(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvert_MuZg6_lyeR0() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(Arrays.asList("test"), String.class);
+    Assertions.assertTrue(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertPrimitivePointer_CGdC13_resw0() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert("true", boolean.class);
+    Assertions.assertTrue(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertNonConvertibleObject_cJnQ15_fid1() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(new Object(), Double.class);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertNonConvertibleCollection_Huvv17_fid1() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(Arrays.asList(1, 2, 3), Double.class);
+    Assertions.assertTrue(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertNonConvertiblePrimitiveBoolean_axke20_fid1() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(true, Double.class);
+    Assertions.assertTrue(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertNonConvertiblePrimitiveNumber_QBqU21_fid1() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(1, Double.class);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertNonConvertibleNodeSet_mOXW18_EFBq0_fid1() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert(Arrays.asList("test"), Double.class);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCanConvertNonConvertiblePointer_dOxj19_THJg0_fid1() {
+    BasicTypeConverter converter = new BasicTypeConverter();
+    boolean result = converter.canConvert("test", Double.class);
+    Assertions.assertTrue(result);
+    }
+}

@@ -1,0 +1,98 @@
+package org.eclipse.cargotracker.interfaces.handling.file;
+
+import jakarta.batch.api.chunk.AbstractItemWriter;
+import jakarta.batch.runtime.context.JobContext;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.transaction.Transactional;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class EventItemWriter_writeItemsTestGenerated {
+
+    @Mock
+    private JobContext jobContext;
+
+    @Mock
+    private ApplicationEvents applicationEvents;
+
+    private EventItemWriter eventItemWriter;
+
+    private AutoCloseable closeable;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        closeable = MockitoAnnotations.openMocks(this);
+        eventItemWriter = new EventItemWriter();
+        ReflectionTestUtils.setField(eventItemWriter, "jobContext", jobContext);
+        ReflectionTestUtils.setField(eventItemWriter, "applicationEvents", applicationEvents);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
+    }
+
+    @Test
+    void testWriteItemsWithEmptyList() throws Exception {
+        // Setup
+        List<Object> items = Collections.emptyList();
+
+        Properties properties = new Properties();
+        properties.setProperty("archive_directory", "test_directory");
+        when(jobContext.getProperties()).thenReturn(properties);
+        when(jobContext.getJobName()).thenReturn("testJob");
+        when(jobContext.getInstanceId()).thenReturn(123L);
+
+        // Execute
+        eventItemWriter.writeItems(items);
+
+        // Verify
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any());
+        Path filePath = Path.of("test_directory/archive_testJob_123.csv");
+        assertFalse(Files.exists(filePath));
+    }
+
+    @Test
+    void testWriteItemsWithNullList() throws Exception {
+        // Execute & Verify
+        assertThrows(Exception.class, () -> eventItemWriter.writeItems(null));
+    }
+
+    @Test
+    void testWriteItemsWithNullAttemptInList() throws Exception {
+        // Setup
+        List<Object> items = Collections.singletonList(null);
+
+        Properties properties = new Properties();
+        properties.setProperty("archive_directory", "test_directory");
+        when(jobContext.getProperties()).thenReturn(properties);
+        when(jobContext.getJobName()).thenReturn("testJob");
+        when(jobContext.getInstanceId()).thenReturn(123L);
+
+        // Execute & Verify
+        assertThrows(Exception.class, () -> eventItemWriter.writeItems(items));
+    }
+}

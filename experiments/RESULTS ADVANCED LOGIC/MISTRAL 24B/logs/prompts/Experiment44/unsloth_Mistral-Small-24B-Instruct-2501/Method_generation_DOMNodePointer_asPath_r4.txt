@@ -1,0 +1,592 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.jxpath.ri.model.dom;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import org.apache.commons.jxpath.JXPathAbstractFactoryException;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.ri.compiler.NodeNameTest;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.compiler.NodeTypeTest;
+import org.apache.commons.jxpath.ri.compiler.ProcessingInstructionTest;
+import org.apache.commons.jxpath.ri.Compiler;
+import org.apache.commons.jxpath.ri.model.beans.NullPointer;
+import org.apache.commons.jxpath.ri.model.dom.DOMNodePointer;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.apache.commons.jxpath.ri.NamespaceResolver;
+import org.apache.commons.jxpath.ri.QName;
+import org.apache.commons.jxpath.util.TypeUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Comment;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.ProcessingInstruction;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class DOMNodePointer_asPathTestGenerated {
+    @Mock
+    private Node node;
+    @Mock
+    private Locale locale;
+    @Mock
+    private NamespaceResolver namespaceResolver;
+    private DOMNodePointer domNodePointer;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        domNodePointer = new DOMNodePointer(node, locale);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        domNodePointer = null;
+    }
+
+    @Test
+    public void testAsPathWithId() {
+        domNodePointer = new DOMNodePointer(node, locale, "testId");
+        String path = domNodePointer.asPath();
+        assertEquals("id('testId')", path);
+    }
+
+    @Test
+    public void testAsPathWithDocumentNode() {
+        when(node.getNodeType()).thenReturn(Node.DOCUMENT_NODE);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertEquals("", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithCommentNode() {
+        when(node.getNodeType()).thenReturn(Node.COMMENT_NODE);
+        when(node.getPreviousSibling()).thenReturn(null);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertEquals("", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithAttributeNode() {
+        when(node.getNodeType()).thenReturn(Node.ATTRIBUTE_NODE);
+        when(node.getPreviousSibling()).thenReturn(null);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertEquals("", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithTextNode() {
+        when(node.getNodeType()).thenReturn(Node.TEXT_NODE);
+        when(node.getPreviousSibling()).thenReturn(null);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertEquals("/text()[1]/text()[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithTextNodeWithParent() {
+        when(node.getNodeType()).thenReturn(Node.TEXT_NODE);
+        when(node.getPreviousSibling()).thenReturn(null);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertEquals("/text()[1]/text()[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithTextNodeWithSibling() {
+        when(node.getNodeType()).thenReturn(Node.TEXT_NODE);
+        when(node.getPreviousSibling()).thenReturn(mock(Node.class));
+        when(node.getPreviousSibling().getNodeType()).thenReturn(Node.TEXT_NODE);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertEquals("/text()[2]/text()[2]", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithCDATASectionNode() {
+        when(node.getNodeType()).thenReturn(Node.CDATA_SECTION_NODE);
+        when(node.getPreviousSibling()).thenReturn(null);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertEquals("/text()[1]/text()[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithTextAndCDATA() {
+        when(node.getNodeType()).thenReturn(Node.CDATA_SECTION_NODE);
+        when(node.getPreviousSibling()).thenReturn(mock(Node.class));
+        when(node.getPreviousSibling().getNodeType()).thenReturn(Node.TEXT_NODE);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/text()[1]"));
+    }
+
+    @Test
+    public void testAsPathWithNoParent() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn(null);
+        when(node.getPreviousSibling()).thenReturn(null);
+        domNodePointer = new DOMNodePointer(node, locale);
+        assertTrue(domNodePointer.asPath().contains("/element[1]"));
+    }
+
+    @Test
+    public void testAsPathWithElementNode() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn(null);
+        when(node.getPreviousSibling()).thenReturn(null);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/element[1]"));
+    }
+
+    @Test
+    public void testAsPathWithProcessingInstructionNode() {
+        when(node.getNodeType()).thenReturn(Node.PROCESSING_INSTRUCTION_NODE);
+        when(((ProcessingInstruction) node).getTarget()).thenReturn("target");
+        when(node.getPreviousSibling()).thenReturn(null);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertEquals("/processing-instruction('target')[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithNamespace() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn("http://example.com");
+        when(node.getPreviousSibling()).thenReturn(null);
+        when(namespaceResolver.getPrefix("http://example.com")).thenReturn("prefix");
+        when(domNodePointer.getNamespaceResolver()).thenReturn(namespaceResolver);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/prefix:element[1]"));
+    }
+
+    @Test
+    public void testAsPathWithNoNamespacePrefix() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn("http://example.com");
+        when(node.getPreviousSibling()).thenReturn(null);
+        when(namespaceResolver.getPrefix("http://example.com")).thenReturn(null);
+        when(domNodePointer.getNamespaceResolver()).thenReturn(namespaceResolver);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/node()[1]"));
+    }
+
+    @Test
+    public void testAsPathWithParentNode() {
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        when(domNodePointer.getParent()).thenReturn(parentPointer);
+        when(parentPointer.asPath()).thenReturn("/parent");
+        assertEquals("/parent", domNodePointer.asPath());
+    }
+
+    @Test
+    public void testAsPathWithElementNodeWithNamespaceAndParent() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn("http://example.com");
+        when(node.getPreviousSibling()).thenReturn(null);
+        when(namespaceResolver.getPrefix("http://example.com")).thenReturn("prefix");
+        when(domNodePointer.getNamespaceResolver()).thenReturn(namespaceResolver);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/prefix:element[1]"));
+    }
+
+    @Test
+    public void testAsPathWithElementNodeWithoutNamespaceAndParent() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn(null);
+        when(node.getPreviousSibling()).thenReturn(null);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/element[1]"));
+    }
+
+    @Test
+    public void testAsPathWithDefaultNamespace() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn(null);
+        when(node.getPreviousSibling()).thenReturn(null);
+        when(domNodePointer.getDefaultNamespaceURI()).thenReturn("http://default.com");
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/element[1]"));
+    }
+
+    @Test
+    public void testAsPathWithEmptyNamespace() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn("");
+        when(node.getPreviousSibling()).thenReturn(null);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/element[1]"));
+    }
+
+    @Test
+    public void testAsPathWithComplexNamespace() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn("http://complex.com");
+        when(node.getPreviousSibling()).thenReturn(null);
+        when(namespaceResolver.getPrefix("http://complex.com")).thenReturn("complex");
+        when(domNodePointer.getNamespaceResolver()).thenReturn(namespaceResolver);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/complex:element[1]"));
+    }
+
+    @Test
+    public void testAsPathWithElementNodeWithParentAndNoNamespace() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn(null);
+        when(node.getPreviousSibling()).thenReturn(null);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/element[1]"));
+    }
+
+    @Test
+    public void testAsPathWithElementNodeWithParentAndNamespace() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn("http://example.com");
+        when(node.getPreviousSibling()).thenReturn(null);
+        when(namespaceResolver.getPrefix("http://example.com")).thenReturn("prefix");
+        when(domNodePointer.getNamespaceResolver()).thenReturn(namespaceResolver);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/prefix:element[1]"));
+    }
+
+    @Test
+    public void testAsPathWithElementNodeWithParentAndNoNamespacePrefix() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn("http://example.com");
+        when(node.getPreviousSibling()).thenReturn(null);
+        when(namespaceResolver.getPrefix("http://example.com")).thenReturn(null);
+        when(domNodePointer.getNamespaceResolver()).thenReturn(namespaceResolver);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/node()[1]"));
+    }
+
+    @Test
+    public void testAsPathWithElementNodeWithParentAndDefaultNamespace() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn(null);
+        when(node.getPreviousSibling()).thenReturn(null);
+        when(domNodePointer.getDefaultNamespaceURI()).thenReturn("http://default.com");
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/element[1]"));
+    }
+
+    @Test
+    public void testAsPathWithElementNodeWithParentAndEmptyNamespace() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getNamespaceURI()).thenReturn("");
+        when(node.getPreviousSibling()).thenReturn(null);
+        DOMNodePointer parentPointer = new DOMNodePointer(node, locale);
+        domNodePointer = new DOMNodePointer(parentPointer, node);
+        assertTrue(domNodePointer.asPath().contains("/element[1]"));
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 40.00% | Branch: 57.89%
+- Tests: 8/25 passed
+
+TEST STATUS:
+- PASSED (8): testAsPathWithId, testAsPathWithDocumentNode, testAsPathWithCommentNode, testAsPathWithAttributeNode, testAsPathWithTextNode, testAsPathWithTextNodeWithParent, testAsPathWithTextNodeWithSibling, testAsPathWithCDATASectionNode
+- FAILED (2): testAsPathWithTextAndCDATA, testAsPathWithNoParent
+- ERRORS (15): testAsPathWithElementNode, testAsPathWithProcessingInstructionNode, testAsPathWithNamespace, testAsPathWithNoNamespacePrefix, testAsPathWithParentNode, testAsPathWithElementNodeWithNamespaceAndParent, testAsPathWithElementNodeWithoutNamespaceAndParent, testAsPathWithDefaultNamespace, testAsPathWithEmptyNamespace, testAsPathWithComplexNamespace, testAsPathWithElementNodeWithParentAndNoNamespace, testAsPathWithElementNodeWithParentAndNamespace, testAsPathWithElementNodeWithParentAndNoNamespacePrefix, testAsPathWithElementNodeWithParentAndDefaultNamespace, testAsPathWithElementNodeWithParentAndEmptyNamespace
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   HashMap -> java.util.HashMap
+//   Locale -> java.util.Locale
+//   Map -> java.util.Map
+//   JXPathAbstractFactoryException -> org.apache.commons.jxpath.JXPathAbstractFactoryException
+//   JXPathContext -> org.apache.commons.jxpath.JXPathContext
+//   JXPathException -> org.apache.commons.jxpath.JXPathException
+//   Pointer -> org.apache.commons.jxpath.Pointer
+//   Compiler -> org.apache.commons.jxpath.ri.Compiler
+//   NamespaceResolver -> org.apache.commons.jxpath.ri.NamespaceResolver
+//   QName -> org.apache.commons.jxpath.ri.QName
+//   NodeNameTest -> org.apache.commons.jxpath.ri.compiler.NodeNameTest
+//   NodeTest -> org.apache.commons.jxpath.ri.compiler.NodeTest
+//   NodeTypeTest -> org.apache.commons.jxpath.ri.compiler.NodeTypeTest
+//   ProcessingInstructionTest -> org.apache.commons.jxpath.ri.compiler.ProcessingInstructionTest
+//   NodeIterator -> org.apache.commons.jxpath.ri.model.NodeIterator
+//   NodePointer -> org.apache.commons.jxpath.ri.model.NodePointer
+//   NullPointer -> org.apache.commons.jxpath.ri.model.beans.NullPointer
+//   TypeUtils -> org.apache.commons.jxpath.util.TypeUtils
+//   Attr -> org.w3c.dom.Attr
+//   Comment -> org.w3c.dom.Comment
+//   Document -> org.w3c.dom.Document
+//   Element -> org.w3c.dom.Element
+//   NamedNodeMap -> org.w3c.dom.NamedNodeMap
+//   Node -> org.w3c.dom.Node
+//   NodeList -> org.w3c.dom.NodeList
+//   ProcessingInstruction -> org.w3c.dom.ProcessingInstruction
+//   DOMNodePointer -> org.apache.commons.jxpath.ri.model.dom.DOMNodePointer
+
+// === Class: DOMNodePointer ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final Node node;
+    private Map namespaces;
+    private String defaultNamespace;
+    private String id;
+    private NamespaceResolver localNamespaceResolver;
+    public static final String XML_NAMESPACE_URI;
+    public static final String XMLNS_NAMESPACE_URI;
+
+// Constructors:
+public DOMNodePointer(Node node, Locale locale);
+public DOMNodePointer(Node node, Locale locale, String id);
+public DOMNodePointer(NodePointer parent, Node node);
+
+// Getter/Setter Methods (for test assertions):
+public QName getName();
+public String getNamespaceURI();
+public synchronized NamespaceResolver getNamespaceResolver();
+public String getNamespaceURI(final String prefix);
+public String getDefaultNamespaceURI();
+public Object getBaseValue();
+public Object getImmediateNode();
+public boolean isActual();
+public boolean isCollection();
+public int getLength();
+public boolean isLeaf();
+public boolean isLanguage(final String lang);
+protected String getLanguage();
+public void setValue(final Object value);
+private int getRelativePositionByQName();
+private int getRelativePositionOfElement();
+private int getRelativePositionOfTextNode();
+private int getRelativePositionOfPI();
+public static String getPrefix(final Node node);
+public static String getLocalName(final Node node);
+public static String getNamespaceURI(Node node);
+public Object getValue();
+public Pointer getPointerByID(final JXPathContext context, final String id);
+
+// Internal Methods (full implementation for context):
+    private int getRelativePositionOfPI() {
+        int count = 1;
+        final String target = ((ProcessingInstruction) node).getTarget();
+        Node n = node.getPreviousSibling();
+        while (n != null) {
+            if (n.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE
+                && ((ProcessingInstruction) n).getTarget().equals(target)) {
+                count++;
+            }
+            n = n.getPreviousSibling();
+        }
+        return count;
+    }
+    private int getRelativePositionByQName() {
+        int count = 1;
+        Node n = node.getPreviousSibling();
+        while (n != null) {
+            if (n.getNodeType() == Node.ELEMENT_NODE && matchesQName(n)) {
+                count++;
+            }
+            n = n.getPreviousSibling();
+        }
+        return count;
+    }
+    private int getRelativePositionOfElement() {
+        int count = 1;
+        Node n = node.getPreviousSibling();
+        while (n != null) {
+            if (n.getNodeType() == Node.ELEMENT_NODE) {
+                count++;
+            }
+            n = n.getPreviousSibling();
+        }
+        return count;
+    }
+    private int getRelativePositionOfTextNode() {
+        int count = 1;
+        Node n = node.getPreviousSibling();
+        while (n != null) {
+            if (n.getNodeType() == Node.TEXT_NODE
+                || n.getNodeType() == Node.CDATA_SECTION_NODE) {
+                count++;
+            }
+            n = n.getPreviousSibling();
+        }
+        return count;
+    }
+    public synchronized NamespaceResolver getNamespaceResolver() {
+        if (localNamespaceResolver == null) {
+            localNamespaceResolver = new NamespaceResolver(super.getNamespaceResolver());
+            localNamespaceResolver.setNamespaceContextPointer(this);
+        }
+        return localNamespaceResolver;
+    }
+    public static String getLocalName(final Node node) {
+        final String localName = node.getLocalName();
+        if (localName != null) {
+            return localName;
+        }
+
+        final String name = node.getNodeName();
+        final int index = name.lastIndexOf(':');
+        return index < 0 ? name : name.substring(index + 1);
+    }
+    public String getNamespaceURI() {
+        return getNamespaceURI(node);
+    }
+
+// === Superclass: NodePointer (inherited members) ===
+// Inherited Fields:
+    public static final int WHOLE_COLLECTION;
+    public static final String UNKNOWN_NAMESPACE;
+    protected int index;
+    protected NodePointer parent;
+    protected Locale locale;
+
+// Inherited Method Signatures:
+static public NodePointer newNodePointer(final QName name, final Object bean, final Locale locale);
+static public NodePointer newChildNodePointer(final NodePointer parent, final QName name, final Object bean);
+public NamespaceResolver getNamespaceResolver();
+public void setNamespaceResolver(final NamespaceResolver namespaceResolver);
+public NodePointer getParent();
+public NodePointer getImmediateParentPointer();
+public void setAttribute(final boolean attribute);
+public boolean isAttribute();
+public boolean isRoot();
+public abstract boolean isLeaf();
+public boolean isNode();
+public boolean isContainer();
+public int getIndex();
+public void setIndex(final int index);
+public abstract boolean isCollection();
+public abstract int getLength();
+public Object getValue();
+public NodePointer getValuePointer();
+public NodePointer getImmediateValuePointer();
+public boolean isActual();
+public abstract QName getName();
+public abstract Object getBaseValue();
+public Object getNodeValue();
+public Object getNode();
+synchronized public Object getRootNode();
+public abstract Object getImmediateNode();
+public abstract void setValue(Object value);
+public abstract int compareChildNodePointers(NodePointer pointer1, NodePointer pointer2);
+public boolean testNode(final NodeTest test);
+public NodePointer createPath(final JXPathContext context, final Object value);
+public void remove();
+public NodePointer createPath(final JXPathContext context, final Object value);
+public NodePointer createChild(final JXPathContext context, final QName name, final int index, final Object value);
+public NodePointer createChild(final JXPathContext context, final QName name, final int index, final Object value);
+public NodePointer createAttribute(final JXPathContext context, final QName name);
+public Locale getLocale();
+public boolean isLanguage(final String lang);
+public NodeIterator childIterator(final NodeTest test, final boolean reverse, final NodePointer startWith);
+public NodeIterator attributeIterator(final QName qname);
+public NodeIterator namespaceIterator();
+public NodePointer namespacePointer(final String namespace);
+public String getNamespaceURI(final String prefix);
+public String getNamespaceURI(final String prefix);
+protected boolean isDefaultNamespace(final String prefix);
+protected String getDefaultNamespaceURI();
+public Pointer getPointerByID(final JXPathContext context, final String id);
+public Pointer getPointerByKey(final JXPathContext context, final String key, final String value);
+public NodeSet getNodeSetByKey(final JXPathContext context, final String key, final Object value);
+public String asPath();
+public int compareTo(final Object object);
+public void printPointerChain();
+public void setExceptionHandler(final ExceptionHandler exceptionHandler);
+public void handle(final Throwable t, final NodePointer originator);
+public void handle(final Throwable t, final NodePointer originator);
+protected String escape(final String string);
+protected AbstractFactory getAbstractFactory(final JXPathContext context);
+static public NodePointer verify(final NodePointer nodePointer);
+
+
+TASK:
+Regenerate ONLY the method "asPath" OF CLASS "DOMNodePointer" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public String asPath() {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.jxpath.ri.model.dom
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "asPath"
+– Allowed imports: exactly those already present in DOMNodePointer
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

@@ -1,0 +1,308 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.cli;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class OptionGroup_toStringTestGenerated {
+
+    private void assertEquals(String expected, String actual) {
+        org.junit.jupiter.api.Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testToString_emptyOptionGroup() {
+        OptionGroup group = new OptionGroup();
+        assertEquals("[]", group.toString());
+    }
+
+    @Test
+    public void testToString_multipleOptions() {
+        Option option1 = new Option("a", false, "Option a");
+        Option option2 = new Option("b", false, "Option b");
+        OptionGroup group = new OptionGroup();
+        try {
+            group.setSelected(option1);
+            group.setSelected(option2);
+            assertEquals("[a, b]", group.toString());
+        } catch (AlreadySelectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testToString_optionsWithDescriptions() {
+        Option option1 = new Option("a", false, "Option a");
+        Option option2 = new Option("b", false, "Option b");
+        OptionGroup group = new OptionGroup();
+        try {
+            group.setSelected(option1);
+            group.setSelected(option2);
+            assertEquals("[a, b]", group.toString());
+        } catch (AlreadySelectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testToString_singleOption() {
+        Option option = new Option("a", false, "Option a");
+        OptionGroup group = new OptionGroup();
+        try {
+            group.setSelected(option);
+            assertEquals("[a]", group.toString());
+        } catch (AlreadySelectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testToString_shortOptionWithDescription() {
+        Option option = new Option("f", false, "Option f");
+        option.setDescription("Option f Description");
+        OptionGroup group = new OptionGroup();
+        try {
+            group.setSelected(option);
+            assertEquals("[f Option f Description]", group.toString());
+        } catch (AlreadySelectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testToString_singleLongOption() {
+        Option option = new Option("","longopt", false, "Long Option");
+        option.setLongOpt("longopt");
+        OptionGroup group = new OptionGroup();
+        try {
+            group.setSelected(option);
+            assertEquals("[--longopt]", group.toString());
+        } catch (AlreadySelectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testToString_multipleOptionsWithLongOptions() {
+        Option option1 = new Option("a", false, "Option a");
+        Option option2 = new Option("","longopt", false, "Long Option");
+        option2.setLongOpt("longopt");
+        OptionGroup group = new OptionGroup();
+        try {
+            group.setSelected(option1);
+            group.setSelected(option2);
+            assertEquals("[a, --longopt]", group.toString());
+        } catch (AlreadySelectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testToString_longOptionsWithDescriptions() {
+        Option option1 = new Option("","longopt1", false, "Long Option 1");
+        option1.setLongOpt("longopt1");
+        Option option2 = new Option("","longopt2", false, "Long Option 2");
+        option2.setLongOpt("longopt2");
+        OptionGroup group = new OptionGroup();
+        try {
+            group.setSelected(option1);
+            group.setSelected(option2);
+            assertEquals("[--longopt1, --longopt2]", group.toString());
+        } catch (AlreadySelectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testToString_mixedOptions() {
+        Option option1 = new Option("a", false, "Option a");
+        Option option2 = new Option("","longopt", false, "Long Option");
+        option2.setLongOpt("longopt");
+        OptionGroup group = new OptionGroup();
+        try {
+            group.setSelected(option1);
+            group.setSelected(option2);
+            assertEquals("[a, --longopt]", group.toString());
+        } catch (AlreadySelectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testToString_longOptionWithDescription() {
+        Option option = new Option("","longopt", false, "Long Option");
+        option.setLongOpt("longopt");
+        OptionGroup group = new OptionGroup();
+        try {
+            group.setSelected(option);
+            assertEquals("[--longopt]", group.toString());
+        } catch (AlreadySelectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testToString_longOptionOnlyWithDescription() {
+        Option option = new Option("","longoption", false, "Long Option");
+        option.setLongOpt("longoption");
+        option.setDescription("Long Option Description");
+        OptionGroup group = new OptionGroup();
+        try {
+            group.setSelected(option);
+            assertEquals("[--longoption Long Option Description]", group.toString());
+        } catch (AlreadySelectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 33.33% | Branch: 12.50%
+- Tests: 3/11 passed
+
+TEST STATUS:
+- PASSED (3): testToString_emptyOptionGroup, testToString_multipleOptions, testToString_optionsWithDescriptions
+- FAILED (2): testToString_singleOption, testToString_shortOptionWithDescription
+- ERRORS (6): testToString_singleLongOption, testToString_multipleOptionsWithLongOptions, testToString_longOptionsWithDescriptions, testToString_mixedOptions, testToString_longOptionWithDescription, testToString_longOptionOnlyWithDescription
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Serializable -> java.io.Serializable
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   LinkedHashMap -> java.util.LinkedHashMap
+//   Map -> java.util.Map
+//   OptionGroup -> org.apache.commons.cli.OptionGroup
+//   Option -> org.apache.commons.cli.Option
+
+// === Class: OptionGroup ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final Map optionMap;
+    private String selected;
+    private boolean required;
+
+// Getter/Setter Methods (for test assertions):
+public Collection<String> getNames();
+public Collection<Option> getOptions();
+public String getSelected();
+public boolean isRequired();
+public void setRequired(final boolean required);
+public void setSelected(final Option option) throws AlreadySelectedException;
+
+// Internal Methods (full implementation for context):
+    public Collection<Option> getOptions() {
+        // the values are the collection of options
+        return optionMap.values();
+    }
+
+// === External Class: Option ===
+// Full import path: org.apache.commons.cli.Option
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   Objects -> java.util.Objects
+// Fields (with actual visibility):
+    private static final Class DEFAULT_TYPE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private int argCount;
+    private String argName;
+    private Converter converter;
+    private final DeprecatedAttributes deprecated;
+    private String description;
+    private String longOption;
+    private final String option;
+    private boolean optionalArg;
+    private boolean required;
+    private Class type;
+    private char valueSeparator;
+    package-private static final Option[] EMPTY_ARRAY;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int UNINITIALIZED;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int UNLIMITED_VALUES;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private List values;
+    private char valuesep;
+
+// Constructors:
+private Builder(String option);
+private Option(Builder builder);
+public Option(String option, boolean hasArg, String description);
+public Option(String option, String description);
+public Option(String option, String longOption, boolean hasArg, String description);
+
+// Method Signatures (used by target method):
+public String getLongOpt();
+public String getDescription();
+public String getOpt();
+
+// Public Getter Methods (for test assertions):
+public Builder hasArg();
+public Builder hasArg(boolean hasArg);
+public Builder hasArgs();
+public String getArgName();
+public int getArgs();
+public Converter getConverter();
+public DeprecatedAttributes getDeprecated();
+public int getId();
+public String getKey();
+public Object getType();
+public String getValue();
+public String getValue(int index);
+public String getValue(String defaultValue);
+public String getValues();
+public char getValueSeparator();
+
+
+TASK:
+Regenerate ONLY the method "toString" OF CLASS "OptionGroup" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public String toString() {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.cli
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "toString"
+– Allowed imports: exactly those already present in OptionGroup
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

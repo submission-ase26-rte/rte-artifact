@@ -1,0 +1,13 @@
+```java
+public HandlingEvent createHandlingEvent( LocalDateTime registrationTime, LocalDateTime completionTime, TrackingId trackingId, VoyageNumber voyageNumber, UnLocode unlocode, HandlingEvent.Type type) throws CannotCreateHandlingEventException {
+    Cargo cargo = findCargo(trackingId);
+    Location location = findLocation(unlocode);
+    Voyage voyage = findVoyage(voyageNumber);
+
+    if (type.voyageRequired() && voyage == null) {
+        throw new CannotCreateHandlingEventException("Voyage is required for this type of handling event");
+    }
+
+    return new HandlingEvent(cargo, completionTime, registrationTime, type, location, voyage);
+}
+```

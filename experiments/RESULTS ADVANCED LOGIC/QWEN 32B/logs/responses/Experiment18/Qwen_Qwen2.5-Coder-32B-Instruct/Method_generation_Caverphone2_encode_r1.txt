@@ -1,0 +1,61 @@
+```java
+public String encode(final String source) {
+    if (SoundexUtils.isEmpty(source)) {
+        return TEN_1;
+    }
+    String txt = source.toLowerCase().replaceAll("[^a-z]", "");
+    txt = txt.replaceAll("^cough", "cou2f");
+    txt = txt.replaceAll("^rough", "rou2f");
+    txt = txt.replaceAll("^tough", "tou2f");
+    txt = txt.replaceAll("^enough", "en2uf");
+    txt = txt.replaceAll("^gn", "2n");
+    txt = txt.replaceAll("^kn", "nn");
+    txt = txt.replaceAll("^ph", "ff");
+    txt = txt.replaceAll("^ps", "ss");
+    txt = txt.replaceAll("^x", "s");
+    txt = txt.replaceAll("ck$", "k");
+    txt = txt.replaceAll("c$", "k");
+    txt = txt.replaceAll("q$", "k");
+    txt = txt.replaceAll("g$", "k");
+    txt = txt.replaceAll("dg$", "g");
+    txt = txt.replaceAll("tch$", "2ch");
+    txt = txt.replaceAll("c", "k");
+    txt = txt.replaceAll("q", "k");
+    txt = txt.replaceAll("g", "k");
+    txt = txt.replaceAll("b", "p");
+    txt = txt.replaceAll("d", "t");
+    txt = txt.replaceAll("v", "f");
+    txt = txt.replaceAll("w|h", "w");
+    txt = txt.replaceAll("k", "c");
+    txt = txt.replaceAll("f$", "f2");
+    txt = txt.replaceAll("f", "v");
+    txt = txt.replaceAll("j", "y");
+    txt = txt.replaceAll("l$", "l2");
+    txt = txt.replaceAll("l", "l");
+    txt = txt.replaceAll("m$", "m2");
+    txt = txt.replaceAll("m", "m");
+    txt = txt.replaceAll("n$", "n2");
+    txt = txt.replaceAll("n", "n");
+    txt = txt.replaceAll("p$", "p2");
+    txt = txt.replaceAll("p", "p");
+    txt = txt.replaceAll("r$", "r2");
+    txt = txt.replaceAll("r", "r");
+    txt = txt.replaceAll("s$", "s2");
+    txt = txt.replaceAll("s", "s");
+    txt = txt.replaceAll("t$", "t2");
+    txt = txt.replaceAll("t", "t");
+    txt = txt.replaceAll("y$", "y2");
+    txt = txt.replaceAll("y", "y");
+    txt = txt.replaceAll("z", "s");
+    txt = txt.replaceAll("2", "");
+    txt = txt.replaceAll("^[aeiou]", "a");
+    txt = txt.replaceAll("[aeiou]", "");
+    txt = txt.replaceAll("^$", "z00000");
+    txt = txt.replaceAll("(.)\\1", "$1");
+    txt = txt.substring(0, Math.min(txt.length(), 10)).toUpperCase();
+    while (txt.length() < 10) {
+        txt += "1";
+    }
+    return txt;
+}
+```

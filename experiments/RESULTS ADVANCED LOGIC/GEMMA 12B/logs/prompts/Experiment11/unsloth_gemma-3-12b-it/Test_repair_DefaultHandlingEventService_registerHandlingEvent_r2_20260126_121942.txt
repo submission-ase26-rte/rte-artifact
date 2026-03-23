@@ -1,0 +1,131 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.application.internal;
+Class name (MUST be exactly): DefaultHandlingEventService_registerHandlingEventTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.application.internal;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.logging.Logger;
+import jakarta.inject.Inject;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEventRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.Mockito;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@MockitoExtension
+public class DefaultHandlingEventService_registerHandlingEventTestGenerated {
+
+    @Inject
+    private ApplicationEvents applicationEvents;
+    @Inject
+    private HandlingEventRepository handlingEventRepository;
+    @Inject
+    private HandlingEventFactory handlingEventFactory;
+    @Inject
+    private Logger logger;
+    private DefaultHandlingEventService defaultHandlingEventService;
+
+    @BeforeEach
+    public void setUp() {
+        applicationEvents = Mockito.mock(ApplicationEvents.class);
+        handlingEventRepository = Mockito.mock(HandlingEventRepository.class);
+        handlingEventFactory = Mockito.mock(HandlingEventFactory.class);
+        logger = Mockito.mock(Logger.class);
+        defaultHandlingEventService = new DefaultHandlingEventService(applicationEvents, handlingEventRepository, handlingEventFactory, logger);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(applicationEvents, handlingEventRepository, handlingEventFactory, logger);
+    }
+
+    @Test
+    public void registerHandlingEvent_success() throws CannotCreateHandlingEventException {
+        LocalDateTime completionTime = LocalDateTime.now();
+        TrackingId trackingId = new TrackingId("123");
+        VoyageNumber voyageNumber = new VoyageNumber("Voyage1");
+        UnLocode unLocode = new UnLocode("locode1");
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+
+        HandlingEvent event = Mockito.mock(HandlingEvent.class);
+        when(handlingEventFactory.createHandlingEvent(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(event);
+
+        defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type);
+
+        Mockito.verify(handlingEventRepository).store(event);
+        Mockito.verify(applicationEvents).cargoWasHandled(event);
+        Mockito.verify(logger).info("Registered handling event");
+    }
+
+    @Test
+    public void registerHandlingEvent_cannotCreateHandlingEventException() {
+        LocalDateTime completionTime = LocalDateTime.now();
+        TrackingId trackingId = new TrackingId("123");
+        VoyageNumber voyageNumber = new VoyageNumber("Voyage1");
+        UnLocode unLocode = new UnLocode("locode1");
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+
+        when(handlingEventFactory.createHandlingEvent(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenThrow(CannotCreateHandlingEventException.class);
+
+        assertThrows(CannotCreateHandlingEventException.class, () -> {
+            defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type);
+        });
+    }
+
+    @Test
+    public void registerHandlingEvent_nullInput() {
+        LocalDateTime completionTime = null;
+        TrackingId trackingId = new TrackingId("123");
+        VoyageNumber voyageNumber = new VoyageNumber("Voyage1");
+        UnLocode unLocode = new UnLocode("locode1");
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+
+        assertThrows(NullPointerException.class, () -> {
+            defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type);
+        });
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/application/internal/DefaultHandlingEventService_registerHandlingEventTestGenerated.java:[29] incompatible types: org.mockito.junit.jupiter.MockitoExtension cannot be converted to java.lang.annotation.Annotation
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/application/internal/DefaultHandlingEventService_registerHandlingEventTestGenerated.java:[48] constructor DefaultHandlingEventService in class org.eclipse.cargotracker.application.internal.DefaultHandlingEventService cannot be applied to given types;
+  required: no arguments
+  found:    org.eclipse.cargotracker.application.ApplicationEvents,org.eclipse.cargotracker.domain.model.handling.HandlingEventRepository,org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory,java.util.logging.Logger
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: DefaultHandlingEventService_registerHandlingEventTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

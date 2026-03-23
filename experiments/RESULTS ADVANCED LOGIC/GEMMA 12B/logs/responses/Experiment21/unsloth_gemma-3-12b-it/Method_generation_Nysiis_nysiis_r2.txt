@@ -1,0 +1,42 @@
+```java
+public String nysiis(String str) {
+        if (str == null) {
+            return null;
+        }
+        str = SoundexUtils.clean(str);
+        if (str.isEmpty()) {
+            return "";
+        }
+        char firstChar = str.charAt(0);
+        str = str.substring(1).toUpperCase();
+        StringBuilder sb = new StringBuilder();
+        sb.append(firstChar);
+        char prev = firstChar;
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            char next = (i + 1 < str.length()) ? str.charAt(i + 1) : ' ';
+            char aNext = (i + 2 < str.length()) ? str.charAt(i + 2) : ' ';
+            char[] chars = transcodeRemaining(prev, c, next, aNext);
+            if (chars.length > 0) {
+                sb.append(chars[0]);
+            }
+            prev = c;
+        }
+        String result = sb.toString();
+        result = result.replace('A', 'A');
+        result = result.replace('E', 'A');
+        result = result.replace('I', 'A');
+        result = result.replace('O', 'A');
+        result = result.replace('U', 'A');
+        result = result.replace('H', 'H');
+        result = result.replace('W', 'W');
+        if (isStrict()) {
+            return result;
+        }
+        result = result.replace("KN", "NN");
+        result = result.replace("K", "C");
+        result = result.replace("PH", "FF");
+        result = result.replace("SCH", "SSS");
+        return result;
+    }
+```

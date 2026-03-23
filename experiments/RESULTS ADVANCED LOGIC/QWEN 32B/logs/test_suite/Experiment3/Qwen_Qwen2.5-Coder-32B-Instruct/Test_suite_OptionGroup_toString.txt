@@ -1,0 +1,78 @@
+package org.apache.commons.cli;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class OptionGroup_toStringTestGenerated {
+
+    private OptionGroup optionGroup;
+
+    @BeforeEach
+    public void setUp() {
+        optionGroup = new OptionGroup();
+    }
+
+    @Test
+    public void testToStringWithNoOptions() {
+        assertEquals("[]", optionGroup.toString());
+    }
+
+    @Test
+    public void testToStringWithSingleShortOption() {
+        Option option = new Option("a", "description");
+        optionGroup.addOption(option);
+        assertEquals("[-a description]", optionGroup.toString());
+    }
+
+    @Test
+    public void testToStringWithSingleLongOption() {
+        Option option = new Option("a", "longOption", false, "description");
+        optionGroup.addOption(option);
+        assertEquals("[--longOption description]", optionGroup.toString());
+    }
+
+    @Test
+    public void testToStringWithMultipleOptions() {
+        Option option1 = new Option("a", "description1");
+        Option option2 = new Option("b", "description2");
+        optionGroup.addOption(option1);
+        optionGroup.addOption(option2);
+        assertEquals("[-a description1, -b description2]", optionGroup.toString());
+    }
+
+    @Test
+    public void testToStringWithMixedOptions() {
+        Option option1 = new Option("a", "description1");
+        Option option2 = new Option("b", "longOption", false, "description2");
+        optionGroup.addOption(option1);
+        optionGroup.addOption(option2);
+        assertEquals("[-a description1, --longOption description2]", optionGroup.toString());
+    }
+
+    @Test
+    public void testToStringWithOptionWithoutDescription() {
+        Option option = new Option("a", false, null);
+        optionGroup.addOption(option);
+        assertEquals("[-a]", optionGroup.toString());
+    }
+
+    @Test
+    public void testToStringWithLongOptionWithoutDescription() {
+        Option option = new Option("a", "longOption", false, null);
+        optionGroup.addOption(option);
+        assertEquals("[--longOption]", optionGroup.toString());
+    }
+
+    private void addOptionToGroup(String opt, String longOpt, String description) {
+        Option option = new Option(opt, longOpt, false, description);
+        optionGroup.addOption(option);
+    }
+}

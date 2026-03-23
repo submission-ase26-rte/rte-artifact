@@ -1,0 +1,108 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.springframework.samples.petclinic.owner;
+Class name (MUST be exactly): Owner_addVisitTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.springframework.samples.petclinic.owner;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.samples.petclinic.model.Pet;
+import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+public class Owner_addVisitTestGenerated {
+
+    @Mock
+    private Pet petMock;
+
+    @Mock
+    private Visit visitMock;
+
+    @InjectMocks
+    private Owner owner;
+
+    @BeforeEach
+    public void setUp() {
+        List<Pet> pets = new ArrayList<>();
+        pets.add(petMock);
+        ReflectionTestUtils.setField(owner, "pets", pets);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        reset(petMock, visitMock);
+    }
+
+    @Test
+    public void testAddVisitWithValidPetIdAndVisit() {
+        when(petMock.getId()).thenReturn(1);
+        owner.addVisit(1, visitMock);
+        verify(petMock, times(1)).addVisit(visitMock);
+    }
+
+    @Test
+    public void testAddVisitWithNullPetId() {
+        assertThrows(IllegalArgumentException.class, () -> owner.addVisit(null, visitMock));
+    }
+
+    @Test
+    public void testAddVisitWithNullVisit() {
+        assertThrows(IllegalArgumentException.class, () -> owner.addVisit(1, null));
+    }
+
+    @Test
+    public void testAddVisitWithInvalidPetId() {
+        when(petMock.getId()).thenReturn(2);
+        assertThrows(IllegalArgumentException.class, () -> owner.addVisit(1, visitMock));
+    }
+
+    @Test
+    public void testAddVisitWithEmptyPetsList() {
+        ReflectionTestUtils.setField(owner, "pets", new ArrayList<>());
+        assertThrows(IllegalArgumentException.class, () -> owner.addVisit(1, visitMock));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/Owner_addVisitTestGenerated.java:[14] cannot find symbol
+  symbol:   class Pet
+  location: package org.springframework.samples.petclinic.model
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/Owner_addVisitTestGenerated.java:[15] cannot find symbol
+  symbol:   class Visit
+  location: package org.springframework.samples.petclinic.model
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: Owner_addVisitTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

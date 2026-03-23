@@ -1,0 +1,345 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.eclipse.cargotracker.domain.model.handling;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import org.eclipse.cargotracker.domain.model.cargo.Cargo;
+import org.eclipse.cargotracker.domain.model.cargo.CargoRepository;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class HandlingEventFactory_createHandlingEventTestGenerated {
+    @Mock
+    private CargoRepository cargoRepository;
+    @Mock
+    private VoyageRepository voyageRepository;
+    @Mock
+    private LocationRepository locationRepository;
+    @InjectMocks
+    private HandlingEventFactory handlingEventFactory;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testCreateHandlingEvent_UnknownCargoException() {
+        TrackingId trackingId = new TrackingId("123456");
+        VoyageNumber voyageNumber = new VoyageNumber("VN123");
+        UnLocode unlocode = new UnLocode("USNYC");
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        HandlingEvent.Type type = HandlingEvent.Type.RECEIVE;
+        when(cargoRepository.find(trackingId)).thenReturn(null);
+        assertThrows(UnknownCargoException.class, () -> handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type));
+    }
+
+    @Test
+    public void testCreateHandlingEvent_CannotCreateHandlingEventException() {
+        TrackingId trackingId = new TrackingId("123456");
+        VoyageNumber voyageNumber = new VoyageNumber("VN123");
+        UnLocode unlocode = new UnLocode("USNYC");
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        HandlingEvent.Type type = HandlingEvent.Type.RECEIVE;
+        Cargo cargo = new Cargo();
+        when(cargoRepository.find(trackingId)).thenThrow(new RuntimeException("Cargo not found"));
+        assertThrows(RuntimeException.class, () -> handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type));
+    }
+
+    @Test
+    public void testCreateHandlingEvent_VoyageRequiredException() {
+        TrackingId trackingId = new TrackingId("123456");
+        VoyageNumber voyageNumber = null;
+        UnLocode unlocode = new UnLocode("USNYC");
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+        Cargo cargo = new Cargo();
+        when(cargoRepository.find(trackingId)).thenReturn(cargo);
+        when(locationRepository.find(unlocode)).thenReturn(new Location());
+        assertThrows(CannotCreateHandlingEventException.class, () -> handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type));
+    }
+
+    @Test
+    public void testCreateHandlingEvent_NullLocationException() {
+        TrackingId trackingId = new TrackingId("123456");
+        VoyageNumber voyageNumber = new VoyageNumber("VN123");
+        UnLocode unlocode = new UnLocode("USNYC");
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+        Cargo cargo = new Cargo();
+        when(cargoRepository.find(trackingId)).thenReturn(cargo);
+        when(voyageRepository.find(voyageNumber)).thenReturn(new Voyage());
+        when(locationRepository.find(unlocode)).thenReturn(null);
+        assertThrows(CannotCreateHandlingEventException.class, () -> handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type));
+    }
+
+    @Test
+    public void testCreateHandlingEvent_UnknownVoyageException() {
+        TrackingId trackingId = new TrackingId("123456");
+        VoyageNumber voyageNumber = new VoyageNumber("VN123");
+        UnLocode unlocode = new UnLocode("USNYC");
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        HandlingEvent.Type type = HandlingEvent.Type.CLAIM;
+        Cargo cargo = new Cargo();
+        when(cargoRepository.find(trackingId)).thenReturn(cargo);
+        when(voyageRepository.find(voyageNumber)).thenThrow(new UnknownVoyageException(voyageNumber));
+        assertThrows(UnknownVoyageException.class, () -> handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type));
+    }
+
+    @Test
+    public void testCreateHandlingEvent_UnknownLocationException() {
+        TrackingId trackingId = new TrackingId("123456");
+        VoyageNumber voyageNumber = new VoyageNumber("VN123");
+        UnLocode unlocode = new UnLocode("USNYC");
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        HandlingEvent.Type type = HandlingEvent.Type.CUSTOMS;
+        Cargo cargo = new Cargo();
+        when(cargoRepository.find(trackingId)).thenReturn(cargo);
+        when(locationRepository.find(unlocode)).thenThrow(new UnknownLocationException(unlocode));
+        assertThrows(UnknownLocationException.class, () -> handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type));
+    }
+
+    @Test
+    public void testCreateHandlingEvent_SuccessWithoutVoyage() throws Exception {
+        TrackingId trackingId = new TrackingId("123456");
+        VoyageNumber voyageNumber = null;
+        UnLocode unlocode = new UnLocode("USNYC");
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        HandlingEvent.Type type = HandlingEvent.Type.UNLOAD;
+        Cargo cargo = new Cargo();
+        Location location = new Location();
+        when(cargoRepository.find(trackingId)).thenReturn(cargo);
+        when(locationRepository.find(unlocode)).thenReturn(location);
+        HandlingEvent event = handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+        assertEquals(cargo, event.getCargo());
+        assertEquals(type, event.getType());
+        assertEquals(location, event.getLocation());
+        assertEquals(null, event.getVoyage());
+        assertEquals(completionTime, event.getCompletionTime());
+        assertEquals(registrationTime, event.getRegistrationTime());
+    }
+
+    @Test
+    public void testCreateHandlingEvent_SuccessWithVoyage() throws Exception {
+        TrackingId trackingId = new TrackingId("123456");
+        VoyageNumber voyageNumber = new VoyageNumber("VN123");
+        UnLocode unlocode = new UnLocode("USNYC");
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+        Cargo cargo = new Cargo();
+        Voyage voyage = new Voyage();
+        Location location = new Location();
+        when(cargoRepository.find(trackingId)).thenReturn(cargo);
+        when(voyageRepository.find(voyageNumber)).thenReturn(voyage);
+        when(locationRepository.find(unlocode)).thenReturn(location);
+        HandlingEvent event = handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+        assertEquals(cargo, event.getCargo());
+        assertEquals(type, event.getType());
+        assertEquals(location, event.getLocation());
+        assertEquals(voyage, event.getVoyage());
+        assertEquals(completionTime, event.getCompletionTime());
+        assertEquals(registrationTime, event.getRegistrationTime());
+    }
+
+    @Test
+    public void testCreateHandlingEvent_NullVoyageNumber() throws Exception {
+        TrackingId trackingId = new TrackingId("123456");
+        VoyageNumber voyageNumber = null;
+        UnLocode unlocode = new UnLocode("USNYC");
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now().plusHours(1);
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+        Cargo cargo = new Cargo();
+        Location location = new Location();
+        when(cargoRepository.find(trackingId)).thenReturn(cargo);
+        when(locationRepository.find(unlocode)).thenReturn(location);
+        HandlingEvent event = handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+        assertEquals(cargo, event.getCargo());
+        assertEquals(type, event.getType());
+        assertEquals(location, event.getLocation());
+        assertEquals(null, event.getVoyage());
+        assertEquals(completionTime, event.getCompletionTime());
+        assertEquals(registrationTime, event.getRegistrationTime());
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 87.50% | Branch: 100.00%
+- Tests: 4/9 passed
+
+TEST STATUS:
+- PASSED (4): testCreateHandlingEvent_UnknownCargoException, testCreateHandlingEvent_CannotCreateHandlingEventException, testCreateHandlingEvent_VoyageRequiredException, testCreateHandlingEvent_NullLocationException
+- FAILED (1): testCreateHandlingEvent_SuccessWithVoyage
+- ERRORS (4): testCreateHandlingEvent_UnknownVoyageException, testCreateHandlingEvent_UnknownLocationException, testCreateHandlingEvent_SuccessWithoutVoyage, testCreateHandlingEvent_NullVoyageNumber
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ApplicationScoped -> jakarta.enterprise.context.ApplicationScoped
+//   Inject -> jakarta.inject.Inject
+//   Serializable -> java.io.Serializable
+//   LocalDateTime -> java.time.LocalDateTime
+//   Cargo -> org.eclipse.cargotracker.domain.model.cargo.Cargo
+//   CargoRepository -> org.eclipse.cargotracker.domain.model.cargo.CargoRepository
+//   TrackingId -> org.eclipse.cargotracker.domain.model.cargo.TrackingId
+//   Location -> org.eclipse.cargotracker.domain.model.location.Location
+//   LocationRepository -> org.eclipse.cargotracker.domain.model.location.LocationRepository
+//   UnLocode -> org.eclipse.cargotracker.domain.model.location.UnLocode
+//   Voyage -> org.eclipse.cargotracker.domain.model.voyage.Voyage
+//   VoyageNumber -> org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+//   VoyageRepository -> org.eclipse.cargotracker.domain.model.voyage.VoyageRepository
+//   HandlingEventFactory -> org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+
+// === Class: HandlingEventFactory ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private CargoRepository cargoRepository;
+    private VoyageRepository voyageRepository;
+    private LocationRepository locationRepository;
+
+// Internal Methods (full implementation for context):
+  private Cargo findCargo(TrackingId trackingId) throws UnknownCargoException {
+    Cargo cargo = cargoRepository.find(trackingId);
+
+    if (cargo == null) {
+      throw new UnknownCargoException(trackingId);
+    }
+
+    return cargo;
+  }
+  private Location findLocation(UnLocode unlocode) throws UnknownLocationException {
+    Location location = locationRepository.find(unlocode);
+
+    if (location == null) {
+      throw new UnknownLocationException(unlocode);
+    }
+
+    return location;
+  }
+  private Voyage findVoyage(VoyageNumber voyageNumber) throws UnknownVoyageException {
+    if (voyageNumber == null) {
+      return null;
+    }
+
+    Voyage voyage = voyageRepository.find(voyageNumber);
+
+    if (voyage == null) {
+      throw new UnknownVoyageException(voyageNumber);
+    }
+
+    return voyage;
+  }
+
+// === External Class: HandlingEvent ===
+// Full import path: org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+// Import paths:
+//   Column -> jakarta.persistence.Column
+//   Entity -> jakarta.persistence.Entity
+//   EnumType -> jakarta.persistence.EnumType
+//   Enumerated -> jakarta.persistence.Enumerated
+//   GeneratedValue -> jakarta.persistence.GeneratedValue
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private Long id;
+    private Type type;
+    private Voyage voyage;
+    private Location location;
+    private LocalDateTime completionTime;
+    private LocalDateTime registrationTime;
+    private Cargo cargo;
+    private String summary;
+    private final boolean voyageRequired;
+
+// Enum Values (use ONLY these constants):
+//   Type: LOAD, UNLOAD, RECEIVE, CLAIM, CUSTOMS
+
+// Constructors:
+public HandlingEvent();
+public HandlingEvent(Cargo cargo, LocalDateTime completionTime, LocalDateTime registrationTime, Type type, Location location, Voyage voyage);
+public HandlingEvent(Cargo cargo, LocalDateTime completionTime, LocalDateTime registrationTime, Type type, Location location);
+private Type(boolean voyageRequired);
+
+
+// Public Getter Methods (for test assertions):
+public Type getType();
+public Voyage getVoyage();
+public LocalDateTime getCompletionTime();
+public LocalDateTime getRegistrationTime();
+public Location getLocation();
+public Cargo getCargo();
+public String getSummary();
+public String toString();
+
+
+TASK:
+Regenerate ONLY the method "createHandlingEvent" OF CLASS "HandlingEventFactory" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public HandlingEvent createHandlingEvent( LocalDateTime registrationTime, LocalDateTime completionTime, TrackingId trackingId, VoyageNumber voyageNumber, UnLocode unlocode, HandlingEvent.Type type) throws CannotCreateHandlingEventException {
+    // your implementation here
+}
+```
+
+
+- Package: org.eclipse.cargotracker.domain.model.handling
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "createHandlingEvent"
+– Allowed imports: exactly those already present in HandlingEventFactory
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

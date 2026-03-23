@@ -1,0 +1,17 @@
+```java
+public CompressorInputStream createCompressorInputStream(final String name, final InputStream in, final boolean actualDecompressConcatenated) throws CompressorException {
+    if (name == null) {
+        throw new IllegalArgumentException("Compressor name must not be null");
+    }
+    if (in == null) {
+        throw new IllegalArgumentException("Input stream must not be null");
+    }
+
+    final CompressorStreamProvider provider = getCompressorInputStreamProviders().get(toKey(name));
+    if (provider == null) {
+        throw new ServiceConfigurationError("No provider for compressor " + name);
+    }
+
+    return provider.createCompressorInputStream(name, in, actualDecompressConcatenated);
+}
+```

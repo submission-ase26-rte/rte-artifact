@@ -1,0 +1,82 @@
+package org.springframework.samples.petclinic.owner;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.samples.petclinic.model.Person;
+import org.springframework.samples.petclinic.owner.Pet;
+import org.springframework.samples.petclinic.owner.Visit;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+public class Owner_addVisitTestGenerated {
+
+    @Mock
+    private PetType mockPetType;
+
+    @Mock
+    private Visit mockVisit;
+
+    private Owner owner;
+    private Pet pet;
+
+    @BeforeEach
+    public void setUp() {
+        owner = new Owner();
+        pet = new Pet();
+        pet.setId(1);
+        pet.setType(mockPetType);
+        pet.setBirthDate(LocalDate.now());
+        List<Pet> pets = new ArrayList<>();
+        pets.add(pet);
+        ReflectionTestUtils.setField(owner, "pets", pets);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        owner = null;
+        pet = null;
+    }
+
+    @Test
+    public void testAddVisitWithValidPetIdAndVisit() {
+        owner.addVisit(1, mockVisit);
+        assertTrue(pet.getVisits().contains(mockVisit));
+    }
+
+    @Test
+    public void testAddVisitWithNullPetId() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            owner.addVisit(null, mockVisit);
+        });
+        assertEquals("Pet identifier must not be null!", exception.getMessage());
+    }
+
+    @Test
+    public void testAddVisitWithNullVisit() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            owner.addVisit(1, null);
+        });
+        assertEquals("Visit must not be null!", exception.getMessage());
+    }
+
+    @Test
+    public void testAddVisitWithInvalidPetId() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            owner.addVisit(2, mockVisit);
+        });
+        assertEquals("Invalid Pet identifier!", exception.getMessage());
+    }
+}

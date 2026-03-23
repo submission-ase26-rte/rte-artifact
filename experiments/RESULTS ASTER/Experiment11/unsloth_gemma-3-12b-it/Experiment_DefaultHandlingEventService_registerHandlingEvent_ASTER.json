@@ -1,0 +1,81 @@
+{
+  "method_id": 11,
+  "tested_method": "registerHandlingEvent",
+  "tested_class": "DefaultHandlingEventService",
+  "project": "Cargotracker",
+  "timestamp": "2026-01-27T18:30:17.477098",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\Cargotracker\\Run-1\\src\\test\\java\\org\\eclipse\\cargotracker\\application\\internal\\Metodo11_unit_registerHandlingEvent_DefaultHandlingEventService_Test.java",
+  "test_results": {
+    "success": false,
+    "tests_passed": 0,
+    "tests_total": 6,
+    "tests_failed": 6,
+    "line_coverage": 28.57142857142857,
+    "branch_coverage": 0.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testRegisterHandlingEventWithInvalidType_txaU4 --\nERROR: java.lang.IllegalArgumentException: countryAndLocation is not a valid UN/LOCODE (does not match pattern)\n--------------------------------------------------\nTEST: testRegisterHandlingEventWithNullUnLocode_KbHj3 --\nERROR: java.lang.NullPointerException: Cannot invoke \"org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory.createHandlingEvent(java.time.LocalDateTime, java.time.LocalDateTime, org.eclipse.cargotracker.domain.model.cargo.TrackingId, org.eclipse.cargotracker.domain.model.voyage.VoyageNumber, org.eclipse.cargotracker.domain.model.location.UnLocode, org.eclipse.cargotracker.domain.model.handling.HandlingEvent$Type)\" because \"this.handlingEventFactory\" is null\n--------------------------------------------------\nTEST: testRegisterHandlingEventWithFutureCompletionTime_jEEx6 --\nERROR: java.lang.IllegalArgumentException: countryAndLocation is not a valid UN/LOCODE (does not match pattern)\n--------------------------------------------------\nTEST: testRegisterHandlingEventWithNullTrackingId_xsIh1 --\nERROR: java.lang.IllegalArgumentException: countryAndLocation is not a valid UN/LOCODE (does not match pattern)\n--------------------------------------------------\nTEST: testRegisterHandlingEventWithNullVoyageNumber_PGoI2 --\nERROR: java.lang.IllegalArgumentException: countryAndLocation is not a valid UN/LOCODE (does not match pattern)\n--------------------------------------------------\nTEST: testRegisterHandlingEventWithValidParameters_jWdy0_OmQU0 --\nERROR: java.lang.IllegalArgumentException: countryAndLocation is not a valid UN/LOCODE (does not match pattern)",
+    "test_info": {
+      "valid_tests": [],
+      "invalid_tests": [
+        "testRegisterHandlingEventWithNullTrackingId_xsIh1",
+        "testRegisterHandlingEventWithNullVoyageNumber_PGoI2",
+        "testRegisterHandlingEventWithNullUnLocode_KbHj3",
+        "testRegisterHandlingEventWithInvalidType_txaU4",
+        "testRegisterHandlingEventWithFutureCompletionTime_jEEx6",
+        "testRegisterHandlingEventWithValidParameters_jWdy0_OmQU0"
+      ],
+      "failed_assert_tests": [],
+      "runtime_error_tests": [
+        "testRegisterHandlingEventWithNullTrackingId_xsIh1",
+        "testRegisterHandlingEventWithNullVoyageNumber_PGoI2",
+        "testRegisterHandlingEventWithNullUnLocode_KbHj3",
+        "testRegisterHandlingEventWithInvalidType_txaU4",
+        "testRegisterHandlingEventWithFutureCompletionTime_jEEx6",
+        "testRegisterHandlingEventWithValidParameters_jWdy0_OmQU0"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 6,
+    "assertion_complexity": 0.0909,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 1.0,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.6714,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.4815,
+    "overall_naturalness_score": 0.7882
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.3002976568101241,
+    "string_similarity": 0.4095808383233533,
+    "token_similarity": 0.4375,
+    "ast_similarity": 0.0,
+    "embedding_similarity": 0.9027148485183716,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.12244897959183673,
+      "similar_blocks": 6,
+      "total_blocks": 98
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.47440119540932313,
+    "passes_threshold": false
+  },
+  "original_method": "  public void registerHandlingEvent(\n      LocalDateTime completionTime,\n      TrackingId trackingId,\n      VoyageNumber voyageNumber,\n      UnLocode unLocode,\n      HandlingEvent.Type type)\n      throws CannotCreateHandlingEventException {\n    LocalDateTime registrationTime = LocalDateTime.now();\n\n    /*\n     * Using a factory to create a HandlingEvent (aggregate). This is where it is\n     * determined wether the incoming data, the attempt, actually is capable of\n     * representing a real handling event.\n     */\n    HandlingEvent event =\n        handlingEventFactory.createHandlingEvent(\n            registrationTime, completionTime, trackingId, voyageNumber, unLocode, type);\n\n    /*\n     * Store the new handling event, which updates the persistent state of the\n     * handling event aggregate (but not the cargo aggregate - that happens\n     * asynchronously!)\n     */\n    handlingEventRepository.store(event);\n\n    /* Publish an event stating that a cargo has been handled. */\n    applicationEvents.cargoWasHandled(event);\n\n    logger.info(\"Registered handling event\");\n  }",
+  "regenerated_method": "import java.time.LocalDateTime;\nimport java.util.logging.Logger;\nimport org.eclipse.cargotracker.application.ApplicationEvents;\nimport org.eclipse.cargotracker.domain.model.cargo.TrackingId;\nimport org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException;\nimport org.eclipse.cargotracker.domain.model.handling.HandlingEvent;\nimport org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory;\nimport org.eclipse.cargotracker.domain.model.handling.HandlingEventRepository;\nimport org.eclipse.cargotracker.domain.model.location.UnLocode;\nimport org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;\n\npublic void registerHandlingEvent( LocalDateTime completionTime, TrackingId trackingId, VoyageNumber voyageNumber, UnLocode unLocode, HandlingEvent.Type type) throws CannotCreateHandlingEventException {\n    if (trackingId == null) {\n        throw new CannotCreateHandlingEventException(\"TrackingId cannot be null\");\n    }\n    if (voyageNumber == null) {\n        throw new CannotCreateHandlingEventException(\"VoyageNumber cannot be null\");\n    }\n    if (unLocode == null) {\n        throw new CannotCreateHandlingEventException(\"UnLocode cannot be null\");\n    }\n    if (completionTime.isAfter(LocalDateTime.now())) {\n        throw new CannotCreateHandlingEventException(\"Completion time cannot be in the future\");\n    }\n\n    if (type == null || type == HandlingEvent.Type.values()[HandlingEvent.Type.values().length - 1]) {\n        throw new CannotCreateHandlingEventException(\"Handling event type is invalid\");\n    }\n\n    LocalDateTime registrationTime = LocalDateTime.now();\n    HandlingEvent event = handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unLocode, type);\n    handlingEventRepository.store(event);\n    applicationEvents.cargoWasHandled(event);\n    logger.info(\"Handling event registered: \" + event);\n}",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6911954370472159,
+  "original_metrics": {
+    "loc": 30,
+    "sloc": 15,
+    "complexity": 1
+  }
+}

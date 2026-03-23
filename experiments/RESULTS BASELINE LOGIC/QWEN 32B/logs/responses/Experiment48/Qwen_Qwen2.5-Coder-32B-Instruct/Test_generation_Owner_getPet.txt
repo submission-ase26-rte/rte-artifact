@@ -1,0 +1,104 @@
+```java
+package org.springframework.samples.petclinic.owner;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+public class Owner_getPetTestGenerated {
+
+    @Mock
+    private Pet mockPet1;
+
+    @Mock
+    private Pet mockPet2;
+
+    @InjectMocks
+    private Owner owner;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        List<Pet> pets = new ArrayList<>();
+        pets.add(mockPet1);
+        pets.add(mockPet2);
+        ReflectionTestUtils.setField(owner, "pets", pets);
+    }
+
+    @AfterEach
+    public void tearDown() {
+    }
+
+    @Test
+    public void testGetPet_NameFound_ReturnsPet() {
+        when(mockPet1.getName()).thenReturn("Buddy");
+        when(mockPet2.getName()).thenReturn("Max");
+        Pet result = owner.getPet("buddy", false);
+        assertEquals(mockPet1, result);
+    }
+
+    @Test
+    public void testGetPet_NameNotFound_ReturnsNull() {
+        when(mockPet1.getName()).thenReturn("Buddy");
+        when(mockPet2.getName()).thenReturn("Max");
+        Pet result = owner.getPet("Charlie", false);
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetPet_NameFoundIgnoreCase_ReturnsPet() {
+        when(mockPet1.getName()).thenReturn("Buddy");
+        when(mockPet2.getName()).thenReturn("Max");
+        Pet result = owner.getPet("bUDDY", false);
+        assertEquals(mockPet1, result);
+    }
+
+    @Test
+    public void testGetPet_NameFoundIgnoreNew_ReturnsPet() {
+        when(mockPet1.getName()).thenReturn("Buddy");
+        when(mockPet1.isNew()).thenReturn(false);
+        when(mockPet2.getName()).thenReturn("Max");
+        when(mockPet2.isNew()).thenReturn(true);
+        Pet result = owner.getPet("buddy", true);
+        assertEquals(mockPet1, result);
+    }
+
+    @Test
+    public void testGetPet_NameFoundIgnoreNew_ReturnsNull() {
+        when(mockPet1.getName()).thenReturn("Buddy");
+        when(mockPet1.isNew()).thenReturn(true);
+        when(mockPet2.getName()).thenReturn("Max");
+        when(mockPet2.isNew()).thenReturn(true);
+        Pet result = owner.getPet("buddy", true);
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetPet_NameNull_ReturnsNull() {
+        Pet result = owner.getPet(null, false);
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetPet_NameEmpty_ReturnsNull() {
+        Pet result = owner.getPet("", false);
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetPet_NoPets_ReturnsNull() {
+        ReflectionTestUtils.setField(owner, "pets", new ArrayList<>());
+        Pet result = owner.getPet("Buddy", false);
+        assertNull(result);
+    }
+}
+```

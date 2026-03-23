@@ -1,0 +1,102 @@
+```java
+public void performTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    String action = req.getParameter("action");
+    HttpSession session = req.getSession(false);
+
+    if (action == null) {
+        req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
+        return;
+    }
+
+    if (session == null) {
+        Log.error("TradeScenarioServlet:performTask - session is null", new Exception("session is null"));
+        return;
+    }
+
+    String userID = (String) session.getAttribute("uidBean");
+
+    if (userID == null) {
+        userID = TradeConfig.getUserID();
+        session.setAttribute("uidBean", userID);
+    }
+
+    switch (action) {
+        case "n":
+            break;
+        case "q":
+            String symbol = TradeConfig.rndSymbols();
+            req.setAttribute("symbol", symbol);
+            req.getRequestDispatcher("/quote.jsp").forward(req, resp);
+            break;
+        case "a":
+            req.getRequestDispatcher("/account.jsp").forward(req, resp);
+            break;
+        case "u":
+            req.getRequestDispatcher("/update_account.jsp").forward(req, resp);
+            req.getRequestDispatcher("/account.jsp").forward(req, resp);
+            break;
+        case "h":
+            req.getRequestDispatcher("/portfolio.jsp").forward(req, resp);
+            break;
+        case "l":
+            userID = TradeConfig.getUserID();
+            session.setAttribute("uidBean", userID);
+            req.getRequestDispatcher("/account.jsp").forward(req, resp);
+            break;
+        case "o":
+            req.getRequestDispatcher("/order.jsp").forward(req, resp);
+            break;
+        case "p":
+            req.getRequestDispatcher("/portfolio.jsp").forward(req, resp);
+            break;
+        case "s":
+            Collection<HoldingDataBean> holdings = (Collection<HoldingDataBean>) req.getAttribute("holdingDataBeans");
+            if (holdings != null && !holdings.isEmpty()) {
+                req.getRequestDispatcher("/sell.jsp").forward(req, resp);
+                req.getRequestDispatcher("/portfolio.jsp").forward(req, resp);
+            } else {
+                symbol = TradeConfig.rndSymbol();
+                float quantity = TradeConfig.rndQuantity();
+                req.setAttribute("symbol", symbol);
+                req.setAttribute("quantity", quantity);
+                req.getRequestDispatcher("/sell.jsp").forward(req, resp);
+                req.getRequestDispatcher("/portfolio.jsp").forward(req, resp);
+                req.getRequestDispatcher("/portfolio.jsp").forward(req, resp);
+            }
+            break;
+        case "b":
+            symbol = TradeConfig.rndSymbol();
+            float quantity = TradeConfig.rndQuantity();
+            req.setAttribute("symbol", symbol);
+            req.setAttribute("quantity", quantity);
+            req.getRequestDispatcher("/buy.jsp").forward(req, resp);
+            req.getRequestDispatcher("/portfolio.jsp").forward(req, resp);
+            break;
+        case "r":
+            String newUser = TradeConfig.rndNewUserID();
+            String fullName = TradeConfig.rndFullName();
+            String creditCard = TradeConfig.rndCreditCard();
+            String balance = TradeConfig.rndBalance();
+            String email = TradeConfig.rndEmail(newUser);
+            String address = TradeConfig.rndAddress();
+            session.setAttribute("uidBean", newUser);
+            req.setAttribute("newUser", newUser);
+            req.setAttribute("fullName", fullName);
+            req.setAttribute("creditCard", creditCard);
+            req.setAttribute("balance", balance);
+            req.setAttribute("email", email);
+            req.setAttribute("address", address);
+            req.getRequestDispatcher("/register.jsp").forward(req, resp);
+            req.getRequestDispatcher("/account.jsp").forward(req, resp);
+            break;
+        default:
+            char defaultAction = TradeConfig.getScenarioAction(false);
+            if (defaultAction == 'a') {
+                req.getRequestDispatcher("/account.jsp").forward(req, resp);
+            } else {
+                req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
+            }
+            break;
+    }
+}
+```

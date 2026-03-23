@@ -1,0 +1,283 @@
+```java
+package org.apache.commons.jxpath.ri.compiler;
+
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.ri.EvalContext;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class CoreFunction_computeValueTestGenerated {
+
+    private JXPathContext jxpathContextMock;
+    private EvalContext evalContextMock;
+
+    @BeforeEach
+    void setUp() {
+        jxpathContextMock = mock(JXPathContext.class);
+        evalContextMock = mock(EvalContext.class);
+        when(evalContextMock.getJXPathContext()).thenReturn(jxpathContextMock);
+    }
+
+    @Test
+    void testComputeValue_functionLast() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_LAST, null);
+        when(evalContextMock.getCurrentPosition()).thenReturn(3);
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Integer.valueOf(3), result);
+    }
+
+    @Test
+    void testComputeValue_functionPosition() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_POSITION, null);
+        when(evalContextMock.getCurrentPosition()).thenReturn(5);
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Integer.valueOf(5), result);
+    }
+
+    @Test
+    void testComputeValue_functionCount() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_COUNT, null);
+        when(evalContextMock.getCurrentPosition()).thenReturn(0);
+        when(evalContextMock.nextNode()).thenReturn(true, true, false);
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Double.valueOf(2), result);
+    }
+
+    @Test
+    void testComputeValue_functionLang() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_LANG, null);
+        when(evalContextMock.getCurrentNodePointer()).thenReturn(null);
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Boolean.FALSE, result);
+    }
+
+    @Test
+    void testComputeValue_functionID() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_ID, null);
+        when(evalContextMock.getCurrentNodePointer()).thenReturn(Mockito.mock(NodePointer.class));
+        when(evalContextMock.getCurrentNodePointer().getPointerByID(jxpathContextMock, "id1")).thenReturn(Mockito.mock(NodePointer.class));
+        Object result = function.computeValue(evalContextMock);
+        assertNotNull(result);
+    }
+
+    @Test
+    void testComputeValue_functionLocalName() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_LOCAL_NAME, null);
+        when(evalContextMock.getCurrentNodePointer()).thenReturn(Mockito.mock(NodePointer.class));
+        when(evalContextMock.getCurrentNodePointer().getName()).thenReturn(Mockito.mock(Name.class));
+        when(evalContextMock.getCurrentNodePointer().getName().getName()).thenReturn("localName");
+        Object result = function.computeValue(evalContextMock);
+        assertEquals("localName", result);
+    }
+
+    @Test
+    void testComputeValue_functionNamespaceURI() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_NAMESPACE_URI, null);
+        when(evalContextMock.getCurrentNodePointer()).thenReturn(Mockito.mock(NodePointer.class));
+        when(evalContextMock.getCurrentNodePointer().getNamespaceURI()).thenReturn("http://example.com");
+        Object result = function.computeValue(evalContextMock);
+        assertEquals("http://example.com", result);
+    }
+
+    @Test
+    void testComputeValue_functionName() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_NAME, null);
+        when(evalContextMock.getCurrentNodePointer()).thenReturn(Mockito.mock(NodePointer.class));
+        when(evalContextMock.getCurrentNodePointer().getName()).thenReturn(Mockito.mock(Name.class));
+        when(evalContextMock.getCurrentNodePointer().getName().toString()).thenReturn("elementName");
+        Object result = function.computeValue(evalContextMock);
+        assertEquals("elementName", result);
+    }
+
+    @Test
+    void testComputeValue_functionString() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_STRING, null);
+        when(evalContextMock.getCurrentNodePointer()).thenReturn(Mockito.mock(NodePointer.class));
+        when(evalContextMock.getCurrentNodePointer().getValue()).thenReturn("value");
+        Object result = function.computeValue(evalContextMock);
+        assertEquals("value", result);
+    }
+
+    @Test
+    void testComputeValue_functionConcat() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_CONCAT, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("str1");
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("str2");
+        Object result = function.computeValue(evalContextMock);
+        assertEquals("str1str2", result);
+    }
+
+
+    @Test
+    void testComputeValue_functionStartsWith() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_STARTS_WITH, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("startsWithTest");
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("start");
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Boolean.TRUE, result);
+    }
+
+    @Test
+    void testComputeValue_functionEndsWith() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_ENDS_WITH, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("endsWithTest");
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("Test");
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Boolean.TRUE, result);
+    }
+
+    @Test
+    void testComputeValue_functionContains() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_CONTAINS, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("containsTest");
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("test");
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Boolean.TRUE, result);
+    }
+
+    @Test
+    void testComputeValue_functionSubstringBefore() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_SUBSTRING_BEFORE, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("beforeTest");
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("before");
+        Object result = function.computeValue(evalContextMock);
+        assertEquals("", result);
+    }
+
+    @Test
+    void testComputeValue_functionSubstringAfter() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_SUBSTRING_AFTER, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("afterTest");
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("after");
+        Object result = function.computeValue(evalContextMock);
+        assertEquals("", result);
+    }
+
+    @Test
+    void testComputeValue_functionSubstring() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_SUBSTRING, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("substringTest");
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn(Double.valueOf(1.0));
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn(Double.valueOf(3.0));
+        Object result = function.computeValue(evalContextMock);
+        assertEquals("bs", result);
+    }
+
+    @Test
+    void testComputeValue_functionStringLength() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_STRING_LENGTH, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("stringLengthTest");
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Double.valueOf(14.0), result);
+    }
+
+    @Test
+    void testComputeValue_functionNormalizeSpace() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_NORMALIZE_SPACE, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("normalize  space  test");
+        Object result = function.computeValue(evalContextMock);
+        assertEquals("normalize space test", result);
+    }
+
+    @Test
+    void testComputeValue_functionBoolean() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_BOOLEAN, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn(true);
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Boolean.TRUE, result);
+    }
+
+    @Test
+    void testComputeValue_functionNot() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_NOT, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn(true);
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Boolean.FALSE, result);
+    }
+
+    @Test
+    void testComputeValue_functionTrue() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_TRUE, null);
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Boolean.TRUE, result);
+    }
+
+    @Test
+    void testComputeValue_functionFalse() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_FALSE, null);
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Boolean.FALSE, result);
+    }
+
+    @Test
+    void testComputeValue_functionNull() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_NULL, null);
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(null, result);
+    }
+
+    @Test
+    void testComputeValue_functionNumber() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_NUMBER, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn(123.45);
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Double.valueOf(123.45), result);
+    }
+
+    @Test
+    void testComputeValue_functionSum() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_SUM, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn(123.45);
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Double.valueOf(123.45), result);
+    }
+
+    @Test
+    void testComputeValue_functionFloor() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_FLOOR, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn(123.95);
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Double.valueOf(123.0), result);
+    }
+
+    @Test
+    void testComputeValue_functionCeiling() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_CEILING, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn(123.05);
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Double.valueOf(124.0), result);
+    }
+
+    @Test
+    void testComputeValue_functionRound() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_ROUND, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn(123.45);
+        Object result = function.computeValue(evalContextMock);
+        assertEquals(Double.valueOf(123.0), result);
+    }
+
+    @Test
+    void testComputeValue_functionKey() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_KEY, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("key");
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn(Mockito.mock(NodePointer.class));
+        Object result = function.computeValue(evalContextMock);
+        assertNotNull(result);
+    }
+
+    @Test
+    void testComputeValue_functionFormatNumber() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_FORMAT_NUMBER, null);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn(1234.567);
+        when(evalContextMock.computeValue(evalContextMock)).thenReturn("#,##0.00");
+        Object result = function.computeValue(evalContextMock);
+        assertEquals("1,234.57", result);
+    }
+}
+```

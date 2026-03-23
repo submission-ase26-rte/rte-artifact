@@ -1,0 +1,98 @@
+package org.apache.commons.compress.compressors;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import org.apache.commons.compress.compressors.brotli.BrotliCompressorInputStream;
+import org.apache.commons.compress.compressors.brotli.BrotliUtils;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+import org.apache.commons.compress.compressors.deflate.DeflateCompressorInputStream;
+import org.apache.commons.compress.compressors.deflate64.Deflate64CompressorInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorInputStream;
+import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorInputStream;
+import org.apache.commons.compress.compressors.lzma.LZMACompressorInputStream;
+import org.apache.commons.compress.compressors.lzma.LZMAUtils;
+import org.apache.commons.compress.compressors.pack200.Pack200CompressorInputStream;
+import org.apache.commons.compress.compressors.snappy.FramedSnappyCompressorInputStream;
+import org.apache.commons.compress.compressors.snappy.SnappyCompressorInputStream;
+import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
+import org.apache.commons.compress.compressors.xz.XZUtils;
+import org.apache.commons.compress.compressors.z.ZCompressorInputStream;
+import org.apache.commons.compress.compressors.zstandard.ZstdCompressorInputStream;
+import org.apache.commons.compress.compressors.zstandard.ZstdUtils;
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.compress.utils.Sets;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class CompressorStreamFactory_createCompressorInputStreamTestGenerated {
+
+    private CompressorStreamFactory factory;
+    private InputStream mockInputStream;
+
+    @Mock
+    private CompressorStreamProvider mockCompressorStreamProvider;
+
+    @BeforeEach
+    void setUp() {
+        factory = new CompressorStreamFactory();
+        mockInputStream = mock(InputStream.class);
+    }
+
+    @Test
+    void testCreateCompressorInputStreamWithNullName() {
+        assertThrows(IllegalArgumentException.class, () -> factory.createCompressorInputStream(null, mockInputStream, false));
+    }
+
+    @Test
+    void testCreateCompressorInputStreamWithNullInputStream() {
+        assertThrows(IllegalArgumentException.class, () -> factory.createCompressorInputStream("GZIP", null, false));
+    }
+
+    @Test
+    void testCreateCompressorInputStreamWithBrotliNotAvailable() {
+        when(BrotliUtils.isBrotliCompressionAvailable()).thenReturn(false);
+        assertThrows(CompressorException.class, () -> factory.createCompressorInputStream("BROTLI", mockInputStream, false));
+    }
+
+    @Test
+    void testCreateCompressorInputStreamWithXzNotAvailable() {
+        when(XZUtils.isXZCompressionAvailable()).thenReturn(false);
+        assertThrows(CompressorException.class, () -> factory.createCompressorInputStream("XZ", mockInputStream, false));
+    }
+
+    @Test
+    void testCreateCompressorInputStreamWithZstandardNotAvailable() {
+        when(ZstdUtils.isZstdCompressionAvailable()).thenReturn(false);
+        assertThrows(CompressorException.class, () -> factory.createCompressorInputStream("ZSTANDARD", mockInputStream, false));
+    }
+
+    @Test
+    void testCreateCompressorInputStreamWithLzmaNotAvailable() {
+        when(LZMAUtils.isLZMACompressionAvailable()).thenReturn(false);
+        assertThrows(CompressorException.class, () -> factory.createCompressorInputStream("LZMA", mockInputStream, false));
+    }
+
+    @Test
+    void testCreateCompressorInputStreamWithUnknownCompressor() {
+        assertThrows(CompressorException.class, () -> factory.createCompressorInputStream("UNKNOWN", mockInputStream, false));
+    }
+
+    @Test
+    void testCreateCompressorInputStreamWithIOException() throws IOException {
+        when(mockInputStream.read()).thenThrow(new IOException("Mocked IOException"));
+        assertThrows(CompressorException.class, () -> factory.createCompressorInputStream("GZIP", mockInputStream, false));
+    }
+}

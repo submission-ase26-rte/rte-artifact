@@ -1,0 +1,135 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language.bm;
+Class name (MUST be exactly): PhoneticEngine_encodeTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.codec.language.bm;
+
+import org.apache.commons.codec.language.bm.Languages;
+import org.apache.commons.codec.language.bm.PhoneticEngine;
+import org.apache.commons.codec.language.bm.NameType;
+import org.apache.commons.codec.language.bm.RuleType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PhoneticEngine_encodeTestGenerated {
+
+    private PhoneticEngine phoneticEngine;
+    private Languages.LanguageSet languageSet;
+
+    @BeforeEach
+    public void setUp() {
+        languageSet = Languages.LanguageSet.NO_LANGUAGES;
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, false);
+    }
+
+    @Test
+    public void testEncodeWithSingleWord() {
+        String input = "test";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithMultiWord() {
+        String input = "test input";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithDashSeparatedWords() {
+        String input = "test-input";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithSpacesSeparatedWords() {
+        String input = "test input";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithDashPrefix() {
+        String input = "d'test";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithGenericPrefix() {
+        String input = "van test";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithSephardicPrefix() {
+        String input = "o'test";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithAshkenaziPrefix() {
+        String input = "ben test";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithConcatMode() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, true);
+        String input = "test input";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithEmptyInput() {
+        String input = "";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithNullInput() {
+        assertThrows(NullPointerException.class, () -> {
+            phoneticEngine.encode(null, languageSet);
+        });
+    }
+
+    @Test
+    public void testEncodeWithNullLanguageSet() {
+        assertThrows(NullPointerException.class, () -> {
+            phoneticEngine.encode("test", null);
+        });
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[22] cannot find symbol
+  symbol:   variable NO_LANGUAGES
+  location: class org.apache.commons.codec.language.bm.Languages.LanguageSet
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: PhoneticEngine_encodeTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

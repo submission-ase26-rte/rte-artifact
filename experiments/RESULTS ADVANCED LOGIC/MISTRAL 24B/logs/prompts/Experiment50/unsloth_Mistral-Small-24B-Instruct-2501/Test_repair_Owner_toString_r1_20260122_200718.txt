@@ -1,0 +1,103 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.springframework.samples.petclinic.owner;
+Class name (MUST be exactly): Owner_toStringTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.springframework.samples.petclinic.owner;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.core.style.ToStringCreator;
+import org.springframework.samples.petclinic.model.Person;
+import org.springframework.samples.petclinic.owner.Owner;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Owner_toStringTestGenerated {
+
+    private Owner owner;
+
+    @BeforeEach
+    void setUp() {
+        owner = new Owner();
+    }
+
+    @Test
+    void testToString() {
+        owner.setFirstName("John");
+        owner.setLastName("Doe");
+        owner.setAddress("123 Main St");
+        owner.setCity("Springfield");
+        owner.setTelephone("555-1234");
+        List<Pet> pets = new ArrayList<>();
+        owner.setPets(pets);
+
+        String expected = new ToStringCreator(owner)
+                .append("id", owner.getId())
+                .append("new", owner.isNew())
+                .append("lastName", owner.getLastName())
+                .append("firstName", owner.getFirstName())
+                .append("address", owner.getAddress())
+                .append("city", owner.getCity())
+                .append("telephone", owner.getTelephone())
+                .toString();
+
+        assertEquals(expected, owner.toString());
+    }
+
+    @Test
+    void testToStringWithNullValues() {
+        owner.setFirstName(null);
+        owner.setLastName(null);
+        owner.setAddress(null);
+        owner.setCity(null);
+        owner.setTelephone(null);
+        List<Pet> pets = new ArrayList<>();
+        owner.setPets(pets);
+
+        String expected = new ToStringCreator(owner)
+                .append("id", owner.getId())
+                .append("new", owner.isNew())
+                .append("lastName", owner.getLastName())
+                .append("firstName", owner.getFirstName())
+                .append("address", owner.getAddress())
+                .append("city", owner.getCity())
+                .append("telephone", owner.getTelephone())
+                .toString();
+
+        assertEquals(expected, owner.toString());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/Owner_toStringTestGenerated.java:[34] cannot find symbol
+  symbol:   method setPets(java.util.List<org.springframework.samples.petclinic.owner.Pet>)
+  location: variable owner of type org.springframework.samples.petclinic.owner.Owner
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/Owner_toStringTestGenerated.java:[57] cannot find symbol
+  symbol:   method setPets(java.util.List<org.springframework.samples.petclinic.owner.Pet>)
+  location: variable owner of type org.springframework.samples.petclinic.owner.Owner
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: Owner_toStringTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

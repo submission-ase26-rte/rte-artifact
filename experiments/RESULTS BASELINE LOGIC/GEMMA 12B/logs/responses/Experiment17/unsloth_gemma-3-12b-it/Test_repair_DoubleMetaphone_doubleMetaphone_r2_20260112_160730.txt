@@ -1,0 +1,102 @@
+```java
+package org.apache.commons.codec.language;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class DoubleMetaphone_doubleMetaphoneTestGenerated {
+
+    private DoubleMetaphone doubleMetaphone;
+
+    @BeforeEach
+    void setUp() {
+        doubleMetaphone = Mockito.mock(DoubleMetaphone.class);
+        when(doubleMetaphone.getMaxCodeLen()).thenReturn(4);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.reset(doubleMetaphone);
+    }
+
+    @Test
+    void testDoubleMetaphone_alternateFalse() {
+        when(doubleMetaphone.cleanInput("test")).thenReturn("test");
+        when(doubleMetaphone.isSlavoGermanic("test")).thenReturn(false);
+        when(doubleMetaphone.isSilentStart("test")).thenReturn(false);
+        when(doubleMetaphone.handleAEIOUY(any(), anyInt())).thenReturn(1);
+        when(doubleMetaphone.handleC(any(), any(), anyInt())).thenReturn(1);
+        when(doubleMetaphone.handleD(any(), any(), anyInt())).thenReturn(1);
+        when(doubleMetaphone.handleG(any(), any(), anyInt(), false)).thenReturn(1);
+        when(doubleMetaphone.handleH(any(), any(), anyInt())).thenReturn(1);
+        when(doubleMetaphone.handleJ(any(), any(), anyInt(), false)).thenReturn(1);
+        when(doubleMetaphone.handleL(any(), any(), anyInt())).thenReturn(1);
+        when(doubleMetaphone.handleR(any(), any(), anyInt(), false)).thenReturn(1);
+        when(doubleMetaphone.handleS(any(), any(), anyInt(), false)).thenReturn(1);
+        when(doubleMetaphone.handleT(any(), any(), anyInt())).thenReturn(1);
+        when(doubleMetaphone.handleX(any(), any(), anyInt())).thenReturn(1);
+        when(doubleMetaphone.handleZ(any(), any(), anyInt(), false)).thenReturn(1);
+        when(doubleMetaphone.conditionM0(any(), anyInt())).thenReturn(false);
+
+        DoubleMetaphoneResult result = new DoubleMetaphoneResult(4);
+        when(doubleMetaphone.doubleMetaphone(any(), false)).thenReturn("test");
+
+        String encoded = doubleMetaphone.doubleMetaphone("test", false);
+        assertEquals("test", encoded);
+    }
+
+    @Test
+    void testDoubleMetaphone_alternateTrue() {
+        when(doubleMetaphone.cleanInput("test")).thenReturn("test");
+        when(doubleMetaphone.isSlavoGermanic("test")).thenReturn(false);
+        when(doubleMetaphone.isSilentStart("test")).thenReturn(false);
+        when(doubleMetaphone.handleAEIOUY(any(), anyInt())).thenReturn(1);
+        when(doubleMetaphone.handleC(any(), any(), anyInt())).thenReturn(1);
+        when(doubleMetaphone.handleD(any(), any(), anyInt())).thenReturn(1);
+        when(doubleMetaphone.handleG(any(), any(), anyInt(), false)).thenReturn(1);
+        when(doubleMetaphone.handleH(any(), any(), anyInt())).thenReturn(1);
+        when(doubleMetaphone.handleJ(any(), any(), anyInt(), false)).thenReturn(1);
+        when(doubleMetaphone.handleL(any(), any(), anyInt())).thenReturn(1);
+        when(doubleMetaphone.handleR(any(), any(), anyInt(), false)).thenReturn(1);
+        when(doubleMetaphone.handleS(any(), any(), anyInt(), false)).thenReturn(1);
+        when(doubleMetaphone.handleT(any(), any(), anyInt())).thenReturn(1);
+        when(doubleMetaphone.handleX(any(), any(), anyInt())).thenReturn(1);
+        when(doubleMetaphone.handleZ(any(), any(), anyInt(), false)).thenReturn(1);
+        when(doubleMetaphone.conditionM0(any(), anyInt())).thenReturn(false);
+
+        DoubleMetaphoneResult result = new DoubleMetaphoneResult(4);
+        when(doubleMetaphone.doubleMetaphone(any(), true)).thenReturn("alternate");
+
+        String encoded = doubleMetaphone.doubleMetaphone("test", true);
+        assertEquals("alternate", encoded);
+    }
+
+    @Test
+    void testDoubleMetaphone_nullInput() {
+        when(doubleMetaphone.cleanInput(null)).thenReturn(null);
+        String encoded = doubleMetaphone.doubleMetaphone(null, false);
+        assertNull(encoded);
+    }
+
+    @Test
+    void testDoubleMetaphone_emptyInput() {
+        when(doubleMetaphone.cleanInput("")).thenReturn("");
+        when(doubleMetaphone.isSlavoGermanic("")).thenReturn(false);
+        when(doubleMetaphone.isSilentStart("")).thenReturn(false);
+        when(doubleMetaphone.doubleMetaphone(any(), false)).thenReturn("");
+
+        String encoded = doubleMetaphone.doubleMetaphone("", false);
+        assertEquals("", encoded);
+    }
+}
+```

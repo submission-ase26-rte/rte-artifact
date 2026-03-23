@@ -1,0 +1,480 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class BasicTypeConverter_convertTestGenerated {
+
+    private BasicTypeConverter converter;
+
+    @Mock
+    private NodeSet mockNodeSet;
+
+    @Mock
+    private Pointer mockPointer;
+
+    @Mock
+    private Converter mockConverter;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        converter = new BasicTypeConverter();
+        ConvertUtils.register(mockConverter, String.class);
+    }
+
+    @Test
+    public void testConvertNullToPrimitive() {
+        assertEquals(Boolean.FALSE, converter.convert(null, boolean.class));
+        assertEquals(Character.valueOf('\0'), converter.convert(null, char.class));
+        assertEquals(Byte.valueOf((byte) 0), converter.convert(null, byte.class));
+        assertEquals(Short.valueOf((short) 0), converter.convert(null, short.class));
+        assertEquals(Integer.valueOf(0), converter.convert(null, int.class));
+        assertEquals(Long.valueOf(0L), converter.convert(null, long.class));
+        assertEquals(Float.valueOf(0.0f), converter.convert(null, float.class));
+        assertEquals(Double.valueOf(0.0), converter.convert(null, double.class));
+    }
+
+    @Test
+    public void testConvertNullToObject() {
+        assertNull(converter.convert(null, Object.class));
+    }
+
+    @Test
+    public void testConvertObjectToObject() {
+        Object obj = new Object();
+        assertSame(obj, converter.convert(obj, Object.class));
+    }
+
+    @Test
+    public void testConvertNodeSetToObject() {
+        List<String> values = Collections.singletonList("value1");
+        when(mockNodeSet.getValues()).thenReturn(values);
+        assertSame(values, converter.convert(mockNodeSet, Object.class));
+    }
+
+    @Test
+    public void testConvertPointerToObject() {
+        Object value = new Object();
+        when(mockPointer.getValue()).thenReturn(value);
+        assertSame(value, converter.convert(mockPointer, Object.class));
+    }
+
+    @Test
+    public void testConvertCompatibleTypes() {
+        Integer intValue = 42;
+        assertSame(intValue, converter.convert(intValue, Integer.class));
+    }
+
+    @Test
+    public void testConvertArrayToArray() {
+        Integer[] intArray = {1, 2, 3};
+        assertArrayEquals(intArray, (Integer[]) converter.convert(intArray, Integer[].class));
+    }
+
+    @Test
+    public void testConvertArrayToCollection() {
+        Integer[] intArray = {1, 2, 3};
+        Collection<Integer> result = (Collection<Integer>) converter.convert(intArray, List.class);
+        assertTrue(result instanceof List);
+        assertEquals(Collections.singletonList(1), result);
+    }
+
+    @Test
+    public void testConvertArrayToSingleElement() {
+        Integer[] intArray = {1};
+        assertEquals(Integer.valueOf(1), converter.convert(intArray, Integer.class));
+    }
+
+    @Test
+    public void testConvertArrayToEmptyString() {
+        Integer[] intArray = {};
+        assertEquals("", converter.convert(intArray, String.class));
+    }
+
+    @Test
+    public void testConvertCollectionToArray() {
+        List<Integer> intList = Collections.singletonList(1);
+        assertArrayEquals(new Integer[]{1}, (Integer[]) converter.convert(intList, Integer[].class));
+    }
+
+    @Test
+    public void testConvertCollectionToCollection() {
+        List<Integer> intList = Collections.singletonList(1);
+        Collection<Integer> result = (Collection<Integer>) converter.convert(intList, List.class);
+        assertTrue(result instanceof List);
+        assertEquals(Collections.singletonList(1), result);
+    }
+
+    @Test
+    public void testConvertCollectionToSingleElement() {
+        List<Integer> intList = Collections.singletonList(1);
+        assertEquals(Integer.valueOf(1), converter.convert(intList, Integer.class));
+    }
+
+    @Test
+    public void testConvertCollectionToEmptyString() {
+        List<Integer> intList = Collections.emptyList();
+        assertEquals("", converter.convert(intList, String.class));
+    }
+
+    @Test
+    public void testConvertNodeSetToValues() {
+        List<String> values = Collections.singletonList("value1");
+        when(mockNodeSet.getValues()).thenReturn(values);
+        assertEquals(values, converter.convert(mockNodeSet, List.class));
+    }
+
+    @Test
+    public void testConvertPointerToValue() {
+        Object value = new Object();
+        when(mockPointer.getValue()).thenReturn(value);
+        assertSame(value, converter.convert(mockPointer, Object.class));
+    }
+
+    @Test
+    public void testConvertToString() {
+        Object obj = new Object();
+        assertEquals(obj.toString(), converter.convert(obj, String.class));
+    }
+
+    @Test
+    public void testConvertBooleanToNumber() {
+        assertEquals(Integer.valueOf(1), converter.convert(Boolean.TRUE, Integer.class));
+        assertEquals(Integer.valueOf(0), converter.convert(Boolean.FALSE, Integer.class));
+    }
+
+    @Test
+    public void testConvertNumberToBoolean() {
+        assertEquals(Boolean.TRUE, converter.convert(Integer.valueOf(1), Boolean.class));
+        assertEquals(Boolean.FALSE, converter.convert(Integer.valueOf(0), Boolean.class));
+    }
+
+    @Test
+    public void testConvertStringToPrimitive() {
+        assertEquals(Boolean.TRUE, converter.convert("true", Boolean.class));
+        assertEquals(Character.valueOf('a'), converter.convert("a", Character.class));
+        assertEquals(Byte.valueOf((byte) 1), converter.convert("1", Byte.class));
+        assertEquals(Short.valueOf((short) 1), converter.convert("1", Short.class));
+        assertEquals(Integer.valueOf(1), converter.convert("1", Integer.class));
+        assertEquals(Long.valueOf(1L), converter.convert("1", Long.class));
+        assertEquals(Float.valueOf(1.0f), converter.convert("1.0", Float.class));
+        assertEquals(Double.valueOf(1.0), converter.convert("1.0", Double.class));
+    }
+
+    @Test
+    public void testConvertUsingConverter() {
+        when(mockConverter.convert(String.class, "test")).thenReturn("converted");
+        assertEquals("converted", converter.convert("test", String.class));
+    }
+
+    @Test
+    public void testConvertUnsupportedType() {
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert(new Object(), String.class));
+    }
+
+    @Test
+    public void testConvertUnsupportedArrayType() {
+        Object[] array = {new Object()};
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert(array, Integer[].class));
+    }
+
+    @Test
+    public void testConvertUnsupportedCollectionType() {
+        List<Object> list = Collections.singletonList(new Object());
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert(list, Integer[].class));
+    }
+
+    @Test
+    public void testConvertUnsupportedNodeSetType() {
+        List<Object> values = Collections.singletonList(new Object());
+        when(mockNodeSet.getValues()).thenReturn(values);
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert(mockNodeSet, Integer[].class));
+    }
+
+    @Test
+    public void testConvertUnsupportedPointerType() {
+        Object value = new Object();
+        when(mockPointer.getValue()).thenReturn(value);
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert(mockPointer, Integer[].class));
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 82.50% | Branch: 84.38%
+- Tests: 19/26 passed
+
+TEST STATUS:
+- PASSED (19): testConvertNullToPrimitive, testConvertNullToObject, testConvertObjectToObject, testConvertNodeSetToObject, testConvertPointerToObject, testConvertCompatibleTypes, testConvertArrayToArray, testConvertArrayToSingleElement, testConvertArrayToEmptyString, testConvertCollectionToArray, testConvertCollectionToCollection, testConvertCollectionToSingleElement, testConvertCollectionToEmptyString, testConvertNodeSetToValues, testConvertPointerToValue, testConvertToString, testConvertBooleanToNumber, testConvertNumberToBoolean, testConvertStringToPrimitive
+- FAILED (7): testConvertArrayToCollection, testConvertUsingConverter, testConvertUnsupportedType, testConvertUnsupportedArrayType, testConvertUnsupportedCollectionType, testConvertUnsupportedNodeSetType, testConvertUnsupportedPointerType
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Array -> java.lang.reflect.Array
+//   Modifier -> java.lang.reflect.Modifier
+//   BigDecimal -> java.math.BigDecimal
+//   BigInteger -> java.math.BigInteger
+//   ArrayList -> java.util.ArrayList
+//   Collection -> java.util.Collection
+//   Collections -> java.util.Collections
+//   HashSet -> java.util.HashSet
+//   Iterator -> java.util.Iterator
+//   List -> java.util.List
+//   Set -> java.util.Set
+//   SortedSet -> java.util.SortedSet
+//   ConvertUtils -> org.apache.commons.beanutils.ConvertUtils
+//   Converter -> org.apache.commons.beanutils.Converter
+//   JXPathInvalidAccessException -> org.apache.commons.jxpath.JXPathInvalidAccessException
+//   JXPathTypeConversionException -> org.apache.commons.jxpath.JXPathTypeConversionException
+//   NodeSet -> org.apache.commons.jxpath.NodeSet
+//   Pointer -> org.apache.commons.jxpath.Pointer
+//   BasicTypeConverter -> org.apache.commons.jxpath.util.BasicTypeConverter
+//   TypeUtils -> org.apache.commons.jxpath.util.TypeUtils
+
+// === Class: BasicTypeConverter ===
+// Fields (with actual visibility):
+    private final List values;
+    private List pointers;
+    private static final long serialVersionUID;
+    private final Object bean;
+
+// Constructors:
+public ValueNodeSet(List values);
+public ValuePointer(Object object);
+
+// Getter/Setter Methods (for test assertions):
+public List getValues();
+public List getNodes();
+public List getPointers();
+public Object getValue();
+public Object getNode();
+public Object getRootNode();
+public void setValue(final Object value);
+
+// Internal Methods (full implementation for context):
+    protected Object convertStringToPrimitive(final Object object, Class toType) {
+        toType = TypeUtils.wrapPrimitive(toType);
+        if (toType == Boolean.class) {
+            return Boolean.valueOf((String) object);
+        }
+        if (toType == Character.class) {
+            return Character.valueOf(((String) object).charAt(0));
+        }
+        if (toType == Byte.class) {
+            return Byte.valueOf((String) object);
+        }
+        if (toType == Short.class) {
+            return Short.valueOf((String) object);
+        }
+        if (toType == Integer.class) {
+            return Integer.valueOf((String) object);
+        }
+        if (toType == Long.class) {
+            return Long.valueOf((String) object);
+        }
+        if (toType == Float.class) {
+            return Float.valueOf((String) object);
+        }
+        if (toType == Double.class) {
+            return Double.valueOf((String) object);
+        }
+        return null;
+    }
+    protected Number allocateNumber(Class type, final double value) {
+        type = TypeUtils.wrapPrimitive(type);
+        if (type == Byte.class) {
+            return Byte.valueOf((byte) value);
+        }
+        if (type == Short.class) {
+            return Short.valueOf((short) value);
+        }
+        if (type == Integer.class) {
+            return Integer.valueOf((int) value);
+        }
+        if (type == Long.class) {
+            return Long.valueOf((long) value);
+        }
+        if (type == Float.class) {
+            return Float.valueOf((float) value);
+        }
+        if (type == Double.class) {
+            return Double.valueOf(value);
+        }
+        if (type == BigInteger.class) {
+            return BigInteger.valueOf((long) value);
+        }
+        if (type == BigDecimal.class) {
+            // TODO ? https://pmd.sourceforge.io/pmd-6.50.0/pmd_rules_java_errorprone.html#avoiddecimalliteralsinbigdecimalconstructor
+            return new BigDecimal(value); // NOPMD
+        }
+        final String className = type.getName();
+        Class initialValueType = null;
+        if ("java.util.concurrent.atomic.AtomicInteger".equals(className)) {
+            initialValueType = int.class;
+        }
+        if ("java.util.concurrent.atomic.AtomicLong".equals(className)) {
+            initialValueType = long.class;
+        }
+        if (initialValueType != null) {
+            try {
+                return (Number) type.getConstructor(
+                        new Class[] { initialValueType })
+                        .newInstance(
+                                allocateNumber(initialValueType,
+                                        value));
+            }
+            catch (final Exception e) {
+                throw new JXPathTypeConversionException(className, e);
+            }
+        }
+        return null;
+    }
+    protected Collection unmodifiableCollection(final Collection collection) {
+        if (collection instanceof List) {
+            return Collections.unmodifiableList((List) collection);
+        }
+        if (collection instanceof SortedSet) {
+            return Collections.unmodifiableSortedSet((SortedSet) collection);
+        }
+        if (collection instanceof Set) {
+            return Collections.unmodifiableSet((Set) collection);
+        }
+        return Collections.unmodifiableCollection(collection);
+    }
+    protected Collection allocateCollection(final Class type) {
+        if (!type.isInterface()
+                && (type.getModifiers() & Modifier.ABSTRACT) == 0) {
+            try {
+                return (Collection) type.getConstructor().newInstance();
+            }
+            catch (final Exception ex) {
+                throw new JXPathInvalidAccessException(
+                        "Cannot create collection of type: " + type, ex);
+            }
+        }
+
+        if (type == List.class || type == Collection.class) {
+            return new ArrayList();
+        }
+        if (type == Set.class) {
+            return new HashSet();
+        }
+        throw new JXPathInvalidAccessException(
+                "Cannot create collection of type: " + type);
+    }
+    protected Object convertNullToPrimitive(final Class toType) {
+        if (toType == boolean.class) {
+            return Boolean.FALSE;
+        }
+        if (toType == char.class) {
+            return Character.valueOf('\0');
+        }
+        if (toType == byte.class) {
+            return Byte.valueOf((byte) 0);
+        }
+        if (toType == short.class) {
+            return Short.valueOf((short) 0);
+        }
+        if (toType == int.class) {
+            return Integer.valueOf(0);
+        }
+        if (toType == long.class) {
+            return Long.valueOf(0L);
+        }
+        if (toType == float.class) {
+            return Float.valueOf(0.0f);
+        }
+        if (toType == double.class) {
+            return Double.valueOf(0.0);
+        }
+        return null;
+    }
+
+// === External Class: TypeUtils ===
+// Full import path: org.apache.commons.jxpath.util.TypeUtils
+// Import paths:
+//   HashMap -> java.util.HashMap
+// Fields (with actual visibility):
+    private static TypeConverter typeConverter;
+    private static final HashMap PRIMITIVE_TYPE_MAP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+
+// Method Signatures (used by target method):
+static public Class wrapPrimitive(final Class p);
+
+// Public Getter Methods (for test assertions):
+public static TypeConverter getTypeConverter();
+public static boolean canConvert(Object object, Class toType);
+
+
+TASK:
+Regenerate ONLY the method "convert" OF CLASS "BasicTypeConverter" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public Object convert(final Object object, final Class toType) {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.jxpath.util
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "convert"
+– Allowed imports: exactly those already present in BasicTypeConverter
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

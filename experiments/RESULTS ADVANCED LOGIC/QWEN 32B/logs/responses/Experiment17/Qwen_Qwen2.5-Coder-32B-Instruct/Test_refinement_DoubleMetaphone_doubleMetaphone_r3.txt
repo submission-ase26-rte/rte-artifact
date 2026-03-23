@@ -1,0 +1,129 @@
+```java
+package org.apache.commons.codec.language;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class DoubleMetaphone_doubleMetaphoneTestGenerated {
+    private DoubleMetaphone doubleMetaphone;
+
+    @BeforeEach
+    public void setUp() {
+        doubleMetaphone = new DoubleMetaphone();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        doubleMetaphone = null;
+    }
+
+    @Test
+    public void testDoubleMetaphoneEmptyInput() {
+        assertEquals("", doubleMetaphone.doubleMetaphone("", false));
+        assertEquals("", doubleMetaphone.doubleMetaphone("", true));
+    }
+
+    @Test
+    public void testDoubleMetaphoneC() {
+        assertEquals("S", doubleMetaphone.doubleMetaphone("\u00C7", false));
+        assertEquals("K", doubleMetaphone.doubleMetaphone("C", false));
+        assertEquals("K", doubleMetaphone.doubleMetaphone("CC", false));
+        assertEquals("X", doubleMetaphone.doubleMetaphone("CIA", false));
+        assertEquals("S", doubleMetaphone.doubleMetaphone("CZ", false));
+        assertEquals("X", doubleMetaphone.doubleMetaphone("CH", false));
+        assertEquals("K", doubleMetaphone.doubleMetaphone("CK", false));
+        assertEquals("S", doubleMetaphone.doubleMetaphone("CE", false));
+    }
+
+    @Test
+    public void testDoubleMetaphoneG() {
+        assertEquals("K", doubleMetaphone.doubleMetaphone("G", false));
+        assertEquals("J", doubleMetaphone.doubleMetaphone("GH", false));
+        assertEquals("K", doubleMetaphone.doubleMetaphone("GN", false));
+        assertEquals("K", doubleMetaphone.doubleMetaphone("GLI", false));
+        assertEquals("K", doubleMetaphone.doubleMetaphone("GE", false));
+        assertEquals("J", doubleMetaphone.doubleMetaphone("GI", false));
+        assertEquals("K", doubleMetaphone.doubleMetaphone("GG", false));
+    }
+
+    @Test
+    public void testDoubleMetaphoneH() {
+        assertEquals("H", doubleMetaphone.doubleMetaphone("H", false));
+        assertEquals("H", doubleMetaphone.doubleMetaphone("HA", false));
+        assertEquals("", doubleMetaphone.doubleMetaphone("H", true));
+    }
+
+    @Test
+    public void testDoubleMetaphoneJ() {
+        assertEquals("H", doubleMetaphone.doubleMetaphone("J", false));
+        assertEquals("H", doubleMetaphone.doubleMetaphone("JOSE", false));
+        assertEquals("H", doubleMetaphone.doubleMetaphone("JONES", false));
+    }
+
+    @Test
+    public void testDoubleMetaphoneP() {
+        assertEquals("F", doubleMetaphone.doubleMetaphone("P", false));
+        assertEquals("F", doubleMetaphone.doubleMetaphone("PH", false));
+        assertEquals("P", doubleMetaphone.doubleMetaphone("PP", false));
+    }
+
+    @Test
+    public void testDoubleMetaphoneS() {
+        assertEquals("S", doubleMetaphone.doubleMetaphone("S", false));
+        assertEquals("S", doubleMetaphone.doubleMetaphone("SS", false));
+        assertEquals("X", doubleMetaphone.doubleMetaphone("SH", false));
+        assertEquals("X", doubleMetaphone.doubleMetaphone("SIO", false));
+        assertEquals("X", doubleMetaphone.doubleMetaphone("SIA", false));
+        assertEquals("X", doubleMetaphone.doubleMetaphone("SIAN", false));
+        assertEquals("S", doubleMetaphone.doubleMetaphone("SM", false));
+        assertEquals("S", doubleMetaphone.doubleMetaphone("SN", false));
+        assertEquals("S", doubleMetaphone.doubleMetaphone("SL", false));
+        assertEquals("S", doubleMetaphone.doubleMetaphone("SW", false));
+        assertEquals("S", doubleMetaphone.doubleMetaphone("SZ", false));
+        assertEquals("X", doubleMetaphone.doubleMetaphone("SC", false));
+    }
+
+    @Test
+    public void testDoubleMetaphoneT() {
+        assertEquals("T", doubleMetaphone.doubleMetaphone("T", false));
+        assertEquals("T", doubleMetaphone.doubleMetaphone("TT", false));
+        assertEquals("T", doubleMetaphone.doubleMetaphone("TD", false));
+        assertEquals("X", doubleMetaphone.doubleMetaphone("TION", false));
+        assertEquals("X", doubleMetaphone.doubleMetaphone("TIA", false));
+        assertEquals("X", doubleMetaphone.doubleMetaphone("TCH", false));
+        assertEquals("0", doubleMetaphone.doubleMetaphone("TH", false));
+    }
+
+    @Test
+    public void testDoubleMetaphoneW() {
+        assertEquals("W", doubleMetaphone.doubleMetaphone("W", false));
+        assertEquals("R", doubleMetaphone.doubleMetaphone("WR", false));
+        assertEquals("A", doubleMetaphone.doubleMetaphone("WY", false));
+        assertEquals("A", doubleMetaphone.doubleMetaphone("WH", false));
+        assertEquals("F", doubleMetaphone.doubleMetaphone("W", true));
+        assertEquals("TS", doubleMetaphone.doubleMetaphone("WITZ", false));
+    }
+
+    @Test
+    public void testDoubleMetaphoneX() {
+        assertEquals("KS", doubleMetaphone.doubleMetaphone("X", false));
+    }
+
+    @Test
+    public void testDoubleMetaphoneSilentStart() {
+        assertEquals("NJ", doubleMetaphone.doubleMetaphone("Gnagy", false));
+        assertEquals("NJ", doubleMetaphone.doubleMetaphone("Gnagy", true));
+    }
+
+    @Test
+    public void testDoubleMetaphoneSlavoGermanic() {
+        assertEquals("K", doubleMetaphone.doubleMetaphone("Wagner", false));
+        assertEquals("K", doubleMetaphone.doubleMetaphone("Wagner", true));
+    }
+}
+```

@@ -1,0 +1,153 @@
+```java
+package org.apache.commons.jxpath.util;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.ReferenceImpl;
+import org.apache.commons.jxpath.ri.model.ValueNode;
+import org.apache.commons.jxpath.ri.model.beans.BeanPointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class BasicTypeConverter_canConvertTestGenerated {
+
+    private BasicTypeConverter basicTypeConverter;
+
+    @BeforeEach
+    public void setUp() {
+        List<Object> values = new ArrayList<>();
+        basicTypeConverter = new BasicTypeConverter();
+    }
+
+    @Test
+    public void testCanConvertNullObject() {
+        assertTrue(basicTypeConverter.canConvert(null, Object.class));
+    }
+
+    @Test
+    public void testCanConvertAssignableFrom() {
+        assertTrue(basicTypeConverter.canConvert("test", String.class));
+        assertTrue(basicTypeConverter.canConvert(new Integer(1), Number.class));
+    }
+
+    @Test
+    public void testCanConvertStringToNumber() {
+        assertTrue(basicTypeConverter.canConvert("123", Integer.class));
+    }
+
+    @Test
+    public void testCanConvertBooleanToNumber() {
+        assertTrue(basicTypeConverter.canConvert(Boolean.TRUE, Number.class));
+    }
+
+    @Test
+    public void testCanConvertNumberToBoolean() {
+        assertTrue(basicTypeConverter.canConvert(1, Boolean.class));
+    }
+
+    @Test
+    public void testCanConvertStringToBoolean() {
+        assertTrue(basicTypeConverter.canConvert("true", Boolean.class));
+    }
+
+    @Test
+    public void testCanConvertArrayToArray() {
+        Integer[] array = {1, 2, 3};
+        assertTrue(basicTypeConverter.canConvert(array, Integer[].class));
+    }
+
+    @Test
+    public void testCanConvertArrayToCollection() {
+        Integer[] array = {1, 2, 3};
+        assertTrue(basicTypeConverter.canConvert(array, List.class));
+    }
+
+    @Test
+    public void testCanConvertArrayToPrimitive() {
+        Integer[] array = {1};
+        assertTrue(basicTypeConverter.canConvert(array, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToArray() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        assertTrue(basicTypeConverter.canConvert(list, Integer[].class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToCollection() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        assertTrue(basicTypeConverter.canConvert(list, List.class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToPrimitive() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        assertTrue(basicTypeConverter.canConvert(list, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertNodeSetToType() {
+        NodeSet nodeSet = new NodeIterator(new NodeSet(new ArrayList<ValueNode>()), 1);
+        assertTrue(basicTypeConverter.canConvert(nodeSet, List.class));
+    }
+
+    @Test
+    public void testCanConvertPointerToType() {
+        Pointer pointer = new BeanPointer("test") {
+            @Override
+            public Object getValue() {
+                return 1;
+            }
+        };
+        assertTrue(basicTypeConverter.canConvert(pointer, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertWithConvertUtils() {
+        ConvertUtils.register(new Converter() {
+            @Override
+            public Object convert(Class aClass, Object o) {
+                return null;
+            }
+        }, String.class);
+        assertTrue(basicTypeConverter.canConvert("test", String.class));
+    }
+
+    @Test
+    public void testCanConvertWithNonConvertibleTypes() {
+        assertFalse(basicTypeConverter.canConvert(new Object(), Integer.class));
+    }
+}
+```

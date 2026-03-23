@@ -1,0 +1,165 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language;
+Class name (MUST be exactly): Nysiis_nysiisTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.codec.language;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mockito;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Nysiis_nysiisTestGenerated {
+
+    private Nysiis nysiis;
+    private Nysiis strictNysiis;
+
+    @BeforeEach
+    public void setUp() {
+        nysiis = new Nysiis();
+        strictNysiis = new Nysiis(true);
+    }
+
+    @Test
+    public void testNysiisWithNullInput() {
+        assertNull(nysiis.nysiis(null));
+        assertNull(strictNysiis.nysiis(null));
+    }
+
+    @Test
+    public void testNysiisWithEmptyString() {
+        assertEquals("", nysiis.nysiis(""));
+        assertEquals("", strictNysiis.nysiis(""));
+    }
+
+    @Test
+    public void testNysiisWithSingleCharacter() {
+        assertEquals("A", nysiis.nysiis("A"));
+        assertEquals("A", strictNysiis.nysiis("A"));
+    }
+
+    @Test
+    public void testNysiisWithBasicName() {
+        assertEquals("NRSN", nysiis.nysiis("Narson"));
+        assertEquals("NRSN", strictNysiis.nysiis("NRSN"));
+    }
+
+    @Test
+    public void testNysiisWithMacPattern() {
+        assertEquals("MCCO", nysiis.nysiis("Maco"));
+        assertEquals("MCCO", strictNysiis.nysiis("MCCO"));
+    }
+
+    @Test
+    public void testNysiisWithKnPattern() {
+        assertEquals("NNES", nysiis.nysiis("Knes"));
+        assertEquals("NNES", strictNysiis.nysiis("NNES"));
+    }
+
+    @Test
+    public void testNysiisWithKPattern() {
+        assertEquals("CK", nysiis.nysiis("K"));
+        assertEquals("CK", strictNysiis.nysiis("CK"));
+    }
+
+    @Test
+    public void testNysiisWithPhPfPattern() {
+        assertEquals("FFO", nysiis.nysiis("Pho"));
+        assertEquals("FFO", strictNysiis.nysiis("FFO"));
+    }
+
+    @Test
+    public void testNysiisWithSchPattern() {
+        assertEquals("SSSS", nysiis.nysiis("Sch"));
+        assertEquals("SSS", strictNysiis.nysiis("SSS"));
+    }
+
+    @Test
+    public void testNysiisWithEeIePattern() {
+        assertEquals("Y", nysiis.nysiis("Ee"));
+        assertEquals("Y", strictNysiis.nysiis("Y"));
+    }
+
+    @Test
+    public void testNysiisWithDtEtcPattern() {
+        assertEquals("D", nysiis.nysiis("Dt"));
+        assertEquals("D", strictNysiis.nysiis("D"));
+    }
+
+    @Test
+    public void testNysiisWithMultiplePatterns() {
+        assertEquals("MCCFFD", nysiis.nysiis("Macpherson"));
+        assertEquals("MCCFFD", strictNysiis.nysiis("MCCFFD"));
+    }
+
+    @Test
+    public void testNysiisWithLongName() {
+        assertEquals("LNGNM", nysiis.nysiis("Langan"));
+        assertEquals("LNGNM", strictNysiis.nysiis("LNGNM"));
+
+        String longName = "A".repeat(100);
+        assertEquals("A", nysiis.nysiis(longName));
+        assertEquals("AA", strictNysiis.nysiis(longName));
+    }
+
+    @Test
+    public void testNysiisWithSpecialCharacters() {
+        assertEquals("NRSN", nysiis.nysiis("Narson123"));
+        assertEquals("NRSN", strictNysiis.nysiis("NRSN"));
+    }
+
+    @Test
+    public void testNysiisWithSpaces() {
+        assertEquals("MCCO", nysiis.nysiis(" Ma co "));
+        assertEquals("MCCO", strictNysiis.nysiis("MCCO"));
+    }
+
+    @Test
+    public void testNysiisWithMixedCase() {
+        assertEquals("MCCO", nysiis.nysiis("mAcO"));
+        assertEquals("MCCO", strictNysiis.nysiis("MCCO"));
+    }
+
+    @Test
+    public void testNysiisWithEndingS() {
+        assertEquals("NARS", nysiis.nysiis("Narss"));
+        assertEquals("NAR", strictNysiis.nysiis("NAR"));
+    }
+
+    @Test
+    public void testNysiisWithEndingAy() {
+        assertEquals("NARY", nysiis.nysiis("Naraya"));
+        assertEquals("NARY", strictNysiis.nysiis("NARY"));
+    }
+
+    @Test
+    public void testNysiisWithEndingA() {
+        assertEquals("NARA", nysiis.nysiis("Naraa"));
+        assertEquals("NAR", strictNysiis.nysiis("NAR"));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[100] cannot find symbol
+  symbol:   method repeat(int)
+  location: class java.lang.String
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: Nysiis_nysiisTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

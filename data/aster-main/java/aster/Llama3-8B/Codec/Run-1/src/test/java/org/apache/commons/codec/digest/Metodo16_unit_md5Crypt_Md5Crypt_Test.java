@@ -1,0 +1,202 @@
+/**
+ * Filtered unit tests for method: md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random)
+ * Original class: Md5Crypt
+ * Tests that actually call the target method
+ */
+package org.apache.commons.codec.digest;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo16_unit_md5Crypt_Md5Crypt_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testMd5Crypt_MKQs0() {
+    byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+    String salt = "salt";
+    String prefix = "$1$";
+    Random random = new Random();
+    String result = Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+    assertEquals("passwordsalt$", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testMd5CryptNullSalt_XjEp1() {
+    byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+    String salt = null;
+    String prefix = "$1$";
+    Random random = new Random();
+    String result = Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+    assertEquals("$1$P9OugdSJ$uEAoKhSp6AJb9NFzs94fY0", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testMd5CryptNullKeyBytes_feXF4() {
+    byte[] keyBytes = null;
+    String salt = "salt";
+    String prefix = "$1$";
+    Random random = new Random();
+    try {
+    Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+    assertEquals(false, true);
+    } catch (IllegalArgumentException e) {
+    assertEquals("Key bytes cannot be null", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testMd5CryptNullPrefix_CMyH6() {
+    byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+    String salt = "salt";
+    String prefix = null;
+    Random random = new Random();
+    try {
+    Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+    assertEquals(false, true);
+    } catch (IllegalArgumentException e) {
+    assertEquals("Invalid prefix value: null", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testMd5CryptNullRandom_Fpxl8() {
+    byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+    String salt = "salt";
+    String prefix = "$1$";
+    Random random = null;
+    try {
+    Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+    assertEquals(false, true);
+    } catch (NullPointerException e) {
+    assertEquals("random cannot be null", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testMd5CryptEmptyRandom_GNXd9() {
+    byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+    String salt = "salt";
+    String prefix = "$1$";
+    Random random = new Random();
+    try {
+    Md5Crypt.md5Crypt(keyBytes, salt, prefix, new Random());
+    assertEquals(false, true);
+    } catch (NullPointerException e) {
+    assertEquals("random cannot be null", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testMd5CryptNullSalt_XjEp1_fid2() {
+    byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+    String salt = null;
+    String prefix = "$1$";
+    Random random = new Random();
+    String result = Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+    assertEquals("$1$randomsalt$", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testMd5CryptEmptyKeyBytes_ezcI3_fid2() {
+    byte[] keyBytes = new byte[0];
+    String salt = "salt";
+    String prefix = "$1$";
+    Random random = new Random();
+    try {
+    Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+    assertEquals(false, true);
+    } catch (IllegalArgumentException e) {
+    assertEquals("Key bytes cannot be empty", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testMd5CryptEmptyPrefix_KWnR7_fid2() {
+    byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+    String salt = "salt";
+    String prefix = "";
+    Random random = new Random();
+    try {
+    Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+    assertEquals(false, true);
+    } catch (IllegalArgumentException e) {
+    assertEquals("Invalid prefix value: ", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testMd5CryptInvalidSalt_Xeed2() {
+    byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+    String salt = "invalidsalt";
+    String prefix = "$1$";
+    Random random = new Random();
+    try {
+    Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+    assertEquals(false, true);
+    } catch (IllegalArgumentException e) {
+    assertEquals("Invalid salt value: invalidsalt", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testMd5CryptEmptyKeyBytes_ezcI3() {
+    byte[] keyBytes = new byte[0];
+    String salt = "salt";
+    String prefix = "$1$";
+    Random random = new Random();
+    try {
+    Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+    assertEquals(false, true);
+    } catch (IllegalArgumentException e) {
+    assertEquals("Invalid salt value: salt", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testMd5CryptEmptySalt_DOSv5() {
+    byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+    String salt = "";
+    String prefix = "$1$";
+    Random random = new Random();
+    try {
+    Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+    assertEquals(false, true);
+    } catch (IllegalArgumentException e) {
+    assertEquals("Invalid salt value: ", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testMd5CryptEmptyPrefix_KWnR7() {
+    byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+    String salt = "salt";
+    String prefix = "";
+    Random random = new Random();
+    try {
+    Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+    assertEquals(true, true);
+    } catch (IllegalArgumentException e) {
+    assertEquals("Invalid prefix value: ", e.getMessage());
+    }
+    }
+}

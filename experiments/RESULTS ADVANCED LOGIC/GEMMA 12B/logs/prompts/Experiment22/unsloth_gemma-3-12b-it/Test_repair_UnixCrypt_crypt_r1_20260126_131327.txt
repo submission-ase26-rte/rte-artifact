@@ -1,0 +1,112 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.digest;
+Class name (MUST be exactly): UnixCrypt_cryptTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.codec.digest;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class UnixCrypt_cryptTestGenerated {
+
+    private UnixCrypt unixCrypt;
+    private SecureRandom mockSecureRandom;
+
+    @BeforeEach
+    void setUp() {
+        unixCrypt = new UnixCrypt();
+        mockSecureRandom = mock(SecureRandom.class);
+    }
+
+    @Test
+    void testCryptWithNullSalt() {
+        byte[] original = "test".getBytes(StandardCharsets.UTF_8);
+        String result = unixCrypt.crypt(original, null);
+        assertNotNull(result);
+        assertTrue(result.length() == 13);
+        assertTrue(result.startsWith("$"));
+    }
+
+    @Test
+    void testCryptWithValidSalt() {
+        byte[] original = "test".getBytes(StandardCharsets.UTF_8);
+        String salt = "aA";
+        String result = unixCrypt.crypt(original, salt);
+        assertNotNull(result);
+        assertTrue(result.length() == 13);
+        assertTrue(result.startsWith(salt));
+    }
+
+    @Test
+    void testCryptWithInvalidSaltThrowsIllegalArgumentException() {
+        byte[] original = "test".getBytes(StandardCharsets.UTF_8);
+        String invalidSalt = "aa";
+        assertThrows(IllegalArgumentException.class, () -> unixCrypt.crypt(original, invalidSalt));
+    }
+
+    @Test
+    void testCryptWithLongerOriginalPassword() {
+        byte[] original = "thisisalongerpassword".getBytes(StandardCharsets.UTF_8);
+        String salt = "aA";
+        String result = unixCrypt.crypt(original, salt);
+        assertNotNull(result);
+        assertTrue(result.length() == 13);
+        assertTrue(result.startsWith(salt));
+    }
+
+    @Test
+    void testCryptWithEmptyOriginalPassword() {
+        byte[] original = "".getBytes(StandardCharsets.UTF_8);
+        String salt = "aA";
+        String result = unixCrypt.crypt(original, salt);
+        assertNotNull(result);
+        assertTrue(result.length() == 13);
+        assertTrue(result.startsWith(salt));
+    }
+
+    @Test
+    void testCryptWithSaltGeneratedFromSecureRandom() {
+        byte[] original = "test".getBytes(StandardCharsets.UTF_8);
+        when(mockSecureRandom.nextInt(2)).thenReturn(0);
+        unixCrypt.setSecureRandom(mockSecureRandom);
+        String result = unixCrypt.crypt(original, null);
+        assertNotNull(result);
+        assertTrue(result.length() == 13);
+        assertTrue(result.startsWith("$"));
+    }
+
+    private void setSecureRandom(SecureRandom mockSecureRandom) {
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/digest/UnixCrypt_cryptTestGenerated.java:[78] cannot find symbol
+  symbol:   method setSecureRandom(java.security.SecureRandom)
+  location: variable unixCrypt of type org.apache.commons.codec.digest.UnixCrypt
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: UnixCrypt_cryptTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

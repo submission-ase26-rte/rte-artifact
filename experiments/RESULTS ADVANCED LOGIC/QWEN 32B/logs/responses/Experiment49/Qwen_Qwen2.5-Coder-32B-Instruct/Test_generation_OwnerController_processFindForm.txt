@@ -1,0 +1,126 @@
+```java
+package org.springframework.samples.petclinic.owner;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.openMocks;
+
+public class OwnerController_processFindFormTestGenerated {
+
+    @Mock
+    private OwnerRepository ownerRepository;
+
+    @InjectMocks
+    private OwnerController ownerController;
+
+    private AutoCloseable closeable;
+
+    @BeforeEach
+    public void setUp() {
+        closeable = openMocks(this);
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        closeable.close();
+    }
+
+    @Test
+    public void testProcessFindForm_NoLastName() {
+        Owner owner = new Owner();
+        BindingResult result = mock(BindingResult.class);
+        Model model = mock(Model.class);
+
+        String viewName = ownerController.processFindForm(1, owner, result, model);
+
+        assertEquals("owners/findOwners", viewName);
+        verify(result).rejectValue("lastName", "notFound", "not found");
+        verify(model, never()).addAttribute(anyString(), any());
+    }
+
+    @Test
+    public void testProcessFindForm_NoOwnersFound() {
+        Owner owner = new Owner();
+        owner.setLastName("Doe");
+        BindingResult result = mock(BindingResult.class);
+        Model model = mock(Model.class);
+
+        when(ownerRepository.findByLastName(eq("Doe"), any(PageRequest.class)))
+                .thenReturn(new PageImpl<>(Collections.emptyList()));
+
+        String viewName = ownerController.processFindForm(1, owner, result, model);
+
+        assertEquals("owners/findOwners", viewName);
+        verify(result).rejectValue("lastName", "notFound", "not found");
+        verify(model, never()).addAttribute(anyString(), any());
+    }
+
+    @Test
+    public void testProcessFindForm_OneOwnerFound() {
+        Owner owner = new Owner();
+        owner.setLastName("Doe");
+        BindingResult result = mock(BindingResult.class);
+        Model model = mock(Model.class);
+
+        Owner foundOwner = new Owner();
+        foundOwner.setId(1);
+        foundOwner.setLastName("Doe");
+
+        when(ownerRepository.findByLastName(eq("Doe"), any(PageRequest.class)))
+                .thenReturn(new PageImpl<>(List.of(foundOwner)));
+
+        String viewName = ownerController.processFindForm(1, owner, result, model);
+
+        assertEquals("redirect:/owners/1", viewName);
+        verify(result, never()).rejectValue(anyString(), anyString(), anyString());
+        verify(model, never()).addAttribute(anyString(), any());
+    }
+
+    @Test
+    public void testProcessFindForm_MultipleOwnersFound() {
+        Owner owner = new Owner();
+        owner.setLastName("Doe");
+        BindingResult result = mock(BindingResult.class);
+        Model model = mock(Model.class);
+
+        Owner foundOwner1 = new Owner();
+        foundOwner1.setId(1);
+        foundOwner1.setLastName("Doe");
+
+        Owner foundOwner2 = new Owner();
+        foundOwner2.setId(2);
+        foundOwner2.setLastName("Doe");
+
+        Page<Owner> ownersResults = new PageImpl<>(List.of(foundOwner1, foundOwner2));
+
+        when(ownerRepository.findByLastName(eq("Doe"), any(PageRequest.class)))
+                .thenReturn(ownersResults);
+
+        String viewName = ownerController.processFindForm(1, owner, result, model);
+
+        assertEquals("owners/ownersList", viewName);
+        verify(result, never()).rejectValue(anyString(), anyString(), anyString());
+        verify(model).addAttribute("owners", ownersResults);
+        verify(model).addAttribute("currentPage", 1);
+        verify(model).addAttribute("totalPages", ownersResults.getTotalPages());
+        verify(model).addAttribute("totalItems", ownersResults.getTotalElements());
+    }
+}
+```

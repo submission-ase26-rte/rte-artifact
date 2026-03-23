@@ -1,0 +1,262 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Filtered unit tests for method: nextNode()
+ * Original class: PrecedingOrFollowingContext
+ * Tests that actually call the target method
+ */
+package org.apache.commons.jxpath.ri.axes;
+
+import java.util.Stack;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.jxpath.ri.compiler.NodeTypeTest;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+import static org.mockito.Mockito.*;
+
+public class Metodo41_unit_nextNode_PrecedingOrFollowingContext_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testsetPosition_positionGreaterThanCurrentPosition_nextNodeCalled_fGjQ2_CkoK0_1() {
+    NodeTypeTest nodeTest = new NodeTypeTest(1);
+    SelfContext selfContext = new SelfContext(new NamespaceContext(null, nodeTest), nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(new NamespaceContext(selfContext, nodeTest), nodeTest, false);
+    context.setPosition(5);
+    assertTrue(context.nextNode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testsetPosition_positionGreaterThanCurrentPosition_nextNodeReturnsFalse_XOun3_AfNK0_1() {
+    NodeTypeTest nodeTest = new NodeTypeTest(0);
+    SelfContext selfContext = new SelfContext(null, nodeTest);
+    NamespaceContext parentContext = new NamespaceContext(selfContext, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(parentContext, nodeTest, false);
+    context.setPosition(5);
+    assertFalse(context.nextNode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testsetPosition_positionGreaterThanCurrentPosition_nextNodeReturnsTrueAndReturnTrue_zyaA5_GHAH0_1() {
+    NodeTypeTest nodeTest = new NodeTypeTest(1);
+    SelfContext parentContext = new SelfContext(null, nodeTest);
+    NamespaceContext namespaceContext = new NamespaceContext(parentContext, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, false);
+    context.setPosition(5);
+    assertTrue(context.nextNode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode_currentNodePointerNull_AyVX8_Pkpl0() {
+    NamespaceContext parentContext = new NamespaceContext(null, null);
+    NodeTypeTest nodeTest = new NodeTypeTest(0);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(parentContext, nodeTest, false);
+    context.nextNode();
+    org.junit.Assert.assertNull(context.getCurrentNodePointer());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode_nodeTestTrue_fnEa12_nOhx0() {
+    SelfContext selfContext = new SelfContext(new NamespaceContext(null, new NodeTypeTest(1)), new NodeTypeTest(1));
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(new NamespaceContext(selfContext, new NodeTypeTest(1)), new NodeTypeTest(1), false);
+    context.nextNode();
+    Assertions.assertTrue(context.nextNode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode_nodeTestFalse_YmOD13_JvmR0() {
+    SelfContext selfContext = new SelfContext(new NamespaceContext(null, new NodeTypeTest(0)), new NodeTypeTest(0));
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(new NamespaceContext(selfContext, new NodeTypeTest(0)), new NodeTypeTest(0), false);
+    context.nextNode();
+    Assertions.assertFalse(context.nextNode());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode_setPositionTrue_KlRt14_whzA0() {
+    SelfContext parentContext = new SelfContext(null, null);
+    NodeTypeTest nodeTest = new NodeTypeTest(0);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(parentContext, nodeTest, false);
+    context.setPosition(1);
+    context.nextNode();
+    Assertions.assertTrue(context.setPosition(2));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode_setPositionFalse_uQtz15_sUiV0() {
+    NamespaceContext parentContext = new NamespaceContext(new SelfContext(null, null), new NodeTypeTest(0));
+    NodeTypeTest nodeTest = new NodeTypeTest(0);
+    SelfContext selfContext = new SelfContext(parentContext, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(selfContext, nodeTest, false);
+    context.setPosition(1);
+    context.nextNode();
+    Assertions.assertFalse(context.setPosition(2));
+    }
+
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 0/8 passed
+
+TEST STATUS:
+- PASSED (0): none
+- FAILED (0): none
+- ERRORS (8): testsetPosition_positionGreaterThanCurrentPosition_nextNodeCalled_fGjQ2_CkoK0_1, testsetPosition_positionGreaterThanCurrentPosition_nextNodeReturnsFalse_XOun3_AfNK0_1, testsetPosition_positionGreaterThanCurrentPosition_nextNodeReturnsTrueAndReturnTrue_zyaA5_GHAH0_1, testNextNode_currentNodePointerNull_AyVX8_Pkpl0, testNextNode_nodeTestTrue_fnEa12_nOhx0, testNextNode_nodeTestFalse_YmOD13_JvmR0, testNextNode_setPositionTrue_KlRt14_whzA0, testNextNode_setPositionFalse_uQtz15_sUiV0
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Stack -> java.util.Stack
+//   EvalContext -> org.apache.commons.jxpath.ri.EvalContext
+//   NodeTest -> org.apache.commons.jxpath.ri.compiler.NodeTest
+//   NodeIterator -> org.apache.commons.jxpath.ri.model.NodeIterator
+//   NodePointer -> org.apache.commons.jxpath.ri.model.NodePointer
+//   PrecedingOrFollowingContext -> org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+
+// === Class: PrecedingOrFollowingContext ===
+// Fields (with actual visibility):
+    private final NodeTest nodeTest;
+    private boolean setStarted;
+    private Stack stack;
+    private NodePointer currentNodePointer;
+    private NodePointer currentRootLocation;
+    private final boolean reverse;
+
+// Constructors:
+public PrecedingOrFollowingContext(EvalContext parentContext, NodeTest nodeTest, boolean reverse);
+
+// Getter/Setter Methods (for test assertions):
+public NodePointer getCurrentNodePointer();
+public int getDocumentOrder();
+public boolean setPosition(final int position);
+
+// === Superclass: EvalContext (inherited members) ===
+// Inherited Fields:
+    protected EvalContext parentContext;
+    protected RootContext rootContext;
+    protected int position;
+
+// Inherited Method Signatures:
+public Pointer getContextNodePointer();
+public JXPathContext getJXPathContext();
+public int getPosition();
+public int getDocumentOrder();
+public boolean isChildOrderingRequired();
+public boolean hasNext();
+public Object next();
+public void remove();
+protected void sortPointers(final List l);
+public List getContextNodeList();
+public NodeSet getNodeSet();
+public Object getValue();
+public RootContext getRootContext();
+public void reset();
+public int getCurrentPosition();
+public Pointer getSingleNodePointer();
+public abstract NodePointer getCurrentNodePointer();
+public boolean nextSet();
+public abstract boolean nextNode();
+public boolean setPosition(final int position);
+
+// === External Class: NodePointer ===
+// Full import path: org.apache.commons.jxpath.ri.model.NodePointer
+// Type: ABSTRACT CLASS
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    public static final int WHOLE_COLLECTION;
+    public static final String UNKNOWN_NAMESPACE;
+    protected int index;
+    private boolean attribute;
+    private NamespaceResolver namespaceResolver;
+    private ExceptionHandler exceptionHandler;
+    private Object rootNode;
+    protected NodePointer parent;
+    protected Locale locale;
+// Constructors:
+protected NodePointer(NodePointer parent);
+protected NodePointer(NodePointer parent, Locale locale);
+// Method Signatures (used by target method):
+public abstract boolean isLeaf();
+public boolean testNode(final NodeTest test);
+public NodeIterator childIterator(final NodeTest test, final boolean reverse, final NodePointer startWith);
+public boolean isRoot();
+public NodePointer getParent();
+// Public Getter Methods (for test assertions):
+public NamespaceResolver getNamespaceResolver();
+public NodePointer getImmediateParentPointer();
+public boolean isAttribute();
+public boolean isNode();
+public boolean isContainer();
+public int getIndex();
+public boolean isCollection();
+public int getLength();
+public Object getValue();
+public NodePointer getValuePointer();
+
+// === External Class: NodeIterator ===
+// Full import path: org.apache.commons.jxpath.ri.model.NodeIterator
+// Type: INTERFACE (cannot instantiate)
+// Method Signatures (used by target method):
+boolean setPosition(int position);
+int getPosition();
+NodePointer getNodePointer();
+
+
+TASK:
+Regenerate ONLY the method "nextNode" OF CLASS "PrecedingOrFollowingContext" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public boolean nextNode() {
+    // your implementation here
+}
+```
+
+- Package: org.apache.commons.jxpath.ri.axes
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "nextNode"
+- Allowed imports: exactly those already present in PrecedingOrFollowingContext
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

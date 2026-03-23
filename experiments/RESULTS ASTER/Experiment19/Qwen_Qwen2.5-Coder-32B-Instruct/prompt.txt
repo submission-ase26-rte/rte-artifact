@@ -1,0 +1,557 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Extracted tests for method: encode(String input, final Languages.LanguageSet languageSet)
+ * Original class: PhoneticEngine
+ * Source: ASTER GPT-4
+ */
+package org.apache.commons.codec.language.bm;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.codec.language.bm.Languages.LanguageSet;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo19_encode_PhoneticEngine_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncode_StartsWithD_Apostrophe_SPPq1_QNTu0() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(new HashSet<>(Arrays.asList("en")));
+    String result = engine.encode("d'example", languageSet);
+    assertEquals("(example)-(dexample)", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncode_CombinedStringAfterD_Apostrophe_YZMG3_yTtK0() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    String result = engine.encode("d'example", LanguageSet.from(new HashSet<>(Arrays.asList("en"))));
+    assertTrue(result.contains("dexample"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncode_SplitApostropheSephardic_ZnxF10_OpLn0() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.SEPHARDIC, RuleType.EXACT, true);
+    String result = engine.encode("ex'ample", LanguageSet.from(new HashSet<>(Arrays.asList("MockLanguage"))));
+    assertTrue(result.contains("ample"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncode_CombinedStringAfterPrefix_Space_SvWO7_KUct0() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    String result = engine.encode("mc example", LanguageSet.from(new HashSet<>(Arrays.asList("en"))));
+    assertTrue(result.contains("mcexample"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncode_SubstringAfterPrefix_Space_zzEw6_obJK0() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    String result = engine.encode("mc example", LanguageSet.from(new HashSet<>(Arrays.asList("en"))));
+    assertTrue(result.contains("example"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncode_RemoveNamePrefixesAshkenazi_hrGd13_Aojz0() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.ASHKENAZI, RuleType.EXACT, true);
+    String result = engine.encode("ben example", LanguageSet.from(new HashSet<>(Arrays.asList("en"))));
+    assertTrue(result.contains("example"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncode_UnreachableCase_JsWh15_zjcY0() {
+    try {
+    PhoneticEngine engine = new PhoneticEngine(null, RuleType.EXACT, true);
+    engine.encode("example", LanguageSet.from(new HashSet<>()));
+    fail("Expected IllegalStateException");
+    } catch (IllegalStateException e) {
+    assertEquals("Unreachable case: null", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncode_CombinedStringAfterD_Apostrophe_YZMG3_yTtK0_fid2() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    String result = engine.encode("d'example");
+    assertEquals("DEXAMPL", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncode_SplitApostropheSephardic_ZnxF10_OpLn0_fid2() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.SEPHARDIC, RuleType.EXACT, true);
+    String result = engine.encode("ex'ample", LanguageSet.from(new HashSet<>(Arrays.asList("any"))));
+    assertFalse(result.contains("ample"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncode_CombinedStringAfterPrefix_Space_SvWO7_KUct0_fid2() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    String result = engine.encode("mc example", LanguageSet.from(new HashSet<>(Arrays.asList("en"))));
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncode_SubstringAfterPrefix_Space_zzEw6_obJK0_fid2() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    String result = engine.encode("mc example", LanguageSet.from(new HashSet<>(Arrays.asList("en"))));
+    assertFalse(result.contains("example"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncode_RemoveNamePrefixesAshkenazi_hrGd13_Aojz0_fid2() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.ASHKENAZI, RuleType.EXACT, true);
+    String result = engine.encode("ben example", LanguageSet.from(new HashSet<>(Arrays.asList("en"))));
+    assertFalse(result.contains("ben"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncode_UnreachableCase_JsWh15_zjcY0_fid2() {
+    try {
+    PhoneticEngine engine = new PhoneticEngine(null, RuleType.EXACT, true);
+    engine.encode("example", LanguageSet.from(new HashSet<>()));
+    fail("Expected NullPointerException");
+    } catch (NullPointerException e) {
+    assertNotNull(e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithPrefixD_lMqv1() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("English"));
+    String result = engine.encode("d'example", languageSet);
+    assertEquals("example", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithAshkenaziNameType_EVOh2() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.ASHKENAZI, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("Yiddish"));
+    String result = engine.encode("Schmidt", languageSet);
+    assertEquals("", result); // Assuming no rules lead to an empty encoding result
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithSephardicNameType_AdtG3() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.SEPHARDIC, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("Spanish"));
+    String result = engine.encode("García", languageSet);
+    assertEquals("", result); // Assuming no rules lead to an empty result
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithConcatenateFalse_UUGk4() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, false);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("English"));
+    String result = engine.encode("John Smith", languageSet);
+    assertEquals("Expected phonetic encoding", "ExpectedEncoding", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithMultipleWords_rfvJ5() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("English"));
+    String result = engine.encode("John Smith", languageSet);
+    assertEquals("ExpectedEncodedString", result); // Replace "ExpectedEncodedString" with the expected output from the encode method
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithNonEnglishLanguage_EROZ6() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("French"));
+    String result = engine.encode("Jean-Luc", languageSet);
+    assertEquals("", result); // Assuming no rules lead to an empty encoding result
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithSpecialCharacters_KKrn7() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("English"));
+    String result = engine.encode("O'Neil", languageSet);
+    assertEquals("Neil", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithHyphen_hKaR8() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("English"));
+    String result = engine.encode("Anne-Marie", languageSet);
+    assertEquals("Anne-Marie", result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithUpperCaseInput_vybG9() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("English"));
+    String result = engine.encode("LONDON", languageSet);
+    assertEquals("LONDON", result.toUpperCase());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncode_Razo0_fid1() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    String input = "example";
+    String expectedOutput = "expectedEncodedValue"; // Replace with expected encoded value based on your implementation details
+    String result = engine.encode(input);
+    assertEquals(expectedOutput, result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithPrefixD_lMqv1_fid1() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("English"));
+    String result = engine.encode("d'example", languageSet);
+    assertTrue(result.contains("example"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithAshkenaziNameType_EVOh2_fid1() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.ASHKENAZI, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("Yiddish"));
+    String result = engine.encode("Schmidt", languageSet);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithSephardicNameType_AdtG3_fid1() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.SEPHARDIC, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("Spanish"));
+    String result = engine.encode("Garca", languageSet);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithConcatenateFalse_UUGk4_fid1() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, false);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("English"));
+    String result = engine.encode("John Smith", languageSet);
+    assertTrue(result.contains("John") || result.contains("Smith"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithMultipleWords_rfvJ5_fid1() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("English"));
+    String result = engine.encode("John Smith", languageSet);
+    assertTrue(result.contains("John") && result.contains("Smith"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithNonEnglishLanguage_EROZ6_fid1() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("French"));
+    String result = engine.encode("Jean-Luc", languageSet);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithSpecialCharacters_KKrn7_fid1() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("English"));
+    String result = engine.encode("O'Neil", languageSet);
+    assertTrue(result.contains("Neil"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithHyphen_hKaR8_fid1() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("English"));
+    String result = engine.encode("Anne-Marie", languageSet);
+    assertTrue(result.contains("Anne") && result.contains("Marie"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithUpperCaseInput_vybG9_fid1() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.singleton("English"));
+    String result = engine.encode("LONDON", languageSet);
+    assertEquals("london", result.toLowerCase());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncode_Razo0() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    String input = "example";
+    String expectedOutput = "eSample|eSanple|egzample|egzanple|eksample|eksanple|ezample|ezanple"; // Replace with expected encoded value based on your implementation details
+    String result = engine.encode(input);
+    assertEquals(expectedOutput, result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testEncodeWithEmptyInput_wAKV0() {
+    PhoneticEngine engine = new PhoneticEngine(NameType.GENERIC, RuleType.EXACT, true);
+    LanguageSet languageSet = LanguageSet.from(Collections.emptySet());
+    String result = engine.encode("", languageSet);
+    assertEquals("", result);
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 3/34 passed
+
+TEST STATUS:
+- PASSED (3): testEncode_UnreachableCase_JsWh15_zjcY0_fid2, testEncode_Razo0, testEncodeWithEmptyInput_wAKV0
+- FAILED (3): testEncode_CombinedStringAfterD_Apostrophe_YZMG3_yTtK0_fid2, testEncode_SplitApostropheSephardic_ZnxF10_OpLn0_fid2, testEncode_Razo0_fid1
+- ERRORS (28): testEncode_StartsWithD_Apostrophe_SPPq1_QNTu0, testEncode_CombinedStringAfterD_Apostrophe_YZMG3_yTtK0, testEncode_SplitApostropheSephardic_ZnxF10_OpLn0, testEncode_CombinedStringAfterPrefix_Space_SvWO7_KUct0, testEncode_SubstringAfterPrefix_Space_zzEw6_obJK0, testEncode_RemoveNamePrefixesAshkenazi_hrGd13_Aojz0, testEncode_UnreachableCase_JsWh15_zjcY0, testEncode_CombinedStringAfterPrefix_Space_SvWO7_KUct0_fid2, testEncode_SubstringAfterPrefix_Space_zzEw6_obJK0_fid2, testEncode_RemoveNamePrefixesAshkenazi_hrGd13_Aojz0_fid2, testEncodeWithPrefixD_lMqv1, testEncodeWithAshkenaziNameType_EVOh2, testEncodeWithSephardicNameType_AdtG3, testEncodeWithConcatenateFalse_UUGk4, testEncodeWithMultipleWords_rfvJ5, testEncodeWithNonEnglishLanguage_EROZ6, testEncodeWithSpecialCharacters_KKrn7, testEncodeWithHyphen_hKaR8, testEncodeWithUpperCaseInput_vybG9, testEncodeWithPrefixD_lMqv1_fid1, testEncodeWithAshkenaziNameType_EVOh2_fid1, testEncodeWithSephardicNameType_AdtG3_fid1, testEncodeWithConcatenateFalse_UUGk4_fid1, testEncodeWithMultipleWords_rfvJ5_fid1, testEncodeWithNonEnglishLanguage_EROZ6_fid1, testEncodeWithSpecialCharacters_KKrn7_fid1, testEncodeWithHyphen_hKaR8_fid1, testEncodeWithUpperCaseInput_vybG9_fid1
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ArrayList -> java.util.ArrayList
+//   Arrays -> java.util.Arrays
+//   Collections -> java.util.Collections
+//   EnumMap -> java.util.EnumMap
+//   HashSet -> java.util.HashSet
+//   LinkedHashSet -> java.util.LinkedHashSet
+//   List -> java.util.List
+//   Locale -> java.util.Locale
+//   Map -> java.util.Map
+//   Objects -> java.util.Objects
+//   Set -> java.util.Set
+//   TreeMap -> java.util.TreeMap
+//   Collectors -> java.util.stream.Collectors
+//   LanguageSet -> org.apache.commons.codec.language.bm.Languages.LanguageSet
+//   Phoneme -> org.apache.commons.codec.language.bm.Rule.Phoneme
+//   PhoneticEngine -> org.apache.commons.codec.language.bm.PhoneticEngine
+
+// === Class: PhoneticEngine ===
+// Fields (with actual visibility):
+    private final Set phonemes;
+    private final Map finalRules;
+    private final CharSequence input;
+    private final PhonemeBuilder phonemeBuilder;
+    private int i;
+    private final int maxPhonemes;
+    private boolean found;
+    private static final int DEFAULT_MAX_PHONEMES;
+    private static final Map NAME_PREFIXES;
+    private final Lang lang;
+    private final NameType nameType;
+    private final RuleType ruleType;
+    private final boolean concat;
+
+// Constructors:
+private PhonemeBuilder(Rule phoneme);
+private PhonemeBuilder(Set phonemes);
+public RulesApplication(Map finalRules, CharSequence input, PhonemeBuilder phonemeBuilder, int i, int maxPhonemes);
+public PhoneticEngine(NameType nameType, RuleType ruleType, boolean concatenate);
+public PhoneticEngine(NameType nameType, RuleType ruleType, boolean concatenate, int maxPhonemes);
+
+// Getter/Setter Methods (for test assertions):
+public int getI();
+public PhonemeBuilder getPhonemeBuilder();
+public boolean isFound();
+public Lang getLang();
+public int getMaxPhonemes();
+public NameType getNameType();
+public RuleType getRuleType();
+public boolean isConcat();
+
+// Internal Methods (full implementation for context):
+    private static String join(final List<String> strings, final String sep) {
+        return strings.stream().collect(Collectors.joining(sep));
+    }
+    private PhonemeBuilder applyFinalRules(final PhonemeBuilder phonemeBuilder,
+            final Map<String, List<Rule>> finalRules) {
+        Objects.requireNonNull(finalRules, "finalRules");
+        if (finalRules.isEmpty()) {
+            return phonemeBuilder;
+        }
+
+        final Map<Rule.Phoneme, Rule.Phoneme> phonemes = new TreeMap<>(Rule.Phoneme.COMPARATOR);
+
+        phonemeBuilder.getPhonemes().forEach(phoneme -> {
+            PhonemeBuilder subBuilder = PhonemeBuilder.empty(phoneme.getLanguages());
+            final String phonemeText = phoneme.getPhonemeText().toString();
+
+            for (int i = 0; i < phonemeText.length();) {
+                final RulesApplication rulesApplication = new RulesApplication(finalRules, phonemeText, subBuilder, i, maxPhonemes).invoke();
+                final boolean found = rulesApplication.isFound();
+                subBuilder = rulesApplication.getPhonemeBuilder();
+
+                if (!found) {
+                    // not found, appending as-is
+                    subBuilder.append(phonemeText.subSequence(i, i + 1));
+                }
+
+                i = rulesApplication.getI();
+            }
+
+            // the phonemes map orders the phonemes only based on their text, but ignores the language set
+            // when adding new phonemes, check for equal phonemes and merge their language set, otherwise
+            // phonemes with the same text but different language set get lost
+            subBuilder.getPhonemes().forEach(newPhoneme -> {
+                if (phonemes.containsKey(newPhoneme)) {
+                    final Rule.Phoneme oldPhoneme = phonemes.remove(newPhoneme);
+                    final Rule.Phoneme mergedPhoneme = oldPhoneme.mergeWithLanguage(newPhoneme.getLanguages());
+                    phonemes.put(mergedPhoneme, mergedPhoneme);
+                } else {
+                    phonemes.put(newPhoneme, newPhoneme);
+                }
+            });
+        });
+
+        return new PhonemeBuilder(phonemes.keySet());
+    }
+
+// === External Class: Rule ===
+// Full import path: org.apache.commons.codec.language.bm.Rule
+// Fields (with actual visibility):
+    public static final Comparator COMPARATOR;
+    private final StringBuilder phonemeText;
+    private final Languages languages;
+    private final List phonemeList;
+    public static final RPattern ALL_STRINGS_RMATCHER;
+    public static final String ALL;
+    private static final String DOUBLE_QUOTE;
+    private static final String HASH_INCLUDE;
+    private static final int HASH_INCLUDE_LENGTH;
+    private static final Map RULES;
+    private final int myLine;
+    private final String loc;
+    private final String pattern;
+    private final RPattern lContext;
+    private final PhonemeExpr phoneme;
+    private final RPattern rContext;
+// Constructors:
+public Phoneme(CharSequence phonemeText, Languages languages);
+public Phoneme(Phoneme phonemeLeft, Phoneme phonemeRight);
+public Phoneme(Phoneme phonemeLeft, Phoneme phonemeRight, Languages languages);
+public PhonemeList(List phonemes);
+public Rule(String pattern, String lContext, String rContext, PhonemeExpr phoneme);
+// Method Signatures (used by target method):
+static public Map getInstanceMap(final NameType nameType, final RuleType rt, final Languages langs);
+// Public Getter Methods (for test assertions):
+public Languages getLanguages();
+public Iterable<Phoneme> getPhonemes();
+public CharSequence getPhonemeText();
+public int size();
+public String toString();
+public List<Phoneme> getPhonemes();
+public int size();
+public static List<Rule> getInstance(NameType nameType, RuleType rt, Languages langs);
+public static List<Rule> getInstance(NameType nameType, RuleType rt, String lang);
+public String toString();
+
+// === External Class: Languages ===
+// Full import path: org.apache.commons.codec.language.bm.Languages
+// Fields (with actual visibility):
+    private final Set languages;
+    public static final String ANY;
+    private static final Map LANGUAGES;
+    public static final LanguageSet NO_LANGUAGES;
+    public static final LanguageSet ANY_LANGUAGE;
+// Constructors:
+private SomeLanguages(Set languages);
+private Languages(Set languages);
+// Public Getter Methods (for test assertions):
+public boolean contains(String language);
+public String getAny();
+public boolean isEmpty();
+public boolean isSingleton();
+public boolean contains(String language);
+public String getAny();
+public Set<String> getLanguages();
+public boolean isEmpty();
+public boolean isSingleton();
+public String toString();
+
+// === External Class: RuleType ===
+// Full import path: org.apache.commons.codec.language.bm.RuleType
+// Fields (with actual visibility):
+    private final String name;
+// Constructors:
+RuleType(String name);
+// Public Getter Methods (for test assertions):
+public String getName();
+
+// === External Class: NameType ===
+// Full import path: org.apache.commons.codec.language.bm.NameType
+// Fields (with actual visibility):
+    private final String name;
+// Constructors:
+NameType(String name);
+// Public Getter Methods (for test assertions):
+public String getName();
+
+
+TASK:
+Regenerate ONLY the method "encode" OF CLASS "PhoneticEngine" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public String encode(String input, final Languages.LanguageSet languageSet) {
+    // your implementation here
+}
+```
+
+- Package: org.apache.commons.codec.language.bm
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "encode"
+- Allowed imports: exactly those already present in PhoneticEngine
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

@@ -1,0 +1,185 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package org.eclipse.cargotracker.domain.model.handling;
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ApplicationScoped -> jakarta.enterprise.context.ApplicationScoped
+//   Inject -> jakarta.inject.Inject
+//   Serializable -> java.io.Serializable
+//   LocalDateTime -> java.time.LocalDateTime
+//   Cargo -> org.eclipse.cargotracker.domain.model.cargo.Cargo
+//   CargoRepository -> org.eclipse.cargotracker.domain.model.cargo.CargoRepository
+//   TrackingId -> org.eclipse.cargotracker.domain.model.cargo.TrackingId
+//   Location -> org.eclipse.cargotracker.domain.model.location.Location
+//   LocationRepository -> org.eclipse.cargotracker.domain.model.location.LocationRepository
+//   UnLocode -> org.eclipse.cargotracker.domain.model.location.UnLocode
+//   Voyage -> org.eclipse.cargotracker.domain.model.voyage.Voyage
+//   VoyageNumber -> org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+//   VoyageRepository -> org.eclipse.cargotracker.domain.model.voyage.VoyageRepository
+//   HandlingEventFactory -> org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+
+// === Class: HandlingEventFactory ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private CargoRepository cargoRepository;
+    private VoyageRepository voyageRepository;
+    private LocationRepository locationRepository;
+
+// Internal Methods (full implementation for context):
+  private Cargo findCargo(TrackingId trackingId) throws UnknownCargoException {
+    Cargo cargo = cargoRepository.find(trackingId);
+
+    if (cargo == null) {
+      throw new UnknownCargoException(trackingId);
+    }
+
+    return cargo;
+  }
+  private Voyage findVoyage(VoyageNumber voyageNumber) throws UnknownVoyageException {
+    if (voyageNumber == null) {
+      return null;
+    }
+
+    Voyage voyage = voyageRepository.find(voyageNumber);
+
+    if (voyage == null) {
+      throw new UnknownVoyageException(voyageNumber);
+    }
+
+    return voyage;
+  }
+  private Location findLocation(UnLocode unlocode) throws UnknownLocationException {
+    Location location = locationRepository.find(unlocode);
+
+    if (location == null) {
+      throw new UnknownLocationException(unlocode);
+    }
+
+    return location;
+  }
+
+// === External Class: HandlingEvent ===
+// Full import path: org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+// Import paths:
+//   Column -> jakarta.persistence.Column
+//   Entity -> jakarta.persistence.Entity
+//   EnumType -> jakarta.persistence.EnumType
+//   Enumerated -> jakarta.persistence.Enumerated
+//   GeneratedValue -> jakarta.persistence.GeneratedValue
+// Fields (with actual visibility):
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private Long id;
+    private Type type;
+    private Voyage voyage;
+    private Location location;
+    private LocalDateTime completionTime;
+    private LocalDateTime registrationTime;
+    private Cargo cargo;
+    private String summary;
+    private final boolean voyageRequired;
+
+// Enum Values (use ONLY these constants):
+//   Type: LOAD, UNLOAD, RECEIVE, CLAIM, CUSTOMS
+
+// Constructors:
+public HandlingEvent();
+public HandlingEvent(Cargo cargo, LocalDateTime completionTime, LocalDateTime registrationTime, Type type, Location location, Voyage voyage);
+public HandlingEvent(Cargo cargo, LocalDateTime completionTime, LocalDateTime registrationTime, Type type, Location location);
+private Type(boolean voyageRequired);
+
+
+// Public Getter Methods (for test assertions):
+public Type getType();
+public Voyage getVoyage();
+public LocalDateTime getCompletionTime();
+public LocalDateTime getRegistrationTime();
+public Location getLocation();
+public Cargo getCargo();
+public String getSummary();
+public String toString();
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+  /**
+   * @param registrationTime time when this event was received by the system
+   * @param completionTime when the event was completed, for example finished loading
+   * @param trackingId cargo tracking id
+   * @param voyageNumber voyage number
+   * @param unlocode United Nations Location Code for the location of the event
+   * @param type type of event
+   * @return A handling event.
+   * @throws UnknownVoyageException if there's no voyage with this number
+   * @throws UnknownCargoException if there's no cargo with this tracking id
+   * @throws UnknownLocationException if there's no location with this UN Locode
+   */
+  // TODO [Clean Code] Look at the exception handling more seriously.
+  public HandlingEvent createHandlingEvent(
+      LocalDateTime registrationTime,
+      LocalDateTime completionTime,
+      TrackingId trackingId,
+      VoyageNumber voyageNumber,
+      UnLocode unlocode,
+      HandlingEvent.Type type)
+          throws CannotCreateHandlingEventException {
+    Cargo cargo = findCargo(trackingId);
+    Voyage voyage = findVoyage(voyageNumber);
+    Location location = findLocation(unlocode);
+
+    try {
+      if (voyage == null) {
+        return new HandlingEvent(cargo, completionTime, registrationTime, type, location);
+      } else {
+        return new HandlingEvent(cargo, completionTime, registrationTime, type, location, voyage);
+      }
+    } catch (Exception e) {
+      throw new CannotCreateHandlingEventException(e);
+    }
+  }
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "createHandlingEvent" of class "HandlingEventFactory".
+
+REQUIREMENTS:
+- Test class name: HandlingEventFactory_createHandlingEventTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths that are:
+  - deterministically reachable from the method’s public API
+  - independent from hidden, external, or runtime-loaded data
+- Test error scenarios by asserting the actual runtime behavior
+  when invalid or null inputs are provided.
+- Do not assume defensive checks unless they are explicitly present.
+- Cover expected exceptions declared in the method signature if present
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes or custom implementations.
+- Helper methods inside the test class are allowed if they do not reimplement production logic.
+- DO NOT use getter/setter methods that are not present in the provided class context
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing its actual behavior
+- You MAY mock DEPENDENCIES (constructor parameters, injected services) using @Mock, but NEVER the class under test
+- CRITICAL: DO NOT instantiate INTERFACES or ABSTRACT classes directly - use Mockito.mock(Interface.class) instead
+- DO NOT try to modify static final fields via ReflectionTestUtils - they are IMMUTABLE
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Use ONLY the import paths explicitly provided in the 'CORRECT IMPORT PATHS' section - do not guess or invent import paths.
+- Generate ONLY the test class without explanations or comments outside the code
+- For PRIVATE fields without public setters (e.g., @Inject, @Autowired), use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

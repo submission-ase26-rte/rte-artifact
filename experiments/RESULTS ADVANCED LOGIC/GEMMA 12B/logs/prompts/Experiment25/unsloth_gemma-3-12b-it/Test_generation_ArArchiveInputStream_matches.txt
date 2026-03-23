@@ -1,0 +1,130 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package org.apache.commons.compress.archivers.ar;
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   EOFException -> java.io.EOFException
+//   IOException -> java.io.IOException
+//   InputStream -> java.io.InputStream
+//   StandardCharsets -> java.nio.charset.StandardCharsets
+//   Arrays -> java.util.Arrays
+//   Pattern -> java.util.regex.Pattern
+//   ArchiveInputStream -> org.apache.commons.compress.archivers.ArchiveInputStream
+//   ArchiveUtils -> org.apache.commons.compress.utils.ArchiveUtils
+//   IOUtils -> org.apache.commons.compress.utils.IOUtils
+//   ParsingUtils -> org.apache.commons.compress.utils.ParsingUtils
+//   ArArchiveInputStream -> org.apache.commons.compress.archivers.ar.ArArchiveInputStream
+
+// === Class: ArArchiveInputStream ===
+// Fields (with actual visibility):
+    private static final int NAME_OFFSET;
+    private static final int NAME_LEN;
+    private static final int LAST_MODIFIED_OFFSET;
+    private static final int LAST_MODIFIED_LEN;
+    private static final int USER_ID_OFFSET;
+    private static final int USER_ID_LEN;
+    private static final int GROUP_ID_OFFSET;
+    private static final int GROUP_ID_LEN;
+    private static final int FILE_MODE_OFFSET;
+    private static final int FILE_MODE_LEN;
+    private static final int LENGTH_OFFSET;
+    private static final int LENGTH_LEN;
+    package-private static final String BSD_LONGNAME_PREFIX;
+    private static final int BSD_LONGNAME_PREFIX_LEN;
+    private static final Pattern BSD_LONGNAME_PATTERN;
+    private static final String GNU_STRING_TABLE_NAME;
+    private static final Pattern GNU_LONGNAME_PATTERN;
+    private long offset;
+    private boolean closed;
+    private ArArchiveEntry currentEntry;
+    private byte[] namebuffer;
+    private long entryOffset;
+    private final byte[] metaData;
+
+// Constructors:
+public ArArchiveInputStream(InputStream inputStream);
+
+// Getter/Setter Methods (for test assertions):
+private static boolean isBSDLongName(final String name);
+private static boolean isGNUStringTable(final String name);
+private String getBSDLongName(final String bsdLongName) throws IOException;
+private String getExtendedName(final int offset) throws IOException;
+public ArArchiveEntry getNextArEntry() throws IOException;
+public ArArchiveEntry getNextEntry() throws IOException;
+private boolean isGNULongName(final String name);
+
+// === Superclass: ArchiveInputStream (inherited members) ===
+// Inherited Fields:
+
+// Inherited Method Signatures:
+public boolean canReadEntryData(final ArchiveEntry archiveEntry);
+protected void count(final int read);
+protected void count(final int read);
+public long getBytesRead();
+public Charset getCharset();
+public int getCount();
+abstract public E getNextEntry();
+synchronized public void mark(final int readlimit);
+public boolean markSupported();
+protected void pushedBackBytes(final long pushedBack);
+public int read();
+synchronized public void reset();
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+    /**
+     * Checks if the signature matches ASCII "!&lt;arch&gt;" followed by a single LF control character
+     *
+     * @param signature the bytes to check
+     * @param length    the number of bytes to check
+     * @return true, if this stream is an Ar archive stream, false otherwise
+     */
+    public static boolean matches(final byte[] signature, final int length) {
+        // 3c21 7261 6863 0a3e
+
+        return length >= 8 && signature[0] == 0x21 && signature[1] == 0x3c && signature[2] == 0x61 && signature[3] == 0x72 && signature[4] == 0x63
+                && signature[5] == 0x68 && signature[6] == 0x3e && signature[7] == 0x0a;
+    }
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "matches" of class "ArArchiveInputStream".
+
+REQUIREMENTS:
+- Test class name: ArArchiveInputStream_matchesTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths that are:
+  - deterministically reachable from the method’s public API
+  - independent from hidden, external, or runtime-loaded data
+- Test error scenarios by asserting the actual runtime behavior
+  when invalid or null inputs are provided.
+- Do not assume defensive checks unless they are explicitly present.
+- Cover expected exceptions declared in the method signature if present
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes or custom implementations.
+- Helper methods inside the test class are allowed if they do not reimplement production logic.
+- DO NOT use getter/setter methods that are not present in the provided class context
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing its actual behavior
+- You MAY mock DEPENDENCIES (constructor parameters, injected services) using @Mock, but NEVER the class under test
+- CRITICAL: DO NOT instantiate INTERFACES or ABSTRACT classes directly - use Mockito.mock(Interface.class) instead
+- DO NOT try to modify static final fields via ReflectionTestUtils - they are IMMUTABLE
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Use ONLY the import paths explicitly provided in the 'CORRECT IMPORT PATHS' section - do not guess or invent import paths.
+- Generate ONLY the test class without explanations or comments outside the code
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

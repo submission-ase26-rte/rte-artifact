@@ -1,0 +1,83 @@
+package org.eclipse.cargotracker.interfaces.handling.file;
+
+import jakarta.batch.api.chunk.AbstractItemWriter;
+import jakarta.batch.runtime.context.JobContext;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.application.util.DateConverter;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class EventItemWriter_writeItemsTestGenerated {
+    @Mock
+    private JobContext jobContext;
+    @Mock
+    private ApplicationEvents applicationEvents;
+    @InjectMocks
+    private EventItemWriter eventItemWriter;
+    private Path archiveFile;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(eventItemWriter, "ARCHIVE_DIRECTORY", "target/test-archives");
+        Files.createDirectories(Path.of("target/test-archives"));
+        archiveFile = Path.of("target/test-archives/archive_testJob_1.csv");
+        when(jobContext.getProperties().getProperty("target/test-archives")).thenReturn("target/test-archives");
+        when(jobContext.getJobName()).thenReturn("testJob");
+        when(jobContext.getInstanceId()).thenReturn(1L);
+    }
+
+    @AfterEach
+    void tearDown() throws IOException {
+        Files.deleteIfExists(archiveFile);
+        Files.deleteIfExists(Path.of("target/test-archives"));
+    }
+
+    @Test
+    void testWriteItemsWithEmptyList() throws Exception {
+        List<Object> items = Collections.emptyList();
+        eventItemWriter.writeItems(items);
+        assertTrue(Files.exists(archiveFile));
+        List<String> lines = Files.readAllLines(archiveFile);
+        assertEquals(0, lines.size());
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any());
+    }
+
+    @Test
+    void testWriteItemsWithNullList() throws Exception {
+        List<Object> items = null;
+        Exception exception = assertThrows(NullPointerException.class, () -> {
+            eventItemWriter.writeItems(items);
+        });
+        assertNotNull(exception);
+        assertFalse(Files.exists(archiveFile));
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any());
+    }
+
+}

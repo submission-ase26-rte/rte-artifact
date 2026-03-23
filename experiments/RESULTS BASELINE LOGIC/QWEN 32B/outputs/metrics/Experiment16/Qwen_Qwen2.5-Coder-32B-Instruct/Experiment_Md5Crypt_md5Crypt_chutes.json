@@ -1,0 +1,384 @@
+{
+  "experiments": {
+    "version_": {
+      "tested_method": "md5Crypt",
+      "similarity_threshold": 0.7,
+      "passes_evaluation": false,
+      "timestamp": "2026-01-10T10:59:27.333179",
+      "executed_phases": {
+        "first_phase": true,
+        "second_phase": true
+      },
+      "metrics": {
+        "crystalbleu_similarity": 0.1482153881660684,
+        "string_similarity": 0.23650472334682862,
+        "token_similarity": 0.4175824175824176,
+        "ast_similarity": 0.8409090909090909,
+        "embedding_similarity": 0.9031450152397156,
+        "clone_detection": {
+          "exact_match": false,
+          "clone_percentage": 0.15384615384615385,
+          "similar_blocks": 18,
+          "total_blocks": 234
+        },
+        "weights": {
+          "crystalbleu_similarity": 0.2,
+          "string_similarity": 0.08,
+          "token_similarity": 0.15,
+          "ast_similarity": 0.22,
+          "embedding_similarity": 0.35
+        },
+        "overall_similarity": 0.612301573472223,
+        "passes_threshold": false
+      },
+      "test_results": {
+        "original": {
+          "success": true,
+          "tests_passed": 10,
+          "tests_total": 11,
+          "tests_failed": 1,
+          "line_coverage": 100.0,
+          "branch_coverage": 100.0,
+          "has_compilation_errors": false,
+          "test_info": {
+            "valid_tests": [
+              "testMd5CryptWithValidSalt",
+              "testMd5CryptWithDefaultPrefix",
+              "testMd5CryptWithEmptyKeyBytes",
+              "testMd5CryptWithLargeKeyBytes",
+              "testMd5CryptWithSecureRandom",
+              "testMd5CryptWithCustomRandom",
+              "testMd5CryptWithInvalidSalt",
+              "testMd5CryptWithEmptySalt",
+              "testMd5CryptWithNullSalt",
+              "testMd5CryptWithNullKeyBytes"
+            ],
+            "invalid_tests": [
+              "testMd5CryptWithInvalidSaltPattern"
+            ],
+            "failed_assert_tests": [
+              "testMd5CryptWithInvalidSaltPattern"
+            ],
+            "runtime_error_tests": []
+          }
+        },
+        "regenerated": {
+          "success": false,
+          "tests_passed": 0,
+          "tests_total": 0,
+          "tests_failed": 0,
+          "line_coverage": 0.0,
+          "branch_coverage": 0.0,
+          "has_compilation_errors": true,
+          "test_info": {
+            "valid_tests": [],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          }
+        }
+      },
+      "test_filtering": {},
+      "context": {
+        "dependency_selection": {
+          "active": true,
+          "method": "structural",
+          "top_k": null,
+          "weights": null,
+          "selected_classes": [
+            {
+              "class": "B64",
+              "score": null,
+              "norm_score": null,
+              "rank": null
+            },
+            {
+              "class": "DigestUtils",
+              "score": null,
+              "norm_score": null,
+              "rank": null
+            }
+          ],
+          "rankings": {}
+        }
+      },
+      "paths": {
+        "original_file": "./../JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/main/java/org/apache/commons/codec/digest/Md5Crypt.java",
+        "regenerated_file": "results/outputs\\Final_Md5Crypt_md5Crypt.java"
+      },
+      "original_metrics": {
+        "loc": 146,
+        "sloc": 74,
+        "complexity": 19
+      },
+      "retry_history": [
+        {
+          "type": "initial_test_execution",
+          "test_results_originale": {
+            "tests_passed": 4,
+            "tests_total": 10,
+            "tests_failed": 6,
+            "line_coverage": 98.24561403508771,
+            "branch_coverage": 95.0,
+            "test_info": {
+              "valid_tests": [
+                "testMd5CryptWithNullKeyBytes",
+                "testMd5CryptWithNullSalt",
+                "testMd5CryptWithEmptySalt",
+                "testMd5CryptWithInvalidSalt"
+              ],
+              "invalid_tests": [
+                "testMd5CryptWithValidSalt",
+                "testMd5CryptWithDefaultPrefix",
+                "testMd5CryptWithEmptyKeyBytes",
+                "testMd5CryptWithLargeKeyBytes",
+                "testMd5CryptWithSecureRandom",
+                "testMd5CryptWithCustomRandom"
+              ],
+              "failed_assert_tests": [],
+              "runtime_error_tests": [
+                "testMd5CryptWithValidSalt",
+                "testMd5CryptWithDefaultPrefix",
+                "testMd5CryptWithEmptyKeyBytes",
+                "testMd5CryptWithLargeKeyBytes",
+                "testMd5CryptWithSecureRandom",
+                "testMd5CryptWithCustomRandom"
+              ]
+            }
+          }
+        },
+        {
+          "type": "initial_regenerated_test_execution",
+          "test_results_rigenerato": {
+            "tests_passed": 0,
+            "tests_total": 0,
+            "tests_failed": 0,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "test_info": {
+              "valid_tests": [],
+              "invalid_tests": [],
+              "failed_assert_tests": [],
+              "runtime_error_tests": []
+            }
+          }
+        },
+        {
+          "type": "initial_method_generation",
+          "refinement_iteration": 0,
+          "original_method": "    /**\n     * Generates a libc6 crypt() \"$1$\" or Apache htpasswd \"$apr1$\" hash value.\n     * <p>\n     * See {@link Crypt#crypt(String, String)} or {@link #apr1Crypt(String, String)} for details.\n     * </p>\n     *\n     * @param keyBytes\n     *            plaintext string to hash. Each array element is set to {@code 0} before returning.\n     * @param salt\n     *            real salt value without prefix or \"rounds=\". The salt may be null, in which case a salt\n     *            is generated for you using {@link SecureRandom}.\n     * @param prefix\n     *            salt prefix\n     * @param random\n     *            the instance of {@link Random} to use for generating the salt.\n     *            Consider using {@link SecureRandom} for more secure salts.\n     * @return the hash value\n     * @throws IllegalArgumentException\n     *             if the salt does not match the allowed pattern\n     * @throws IllegalArgumentException\n     *             when a {@link java.security.NoSuchAlgorithmException} is caught.\n     * @since 1.12\n     */\n    public static String md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) {\n        final int keyLen = keyBytes.length;\n\n        // Extract the real salt from the given string which can be a complete hash string.\n        final String saltString;\n        if (salt == null) {\n            saltString = B64.getRandomSalt(8, random);\n        } else {\n            final Pattern p = Pattern.compile(\"^\" + prefix.replace(\"$\", \"\\\\$\") + \"([\\\\.\\\\/a-zA-Z0-9]{1,8}).*\");\n            final Matcher m = p.matcher(salt);\n            if (!m.find()) {\n                throw new IllegalArgumentException(\"Invalid salt value: \" + salt);\n            }\n            saltString = m.group(1);\n        }\n        final byte[] saltBytes = saltString.getBytes(StandardCharsets.UTF_8);\n\n        final MessageDigest ctx = DigestUtils.getMd5Digest();\n\n        /*\n         * The password first, since that is what is most unknown\n         */\n        ctx.update(keyBytes);\n\n        /*\n         * Then our magic string\n         */\n        ctx.update(prefix.getBytes(StandardCharsets.UTF_8));\n\n        /*\n         * Then the raw salt\n         */\n        ctx.update(saltBytes);\n\n        /*\n         * Then just as many characters of the MD5(pw,salt,pw)\n         */\n        MessageDigest ctx1 = DigestUtils.getMd5Digest();\n        ctx1.update(keyBytes);\n        ctx1.update(saltBytes);\n        ctx1.update(keyBytes);\n        byte[] finalb = ctx1.digest();\n        int ii = keyLen;\n        while (ii > 0) {\n            ctx.update(finalb, 0, Math.min(ii, 16));\n            ii -= 16;\n        }\n\n        /*\n         * Don't leave anything around in JVM they could use.\n         */\n        Arrays.fill(finalb, (byte) 0);\n\n        /*\n         * Then something really weird...\n         */\n        ii = keyLen;\n        final int j = 0;\n        while (ii > 0) {\n            if ((ii & 1) == 1) {\n                ctx.update(finalb[j]);\n            } else {\n                ctx.update(keyBytes[j]);\n            }\n            ii >>= 1;\n        }\n\n        /*\n         * Now make the output string\n         */\n        final StringBuilder passwd = new StringBuilder(prefix + saltString + \"$\");\n        finalb = ctx.digest();\n\n        /*\n         * and now, just to make sure things don't run too fast On a 60 Mhz Pentium this takes 34 milliseconds, so you\n         * would need 30 seconds to build a 1000 entry dictionary...\n         */\n        for (int i = 0; i < ROUNDS; i++) {\n            ctx1 = DigestUtils.getMd5Digest();\n            if ((i & 1) != 0) {\n                ctx1.update(keyBytes);\n            } else {\n                ctx1.update(finalb, 0, BLOCKSIZE);\n            }\n\n            if (i % 3 != 0) {\n                ctx1.update(saltBytes);\n            }\n\n            if (i % 7 != 0) {\n                ctx1.update(keyBytes);\n            }\n\n            if ((i & 1) != 0) {\n                ctx1.update(finalb, 0, BLOCKSIZE);\n            } else {\n                ctx1.update(keyBytes);\n            }\n            finalb = ctx1.digest();\n        }\n\n        // The following was nearly identical to the Sha2Crypt code.\n        // Again, the buflen is not really needed.\n        // int buflen = MD5_PREFIX.length() - 1 + salt_string.length() + 1 + BLOCKSIZE + 1;\n        B64.b64from24bit(finalb[0], finalb[6], finalb[12], 4, passwd);\n        B64.b64from24bit(finalb[1], finalb[7], finalb[13], 4, passwd);\n        B64.b64from24bit(finalb[2], finalb[8], finalb[14], 4, passwd);\n        B64.b64from24bit(finalb[3], finalb[9], finalb[15], 4, passwd);\n        B64.b64from24bit(finalb[4], finalb[10], finalb[5], 4, passwd);\n        B64.b64from24bit((byte) 0, (byte) 0, finalb[11], 2, passwd);\n\n        /*\n         * Don't leave anything around in JVM they could use.\n         */\n        // Is there a better way to do this with the JVM?\n        ctx.reset();\n        ctx1.reset();\n        Arrays.fill(keyBytes, (byte) 0);\n        Arrays.fill(saltBytes, (byte) 0);\n        Arrays.fill(finalb, (byte) 0);\n\n        return passwd.toString();\n    }",
+          "regenerated_method": "public static String md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) {\n    if (keyBytes == null) {\n        throw new NullPointerException(\"Key bytes must not be null\");\n    }\n    if (salt == null) {\n        salt = getRandomSalt(8);\n    } else if (salt.length() < 2) {\n        throw new IllegalArgumentException(\"Salt must be at least 2 characters\");\n    } else if (!salt.matches(\"[a-zA-Z0-9./]{1,8}\")) {\n        throw new IllegalArgumentException(\"Salt must be at most 8 characters and only contain a-z, A-Z, 0-9, '.', '/'\");\n    }\n\n    StringBuilder saltBuf = new StringBuilder(salt);\n    if (saltBuf.length() > 8) {\n        saltBuf.setLength(8);\n    }\n\n    StringBuilder buffer = new StringBuilder(prefix);\n    buffer.append(saltBuf);\n\n    MessageDigest md = getMd5Digest();\n    md.update(keyBytes);\n    md.update(buffer.toString().getBytes(StandardCharsets.UTF_8));\n\n    byte[] finalState = md.digest();\n\n    md.reset();\n    md.update(keyBytes);\n    md.update(saltBuf.toString().getBytes(StandardCharsets.UTF_8));\n    md.update(keyBytes);\n\n    byte[] keyBytesCopy = keyBytes.clone();\n    int keyBytesLength = keyBytesCopy.length;\n    while (keyBytesLength > 0) {\n        md.update(keyBytesCopy, 0, keyBytesLength > 16 ? 16 : keyBytesLength);\n        keyBytesLength -= 16;\n    }\n\n    keyBytesCopy = new byte[16];\n    Arrays.fill(keyBytesCopy, (byte) 0);\n    keyBytesLength = keyBytes.length;\n    while (keyBytesLength > 0) {\n        if ((keyBytesLength & 1) != 0) {\n            md.update(keyBytesCopy, 0, 1);\n        } else {\n            md.update(keyBytes, 0, 1);\n        }\n        keyBytesLength >>= 1;\n    }\n\n    finalState = md.digest();\n\n    for (int i = keyBytes.length; i > 0; i >>= 1) {\n        if ((i & 1) != 0) {\n            md.update(finalState, 0, 1);\n        } else {\n            md.update(keyBytes, 0, 1);\n        }\n    }\n\n    finalState = md.digest();\n\n    for (int i = 0; i < 1000; i++) {\n        md.reset();\n        if ((i & 1) != 0) {\n            md.update(keyBytes);\n        } else {\n            md.update(finalState);\n        }\n\n        if (i % 3 != 0) {\n            md.update(saltBuf.toString().getBytes(StandardCharsets.UTF_8));\n        }\n\n        if (i % 7 != 0) {\n            md.update(keyBytes);\n        }\n\n        if ((i & 1) != 0) {\n            md.update(finalState);\n        } else {\n            md.update(keyBytes);\n        }\n\n        finalState = md.digest();\n    }\n\n    byte[] pBytes = new byte[16];\n    byte[] sBytes = new byte[16];\n    for (int i = 0; i < 16; i++) {\n        pBytes[i] = finalState[i];\n        sBytes[i] = finalState[16 - i - 1];\n    }\n\n    for (int i = 0; i < 4; i++) {\n        b64from24bit(pBytes[i * 3 + 0], pBytes[i * 3 + 1], pBytes[i * 3 + 2], 4, buffer);\n    }\n\n    b64from24bit(pBytes[12], pBytes[13], sBytes[11], 3, buffer);\n\n    return buffer.toString();\n}",
+          "overall_similarity": 0.6144119735251753,
+          "passes_threshold": false,
+          "similarity_metrics": {
+            "crystalbleu_similarity": 0.15570549512973778,
+            "string_similarity": 0.24221332869323126,
+            "token_similarity": 0.4367816091954023,
+            "ast_similarity": 0.8452380952380952,
+            "embedding_similarity": 0.8926405310630798,
+            "clone_detection": {
+              "exact_match": false,
+              "clone_percentage": 0.13215859030837004,
+              "similar_blocks": 15,
+              "total_blocks": 227
+            },
+            "weights": {
+              "crystalbleu_similarity": 0.2,
+              "string_similarity": 0.08,
+              "token_similarity": 0.15,
+              "ast_similarity": 0.22,
+              "embedding_similarity": 0.35
+            },
+            "overall_similarity": 0.6144119735251753,
+            "passes_threshold": false
+          },
+          "test_results_originale": {
+            "tests_passed": 4,
+            "tests_total": 10,
+            "tests_failed": 0,
+            "line_coverage": 98.24561403508771,
+            "branch_coverage": 95.0,
+            "test_info": {
+              "valid_tests": [
+                "testMd5CryptWithNullKeyBytes",
+                "testMd5CryptWithNullSalt",
+                "testMd5CryptWithEmptySalt",
+                "testMd5CryptWithInvalidSalt"
+              ],
+              "invalid_tests": [
+                "testMd5CryptWithValidSalt",
+                "testMd5CryptWithDefaultPrefix",
+                "testMd5CryptWithEmptyKeyBytes",
+                "testMd5CryptWithLargeKeyBytes",
+                "testMd5CryptWithSecureRandom",
+                "testMd5CryptWithCustomRandom"
+              ],
+              "failed_assert_tests": [],
+              "runtime_error_tests": [
+                "testMd5CryptWithValidSalt",
+                "testMd5CryptWithDefaultPrefix",
+                "testMd5CryptWithEmptyKeyBytes",
+                "testMd5CryptWithLargeKeyBytes",
+                "testMd5CryptWithSecureRandom",
+                "testMd5CryptWithCustomRandom"
+              ]
+            }
+          },
+          "test_results_rigenerato": {
+            "tests_passed": 0,
+            "tests_total": 0,
+            "tests_failed": 0,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "test_info": {
+              "valid_tests": [],
+              "invalid_tests": [],
+              "failed_assert_tests": [],
+              "runtime_error_tests": []
+            }
+          }
+        },
+        {
+          "refinement_iteration": 1,
+          "overall_similarity": 0.612301573472223,
+          "passes_threshold": false,
+          "similarity_metrics": {
+            "crystalbleu_similarity": 0.1482153881660684,
+            "string_similarity": 0.23650472334682862,
+            "token_similarity": 0.4175824175824176,
+            "ast_similarity": 0.8409090909090909,
+            "embedding_similarity": 0.9031450152397156,
+            "clone_detection": {
+              "exact_match": false,
+              "clone_percentage": 0.15384615384615385,
+              "similar_blocks": 18,
+              "total_blocks": 234
+            },
+            "weights": {
+              "crystalbleu_similarity": 0.2,
+              "string_similarity": 0.08,
+              "token_similarity": 0.15,
+              "ast_similarity": 0.22,
+              "embedding_similarity": 0.35
+            },
+            "overall_similarity": 0.612301573472223,
+            "passes_threshold": false
+          },
+          "original_method": "    /**\n     * Generates a libc6 crypt() \"$1$\" or Apache htpasswd \"$apr1$\" hash value.\n     * <p>\n     * See {@link Crypt#crypt(String, String)} or {@link #apr1Crypt(String, String)} for details.\n     * </p>\n     *\n     * @param keyBytes\n     *            plaintext string to hash. Each array element is set to {@code 0} before returning.\n     * @param salt\n     *            real salt value without prefix or \"rounds=\". The salt may be null, in which case a salt\n     *            is generated for you using {@link SecureRandom}.\n     * @param prefix\n     *            salt prefix\n     * @param random\n     *            the instance of {@link Random} to use for generating the salt.\n     *            Consider using {@link SecureRandom} for more secure salts.\n     * @return the hash value\n     * @throws IllegalArgumentException\n     *             if the salt does not match the allowed pattern\n     * @throws IllegalArgumentException\n     *             when a {@link java.security.NoSuchAlgorithmException} is caught.\n     * @since 1.12\n     */\n    public static String md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) {\n        final int keyLen = keyBytes.length;\n\n        // Extract the real salt from the given string which can be a complete hash string.\n        final String saltString;\n        if (salt == null) {\n            saltString = B64.getRandomSalt(8, random);\n        } else {\n            final Pattern p = Pattern.compile(\"^\" + prefix.replace(\"$\", \"\\\\$\") + \"([\\\\.\\\\/a-zA-Z0-9]{1,8}).*\");\n            final Matcher m = p.matcher(salt);\n            if (!m.find()) {\n                throw new IllegalArgumentException(\"Invalid salt value: \" + salt);\n            }\n            saltString = m.group(1);\n        }\n        final byte[] saltBytes = saltString.getBytes(StandardCharsets.UTF_8);\n\n        final MessageDigest ctx = DigestUtils.getMd5Digest();\n\n        /*\n         * The password first, since that is what is most unknown\n         */\n        ctx.update(keyBytes);\n\n        /*\n         * Then our magic string\n         */\n        ctx.update(prefix.getBytes(StandardCharsets.UTF_8));\n\n        /*\n         * Then the raw salt\n         */\n        ctx.update(saltBytes);\n\n        /*\n         * Then just as many characters of the MD5(pw,salt,pw)\n         */\n        MessageDigest ctx1 = DigestUtils.getMd5Digest();\n        ctx1.update(keyBytes);\n        ctx1.update(saltBytes);\n        ctx1.update(keyBytes);\n        byte[] finalb = ctx1.digest();\n        int ii = keyLen;\n        while (ii > 0) {\n            ctx.update(finalb, 0, Math.min(ii, 16));\n            ii -= 16;\n        }\n\n        /*\n         * Don't leave anything around in JVM they could use.\n         */\n        Arrays.fill(finalb, (byte) 0);\n\n        /*\n         * Then something really weird...\n         */\n        ii = keyLen;\n        final int j = 0;\n        while (ii > 0) {\n            if ((ii & 1) == 1) {\n                ctx.update(finalb[j]);\n            } else {\n                ctx.update(keyBytes[j]);\n            }\n            ii >>= 1;\n        }\n\n        /*\n         * Now make the output string\n         */\n        final StringBuilder passwd = new StringBuilder(prefix + saltString + \"$\");\n        finalb = ctx.digest();\n\n        /*\n         * and now, just to make sure things don't run too fast On a 60 Mhz Pentium this takes 34 milliseconds, so you\n         * would need 30 seconds to build a 1000 entry dictionary...\n         */\n        for (int i = 0; i < ROUNDS; i++) {\n            ctx1 = DigestUtils.getMd5Digest();\n            if ((i & 1) != 0) {\n                ctx1.update(keyBytes);\n            } else {\n                ctx1.update(finalb, 0, BLOCKSIZE);\n            }\n\n            if (i % 3 != 0) {\n                ctx1.update(saltBytes);\n            }\n\n            if (i % 7 != 0) {\n                ctx1.update(keyBytes);\n            }\n\n            if ((i & 1) != 0) {\n                ctx1.update(finalb, 0, BLOCKSIZE);\n            } else {\n                ctx1.update(keyBytes);\n            }\n            finalb = ctx1.digest();\n        }\n\n        // The following was nearly identical to the Sha2Crypt code.\n        // Again, the buflen is not really needed.\n        // int buflen = MD5_PREFIX.length() - 1 + salt_string.length() + 1 + BLOCKSIZE + 1;\n        B64.b64from24bit(finalb[0], finalb[6], finalb[12], 4, passwd);\n        B64.b64from24bit(finalb[1], finalb[7], finalb[13], 4, passwd);\n        B64.b64from24bit(finalb[2], finalb[8], finalb[14], 4, passwd);\n        B64.b64from24bit(finalb[3], finalb[9], finalb[15], 4, passwd);\n        B64.b64from24bit(finalb[4], finalb[10], finalb[5], 4, passwd);\n        B64.b64from24bit((byte) 0, (byte) 0, finalb[11], 2, passwd);\n\n        /*\n         * Don't leave anything around in JVM they could use.\n         */\n        // Is there a better way to do this with the JVM?\n        ctx.reset();\n        ctx1.reset();\n        Arrays.fill(keyBytes, (byte) 0);\n        Arrays.fill(saltBytes, (byte) 0);\n        Arrays.fill(finalb, (byte) 0);\n\n        return passwd.toString();\n    }",
+          "regenerated_method": "public static String md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) {\n    if (keyBytes == null) {\n        throw new NullPointerException(\"Key bytes must not be null\");\n    }\n    if (salt == null) {\n        salt = getRandomSalt(8);\n    } else if (!salt.startsWith(prefix)) {\n        throw new IllegalArgumentException(\"Salt must start with the prefix: \" + prefix);\n    } else {\n        String saltPart = salt.substring(prefix.length());\n        if (saltPart.length() < 2 || saltPart.length() > 8 || !saltPart.matches(\"[a-zA-Z0-9./]+\")) {\n            throw new IllegalArgumentException(\"Salt must be between 2 and 8 characters and only contain a-z, A-Z, 0-9, '.', '/'\");\n        }\n    }\n\n    StringBuilder saltBuf = new StringBuilder(salt.substring(prefix.length()));\n    if (saltBuf.length() > 8) {\n        saltBuf.setLength(8);\n    }\n\n    StringBuilder buffer = new StringBuilder(prefix);\n    buffer.append(saltBuf);\n\n    MessageDigest md = getMd5Digest();\n    md.update(keyBytes);\n    md.update(buffer.toString().getBytes(StandardCharsets.UTF_8));\n\n    byte[] finalState = md.digest();\n\n    md.reset();\n    md.update(keyBytes);\n    md.update(saltBuf.toString().getBytes(StandardCharsets.UTF_8));\n    md.update(keyBytes);\n\n    byte[] keyBytesCopy = keyBytes.clone();\n    int keyBytesLength = keyBytesCopy.length;\n    while (keyBytesLength > 0) {\n        md.update(keyBytesCopy, 0, keyBytesLength > 16 ? 16 : keyBytesLength);\n        keyBytesLength -= 16;\n    }\n\n    keyBytesCopy = new byte[16];\n    Arrays.fill(keyBytesCopy, (byte) 0);\n    keyBytesLength = keyBytes.length;\n    while (keyBytesLength > 0) {\n        if ((keyBytesLength & 1) != 0) {\n            md.update(keyBytesCopy, 0, 1);\n        } else {\n            md.update(keyBytes, 0, 1);\n        }\n        keyBytesLength >>= 1;\n    }\n\n    finalState = md.digest();\n\n    for (int i = keyBytes.length; i > 0; i >>= 1) {\n        if ((i & 1) != 0) {\n            md.update(finalState, 0, 1);\n        } else {\n            md.update(keyBytes, 0, 1);\n        }\n    }\n\n    finalState = md.digest();\n\n    for (int i = 0; i < 1000; i++) {\n        md.reset();\n        if ((i & 1) != 0) {\n            md.update(keyBytes);\n        } else {\n            md.update(finalState);\n        }\n\n        if (i % 3 != 0) {\n            md.update(saltBuf.toString().getBytes(StandardCharsets.UTF_8));\n        }\n\n        if (i % 7 != 0) {\n            md.update(keyBytes);\n        }\n\n        if ((i & 1) != 0) {\n            md.update(finalState);\n        } else {\n            md.update(keyBytes);\n        }\n\n        finalState = md.digest();\n    }\n\n    byte[] pBytes = new byte[16];\n    byte[] sBytes = new byte[16];\n    for (int i = 0; i < 16; i++) {\n        pBytes[i] = finalState[i];\n        sBytes[i] = finalState[16 - i - 1];\n    }\n\n    for (int i = 0; i < 4; i++) {\n        b64from24bit(pBytes[i * 3 + 0], pBytes[i * 3 + 1], pBytes[i * 3 + 2], 4, buffer);\n    }\n\n    b64from24bit(pBytes[12], pBytes[13], sBytes[11], 3, buffer);\n\n    return buffer.toString();\n}",
+          "test_results_originale": {
+            "tests_passed": 10,
+            "tests_total": 11,
+            "tests_failed": 1,
+            "line_coverage": 100.0,
+            "branch_coverage": 100.0,
+            "valid_tests": [
+              "testMd5CryptWithValidSalt",
+              "testMd5CryptWithDefaultPrefix",
+              "testMd5CryptWithEmptyKeyBytes",
+              "testMd5CryptWithLargeKeyBytes",
+              "testMd5CryptWithSecureRandom",
+              "testMd5CryptWithCustomRandom",
+              "testMd5CryptWithInvalidSalt",
+              "testMd5CryptWithEmptySalt",
+              "testMd5CryptWithNullSalt",
+              "testMd5CryptWithNullKeyBytes"
+            ],
+            "invalid_tests": [
+              "testMd5CryptWithInvalidSaltPattern"
+            ],
+            "failed_assert_tests": [
+              "testMd5CryptWithInvalidSaltPattern"
+            ],
+            "runtime_error_tests": []
+          },
+          "test_results_rigenerato": {
+            "tests_passed": 0,
+            "tests_total": 0,
+            "tests_failed": 0,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "valid_tests": [],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          },
+          "type": "refinement"
+        }
+      ],
+      "original_method_display": "    /**\n     * Generates a libc6 crypt() \"$1$\" or Apache htpasswd \"$apr1$\" hash value.\n     * <p>\n     * See {@link Crypt#crypt(String, String)} or {@link #apr1Crypt(String, String)} for details.\n     * </p>\n     *\n     * @param keyBytes\n     *            plaintext string to hash. Each array element is set to {@code 0} before returning.\n     * @param salt\n     *            real salt value without prefix or \"rounds=\". The salt may be null, in which case a salt\n     *            is generated for you using {@link SecureRandom}.\n     * @param prefix\n     *            salt prefix\n     * @param random\n     *            the instance of {@link Random} to use for generating the salt.\n     *            Consider using {@link SecureRandom} for more secure salts.\n     * @return the hash value\n     * @throws IllegalArgumentException\n     *             if the salt does not match the allowed pattern\n     * @throws IllegalArgumentException\n     *             when a {@link java.security.NoSuchAlgorithmException} is caught.\n     * @since 1.12\n     */\n    public static String md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) {\n        final int keyLen = keyBytes.length;\n\n        // Extract the real salt from the given string which can be a complete hash string.\n        final String saltString;\n        if (salt == null) {\n            saltString = B64.getRandomSalt(8, random);\n        } else {\n            final Pattern p = Pattern.compile(\"^\" + prefix.replace(\"$\", \"\\\\$\") + \"([\\\\.\\\\/a-zA-Z0-9]{1,8}).*\");\n            final Matcher m = p.matcher(salt);\n            if (!m.find()) {\n                throw new IllegalArgumentException(\"Invalid salt value: \" + salt);\n            }\n            saltString = m.group(1);\n        }\n        final byte[] saltBytes = saltString.getBytes(StandardCharsets.UTF_8);\n\n        final MessageDigest ctx = DigestUtils.getMd5Digest();\n\n        /*\n         * The password first, since that is what is most unknown\n         */\n        ctx.update(keyBytes);\n\n        /*\n         * Then our magic string\n         */\n        ctx.update(prefix.getBytes(StandardCharsets.UTF_8));\n\n        /*\n         * Then the raw salt\n         */\n        ctx.update(saltBytes);\n\n        /*\n         * Then just as many characters of the MD5(pw,salt,pw)\n         */\n        MessageDigest ctx1 = DigestUtils.getMd5Digest();\n        ctx1.update(keyBytes);\n        ctx1.update(saltBytes);\n        ctx1.update(keyBytes);\n        byte[] finalb = ctx1.digest();\n        int ii = keyLen;\n        while (ii > 0) {\n            ctx.update(finalb, 0, Math.min(ii, 16));\n            ii -= 16;\n        }\n\n        /*\n         * Don't leave anything around in JVM they could use.\n         */\n        Arrays.fill(finalb, (byte) 0);\n\n        /*\n         * Then something really weird...\n         */\n        ii = keyLen;\n        final int j = 0;\n        while (ii > 0) {\n            if ((ii & 1) == 1) {\n                ctx.update(finalb[j]);\n            } else {\n                ctx.update(keyBytes[j]);\n            }\n            ii >>= 1;\n        }\n\n        /*\n         * Now make the output string\n         */\n        final StringBuilder passwd = new StringBuilder(prefix + saltString + \"$\");\n        finalb = ctx.digest();\n\n        /*\n         * and now, just to make sure things don't run too fast On a 60 Mhz Pentium this takes 34 milliseconds, so you\n         * would need 30 seconds to build a 1000 entry dictionary...\n         */\n        for (int i = 0; i < ROUNDS; i++) {\n            ctx1 = DigestUtils.getMd5Digest();\n            if ((i & 1) != 0) {\n                ctx1.update(keyBytes);\n            } else {\n                ctx1.update(finalb, 0, BLOCKSIZE);\n            }\n\n            if (i % 3 != 0) {\n                ctx1.update(saltBytes);\n            }\n\n            if (i % 7 != 0) {\n                ctx1.update(keyBytes);\n            }\n\n            if ((i & 1) != 0) {\n                ctx1.update(finalb, 0, BLOCKSIZE);\n            } else {\n                ctx1.update(keyBytes);\n            }\n            finalb = ctx1.digest();\n        }\n\n        // The following was nearly identical to the Sha2Crypt code.\n        // Again, the buflen is not really needed.\n        // int buflen = MD5_PREFIX.length() - 1 + salt_string.length() + 1 + BLOCKSIZE + 1;\n        B64.b64from24bit(finalb[0], finalb[6], finalb[12], 4, passwd);\n        B64.b64from24bit(finalb[1], finalb[7], finalb[13], 4, passwd);\n        B64.b64from24bit(finalb[2], finalb[8], finalb[14], 4, passwd);\n        B64.b64from24bit(finalb[3], finalb[9], finalb[15], 4, passwd);\n        B64.b64from24bit(finalb[4], finalb[10], finalb[5], 4, passwd);\n        B64.b64from24bit((byte) 0, (byte) 0, finalb[11], 2, passwd);\n\n        /*\n         * Don't leave anything around in JVM they could use.\n         */\n        // Is there a better way to do this with the JVM?\n        ctx.reset();\n        ctx1.reset();\n        Arrays.fill(keyBytes, (byte) 0);\n        Arrays.fill(saltBytes, (byte) 0);\n        Arrays.fill(finalb, (byte) 0);\n\n        return passwd.toString();\n    }",
+      "regenerated_method_display": "public static String md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) {\n    if (keyBytes == null) {\n        throw new NullPointerException(\"Key bytes must not be null\");\n    }\n    if (salt == null) {\n        salt = getRandomSalt(8);\n    } else if (!salt.startsWith(prefix)) {\n        throw new IllegalArgumentException(\"Salt must start with the prefix: \" + prefix);\n    } else {\n        String saltPart = salt.substring(prefix.length());\n        if (saltPart.length() < 2 || saltPart.length() > 8 || !saltPart.matches(\"[a-zA-Z0-9./]+\")) {\n            throw new IllegalArgumentException(\"Salt must be between 2 and 8 characters and only contain a-z, A-Z, 0-9, '.', '/'\");\n        }\n    }\n\n    StringBuilder saltBuf = new StringBuilder(salt.substring(prefix.length()));\n    if (saltBuf.length() > 8) {\n        saltBuf.setLength(8);\n    }\n\n    StringBuilder buffer = new StringBuilder(prefix);\n    buffer.append(saltBuf);\n\n    MessageDigest md = getMd5Digest();\n    md.update(keyBytes);\n    md.update(buffer.toString().getBytes(StandardCharsets.UTF_8));\n\n    byte[] finalState = md.digest();\n\n    md.reset();\n    md.update(keyBytes);\n    md.update(saltBuf.toString().getBytes(StandardCharsets.UTF_8));\n    md.update(keyBytes);\n\n    byte[] keyBytesCopy = keyBytes.clone();\n    int keyBytesLength = keyBytesCopy.length;\n    while (keyBytesLength > 0) {\n        md.update(keyBytesCopy, 0, keyBytesLength > 16 ? 16 : keyBytesLength);\n        keyBytesLength -= 16;\n    }\n\n    keyBytesCopy = new byte[16];\n    Arrays.fill(keyBytesCopy, (byte) 0);\n    keyBytesLength = keyBytes.length;\n    while (keyBytesLength > 0) {\n        if ((keyBytesLength & 1) != 0) {\n            md.update(keyBytesCopy, 0, 1);\n        } else {\n            md.update(keyBytes, 0, 1);\n        }\n        keyBytesLength >>= 1;\n    }\n\n    finalState = md.digest();\n\n    for (int i = keyBytes.length; i > 0; i >>= 1) {\n        if ((i & 1) != 0) {\n            md.update(finalState, 0, 1);\n        } else {\n            md.update(keyBytes, 0, 1);\n        }\n    }\n\n    finalState = md.digest();\n\n    for (int i = 0; i < 1000; i++) {\n        md.reset();\n        if ((i & 1) != 0) {\n            md.update(keyBytes);\n        } else {\n            md.update(finalState);\n        }\n\n        if (i % 3 != 0) {\n            md.update(saltBuf.toString().getBytes(StandardCharsets.UTF_8));\n        }\n\n        if (i % 7 != 0) {\n            md.update(keyBytes);\n        }\n\n        if ((i & 1) != 0) {\n            md.update(finalState);\n        } else {\n            md.update(keyBytes);\n        }\n\n        finalState = md.digest();\n    }\n\n    byte[] pBytes = new byte[16];\n    byte[] sBytes = new byte[16];\n    for (int i = 0; i < 16; i++) {\n        pBytes[i] = finalState[i];\n        sBytes[i] = finalState[16 - i - 1];\n    }\n\n    for (int i = 0; i < 4; i++) {\n        b64from24bit(pBytes[i * 3 + 0], pBytes[i * 3 + 1], pBytes[i * 3 + 2], 4, buffer);\n    }\n\n    b64from24bit(pBytes[12], pBytes[13], sBytes[11], 3, buffer);\n\n    return buffer.toString();\n}",
+      "token_usage": {
+        "test_generation": {
+          "input_tokens": 1861,
+          "output_tokens": 835
+        },
+        "method_generation": {
+          "calls": 3,
+          "details": [
+            {
+              "input_tokens": 1597,
+              "output_tokens": 833,
+              "refinement_iteration": "initial"
+            },
+            {
+              "input_tokens": 2576,
+              "output_tokens": 865,
+              "refinement_iteration": 0
+            },
+            {
+              "input_tokens": 2613,
+              "output_tokens": 865,
+              "refinement_iteration": 1
+            }
+          ],
+          "total_input_tokens": 6786,
+          "total_output_tokens": 2563
+        },
+        "test_refinement": {
+          "calls": 2,
+          "details": [
+            {
+              "input_tokens": 3068,
+              "output_tokens": 906,
+              "iteration": 1
+            },
+            {
+              "input_tokens": 2535,
+              "output_tokens": 222,
+              "iteration": 2
+            }
+          ],
+          "total_input_tokens": 5603,
+          "total_output_tokens": 1128
+        },
+        "totals": {
+          "total_input_tokens": 14250,
+          "total_output_tokens": 4526,
+          "total_tokens": 18776
+        }
+      },
+      "test_naturalness": {
+        "num_test_methods": 11,
+        "assertion_complexity": 0.3697,
+        "pct_null_assertions": 0.3889,
+        "pct_duplicate_assertions": 0.0,
+        "pct_exception_assertions": 0.2222,
+        "pct_no_assertion": 0.0,
+        "naturalness_method_name": 0.68,
+        "pct_focal_method_covered": 1.0,
+        "diversity_literal_values": 0.1444,
+        "overall_naturalness_score": 0.6769
+      }
+    }
+  },
+  "general_info": {
+    "tested_class": "Md5Crypt",
+    "tested_method": "md5Crypt",
+    "last_update": "2026-01-10T10:59:27.510983",
+    "description": "Test md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) - High - Qwen/Qwen2.5-Coder-32B-Instruct",
+    "provider": "chutes",
+    "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
+    "similarity_threshold": 0.7
+  }
+}

@@ -1,0 +1,620 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Filtered unit tests for method: asPath()
+ * Original class: DOMNodePointer
+ * Tests that actually call the target method
+ */
+package org.apache.commons.jxpath.ri.model.dom;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.jxpath.AbstractFactory;
+import org.apache.commons.jxpath.JXPathAbstractFactoryException;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.ri.NamespaceResolver;
+import org.apache.commons.jxpath.ri.QName;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.compiler.ProcessingInstructionTest;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.apache.commons.jxpath.ri.model.VariablePointer;
+import org.apache.commons.jxpath.ri.model.dom.DOMNodePointer;
+import org.apache.commons.jxpath.util.TypeUtils;
+import org.jdom.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.w3c.dom.*;
+import org.w3c.dom.Node;
+import org.w3c.dom.ProcessingInstruction;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+public class Metodo44_unit_asPath_DOMNodePointer_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ParentIsNotNull_VxQf14_QWMV0() {
+    Node nodeMock = mock(Node.class);
+    when(nodeMock.getParentNode()).thenReturn(nodeMock);
+    DOMNodePointer domnodepointer = new DOMNodePointer(nodeMock, Locale.US, "id");
+    assertEquals(domnodepointer.asPath(), domnodepointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_PI_Node_nWwP3() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.PROCESSING_INSTRUCTION_NODE);
+    when(((ProcessingInstruction) node).getTarget()).thenReturn("target");
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/processing-instruction('target')[1]", domNodePointer.asPath());
+    }
+
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_PI_Node_reYF2() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.PROCESSING_INSTRUCTION_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/processing-instruction('target')[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testasPath_ProcessingInstructionNode_ZUTX0() throws Exception {
+    Node node = mock(Node.class);
+    Node parentNode = mock(Node.class);
+    VariablePointer variablePointer = mock(VariablePointer.class);
+    QName qName = mock(QName.class);
+    DOMNodePointer domnodepointer = new DOMNodePointer(parentNode, Locale.US, null);
+    when(node.getNodeType()).thenReturn(Node.PROCESSING_INSTRUCTION_NODE);
+    when(((ProcessingInstruction) node).getTarget()).thenReturn("target");
+    String expectedPath = "/processing-instruction('target')[relativePosition]";
+    assertEquals(expectedPath, domnodepointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_jMuq0_fid1() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    when(node.getPreviousSibling()).thenReturn(null);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/prefix:localName[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_PreviousSibling_jnPa1_fid1() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    Node previousSibling = mock(Node.class);
+    when(previousSibling.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    when(node.getPreviousSibling()).thenReturn(previousSibling);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/prefix:localName[2]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_TextNode_gvTr2_fid1() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.TEXT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/text()[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_DocumentNode_Fvdp4() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.DOCUMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("", domNodePointer.asPath());
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_cKiF0_fid1() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/prefix:localName[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_NoPrefix_XyxE1_fid1() {
+    QName name = new QName("localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/localName[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_RelativePosition_xXRS5_fid1() {
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    when(node.getPreviousSibling()).thenReturn(null);
+    DOMNodePointer domNodePointer = new DOMNodePointer(null, node);
+    assertEquals("/localName[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_RelativePositionSibling_uffs6_fid1() {
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    Node sibling = mock(Node.class);
+    when(node.getPreviousSibling()).thenReturn(sibling);
+    when(sibling.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(null, node);
+    assertEquals("/localName[2]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_RelativePositionSiblingText_VTsL7_fid1() {
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    Node sibling = mock(Node.class);
+    when(node.getPreviousSibling()).thenReturn(sibling);
+    when(sibling.getNodeType()).thenReturn(Node.TEXT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(null, node);
+    assertEquals("/localName[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_NoNamespace_fSJF4_fid1() {
+    QName name = new QName(null, "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/localName[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_RelativePosition_wVNK7_fid1() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    when(node.getPreviousSibling()).thenReturn(mock(Node.class));
+    when(node.getPreviousSibling().getNodeType()).thenReturn(Node.TEXT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/prefix:localName[2]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_PreviousSibling_XkRR1_fid1() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    Node previousSibling = mock(Node.class);
+    when(previousSibling.getNodeType()).thenReturn(Node.PROCESSING_INSTRUCTION_NODE);
+    when(node.getPreviousSibling()).thenReturn(previousSibling);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("/prefix:localName[2]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_Id_yANe6_ZGFB0_fid1() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    String id = "someId";
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("id('someId')", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_PreviousSibling_jnPa1() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    Node previousSibling = mock(Node.class);
+    when(previousSibling.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    when(node.getPreviousSibling()).thenReturn(previousSibling);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("$prefix:localName", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_TextNode_gvTr2() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.TEXT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("$prefix:localName/text()[1]", domNodePointer.asPath());
+    }
+
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_TextNode_flpP2() {
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.TEXT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(null, node);
+    assertEquals("/text()[1]", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_DocumentNode_DkKG4() {
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.DOCUMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(null, node);
+    assertEquals("", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_RelativePositionSibling_uffs6() {
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    Node sibling = mock(Node.class);
+    when(node.getPreviousSibling()).thenReturn(sibling);
+    when(sibling.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(null, node);
+    assertEquals("", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_RelativePositionSiblingText_VTsL7() {
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    Node sibling = mock(Node.class);
+    when(node.getPreviousSibling()).thenReturn(sibling);
+    when(sibling.getNodeType()).thenReturn(Node.TEXT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(null, node);
+    assertEquals("", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_NoNamespace_fSJF4() {
+    QName name = new QName(null, "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("$localName", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_NullId_hjPl5() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("$prefix:localName", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_RelativePosition_wVNK7() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    when(node.getPreviousSibling()).thenReturn(mock(Node.class));
+    when(node.getPreviousSibling().getNodeType()).thenReturn(Node.TEXT_NODE);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("$prefix:localName", domNodePointer.asPath());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAsPath_ElementNode_qgtx0() {
+    QName name = new QName("prefix", "localName");
+    VariablePointer parent = new VariablePointer(name);
+    Node node = mock(Node.class);
+    when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+    when(node.getPreviousSibling()).thenReturn(null);
+    DOMNodePointer domNodePointer = new DOMNodePointer(parent, node);
+    assertEquals("$prefix:localName", domNodePointer.asPath());
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 10/27 passed
+
+TEST STATUS:
+- PASSED (10): testAsPath_ParentIsNotNull_VxQf14_QWMV0, testAsPath_ElementNode_PreviousSibling_jnPa1, testAsPath_TextNode_gvTr2, testAsPath_TextNode_flpP2, testAsPath_DocumentNode_DkKG4, testAsPath_ElementNode_RelativePositionSibling_uffs6, testAsPath_ElementNode_NoNamespace_fSJF4, testAsPath_ElementNode_NullId_hjPl5, testAsPath_ElementNode_RelativePosition_wVNK7, testAsPath_ElementNode_qgtx0
+- FAILED (12): testAsPath_ElementNode_jMuq0_fid1, testAsPath_ElementNode_PreviousSibling_jnPa1_fid1, testAsPath_TextNode_gvTr2_fid1, testAsPath_DocumentNode_Fvdp4, testAsPath_ElementNode_cKiF0_fid1, testAsPath_ElementNode_NoPrefix_XyxE1_fid1, testAsPath_ElementNode_RelativePosition_xXRS5_fid1, testAsPath_ElementNode_RelativePositionSibling_uffs6_fid1, testAsPath_ElementNode_RelativePositionSiblingText_VTsL7_fid1, testAsPath_ElementNode_NoNamespace_fSJF4_fid1, testAsPath_ElementNode_RelativePosition_wVNK7_fid1, testAsPath_ElementNode_Id_yANe6_ZGFB0_fid1
+- ERRORS (5): testAsPath_PI_Node_nWwP3, testAsPath_PI_Node_reYF2, testasPath_ProcessingInstructionNode_ZUTX0, testAsPath_ElementNode_PreviousSibling_XkRR1_fid1, testAsPath_ElementNode_RelativePositionSiblingText_VTsL7
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   HashMap -> java.util.HashMap
+//   Locale -> java.util.Locale
+//   Map -> java.util.Map
+//   JXPathAbstractFactoryException -> org.apache.commons.jxpath.JXPathAbstractFactoryException
+//   JXPathContext -> org.apache.commons.jxpath.JXPathContext
+//   JXPathException -> org.apache.commons.jxpath.JXPathException
+//   Pointer -> org.apache.commons.jxpath.Pointer
+//   Compiler -> org.apache.commons.jxpath.ri.Compiler
+//   NamespaceResolver -> org.apache.commons.jxpath.ri.NamespaceResolver
+//   QName -> org.apache.commons.jxpath.ri.QName
+//   NodeNameTest -> org.apache.commons.jxpath.ri.compiler.NodeNameTest
+//   NodeTest -> org.apache.commons.jxpath.ri.compiler.NodeTest
+//   NodeTypeTest -> org.apache.commons.jxpath.ri.compiler.NodeTypeTest
+//   ProcessingInstructionTest -> org.apache.commons.jxpath.ri.compiler.ProcessingInstructionTest
+//   NodeIterator -> org.apache.commons.jxpath.ri.model.NodeIterator
+//   NodePointer -> org.apache.commons.jxpath.ri.model.NodePointer
+//   NullPointer -> org.apache.commons.jxpath.ri.model.beans.NullPointer
+//   TypeUtils -> org.apache.commons.jxpath.util.TypeUtils
+//   Attr -> org.w3c.dom.Attr
+//   Comment -> org.w3c.dom.Comment
+//   Document -> org.w3c.dom.Document
+//   Element -> org.w3c.dom.Element
+//   NamedNodeMap -> org.w3c.dom.NamedNodeMap
+//   Node -> org.w3c.dom.Node
+//   NodeList -> org.w3c.dom.NodeList
+//   ProcessingInstruction -> org.w3c.dom.ProcessingInstruction
+//   DOMNodePointer -> org.apache.commons.jxpath.ri.model.dom.DOMNodePointer
+
+// === Class: DOMNodePointer ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final Node node;
+    private Map namespaces;
+    private String defaultNamespace;
+    private String id;
+    private NamespaceResolver localNamespaceResolver;
+    public static final String XML_NAMESPACE_URI;
+    public static final String XMLNS_NAMESPACE_URI;
+
+// Constructors:
+public DOMNodePointer(Node node, Locale locale);
+public DOMNodePointer(Node node, Locale locale, String id);
+public DOMNodePointer(NodePointer parent, Node node);
+
+// Getter/Setter Methods (for test assertions):
+public QName getName();
+public String getNamespaceURI();
+public synchronized NamespaceResolver getNamespaceResolver();
+public String getNamespaceURI(final String prefix);
+public String getDefaultNamespaceURI();
+public Object getBaseValue();
+public Object getImmediateNode();
+public boolean isActual();
+public boolean isCollection();
+public int getLength();
+public boolean isLeaf();
+public boolean isLanguage(final String lang);
+protected String getLanguage();
+public void setValue(final Object value);
+private int getRelativePositionByQName();
+
+// Internal Methods (full implementation for context):
+    public String getNamespaceURI() {
+        return getNamespaceURI(node);
+    }
+    private int getRelativePositionByQName() {
+        int count = 1;
+        Node n = node.getPreviousSibling();
+        while (n != null) {
+            if (n.getNodeType() == Node.ELEMENT_NODE && matchesQName(n)) {
+                count++;
+            }
+            n = n.getPreviousSibling();
+        }
+        return count;
+    }
+    public synchronized NamespaceResolver getNamespaceResolver() {
+        if (localNamespaceResolver == null) {
+            localNamespaceResolver = new NamespaceResolver(super.getNamespaceResolver());
+            localNamespaceResolver.setNamespaceContextPointer(this);
+        }
+        return localNamespaceResolver;
+    }
+    public static String getLocalName(final Node node) {
+        final String localName = node.getLocalName();
+        if (localName != null) {
+            return localName;
+        }
+
+        final String name = node.getNodeName();
+        final int index = name.lastIndexOf(':');
+        return index < 0 ? name : name.substring(index + 1);
+    }
+    private int getRelativePositionOfPI() {
+        int count = 1;
+        final String target = ((ProcessingInstruction) node).getTarget();
+        Node n = node.getPreviousSibling();
+        while (n != null) {
+            if (n.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE
+                && ((ProcessingInstruction) n).getTarget().equals(target)) {
+                count++;
+            }
+            n = n.getPreviousSibling();
+        }
+        return count;
+    }
+    private int getRelativePositionOfTextNode() {
+        int count = 1;
+        Node n = node.getPreviousSibling();
+        while (n != null) {
+            if (n.getNodeType() == Node.TEXT_NODE
+                || n.getNodeType() == Node.CDATA_SECTION_NODE) {
+                count++;
+            }
+            n = n.getPreviousSibling();
+        }
+        return count;
+    }
+    private int getRelativePositionOfElement() {
+        int count = 1;
+        Node n = node.getPreviousSibling();
+        while (n != null) {
+            if (n.getNodeType() == Node.ELEMENT_NODE) {
+                count++;
+            }
+            n = n.getPreviousSibling();
+        }
+        return count;
+    }
+
+// === Superclass: NodePointer (inherited members) ===
+// Inherited Fields:
+    public static final int WHOLE_COLLECTION;
+    public static final String UNKNOWN_NAMESPACE;
+    protected int index;
+    protected NodePointer parent;
+    protected Locale locale;
+
+// Inherited Method Signatures:
+public static NodePointer newNodePointer(final QName name, final Object bean, final Locale locale);
+public static NodePointer newChildNodePointer(final NodePointer parent, final QName name, final Object bean);
+public NamespaceResolver getNamespaceResolver();
+public void setNamespaceResolver(final NamespaceResolver namespaceResolver);
+public NodePointer getParent();
+public NodePointer getImmediateParentPointer();
+public void setAttribute(final boolean attribute);
+public boolean isAttribute();
+public boolean isRoot();
+public abstract boolean isLeaf();
+public boolean isNode();
+public boolean isContainer();
+public int getIndex();
+public void setIndex(final int index);
+public abstract boolean isCollection();
+public abstract int getLength();
+public Object getValue();
+public NodePointer getValuePointer();
+public NodePointer getImmediateValuePointer();
+public boolean isActual();
+public abstract QName getName();
+public abstract Object getBaseValue();
+public Object getNodeValue();
+public Object getNode();
+synchronized public Object getRootNode();
+public abstract Object getImmediateNode();
+public abstract void setValue(Object value);
+public abstract int compareChildNodePointers(NodePointer pointer1, NodePointer pointer2);
+public boolean testNode(final NodeTest test);
+public NodePointer createPath(final JXPathContext context, final Object value);
+public void remove();
+public NodePointer createPath(final JXPathContext context, final Object value);
+public NodePointer createChild(final JXPathContext context, final QName name, final int index, final Object value);
+public NodePointer createChild(final JXPathContext context, final QName name, final int index, final Object value);
+public NodePointer createAttribute(final JXPathContext context, final QName name);
+public Locale getLocale();
+public boolean isLanguage(final String lang);
+public NodeIterator childIterator(final NodeTest test, final boolean reverse, final NodePointer startWith);
+public NodeIterator attributeIterator(final QName qname);
+public NodeIterator namespaceIterator();
+public NodePointer namespacePointer(final String namespace);
+public String getNamespaceURI(final String prefix);
+public String getNamespaceURI(final String prefix);
+protected boolean isDefaultNamespace(final String prefix);
+protected String getDefaultNamespaceURI();
+public Pointer getPointerByID(final JXPathContext context, final String id);
+public Pointer getPointerByKey(final JXPathContext context, final String key, final String value);
+public NodeSet getNodeSetByKey(final JXPathContext context, final String key, final Object value);
+public String asPath();
+public int compareTo(final Object object);
+public void printPointerChain();
+public void setExceptionHandler(final ExceptionHandler exceptionHandler);
+public void handle(final Throwable t, final NodePointer originator);
+public void handle(final Throwable t, final NodePointer originator);
+protected String escape(final String string);
+protected AbstractFactory getAbstractFactory(final JXPathContext context);
+public static NodePointer verify(final NodePointer nodePointer);
+
+
+
+
+TASK:
+Regenerate ONLY the method "asPath" OF CLASS "DOMNodePointer" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public String asPath() {
+    // your implementation here
+}
+```
+
+- Package: org.apache.commons.jxpath.ri.model.dom
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "asPath"
+- Allowed imports: exactly those already present in DOMNodePointer
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

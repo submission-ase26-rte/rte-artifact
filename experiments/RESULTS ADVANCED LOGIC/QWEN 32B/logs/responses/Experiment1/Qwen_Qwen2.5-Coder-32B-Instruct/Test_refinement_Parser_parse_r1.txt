@@ -1,0 +1,105 @@
+```java
+package org.apache.commons.cli;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Parser_parseTestGenerated {
+    private Parser parser;
+    private Options options;
+    private Properties properties;
+
+    @BeforeEach
+    void setUp() {
+        parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+        };
+        options = new Options();
+        properties = new Properties();
+    }
+
+    @Test
+    void testParseWithStopAtNonOptionTrueAndUnrecognizedOption() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{"-a", "arg1", "arg2"}, properties, true);
+        assertEquals(Arrays.asList("-a", "arg1", "arg2"), cmd.getArgList());
+        assertFalse(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithDoubleDash() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{"-a", "--", "arg1", "arg2"}, properties, false);
+        assertEquals(Arrays.asList("arg1", "arg2"), cmd.getArgList());
+        assertFalse(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithNullProperties() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{"-a"}, null, false);
+        assertFalse(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithDoubleDashAndStopAtNonOptionTrue() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{"-a", "--", "arg1", "arg2"}, properties, true);
+        assertEquals(Arrays.asList("-a", "arg1", "arg2"), cmd.getArgList());
+        assertFalse(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithSingleDashAndStopAtNonOptionTrue() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{"-a", "-", "arg1", "arg2"}, properties, true);
+        assertEquals(Arrays.asList("-a", "-", "arg1", "arg2"), cmd.getArgList());
+        assertFalse(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithSingleDashAndStopAtNonOptionFalse() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{"-a", "-", "arg1", "arg2"}, properties, false);
+        assertEquals(Arrays.asList("arg1", "arg2"), cmd.getArgList());
+        assertFalse(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithArgumentAndStopAtNonOptionTrue() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{"-a", "arg1", "arg2"}, properties, true);
+        assertEquals(Arrays.asList("-a", "arg1", "arg2"), cmd.getArgList());
+        assertFalse(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithArgumentAndStopAtNonOptionFalse() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{"-a", "arg1", "arg2"}, properties, false);
+        assertEquals(Arrays.asList("arg1", "arg2"), cmd.getArgList());
+        assertFalse(cmd.hasOption("a"));
+    }
+
+    @Test
+    void testParseWithDoubleDashAndArguments() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{"--", "arg1", "arg2"}, properties, false);
+        assertEquals(Arrays.asList("arg1", "arg2"), cmd.getArgList());
+    }
+
+    @Test
+    void testParseWithSingleDashAndArguments() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{"-", "arg1", "arg2"}, properties, false);
+        assertEquals(Arrays.asList("arg1", "arg2"), cmd.getArgList());
+    }
+
+    @Test
+    void testParseWithArgumentsOnly() throws ParseException {
+        CommandLine cmd = parser.parse(options, new String[]{"arg1", "arg2"}, properties, false);
+        assertEquals(Arrays.asList("arg1", "arg2"), cmd.getArgList());
+    }
+}
+```

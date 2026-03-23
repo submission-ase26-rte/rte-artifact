@@ -1,0 +1,160 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.concurrent.Future;
+
+import javax.annotation.Resource;
+import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.inject.Inject;
+import javax.jms.JMSContext;
+import javax.jms.JMSException;
+import javax.jms.Queue;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.TextMessage;
+import javax.jms.Topic;
+import javax.jms.TopicConnectionFactory;
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+import javax.validation.constraints.NotNull;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.*;
+import com.ibm.websphere.samples.daytrader.util.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeDirect_buyTestGenerated {
+
+    @Inject
+    private TradeDirect tradeDirect;
+
+    @Resource(name = "tradeBrokerQueue")
+    private Queue tradeBrokerQueue;
+
+    @Resource(name = "tradeStreamerTopic")
+    private Topic tradeStreamerTopic;
+
+    @Resource(name = "queueConnectionFactory")
+    private QueueConnectionFactory queueConnectionFactory;
+
+    @Resource(name = "topicConnectionFactory")
+    private TopicConnectionFactory topicConnectionFactory;
+
+    @Resource(name = "tradeDatasource")
+    private DataSource datasource;
+
+    @Resource(name = "tradeUserTransaction")
+    private UserTransaction txn;
+
+    @Resource(name = "managedExecutorService")
+    private ManagedExecutorService mes;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        tradeDirect = new TradeDirect();
+        tradeDirect.queueConnectionFactory = queueConnectionFactory;
+        tradeDirect.topicConnectionFactory = topicConnectionFactory;
+        tradeDirect.tradeStreamerTopic = tradeStreamerTopic;
+        tradeDirect.tradeBrokerQueue = tradeBrokerQueue;
+        tradeDirect.datasource = datasource;
+        tradeDirect.txn = txn;
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+
+    }
+
+    @Test
+    public void testBuySynchronous() throws Exception {
+        String userID = "user1";
+        String symbol = "IBM";
+        double quantity = 100.0;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        OrderDataBean orderData = tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+
+        assertNotNull(orderData);
+        assertEquals(userID, orderData.getUserID());
+        assertEquals(symbol, orderData.getSymbol());
+    }
+
+    @Test
+    public void testBuyAsynchronous() throws Exception {
+        String userID = "user1";
+        String symbol = "IBM";
+        double quantity = 100.0;
+        int orderProcessingMode = TradeConfig.ASYNCH;
+
+        Future<OrderDataBean> future = tradeDirect.completeOrderAsync(1, true);
+
+        OrderDataBean orderData = tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+
+        assertNotNull(orderData);
+        assertEquals(userID, orderData.getUserID());
+        assertEquals(symbol, orderData.getSymbol());
+    }
+
+    @Test
+    public void testBuyAsynchronousTwoPhase() throws Exception {
+        String userID = "user1";
+        String symbol = "IBM";
+        double quantity = 100.0;
+        int orderProcessingMode = TradeConfig.ASYNCH_2PHASE;
+
+        OrderDataBean orderData = tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+
+        assertNotNull(orderData);
+        assertEquals(userID, orderData.getUserID());
+        assertEquals(symbol, orderData.getSymbol());
+    }
+
+    @Test
+    public void testBuyInvalidSymbol() throws Exception {
+        String userID = "user1";
+        String symbol = "INVALID";
+        double quantity = 100.0;
+        int orderProcessingMode = TradeConfig.SYNCH;
+        assertThrows(Exception.class, () -> tradeDirect.buy(userID, symbol, quantity, orderProcessingMode));
+    }
+
+    @Test
+    public void testBuyInvalidQuantity() throws Exception {
+        String userID = "user1";
+        String symbol = "IBM";
+        double quantity = -100.0;
+        int orderProcessingMode = TradeConfig.SYNCH;
+        assertThrows(Exception.class, () -> tradeDirect.buy(userID, symbol, quantity, orderProcessingMode));
+    }
+
+    @Test
+    public void testBuyWithExistingHolding() throws Exception {
+        String userID = "user1";
+        String symbol = "IBM";
+        double quantity = 50.0;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        OrderDataBean orderData = tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+
+        assertNotNull(orderData);
+        assertEquals(userID, orderData.getUserID());
+        assertEquals(symbol, orderData.getSymbol());
+    }
+}
+```

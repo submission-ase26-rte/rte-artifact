@@ -1,0 +1,492 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Extracted tests for method: nextNode()
+ * Original class: PrecedingOrFollowingContext
+ * Source: ASTER GPT-4
+ */
+package org.apache.commons.jxpath.ri.axes;
+
+import java.util.Stack;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.jxpath.ri.EvalContext;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.compiler.NodeTypeTest;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+import static org.mockito.Mockito.*;
+
+public class Metodo41_nextNode_PrecedingOrFollowingContext_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode_initialStackEmpty_PMUN0() {
+    NamespaceContext parentContext = mock(NamespaceContext.class);
+    NodeTypeTest nodeTest = new NodeTypeTest(1);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(parentContext, nodeTest, false);
+    when(parentContext.getCurrentNodePointer()).thenReturn(null);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode_initialStackNotEmpty_KDDo1() {
+    NamespaceContext parentContext = mock(NamespaceContext.class);
+    NodeTypeTest nodeTest = new NodeTypeTest(1);
+    NodePointer mockNodePointer = mock(NodePointer.class);
+    NodeIterator mockIterator = mock(NodeIterator.class);
+    when(parentContext.getCurrentNodePointer()).thenReturn(mockNodePointer);
+    when(mockNodePointer.getParent()).thenReturn(mockNodePointer);
+    when(mockNodePointer.childIterator(null, false, mockNodePointer)).thenReturn(mockIterator);
+    when(mockIterator.setPosition(anyInt())).thenReturn(true);
+    when(mockIterator.getNodePointer()).thenReturn(mockNodePointer);
+    when(mockNodePointer.isLeaf()).thenReturn(true);
+    when(mockNodePointer.testNode(nodeTest)).thenReturn(true);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(parentContext, nodeTest, false);
+    boolean result = context.nextNode();
+    assertTrue(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode_stackNotEmpty_reverseTrue_rynr2() {
+    NamespaceContext parentContext = mock(NamespaceContext.class);
+    NodeTypeTest nodeTest = new NodeTypeTest(1);
+    NodePointer mockNodePointer = mock(NodePointer.class);
+    NodeIterator mockIterator = mock(NodeIterator.class);
+    when(parentContext.getCurrentNodePointer()).thenReturn(mockNodePointer);
+    when(mockNodePointer.getParent()).thenReturn(mockNodePointer);
+    when(mockNodePointer.childIterator(null, true, mockNodePointer)).thenReturn(mockIterator);
+    when(mockIterator.setPosition(anyInt())).thenReturn(true);
+    when(mockIterator.getNodePointer()).thenReturn(mockNodePointer);
+    when(mockNodePointer.isLeaf()).thenReturn(false);
+    when(mockNodePointer.childIterator(null, true, null)).thenReturn(mockIterator);
+    when(mockNodePointer.testNode(nodeTest)).thenReturn(false);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode_stackNotEmpty_reverseFalse_nodeTestFails_ERNM3() {
+    NamespaceContext parentContext = mock(NamespaceContext.class);
+    NodeTypeTest nodeTest = new NodeTypeTest(1);
+    NodePointer mockNodePointer = mock(NodePointer.class);
+    NodeIterator mockIterator = mock(NodeIterator.class);
+    when(parentContext.getCurrentNodePointer()).thenReturn(mockNodePointer);
+    when(mockNodePointer.getParent()).thenReturn(mockNodePointer);
+    when(mockNodePointer.childIterator(null, false, mockNodePointer)).thenReturn(mockIterator);
+    when(mockIterator.setPosition(anyInt())).thenReturn(true);
+    when(mockIterator.getNodePointer()).thenReturn(mockNodePointer);
+    when(mockNodePointer.isLeaf()).thenReturn(true);
+    when(mockNodePointer.testNode(nodeTest)).thenReturn(false);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(parentContext, nodeTest, false);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode_currentRootLocationIsRoot_QWeI5() {
+    NamespaceContext parentContext = mock(NamespaceContext.class);
+    NodeTypeTest nodeTest = new NodeTypeTest(1);
+    NodePointer mockNodePointer = mock(NodePointer.class);
+    when(parentContext.getCurrentNodePointer()).thenReturn(mockNodePointer);
+    when(mockNodePointer.getParent()).thenReturn(null);
+    when(mockNodePointer.isRoot()).thenReturn(true);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(parentContext, nodeTest, false);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetPosition_SuccessfullyAdvancesPosition() throws Exception {
+    // Initialize PrecedingOrFollowingContext with mocked dependencies
+        EvalContext mockNamespaceContext = mock(EvalContext.class);
+        NodeTest mockNodeTypeTest = mock(NodeTest.class);
+        PrecedingOrFollowingContext precedingOrFollowingContext = new PrecedingOrFollowingContext(mockNamespaceContext, mockNodeTypeTest, false);
+    // Arrange
+    int initialPosition = 1;
+    int newPosition = 3;
+    // Simulate the internal state and behavior
+    when(precedingOrFollowingContext.nextNode()).thenReturn(true, true, false);
+    // Act
+    boolean result = precedingOrFollowingContext.setPosition(newPosition);
+    // Assert
+    assertTrue(result, "setPosition should return true when it can advance to the requested position");
+    verify(precedingOrFollowingContext, times(2)).nextNode();
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSetPosition_FailsToAdvancePosition() throws Exception {
+    // Initialize PrecedingOrFollowingContext with mocked dependencies
+        EvalContext mockNamespaceContext = null;
+        NodeTest mockNodeTypeTest = null;
+        PrecedingOrFollowingContext precedingOrFollowingContext = new PrecedingOrFollowingContext(mockNamespaceContext, mockNodeTypeTest, false);
+    // Arrange
+    int initialPosition = 1;
+    int newPosition = 5;
+    // Simulate the internal state and behavior
+    when(precedingOrFollowingContext.nextNode()).thenReturn(true, true, false);
+    // Act
+    boolean result = precedingOrFollowingContext.setPosition(newPosition);
+    // Assert
+    assertFalse(result, "setPosition should return false when it cannot advance to the requested position");
+    verify(precedingOrFollowingContext, times(3)).nextNode();
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode1_OyFP0() {
+    NodeTypeTest nodeTest = new NodeTypeTest(1);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, false);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode2_uvao1() {
+    NodeTypeTest nodeTest = new NodeTypeTest(2);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, true);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode3_vHoK2() {
+    NodeTypeTest nodeTest = new NodeTypeTest(3);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, false);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode4_uaAJ3() {
+    NodeTypeTest nodeTest = new NodeTypeTest(4);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, true);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode5_KTHc4() {
+    NodeTypeTest nodeTest = new NodeTypeTest(5);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, false);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode6_bsoY5() {
+    NodeTypeTest nodeTest = new NodeTypeTest(6);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, true);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode7_peJK6() {
+    NodeTypeTest nodeTest = new NodeTypeTest(7);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, false);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode8_CJui7() {
+    NodeTypeTest nodeTest = new NodeTypeTest(8);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, true);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode9_Rbwj8() {
+    NodeTypeTest nodeTest = new NodeTypeTest(9);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, false);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode10_jsRK9() {
+    NodeTypeTest nodeTest = new NodeTypeTest(10);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, true);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode11_jvmZ10() {
+    NodeTypeTest nodeTest = new NodeTypeTest(11);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, false);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode12_qYdZ11() {
+    NodeTypeTest nodeTest = new NodeTypeTest(12);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, true);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode13_hQby12() {
+    NodeTypeTest nodeTest = new NodeTypeTest(13);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, false);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode14_YqCL13() {
+    NodeTypeTest nodeTest = new NodeTypeTest(14);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, true);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode15_gGra14() {
+    NodeTypeTest nodeTest = new NodeTypeTest(15);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, false);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode16_yWwa15() {
+    NodeTypeTest nodeTest = new NodeTypeTest(16);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, true);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode17_MWtP16() {
+    NodeTypeTest nodeTest = new NodeTypeTest(17);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, false);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNextNode18_SiZw17() {
+    NodeTypeTest nodeTest = new NodeTypeTest(18);
+    NamespaceContext namespaceContext = new NamespaceContext(null, nodeTest);
+    PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(namespaceContext, nodeTest, true);
+    boolean result = context.nextNode();
+    assertFalse(result);
+    }
+
+    @Test
+    public void testNextNode_sCMI0() {
+        EvalContext parentContext=mock(EvalContext.class);
+        NodeTest nodeTest=mock(NodeTest.class);
+        PrecedingOrFollowingContext context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+    when(parentContext.getCurrentNodePointer()).thenReturn(null); // Mock the behavior as per requirement
+    boolean result = context.nextNode();
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 2/26 passed
+
+TEST STATUS:
+- PASSED (2): testNextNode_initialStackNotEmpty_KDDo1, testNextNode_currentRootLocationIsRoot_QWeI5
+- FAILED (0): none
+- ERRORS (24): testNextNode_initialStackEmpty_PMUN0, testNextNode_stackNotEmpty_reverseTrue_rynr2, testNextNode_stackNotEmpty_reverseFalse_nodeTestFails_ERNM3, testSetPosition_SuccessfullyAdvancesPosition, testSetPosition_FailsToAdvancePosition, testNextNode1_OyFP0, testNextNode2_uvao1, testNextNode3_vHoK2, testNextNode4_uaAJ3, testNextNode5_KTHc4, testNextNode6_bsoY5, testNextNode7_peJK6, testNextNode8_CJui7, testNextNode9_Rbwj8, testNextNode10_jsRK9, testNextNode11_jvmZ10, testNextNode12_qYdZ11, testNextNode13_hQby12, testNextNode14_YqCL13, testNextNode15_gGra14, testNextNode16_yWwa15, testNextNode17_MWtP16, testNextNode18_SiZw17, testNextNode_sCMI0
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Stack -> java.util.Stack
+//   EvalContext -> org.apache.commons.jxpath.ri.EvalContext
+//   NodeTest -> org.apache.commons.jxpath.ri.compiler.NodeTest
+//   NodeIterator -> org.apache.commons.jxpath.ri.model.NodeIterator
+//   NodePointer -> org.apache.commons.jxpath.ri.model.NodePointer
+//   PrecedingOrFollowingContext -> org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+
+// === Class: PrecedingOrFollowingContext ===
+// Fields (with actual visibility):
+    private final NodeTest nodeTest;
+    private boolean setStarted;
+    private Stack stack;
+    private NodePointer currentNodePointer;
+    private NodePointer currentRootLocation;
+    private final boolean reverse;
+
+// Constructors:
+public PrecedingOrFollowingContext(EvalContext parentContext, NodeTest nodeTest, boolean reverse);
+
+// Getter/Setter Methods (for test assertions):
+public NodePointer getCurrentNodePointer();
+public int getDocumentOrder();
+public boolean setPosition(final int position);
+
+// === Superclass: EvalContext (inherited members) ===
+// Inherited Fields:
+    protected EvalContext parentContext;
+    protected RootContext rootContext;
+    protected int position;
+
+// Inherited Method Signatures:
+public Pointer getContextNodePointer();
+public JXPathContext getJXPathContext();
+public int getPosition();
+public int getDocumentOrder();
+public boolean isChildOrderingRequired();
+public boolean hasNext();
+public Object next();
+public void remove();
+protected void sortPointers(final List l);
+public List getContextNodeList();
+public NodeSet getNodeSet();
+public Object getValue();
+public RootContext getRootContext();
+public void reset();
+public int getCurrentPosition();
+public Pointer getSingleNodePointer();
+abstract public NodePointer getCurrentNodePointer();
+public boolean nextSet();
+abstract public boolean nextNode();
+public boolean setPosition(final int position);
+
+// === External Class: NodePointer ===
+// Full import path: org.apache.commons.jxpath.ri.model.NodePointer
+// Type: ABSTRACT CLASS
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    public static final int WHOLE_COLLECTION;
+    public static final String UNKNOWN_NAMESPACE;
+    protected int index;
+    private boolean attribute;
+    private NamespaceResolver namespaceResolver;
+    private ExceptionHandler exceptionHandler;
+    private Object rootNode;
+    protected NodePointer parent;
+    protected Locale locale;
+// Constructors:
+protected NodePointer(NodePointer parent);
+protected NodePointer(NodePointer parent, Locale locale);
+// Method Signatures (used by target method):
+public boolean testNode(final NodeTest test);
+public NodePointer getParent();
+public boolean isRoot();
+public NodeIterator childIterator(final NodeTest test, final boolean reverse, final NodePointer startWith);
+abstract public boolean isLeaf();
+// Public Getter Methods (for test assertions):
+public NamespaceResolver getNamespaceResolver();
+public NodePointer getImmediateParentPointer();
+public boolean isAttribute();
+public boolean isNode();
+public boolean isContainer();
+public int getIndex();
+public boolean isCollection();
+public int getLength();
+public Object getValue();
+public NodePointer getValuePointer();
+
+// === External Class: NodeIterator ===
+// Full import path: org.apache.commons.jxpath.ri.model.NodeIterator
+// Type: INTERFACE (cannot instantiate)
+// Method Signatures (used by target method):
+boolean setPosition(int position);
+NodePointer getNodePointer();
+int getPosition();
+
+
+TASK:
+Regenerate ONLY the method "nextNode" OF CLASS "PrecedingOrFollowingContext" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public boolean nextNode() {
+    // your implementation here
+}
+```
+
+- Package: org.apache.commons.jxpath.ri.axes
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "nextNode"
+- Allowed imports: exactly those already present in PrecedingOrFollowingContext
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

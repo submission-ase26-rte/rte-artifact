@@ -1,0 +1,194 @@
+package org.apache.commons.codec.language;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Metaphone_metaphoneTestGenerated {
+    private Metaphone metaphone;
+
+    @BeforeEach
+    void setUp() {
+        metaphone = Mockito.mock(Metaphone.class);
+        when(metaphone.getMaxCodeLen()).thenReturn(4);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.reset(metaphone);
+    }
+
+    @Test
+        void testMetaphone_emptyInput() {
+            assertEquals("", metaphone.metaphone(""));
+        }
+
+    @Test
+        void testMetaphone_kn() {
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("N", metaphone.metaphone("KN"));
+        }
+
+    @Test
+        void testMetaphone_ae() {
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("E", metaphone.metaphone("AE"));
+        }
+
+    @Test
+        void testMetaphone_wr() {
+           when(metaphone.getMaxCodeLen()).thenReturn(4);
+           assertEquals("R", metaphone.metaphone("WR"));
+        }
+
+    @Test
+        void testMetaphone_wh() {
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("W", metaphone.metaphone("WH"));
+        }
+
+    @Test
+        void testMetaphone_x() {
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("S", metaphone.metaphone("X"));
+        }
+
+    @Test
+        void testMetaphone_normalWord() {
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("M5T", metaphone.metaphone("Smith"));
+        }
+
+    @Test
+        void testMetaphone_withVowels() {
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("M1T", metaphone.metaphone("Matt"));
+        }
+
+    @Test
+        void testMetaphone_duplicateLetters() {
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("K", metaphone.metaphone("KEE"));
+        }
+
+    @Test
+        void testMetaphone_regionMatch() {
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("X", metaphone.metaphone("CIA"));
+        }
+
+    @Test
+        void testMetaphone_dg() {
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("J", metaphone.metaphone("DGE"));
+        }
+
+    @Test
+        void testMetaphone_gh() {
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("K", metaphone.metaphone("GH"));
+        }
+
+    @Test
+        void testMetaphone_th() {
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("0", metaphone.metaphone("TH"));
+        }
+
+    @Test
+        void testMetaphone_ph() {
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("F", metaphone.metaphone("PH"));
+        }
+
+    @Test
+        void testMetaphone_sh() {
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("X", metaphone.metaphone("SH"));
+        }
+
+    @Test
+        void testMetaphone_tio() {
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("X", metaphone.metaphone("TIO"));
+        }
+
+    @Test
+        void testMetaphone_tch() {
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("T", metaphone.metaphone("TCH"));
+        }
+
+    @Test
+        void testMetaphone_singleCharacter() {
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("A", metaphone.metaphone("A").toUpperCase());
+            when(metaphone.getMaxCodeLen()).thenReturn(4);
+            assertEquals("B", metaphone.metaphone("B").toUpperCase());
+        }
+
+    @Test
+    void testMetaphone_initialExceptions() {
+        when(metaphone.getMaxCodeLen()).thenReturn(4);
+        assertEquals("KN", metaphone.metaphone("KNIGHT"));
+    }
+
+    @Test
+    void testMetaphone_vowelStart() {
+        when(metaphone.getMaxCodeLen()).thenReturn(4);
+        assertEquals("E", metaphone.metaphone("EAGLE"));
+    }
+
+    @Test
+    void testMetaphone_hardG() {
+        when(metaphone.getMaxCodeLen()).thenReturn(4);
+        assertEquals("K", metaphone.metaphone("GHOST"));
+    }
+
+    @Test
+    void testMetaphone_silentB() {
+        when(metaphone.getMaxCodeLen()).thenReturn(4);
+        assertEquals("MB", metaphone.metaphone("COMB"));
+    }
+
+    @Test
+    void testMetaphone_regionMatch2() {
+        when(metaphone.getMaxCodeLen()).thenReturn(4);
+        assertEquals("X", metaphone.metaphone("SCI"));
+    }
+
+    @Test
+    void testMetaphone_sch() {
+        when(metaphone.getMaxCodeLen()).thenReturn(4);
+        assertEquals("SK", metaphone.metaphone("SCHMIDT"));
+    }
+
+    @Test
+    void testMetaphone_thInitial() {
+        when(metaphone.getMaxCodeLen()).thenReturn(4);
+        assertEquals("0", metaphone.metaphone("THOMAS"));
+    }
+
+    @Test
+    void testMetaphone_phInitial() {
+        when(metaphone.getMaxCodeLen()).thenReturn(4);
+        assertEquals("F", metaphone.metaphone("PHILLIP"));
+    }
+
+    @Test
+    void testMetaphone_tio2() {
+        when(metaphone.getMaxCodeLen()).thenReturn(4);
+        assertEquals("X", metaphone.metaphone("TIO"));
+    }
+
+    @Test
+    void testMetaphone_nullInput() {
+        assertNull(metaphone.metaphone(null));
+    }
+
+}

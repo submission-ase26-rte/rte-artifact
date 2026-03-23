@@ -1,0 +1,46 @@
+```java
+public static String detect(final InputStream in) throws ArchiveException {
+    if (in == null) {
+        throw new IllegalArgumentException("InputStream may not be null");
+    }
+    if (!in.markSupported()) {
+        throw new IllegalArgumentException("Mark is not supported");
+    }
+    final byte[] signature = new byte[ArchiveStreamFactory.SIGNATURE_SIZE];
+    try {
+        in.mark(ArchiveStreamFactory.SIGNATURE_SIZE);
+        int read = IOUtils.readFully(in, signature);
+        in.reset();
+        if (read < ArchiveStreamFactory.SIGNATURE_SIZE) {
+            throw new ArchiveException("Input is too short");
+        }
+        if (ZipArchiveInputStream.matches(signature, read)) {
+            return ArchiveStreamFactory.ZIP;
+        }
+        if (JarArchiveInputStream.matches(signature, read)) {
+            return ArchiveStreamFactory.JAR;
+        }
+        if (TarArchiveInputStream.matches(signature, read)) {
+            return ArchiveStreamFactory.TAR;
+        }
+        if (ArArchiveInputStream.matches(signature, read)) {
+            return ArchiveStreamFactory.AR;
+        }
+        if (CpioArchiveInputStream.matches(signature, read)) {
+            return ArchiveStreamFactory.CPIO;
+        }
+        if (ArjArchiveInputStream.matches(signature, read)) {
+            return ArchiveStreamFactory.ARJ;
+        }
+        if (SevenZFile.matches(signature, read)) {
+            return ArchiveStreamFactory.SEVEN_Z;
+        }
+        if (DumpArchiveInputStream.matches(signature, read)) {
+            return ArchiveStreamFactory.DUMP;
+        }
+        throw new ArchiveException("No archive detected");
+    } catch (IOException e) {
+        throw new ArchiveException("Failed to read signature", e);
+    }
+}
+```

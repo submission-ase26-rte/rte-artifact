@@ -1,0 +1,115 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.direct;
+Class name (MUST be exactly): TradeDirectDBUtils_resetTradeTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.mock;
+
+import javax.sql.DataSource;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockedStatic;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeDB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeJDBC;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.MDBStats;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@MockitoExtension
+public class TradeDirectDBUtils_resetTradeTestGenerated {
+
+  @Mock
+  private DataSource datasource;
+
+  @Mock
+  private TradeServices ts;
+
+  private TradeDirectDBUtils tradeDirectDBUtils;
+
+  @BeforeEach
+  public void setUp() throws Exception {
+    tradeDirectDBUtils = new TradeDirectDBUtils(datasource, ts);
+  }
+
+  @AfterEach
+  public void tearDown() {
+    Mockito.reset(datasource, ts);
+  }
+
+  @Test
+  public void testResetTradeDeleteAllTrue() throws Exception {
+    RunStatsDataBean expectedRunStatsData = new RunStatsDataBean();
+    when(datasource.getConnection()).thenReturn(mock(Connection.class));
+    tradeDirectDBUtils.resetTrade(true);
+  }
+
+  @Test
+  public void testResetTradeDeleteAllFalse() throws Exception {
+    RunStatsDataBean expectedRunStatsData = new RunStatsDataBean();
+    Connection mockConnection = mock(Connection.class);
+    when(datasource.getConnection()).thenReturn(mockConnection);
+    PreparedStatement mockStmt = mock(PreparedStatement.class);
+    ResultSet mockRs = mock(ResultSet.class);
+
+    when(mockConnection.createStatement()).thenReturn(mock(Statement.class));
+
+    when(datasource.getConnection()).thenReturn(mockConnection);
+
+    tradeDirectDBUtils.resetTrade(false);
+  }
+
+  @Test
+  public void testResetTradeException() throws Exception {
+    Connection mockConnection = mock(Connection.class);
+    when(datasource.getConnection()).thenReturn(mockConnection);
+
+    Mockito.doThrow(new SQLException()).when(mockConnection).createStatement();
+
+    assertThrows(SQLException.class, () -> {
+      tradeDirectDBUtils.resetTrade(false);
+    });
+  }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirectDBUtils_resetTradeTestGenerated.java:[34] incompatible types: org.mockito.junit.jupiter.MockitoExtension cannot be converted to java.lang.annotation.Annotation
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/direct/TradeDirectDBUtils_resetTradeTestGenerated.java:[47] constructor TradeDirectDBUtils in class com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils cannot be applied to given types;
+  required: no arguments
+  found:    javax.sql.DataSource,com.ibm.websphere.samples.daytrader.interfaces.TradeServices
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- For static method calls, ensure mockStatic is properly closed (use try-with-resources)
+- Keep the SAME class name: TradeDirectDBUtils_resetTradeTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

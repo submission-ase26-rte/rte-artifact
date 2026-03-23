@@ -1,0 +1,80 @@
+```java
+public void contextInitialized(ServletContextEvent event) {
+    ServletContext servletContext = event.getServletContext();
+    InputStream inputStream = servletContext.getResourceAsStream("/properties/daytrader.properties");
+    boolean propertiesLoaded = false;
+
+    try {
+        if (inputStream != null) {
+            Properties properties = new Properties();
+            properties.load(inputStream);
+            setPropertiesFromFile(properties);
+            propertiesLoaded = true;
+        }
+    } catch (IOException e) {
+        Log.trace("Error loading properties file: " + e.getMessage());
+    }
+
+    if (!propertiesLoaded) {
+        setPropertiesFromEnvironmentVariables();
+    }
+
+    if (!propertiesLoaded) {
+        setDefaultProperties();
+    }
+}
+
+private void setPropertiesFromFile(Properties properties) {
+    TradeConfig.setRunTimeMode(Integer.parseInt(properties.getProperty("runtimeMode")));
+    TradeConfig.setOrderProcessingMode(Integer.parseInt(properties.getProperty("orderProcessingMode")));
+    TradeConfig.setMAX_USERS(Integer.parseInt(properties.getProperty("maxUsers")));
+    TradeConfig.setMAX_QUOTES(Integer.parseInt(properties.getProperty("maxQuotes")));
+    TradeConfig.setPublishQuotePriceChange(Boolean.parseBoolean(properties.getProperty("publishQuotePriceChange")));
+    TradeConfig.setDisplayOrderAlerts(Boolean.parseBoolean(properties.getProperty("displayOrderAlerts")));
+    TradeConfig.setWebInterface(Integer.parseInt(properties.getProperty("webInterface")));
+    TradeConfig.setListQuotePriceChangeFrequency(Integer.parseInt(properties.getProperty("listQuotePriceChangeFrequency")));
+    TradeConfig.setPrimIterations(Integer.parseInt(properties.getProperty("primIterations")));
+    TradeConfig.setMarketSummaryInterval(Integer.parseInt(properties.getProperty("marketSummaryInterval")));
+    TradeConfig.setLongRun(Boolean.parseBoolean(properties.getProperty("longRun")));
+}
+
+private void setPropertiesFromEnvironmentVariables() {
+    String runtimeMode = System.getenv("RUNTIME_MODE");
+    String orderProcessingMode = System.getenv("ORDER_PROCESSING_MODE");
+    String maxUsers = System.getenv("MAX_USERS");
+    String maxQuotes = System.getenv("MAX_QUOTES");
+    String publishQuotes = System.getenv("PUBLISH_QUOTES");
+    String displayOrderAlerts = System.getenv("DISPLAY_ORDER_ALERTS");
+    String webInterface = System.getenv("WEB_INTERFACE");
+    String listQuotePriceChangeFrequency = System.getenv("LIST_QUOTE_PRICE_CHANGE_FREQUENCY");
+    String primIterations = System.getenv("PRIM_ITERATIONS");
+    String marketSummaryInterval = System.getenv("MARKET_SUMMARY_INTERVAL");
+    String longRun = System.getenv("LONG_RUN");
+
+    if (runtimeMode != null) TradeConfig.setRunTimeMode(Integer.parseInt(runtimeMode));
+    if (orderProcessingMode != null) TradeConfig.setOrderProcessingMode(Integer.parseInt(orderProcessingMode));
+    if (maxUsers != null) TradeConfig.setMAX_USERS(Integer.parseInt(maxUsers));
+    if (maxQuotes != null) TradeConfig.setMAX_QUOTES(Integer.parseInt(maxQuotes));
+    if (publishQuotes != null) TradeConfig.setPublishQuotePriceChange(Boolean.parseBoolean(publishQuotes));
+    if (displayOrderAlerts != null) TradeConfig.setDisplayOrderAlerts(Boolean.parseBoolean(displayOrderAlerts));
+    if (webInterface != null) TradeConfig.setWebInterface(Integer.parseInt(webInterface));
+    if (listQuotePriceChangeFrequency != null) TradeConfig.setListQuotePriceChangeFrequency(Integer.parseInt(listQuotePriceChangeFrequency));
+    if (primIterations != null) TradeConfig.setPrimIterations(Integer.parseInt(primIterations));
+    if (marketSummaryInterval != null) TradeConfig.setMarketSummaryInterval(Integer.parseInt(marketSummaryInterval));
+    if (longRun != null) TradeConfig.setLongRun(Boolean.parseBoolean(longRun));
+}
+
+private void setDefaultProperties() {
+    TradeConfig.setRunTimeMode(TradeConfig.DIRECT);
+    TradeConfig.setOrderProcessingMode(TradeConfig.ASYNCH);
+    TradeConfig.setMAX_USERS(100);
+    TradeConfig.setMAX_QUOTES(500);
+    TradeConfig.setPublishQuotePriceChange(true);
+    TradeConfig.setDisplayOrderAlerts(false);
+    TradeConfig.setWebInterface(TradeConfig.JSP);
+    TradeConfig.setListQuotePriceChangeFrequency(60);
+    TradeConfig.setPrimIterations(10);
+    TradeConfig.setMarketSummaryInterval(300);
+    TradeConfig.setLongRun(true);
+}
+```

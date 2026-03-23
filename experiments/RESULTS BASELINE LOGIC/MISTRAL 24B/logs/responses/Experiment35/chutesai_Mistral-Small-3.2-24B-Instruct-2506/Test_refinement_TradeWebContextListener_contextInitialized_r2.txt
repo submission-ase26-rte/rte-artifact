@@ -1,0 +1,175 @@
+Here's the fixed test class with the failed tests corrected and new tests added to improve coverage:
+
+```java
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class TradeWebContextListener_contextInitializedTestGenerated {
+    @Mock
+    private ServletContextEvent event;
+    @Mock
+    private ServletContext servletContext;
+    private TradeWebContextListener listener;
+
+    @BeforeEach
+    void setUp() {
+        listener = new TradeWebContextListener();
+        when(event.getServletContext()).thenReturn(servletContext);
+    }
+
+    @Test
+    void testContextInitializedWithValidProperties() throws IOException {
+        String propertiesContent = "runtimeMode=1\n" +
+                                 "orderProcessingMode=1\n" +
+                                 "maxUsers=100\n" +
+                                 "maxQuotes=1000\n" +
+                                 "publishQuotePriceChange=true\n" +
+                                 "displayOrderAlerts=true\n" +
+                                 "webInterface=1\n" +
+                                 "listQuotePriceChangeFrequency=60\n" +
+                                 "primIterations=1000\n" +
+                                 "marketSummaryInterval=300\n" +
+                                 "longRun=false";
+        InputStream inputStream = new ByteArrayInputStream(propertiesContent.getBytes());
+        when(servletContext.getResourceAsStream("/properties/daytrader.properties")).thenReturn(inputStream);
+        try (MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig> mockedTradeConfig =
+                 mockStatic(com.ibm.websphere.samples.daytrader.util.TradeConfig.class);
+             MockedStatic<com.ibm.websphere.samples.daytrader.util.Log> mockedLog =
+                 mockStatic(com.ibm.websphere.samples.daytrader.util.Log.class)) {
+            listener.contextInitialized(event);
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setRunTimeMode(1));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setOrderProcessingMode(1));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setMAX_USERS(100));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setMAX_QUOTES(1000));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setPublishQuotePriceChange(true));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setDisplayOrderAlerts(true));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setWebInterface(1));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setListQuotePriceChangeFrequency(60));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setPrimIterations(1000));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setMarketSummaryInterval(300));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setLongRun(false));
+            mockedLog.verify(() -> com.ibm.websphere.samples.daytrader.util.Log.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect"));
+        }
+    }
+
+    @Test
+    void testContextInitializedWithPartialProperties() throws IOException {
+        String partialPropertiesContent = "runtimeMode=1\n" +
+                                        "orderProcessingMode=1\n" +
+                                        "maxUsers=100\n" +
+                                        "maxQuotes=1000\n" +
+                                        "publishQuotePriceChange=true\n" +
+                                        "displayOrderAlerts=true\n" +
+                                        "webInterface=1\n" +
+                                        "listQuotePriceChangeFrequency=60\n" +
+                                        "primIterations=1000\n";
+        InputStream inputStream = new ByteArrayInputStream(partialPropertiesContent.getBytes());
+        when(servletContext.getResourceAsStream("/properties/daytrader.properties")).thenReturn(inputStream);
+        try (MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig> mockedTradeConfig =
+                 mockStatic(com.ibm.websphere.samples.daytrader.util.TradeConfig.class);
+             MockedStatic<com.ibm.websphere.samples.daytrader.util.Log> mockedLog =
+                 mockStatic(com.ibm.websphere.samples.daytrader.util.Log.class)) {
+            listener.contextInitialized(event);
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setRunTimeMode(1));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setOrderProcessingMode(1));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setMAX_USERS(100));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setMAX_QUOTES(1000));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setPublishQuotePriceChange(true));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setDisplayOrderAlerts(true));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setWebInterface(1));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setListQuotePriceChangeFrequency(60));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setPrimIterations(1000));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setMarketSummaryInterval(anyInt()));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setLongRun(anyBoolean()));
+            mockedLog.verify(() -> com.ibm.websphere.samples.daytrader.util.Log.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect"));
+        }
+    }
+
+    @Test
+    void testContextInitializedWithEnvVariables() throws IOException {
+        String propertiesContent = "runtimeMode=1\n" +
+                                 "orderProcessingMode=1\n" +
+                                 "maxUsers=100\n" +
+                                 "maxQuotes=1000\n" +
+                                 "publishQuotePriceChange=true\n" +
+                                 "displayOrderAlerts=true\n" +
+                                 "webInterface=1\n" +
+                                 "listQuotePriceChangeFrequency=60\n" +
+                                 "primIterations=1000\n" +
+                                 "marketSummaryInterval=300\n" +
+                                 "longRun=false";
+        InputStream inputStream = new ByteArrayInputStream(propertiesContent.getBytes());
+        when(servletContext.getResourceAsStream("/properties/daytrader.properties")).thenReturn(inputStream);
+        when(System.getenv("RUNTIME_MODE")).thenReturn("2");
+        when(System.getenv("ORDER_PROCESSING_MODE")).thenReturn("2");
+        when(System.getenv("MAX_USERS")).thenReturn("200");
+        when(System.getenv("MAX_QUOTES")).thenReturn("2000");
+        when(System.getenv("PUBLISH_QUOTES")).thenReturn("false");
+        when(System.getenv("DISPLAY_ORDER_ALERTS")).thenReturn("false");
+        when(System.getenv("WEB_INTERFACE")).thenReturn("2");
+        when(System.getenv("LIST_QUOTE_PRICE_CHANGE_FREQUENCY")).thenReturn("120");
+        try (MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig> mockedTradeConfig =
+                 mockStatic(com.ibm.websphere.samples.daytrader.util.TradeConfig.class);
+             MockedStatic<com.ibm.websphere.samples.daytrader.util.Log> mockedLog =
+                 mockStatic(com.ibm.websphere.samples.daytrader.util.Log.class)) {
+            listener.contextInitialized(event);
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setRunTimeMode(2));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setOrderProcessingMode(2));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setMAX_USERS(200));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setMAX_QUOTES(2000));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setPublishQuotePriceChange(false));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setDisplayOrderAlerts(false));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setWebInterface(2));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setListQuotePriceChangeFrequency(120));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setPrimIterations(1000));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setMarketSummaryInterval(300));
+            mockedTradeConfig.verify(() -> com.ibm.websphere.samples.daytrader.util.TradeConfig.setLongRun(false));
+            mockedLog.verify(() -> com.ibm.websphere.samples.daytrader.util.Log.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect"));
+        }
+    }
+
+    @Test
+    void testContextInitializedWithMissingPropertiesFile() throws IOException {
+        when(servletContext.getResourceAsStream("/properties/daytrader.properties")).thenReturn(null);
+        try (MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig> mockedTradeConfig =
+                 mockStatic(com.ibm.websphere.samples.daytrader.util.TradeConfig.class);
+             MockedStatic<com.ibm.websphere.samples.daytrader.util.Log> mockedLog =
+                 mockStatic(com.ibm.websphere.samples.daytrader.util.Log.class)) {
+            listener.contextInitialized(event);
+            mockedLog.verify(() -> com.ibm.websphere.samples.daytrader.util.Log.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect"));
+        }
+    }
+
+    @Test
+    void testContextInitializedWithInvalidProperties() throws IOException {
+        String invalidPropertiesContent = "invalidProperty=value";
+        InputStream inputStream = new ByteArrayInputStream(invalidPropertiesContent.getBytes());
+        when(servletContext.getResourceAsStream("/properties/daytrader.properties")).thenReturn(inputStream);
+        try (MockedStatic<com.ibm.websphere.samples.daytrader.util.TradeConfig> mockedTradeConfig =
+                 mockStatic(com.ibm.websphere.samples.daytrader.util.TradeConfig.class);
+             MockedStatic<com.ibm.websphere.samples.daytrader.util.Log> mockedLog =
+                 mockStatic(com.ibm.websphere.samples.daytrader.util.Log.class)) {
+            listener.contextInitialized(event);
+            mockedLog.verify(() -> com.ibm.websphere.samples.daytrader.util.Log.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect"));
+        }
+    }
+}
+```

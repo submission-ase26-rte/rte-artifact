@@ -1,0 +1,263 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.springframework.samples.petclinic.owner;
+Class name (MUST be exactly): PetValidator_validateTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testValidate_BirthDateValid --
+ERROR: java.lang.IllegalStateException: Could not access method or field: Can not set static final java.lang.String field org.springframework.samples.petclinic.owner.PetValidator.REQUIRED to java.lang.String
+--------------------------------------------------
+TEST: testValidate_BirthDateNull --
+ERROR: java.lang.IllegalStateException: Could not access method or field: Can not set static final java.lang.String field org.springframework.samples.petclinic.owner.PetValidator.REQUIRED to java.lang.String
+--------------------------------------------------
+TEST: testValidate_NameEmpty --
+ERROR: java.lang.IllegalStateException: Could not access method or field: Can not set static final java.lang.String field org.springframework.samples.petclinic.owner.PetValidator.REQUIRED to java.lang.String
+--------------------------------------------------
+TEST: testValidate_NameValid --
+ERROR: java.lang.IllegalStateException: Could not access method or field: Can not set static final java.lang.String field org.springframework.samples.petclinic.owner.PetValidator.REQUIRED to java.lang.String
+--------------------------------------------------
+TEST: testValidate_NameNull --
+ERROR: java.lang.IllegalStateException: Could not access method or field: Can not set static final java.lang.String field org.springframework.samples.petclinic.owner.PetValidator.REQUIRED to java.lang.String
+--------------------------------------------------
+TEST: testValidate_TypeValid_NewPet --
+ERROR: java.lang.IllegalStateException: Could not access method or field: Can not set static final java.lang.String field org.springframework.samples.petclinic.owner.PetValidator.REQUIRED to java.lang.String
+--------------------------------------------------
+TEST: testValidate_TypeNull_NewPet --
+ERROR: java.lang.IllegalStateException: Could not access method or field: Can not set static final java.lang.String field org.springframework.samples.petclinic.owner.PetValidator.REQUIRED to java.lang.String
+--------------------------------------------------
+TEST: testValidate_TypeNull_ExistingPet --
+ERROR: java.lang.IllegalStateException: Could not access method or field: Can not set static final java.lang.String field org.springframework.samples.petclinic.owner.PetValidator.REQUIRED to java.lang.String
+
+TEST CODE TO FIX:
+package org.springframework.samples.petclinic.owner;
+
+import java.time.LocalDate;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.validation.Errors;
+
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PetValidator_validateTestGenerated {
+    private PetValidator petValidator;
+    @Mock
+    private Errors errors;
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        petValidator = new PetValidator();
+        ReflectionTestUtils.setField(petValidator, "REQUIRED", "required");
+    }
+
+
+    @Test
+        public void testValidate_NameEmpty() {
+            Pet pet = new Pet();
+            pet.setName("");
+            pet.setType(mock(PetType.class));
+            pet.setBirthDate(LocalDate.now());
+    
+            petValidator.validate(pet, errors);
+    
+            verify(errors).rejectValue("name", "required", "required");
+        }
+
+    @Test
+        public void testValidate_NameNull() {
+            Pet pet = new Pet();
+            pet.setName(null);
+            pet.setType(mock(PetType.class));
+            pet.setBirthDate(LocalDate.now());
+    
+            petValidator.validate(pet, errors);
+    
+            verify(errors).rejectValue("name", "required", "required");
+        }
+
+    @Test
+        public void testValidate_NameValid() {
+            Pet pet = new Pet();
+            pet.setName("Buddy");
+            pet.setType(mock(PetType.class));
+            pet.setBirthDate(LocalDate.now());
+    
+            petValidator.validate(pet, errors);
+    
+            verify(errors, never()).rejectValue("name", "required", "required");
+        }
+
+    @Test
+        public void testValidate_TypeNull_NewPet() {
+            Pet pet = new Pet();
+            pet.setName("Buddy");
+            pet.setType(null);
+            pet.setBirthDate(LocalDate.now());
+    
+            petValidator.validate(pet, errors);
+    
+            verify(errors).rejectValue("type", "required", "required");
+        }
+
+    @Test
+        public void testValidate_TypeValid_NewPet() {
+            Pet pet = new Pet();
+            pet.setName("Buddy");
+            pet.setType(mock(PetType.class));
+            pet.setBirthDate(LocalDate.now());
+    
+            petValidator.validate(pet, errors);
+    
+            verify(errors, never()).rejectValue("type", "required", "required");
+        }
+
+    @Test
+        public void testValidate_TypeNull_ExistingPet() {
+            Pet pet = new Pet();
+            pet.setName("Buddy");
+            pet.setType(null);
+            pet.setBirthDate(LocalDate.now());
+            pet.setId(1);
+    
+            petValidator.validate(pet, errors);
+    
+            verify(errors, never()).rejectValue("type", "required", "required");
+        }
+
+    @Test
+        public void testValidate_BirthDateNull() {
+            Pet pet = new Pet();
+            pet.setName("Buddy");
+            pet.setType(mock(PetType.class));
+            pet.setBirthDate(null);
+    
+            petValidator.validate(pet, errors);
+    
+            verify(errors).rejectValue("birthDate", "required", "required");
+        }
+
+    @Test
+        public void testValidate_BirthDateValid() {
+            Pet pet = new Pet();
+            pet.setName("Buddy");
+            pet.setType(mock(PetType.class));
+            pet.setBirthDate(LocalDate.now());
+    
+            petValidator.validate(pet, errors);
+    
+            verify(errors, never()).rejectValue("birthDate", "required", "required");
+        }
+
+}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   StringUtils -> org.springframework.util.StringUtils
+//   Errors -> org.springframework.validation.Errors
+//   Validator -> org.springframework.validation.Validator
+//   PetValidator -> org.springframework.samples.petclinic.owner.PetValidator
+//   Pet -> org.springframework.samples.petclinic.owner.Pet
+
+// === Class: PetValidator ===
+// Fields (with actual visibility):
+    private static final String REQUIRED;
+
+// === External Class: Pet ===
+// Full import path: org.springframework.samples.petclinic.owner.Pet
+// Import paths:
+//   LocalDate -> java.time.LocalDate
+//   Collection -> java.util.Collection
+//   LinkedHashSet -> java.util.LinkedHashSet
+//   Set -> java.util.Set
+//   DateTimeFormat -> org.springframework.format.annotation.DateTimeFormat
+// Fields (with actual visibility):
+    private LocalDate birthDate;
+    private PetType type;
+    private Set visits;
+
+// Method Signatures (used by target method):
+public PetType getType();
+public LocalDate getBirthDate();
+
+// Public Getter Methods (for test assertions):
+public Collection<Visit> getVisits();
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        petValidator = new PetValidator();
+        ReflectionTestUtils.setField(petValidator, "REQUIRED", "required");
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+	@Override
+	public void validate(Object obj, Errors errors) {
+		Pet pet = (Pet) obj; // NOT COVERED BY TESTS
+		String name = pet.getName(); // NOT COVERED BY TESTS
+		// name validation
+		if (!StringUtils.hasText(name)) { // NOT COVERED BY TESTS
+			errors.rejectValue("name", REQUIRED, REQUIRED); // NOT COVERED BY TESTS
+		}
+
+		// type validation
+		if (pet.isNew() && pet.getType() == null) { // NOT COVERED BY TESTS
+			errors.rejectValue("type", REQUIRED, REQUIRED); // NOT COVERED BY TESTS
+		}
+
+		// birth date validation
+		if (pet.getBirthDate() == null) { // NOT COVERED BY TESTS
+			errors.rejectValue("birthDate", REQUIRED, REQUIRED); // NOT COVERED BY TESTS
+		}
+	}
+
+
+COVERAGE ISSUES:
+Current line coverage: 0.00%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

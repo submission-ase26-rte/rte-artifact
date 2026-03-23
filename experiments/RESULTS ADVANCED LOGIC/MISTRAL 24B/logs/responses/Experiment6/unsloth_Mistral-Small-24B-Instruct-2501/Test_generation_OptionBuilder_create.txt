@@ -1,0 +1,126 @@
+```java
+package org.apache.commons.cli;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+public class OptionBuilder_createTestGenerated {
+
+    private OptionBuilder optionBuilder;
+
+    @BeforeEach
+    public void setUp() {
+        optionBuilder = OptionBuilder.reset();
+    }
+
+    @Test
+    public void testCreateValidOption() {
+        OptionBuilder.longOption = "longOpt";
+        OptionBuilder.description = "description";
+        OptionBuilder.argName = "argName";
+        OptionBuilder.required = true;
+        OptionBuilder.argCount = 1;
+        OptionBuilder.type = String.class;
+        OptionBuilder.optionalArg = true;
+        OptionBuilder.valueSeparator = '=';
+
+        Option option = OptionBuilder.create("opt");
+
+        assertEquals("description", option.getDescription());
+        assertEquals("longOpt", option.getLongOpt());
+        assertTrue(option.isRequired());
+        assertEquals(1, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals("argName", option.getArgName());
+        assertTrue(option.hasOptionalArg());
+        assertEquals('=', option.getValueSeparator());
+    }
+
+    @Test
+    public void testCreateWithNullDescription() {
+        OptionBuilder.longOption = "longOpt";
+        OptionBuilder.description = null;
+        OptionBuilder.argName = "argName";
+        OptionBuilder.required = true;
+        OptionBuilder.argCount = 1;
+        OptionBuilder.type = String.class;
+        OptionBuilder.optionalArg = true;
+        OptionBuilder.valueSeparator = '=';
+
+        Option option = OptionBuilder.create("opt");
+
+        assertEquals(null, option.getDescription());
+        assertEquals("longOpt", option.getLongOpt());
+        assertTrue(option.isRequired());
+        assertEquals(1, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals("argName", option.getArgName());
+        assertTrue(option.hasOptionalArg());
+        assertEquals('=', option.getValueSeparator());
+    }
+
+    @Test
+    public void testCreateWithInvalidOptionChar() {
+        OptionBuilder.longOption = "longOpt";
+        OptionBuilder.description = "description";
+        OptionBuilder.argName = "argName";
+        OptionBuilder.required = true;
+        OptionBuilder.argCount = 1;
+        OptionBuilder.type = String.class;
+        OptionBuilder.optionalArg = true;
+        OptionBuilder.valueSeparator = '=';
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            OptionBuilder.create("");
+        });
+    }
+
+    @Test
+    public void testCreateWithNullLongOpt() {
+        OptionBuilder.longOption = null;
+        OptionBuilder.description = "description";
+        OptionBuilder.argName = "argName";
+        OptionBuilder.required = true;
+        OptionBuilder.argCount = 1;
+        OptionBuilder.type = String.class;
+        OptionBuilder.optionalArg = true;
+        OptionBuilder.valueSeparator = '=';
+
+        Option option = OptionBuilder.create("opt");
+
+        assertEquals(null, option.getLongOpt());
+        assertEquals("description", option.getDescription());
+        assertTrue(option.isRequired());
+        assertEquals(1, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals("argName", option.getArgName());
+        assertTrue(option.hasOptionalArg());
+        assertEquals('=', option.getValueSeparator());
+    }
+
+    @Test
+    public void testCreateWithDefaultType() {
+        OptionBuilder.longOption = "longOpt";
+        OptionBuilder.description = "description";
+        OptionBuilder.argName = "argName";
+        OptionBuilder.required = true;
+        OptionBuilder.argCount = 1;
+        OptionBuilder.type = null;
+        OptionBuilder.optionalArg = true;
+        OptionBuilder.valueSeparator = '=';
+
+        Option option = OptionBuilder.create("opt");
+
+        assertEquals("description", option.getDescription());
+        assertEquals("longOpt", option.getLongOpt());
+        assertTrue(option.isRequired());
+        assertEquals(1, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals("argName", option.getArgName());
+        assertTrue(option.hasOptionalArg());
+        assertEquals('=', option.getValueSeparator());
+    }
+}
+```

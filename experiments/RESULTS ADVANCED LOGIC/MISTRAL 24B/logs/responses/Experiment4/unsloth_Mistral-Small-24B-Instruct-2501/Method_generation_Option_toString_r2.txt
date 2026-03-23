@@ -1,0 +1,19 @@
+```java
+public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("[ Option ").append(option);
+    if (longOption != null) {
+        sb.append(" ").append(longOption);
+    }
+    if (argCount == Option.UNLIMITED_VALUES) {
+        sb.append(" [ARG...]");
+    } else if (argCount == 0) {
+        sb.append("");
+    } else {
+        sb.append(" [ARG]");
+    }
+    sb.append("  :: ").append(description != null ? description : "null").append(" :: ").append(type != null ? type.getName() : "");
+    sb.append(" ]");
+    return sb.toString();
+}
+```

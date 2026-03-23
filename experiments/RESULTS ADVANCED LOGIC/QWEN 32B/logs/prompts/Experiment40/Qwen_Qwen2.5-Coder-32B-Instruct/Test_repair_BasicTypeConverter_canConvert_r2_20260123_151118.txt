@@ -1,0 +1,251 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.util;
+Class name (MUST be exactly): BasicTypeConverter_canConvertTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class BasicTypeConverter_canConvertTestGenerated {
+    private BasicTypeConverter converter;
+
+    @BeforeEach
+    public void setUp() {
+        converter = new BasicTypeConverter();
+    }
+
+    @Test
+    public void testCanConvertUnsupportedConversion() {
+        assertFalse(converter.canConvert("test", BigInteger.class));
+        assertFalse(converter.canConvert(123, String[].class));
+    }
+
+    @Test
+    public void testCanConvertNodeSet() {
+        NodeSet nodeSet = Mockito.mock(NodeSet.class);
+        Mockito.when(nodeSet.getValues()).thenReturn(Collections.singletonList("test"));
+        assertTrue(converter.canConvert(nodeSet, String.class));
+    }
+
+    @Test
+    public void testCanConvertBooleanToAtomicBoolean() {
+        try {
+            assertTrue(converter.canConvert(true, TypeUtils.wrapPrimitive(Class.forName("java.util.concurrent.atomic.AtomicBoolean"))));
+        } catch (ClassNotFoundException e) {
+            fail("Class not found: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testCanConvertUsingConvertUtilsForUnsupportedType() {
+        assertFalse(converter.canConvert("123", Class.class));
+    }
+
+    @Test
+    public void testCanConvertBooleanToNumber() {
+        assertTrue(converter.canConvert(true, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertNumberToBoolean() {
+        assertTrue(converter.canConvert(1, Boolean.class));
+    }
+
+    @Test
+    public void testCanConvertStringToNumber() {
+        assertTrue(converter.canConvert("123", Integer.class));
+    }
+
+    @Test
+    public void testCanConvertStringToBoolean() {
+        assertTrue(converter.canConvert("true", Boolean.class));
+    }
+
+    @Test
+    public void testCanConvertArrayToArrayComponentType() {
+        Integer[] array = {1, 2, 3};
+        assertTrue(converter.canConvert(array, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToArrayComponentType() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        assertTrue(converter.canConvert(list, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertArrayToArray() {
+        Integer[] array = {1, 2, 3};
+        assertTrue(converter.canConvert(array, Integer[].class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToArray() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        assertTrue(converter.canConvert(list, Integer[].class));
+    }
+
+    @Test
+    public void testCanConvertEmptyArrayToSingleType() {
+        Integer[] array = {};
+        assertTrue(converter.canConvert(array, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertEmptyCollectionToSingleType() {
+        List<Integer> list = new ArrayList<>();
+        assertTrue(converter.canConvert(list, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertPointer() {
+        Pointer pointer = Mockito.mock(Pointer.class);
+        Mockito.when(pointer.getValue()).thenReturn("test");
+        assertTrue(converter.canConvert(pointer, String.class));
+    }
+
+    @Test
+    public void testCanConvertUsingConvertUtils() {
+        ConvertUtils.register(new Converter() {
+            @Override
+            public <T> T convert(Class<T> type, Object value) {
+                return (T) value;
+            }
+        }, BigInteger.class);
+        assertTrue(converter.canConvert("123", BigInteger.class));
+    }
+
+    @Test
+    public void testCanConvertNumberToNumber() {
+        assertTrue(converter.canConvert(1, Long.class));
+    }
+
+    @Test
+    public void testCanConvertStringToCharacter() {
+        assertTrue(converter.canConvert("a", Character.class));
+    }
+
+    @Test
+    public void testCanConvertStringToByte() {
+        assertTrue(converter.canConvert("123", Byte.class));
+    }
+
+    @Test
+    public void testCanConvertStringToShort() {
+        assertTrue(converter.canConvert("123", Short.class));
+    }
+
+    @Test
+    public void testCanConvertStringToInteger() {
+        assertTrue(converter.canConvert("123", Integer.class));
+    }
+
+    @Test
+    public void testCanConvertStringToLong() {
+        assertTrue(converter.canConvert("123", Long.class));
+    }
+
+    @Test
+    public void testCanConvertStringToFloat() {
+        assertTrue(converter.canConvert("123.45", Float.class));
+    }
+
+    @Test
+    public void testCanConvertStringToDouble() {
+        assertTrue(converter.canConvert("123.45", Double.class));
+    }
+
+    @Test
+    public void testCanConvertEmptyCollectionToArrayComponentType() {
+        List<Integer> list = new ArrayList<>();
+        assertTrue(converter.canConvert(list, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertNonEmptyCollectionToArrayComponentType() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        assertTrue(converter.canConvert(list, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertNonEmptyCollectionToCollection() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        assertTrue(converter.canConvert(list, Collection.class));
+    }
+
+    @Test
+    public void testCanConvertNullObject() {
+        assertTrue(converter.canConvert(null, String.class));
+    }
+
+    @Test
+    public void testCanConvertSameType() {
+        assertTrue(converter.canConvert("test", String.class));
+    }
+
+    @Test
+    public void testCanConvertToSuperType() {
+        assertTrue(converter.canConvert(new ArrayList<>(), Collection.class));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_canConvertTestGenerated.java:[44] cannot find symbol
+  symbol:   variable Mockito
+  location: class org.apache.commons.jxpath.util.BasicTypeConverter_canConvertTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_canConvertTestGenerated.java:[45] cannot find symbol
+  symbol:   variable Mockito
+  location: class org.apache.commons.jxpath.util.BasicTypeConverter_canConvertTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_canConvertTestGenerated.java:[127] cannot find symbol
+  symbol:   variable Mockito
+  location: class org.apache.commons.jxpath.util.BasicTypeConverter_canConvertTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_canConvertTestGenerated.java:[128] cannot find symbol
+  symbol:   variable Mockito
+  location: class org.apache.commons.jxpath.util.BasicTypeConverter_canConvertTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: BasicTypeConverter_canConvertTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

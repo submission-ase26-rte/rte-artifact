@@ -1,0 +1,397 @@
+package org.apache.commons.codec.language;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Metaphone_metaphoneTestGenerated {
+
+    @Test
+    void testMetaphoneWithInitialKNAEWRWHX() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("N", metaphone.metaphone("KN"));
+        assertEquals("N", metaphone.metaphone("KNIGHT"));
+        assertEquals("E", metaphone.metaphone("AE"));
+        assertEquals("R", metaphone.metaphone("WR"));
+        assertEquals("W", metaphone.metaphone("WH"));
+        assertEquals("S", metaphone.metaphone("X"));
+    }
+
+    @Test
+    void testMetaphoneWithB() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("B", metaphone.metaphone("B"));
+        assertEquals("B", metaphone.metaphone("BAM"));
+        assertEquals("", metaphone.metaphone("MB"));
+    }
+
+    @Test
+    void testMetaphoneWithC() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("S", metaphone.metaphone("SCIENCE"));
+        assertEquals("X", metaphone.metaphone("CIA"));
+        assertEquals("S", metaphone.metaphone("CITY"));
+        assertEquals("K", metaphone.metaphone("SCH"));
+        assertEquals("K", metaphone.metaphone("CH"));
+        assertEquals("K", metaphone.metaphone("CHAIR"));
+        assertEquals("K", metaphone.metaphone("COOK"));
+    }
+
+    @Test
+    void testMetaphoneWithD() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("T", metaphone.metaphone("DOG"));
+        assertEquals("J", metaphone.metaphone("DGE"));
+        assertEquals("J", metaphone.metaphone("DGI"));
+        assertEquals("J", metaphone.metaphone("DGY"));
+    }
+
+    @Test
+    void testMetaphoneWithG() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("", metaphone.metaphone("GH"));
+        assertEquals("", metaphone.metaphone("GHOST"));
+        assertEquals("", metaphone.metaphone("GNARLED"));
+        assertEquals("", metaphone.metaphone("GNED"));
+        assertEquals("J", metaphone.metaphone("GEORGE"));
+        assertEquals("K", metaphone.metaphone("GIFT"));
+    }
+
+    @Test
+    void testMetaphoneWithH() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("", metaphone.metaphone("H"));
+        assertEquals("", metaphone.metaphone("HOUSE"));
+        assertEquals("H", metaphone.metaphone("HAPPY"));
+    }
+
+    @Test
+    void testMetaphoneWithK() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("K", metaphone.metaphone("K"));
+        assertEquals("K", metaphone.metaphone("COOK"));
+    }
+
+    @Test
+    void testMetaphoneWithQ() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("K", metaphone.metaphone("Q"));
+    }
+
+    @Test
+    void testMetaphoneWithT() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("X", metaphone.metaphone("TIA"));
+        assertEquals("X", metaphone.metaphone("TIO"));
+        assertEquals("", metaphone.metaphone("TCH"));
+        assertEquals("0", metaphone.metaphone("TH"));
+        assertEquals("T", metaphone.metaphone("T"));
+    }
+
+    @Test
+    void testMetaphoneWithV() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("F", metaphone.metaphone("V"));
+    }
+
+    @Test
+    void testMetaphoneWithWY() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("R", metaphone.metaphone("WR"));
+        assertEquals("W", metaphone.metaphone("W"));
+        assertEquals("Y", metaphone.metaphone("YARD"));
+    }
+
+    @Test
+    void testMetaphoneWithX() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("KS", metaphone.metaphone("X"));
+    }
+
+    @Test
+    void testMetaphoneWithZ() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("S", metaphone.metaphone("Z"));
+    }
+
+    @Test
+    void testMetaphoneWithInitialK() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("K", metaphone.metaphone("KNAE"));
+        assertEquals("E", metaphone.metaphone("AE"));
+    }
+
+    @Test
+    void testMetaphoneWithInitialX() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("S", metaphone.metaphone("X"));
+    }
+
+    @Test
+    void testMetaphoneWithDGE() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("J", metaphone.metaphone("ADGE"));
+    }
+
+    @Test
+    void testMetaphoneWithGHHard() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("K", metaphone.metaphone("GK"));
+    }
+
+    @Test
+    void testMetaphoneWithHAfterVowel() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("H", metaphone.metaphone("AH"));
+    }
+
+    @Test
+    void testMetaphoneWithInitialKWithNonN() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("K", metaphone.metaphone("KAT"));
+    }
+
+    @Test
+    void testMetaphoneWithInitialAENonE() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("A", metaphone.metaphone("AB"));
+    }
+
+    @Test
+    void testMetaphoneWithInitialWRWithOther() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("W", metaphone.metaphone("WX"));
+    }
+
+    @Test
+    void testMetaphoneWithCodeLengthExceeded() {
+        Metaphone metaphone = new Metaphone();
+        metaphone.setMaxCodeLen(2);
+        assertEquals("KK", metaphone.metaphone("KKKKKK"));
+    }
+
+    @Test
+    void testMetaphoneWithSCI() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("", metaphone.metaphone("SCI"));
+    }
+
+    @Test
+    void testMetaphoneWithSCE() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("", metaphone.metaphone("SCE"));
+    }
+
+    @Test
+    void testMetaphoneWithSCY() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("", metaphone.metaphone("SCY"));
+    }
+
+    @Test
+    void testMetaphoneWithInitialG() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("G", metaphone.metaphone("G"));
+    }
+
+    @Test
+    void testMetaphoneWithInitialP() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("F", metaphone.metaphone("PH"));
+        assertEquals("P", metaphone.metaphone("P"));
+    }
+
+    @Test
+    void testMetaphoneWithNonInitialK() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("K", metaphone.metaphone("AK"));
+    }
+
+    @Test
+    void testMetaphoneWithInitialXCovered() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("S", metaphone.metaphone("X"));
+        assertEquals("S", metaphone.metaphone("XENON"));
+    }
+
+    @Test
+    void testMetaphoneWithPH() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("F", metaphone.metaphone("PHONE"));
+        assertEquals("F", metaphone.metaphone("PH"));
+    }
+
+    @Test
+    void testMetaphoneWithVowelCases() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("A", metaphone.metaphone("A"));
+        assertEquals("E", metaphone.metaphone("E"));
+        assertEquals("I", metaphone.metaphone("I"));
+        assertEquals("O", metaphone.metaphone("O"));
+        assertEquals("U", metaphone.metaphone("U"));
+    }
+
+    @Test
+    void testMetaphoneWithSH() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("X", metaphone.metaphone("SH"));
+        assertEquals("X", metaphone.metaphone("SHINE"));
+    }
+
+    @Test
+    void testMetaphoneWithSIO() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("X", metaphone.metaphone("SIO"));
+        assertEquals("X", metaphone.metaphone("SION"));
+    }
+
+    @Test
+    void testMetaphoneWithSIA() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("X", metaphone.metaphone("SIA"));
+        assertEquals("X", metaphone.metaphone("SIAN"));
+    }
+
+    @Test
+    void testMetaphoneWithTCH() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("", metaphone.metaphone("TCH"));
+        assertEquals("", metaphone.metaphone("ATCH"));
+    }
+
+    @Test
+    void testMetaphoneWithTH() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("0", metaphone.metaphone("TH"));
+        assertEquals("0", metaphone.metaphone("THEN"));
+    }
+
+    @Test
+    void testMetaphoneWithDoubleB() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("B", metaphone.metaphone("BB"));
+        assertEquals("B", metaphone.metaphone("BABBLE"));
+    }
+
+    @Test
+    void testMetaphoneWithCHVowel() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("X", metaphone.metaphone("CH"));
+        assertEquals("X", metaphone.metaphone("CHA"));
+    }
+
+    @Test
+    void testMetaphoneWithWYVowel() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("W", metaphone.metaphone("W"));
+        assertEquals("Y", metaphone.metaphone("Y"));
+        assertEquals("W", metaphone.metaphone("WA"));
+        assertEquals("Y", metaphone.metaphone("YE"));
+    }
+
+    @Test
+    void testMetaphoneWithNullInput() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("", metaphone.metaphone(null));
+    }
+
+    @Test
+    void testMetaphoneWithEmptyString() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("", metaphone.metaphone(""));
+    }
+
+    @Test
+    void testMetaphoneWithSingleCharacter() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("A", metaphone.metaphone("a"));
+        assertEquals("B", metaphone.metaphone("B"));
+        assertEquals("Z", metaphone.metaphone("z"));
+    }
+
+    @Test
+    void testMetaphoneWithMaxLength() {
+        Metaphone metaphone = new Metaphone();
+        metaphone.setMaxCodeLen(4);
+        assertEquals("KKK", metaphone.metaphone("KKKKKK"));
+    }
+
+    @Test
+    void testMetaphoneWithInitialWR() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("R", metaphone.metaphone("WR"));
+        assertEquals("R", metaphone.metaphone("WRAP"));
+    }
+
+    @Test
+    void testMetaphoneWithInitialWH() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("W", metaphone.metaphone("WH"));
+        assertEquals("W", metaphone.metaphone("WHISKEY"));
+    }
+
+    @Test
+    void testMetaphoneWithInitialAE() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("E", metaphone.metaphone("AE"));
+        assertEquals("E", metaphone.metaphone("AERO"));
+    }
+
+    @Test
+    void testMetaphoneWithMaxCodeLen() {
+        Metaphone metaphone = new Metaphone();
+        metaphone.setMaxCodeLen(2);
+        assertEquals("KK", metaphone.metaphone("COOKIE"));
+    }
+
+    @Test
+    void testMetaphoneWithInitialW() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("R", metaphone.metaphone("WR"));
+        assertEquals("W", metaphone.metaphone("W"));
+    }
+
+    @Test
+    void testMetaphoneWithDuplicateConsonants() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("B", metaphone.metaphone("BB"));
+    }
+
+    @Test
+    void testMetaphoneWithVowels() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("A", metaphone.metaphone("A"));
+        assertEquals("E", metaphone.metaphone("E"));
+        assertEquals("I", metaphone.metaphone("I"));
+        assertEquals("O", metaphone.metaphone("O"));
+        assertEquals("U", metaphone.metaphone("U"));
+    }
+
+    @Test
+    void testMetaphoneWithFJLMNR() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("F", metaphone.metaphone("F"));
+        assertEquals("J", metaphone.metaphone("J"));
+        assertEquals("L", metaphone.metaphone("L"));
+        assertEquals("M", metaphone.metaphone("M"));
+        assertEquals("N", metaphone.metaphone("N"));
+        assertEquals("R", metaphone.metaphone("R"));
+    }
+
+    @Test
+    void testMetaphoneWithP() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("F", metaphone.metaphone("PH"));
+        assertEquals("P", metaphone.metaphone("P"));
+    }
+
+    @Test
+    void testMetaphoneWithS() {
+        Metaphone metaphone = new Metaphone();
+        assertEquals("X", metaphone.metaphone("SH"));
+        assertEquals("X", metaphone.metaphone("SIO"));
+        assertEquals("S", metaphone.metaphone("S"));
+    }
+
+}

@@ -1,0 +1,57 @@
+```java
+package org.apache.commons.codec.digest;
+
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.Random;
+import org.apache.commons.codec.digest.Md5Crypt;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Md5Crypt_md5CryptTestGenerated {
+    private SecureRandom secureRandom;
+    private Random random;
+
+    @BeforeEach
+    public void setUp() {
+        secureRandom = new SecureRandom();
+        random = new Random();
+    }
+
+    @Test
+    public void testMd5CryptWithInvalidSalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "$1$invalid";
+        String prefix = "$1$";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+        });
+        assertEquals("Invalid salt value: " + salt, exception.getMessage());
+    }
+
+    @Test
+    public void testMd5CryptWithNullKey() {
+        byte[] keyBytes = null;
+        String prefix = "$1$";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, null, prefix, random);
+        });
+        assertEquals("source cannot be null", exception.getMessage());
+    }
+
+    @Test
+    public void testMd5CryptWithNullRandom() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String prefix = "$1$";
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, null, prefix, null);
+        });
+        assertEquals("random cannot be null", exception.getMessage());
+    }
+
+}
+```

@@ -1,0 +1,86 @@
+{
+  "method_id": 34,
+  "tested_method": "buy",
+  "tested_class": "TradeDirect",
+  "project": "Daytrader",
+  "timestamp": "2026-02-03T13:24:06.762754",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\GPT-4 - ASTER\\Daytrader\\Run-1\\src\\test\\java\\com\\ibm\\websphere\\samples\\daytrader\\impl\\direct\\Metodo34_buy_TradeDirect_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 4,
+    "tests_total": 10,
+    "tests_failed": 6,
+    "line_coverage": 0.0,
+    "branch_coverage": 0.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testBuyCheckOrderFee_ajTc9 --\nERROR: java.lang.NullPointerException: Cannot invoke \"javax.sql.DataSource.getConnection()\" because \"this.datasource\" is null\n--------------------------------------------------\nTEST: testBuyAsynchronous2PhaseMode_aCkT6 --\nERROR: java.lang.NullPointerException: Cannot invoke \"javax.sql.DataSource.getConnection()\" because \"this.datasource\" is null\n--------------------------------------------------\nTEST: testBuyWithZeroQuantity_Rrbn3 --\nERROR: java.lang.NullPointerException: Cannot invoke \"javax.sql.DataSource.getConnection()\" because \"this.datasource\" is null\n--------------------------------------------------\nTEST: testBuyWithValidData_feiB0 --\nERROR: java.lang.NullPointerException: Cannot invoke \"javax.sql.DataSource.getConnection()\" because \"this.datasource\" is null\n--------------------------------------------------\nTEST: testBuyAsynchronousMode_BYaJ5 --\nERROR: java.lang.NullPointerException: Cannot invoke \"javax.sql.DataSource.getConnection()\" because \"this.datasource\" is null\n--------------------------------------------------\nTEST: testBuyWithHighQuantity_mELj7 --\nERROR: java.lang.NullPointerException: Cannot invoke \"javax.sql.DataSource.getConnection()\" because \"this.datasource\" is null",
+    "test_info": {
+      "valid_tests": [
+        "testBuyWithInvalidUser_oxuA1",
+        "testBuyWithInvalidSymbol_bYNq2",
+        "testBuyWithNegativeQuantity_YtkX4",
+        "testBuyWithExceptionDuringProcessing_QNYm8"
+      ],
+      "invalid_tests": [
+        "testBuyWithValidData_feiB0",
+        "testBuyWithZeroQuantity_Rrbn3",
+        "testBuyAsynchronousMode_BYaJ5",
+        "testBuyAsynchronous2PhaseMode_aCkT6",
+        "testBuyWithHighQuantity_mELj7",
+        "testBuyCheckOrderFee_ajTc9"
+      ],
+      "failed_assert_tests": [],
+      "runtime_error_tests": [
+        "testBuyWithValidData_feiB0",
+        "testBuyWithZeroQuantity_Rrbn3",
+        "testBuyAsynchronousMode_BYaJ5",
+        "testBuyAsynchronous2PhaseMode_aCkT6",
+        "testBuyWithHighQuantity_mELj7",
+        "testBuyCheckOrderFee_ajTc9"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 10,
+    "assertion_complexity": 0.1893,
+    "pct_null_assertions": 0.3333,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.2667,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.6896,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.64,
+    "overall_naturalness_score": 0.8074
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.16970845858117742,
+    "string_similarity": 0.11400462962962964,
+    "token_similarity": 0.29906542056074764,
+    "ast_similarity": 0.35185185185185186,
+    "embedding_similarity": 0.9004349708557129,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.10294117647058823,
+      "similar_blocks": 7,
+      "total_blocks": 136
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.48048152237762487,
+    "passes_threshold": false
+  },
+  "original_method": "  public OrderDataBean buy(String userID, String symbol, double quantity, int orderProcessingMode) throws Exception {\n\n    final Connection conn = getConn();\n    OrderDataBean orderData = null;\n\n    BigDecimal total;\n\n    try {\n\n      Log.trace(\"TradeDirect:buy - inSession(\" + this.inSession + \")\");//, userID, symbol, new Double(quantity));\n\n\n      if (!inSession && orderProcessingMode == TradeConfig.ASYNCH_2PHASE) {\n\n        Log.trace(\"TradeDirect:buy create/begin global transaction\");\n\n\n        txn.begin();\n        setInGlobalTxn(true);\n      }\n\n      //conn = getConn();\n\n      AccountDataBean accountData = getAccountData(conn, userID);\n      QuoteDataBean quoteData = getQuoteData(conn, symbol);\n      HoldingDataBean holdingData = null; // the buy operation will create\n      // the holding\n\n      orderData = createOrder(accountData, quoteData, holdingData, \"buy\", quantity);\n\n      // Update -- account should be credited during completeOrder\n      BigDecimal price = quoteData.getPrice();\n      BigDecimal orderFee = orderData.getOrderFee();\n      total = (new BigDecimal(quantity).multiply(price)).add(orderFee);\n      // subtract total from account balance\n      creditAccountBalance(conn, accountData, total.negate());\n      final Integer orderID = orderData.getOrderID();\n\n      try {\n\n        if (orderProcessingMode == TradeConfig.SYNCH) {\n          completeOrder(conn, orderData.getOrderID());\n        } else if (orderProcessingMode == TradeConfig.ASYNCH) {\n          completeOrderAsync(orderID, true);\n        } else if (orderProcessingMode == TradeConfig.ASYNCH_2PHASE) {\n          queueOrder(orderID, true); // 2-phase\n        }\n      } catch (JMSException je) {\n        Log.error(\"TradeBean:buy(\" + userID + \",\" + symbol + \",\" + quantity + \") --> failed to queueOrder\", je);\n\n\n        cancelOrder(conn, orderData.getOrderID());\n      }\n\n      orderData = getOrderData(conn, orderData.getOrderID().intValue());\n\n      if (getInGlobalTxn()) {\n\n        Log.trace(\"TradeDirect:buy committing global transaction\");\n\n        if (!inSession && orderProcessingMode == TradeConfig.ASYNCH_2PHASE) {\n          txn.commit();\n          setInGlobalTxn(false);\n        }\n      } else {\n        commit(conn);\n      }\n    } catch (Exception e) {\n      Log.error(\"TradeDirect:buy error - rolling back\", e);\n      if (getInGlobalTxn()) {\n        txn.rollback();\n      } else {\n        rollBack(conn, e);\n      }\n    } finally {\n      releaseConn(conn);\n    }\n\n    return orderData;\n  }",
+  "regenerated_method": "public OrderDataBean buy(String userID, String symbol, double quantity, int orderProcessingMode) throws Exception {\n    if (quantity <= 0) {\n        throw new Exception(\"Quantity must be greater than zero\");\n    }\n\n    AccountDataBean accountData = getAccountData(userID);\n    if (accountData == null) {\n        throw new Exception(\"Invalid user ID\");\n    }\n\n    QuoteDataBean quoteData = getQuote(symbol);\n    if (quoteData == null) {\n        throw new Exception(\"Invalid symbol\");\n    }\n\n    OrderDataBean orderData = createOrder(accountData, quoteData, null, \"buy\", quantity);\n\n    switch (orderProcessingMode) {\n        case TradeConfig.SYNCH:\n            orderData.setOrderStatus(\"completed\");\n            break;\n        case TradeConfig.ASYNCH:\n            orderData.setOrderStatus(\"open\");\n            queueOrder(orderData.getOrderID(), false);\n            break;\n        case TradeConfig.ASYNCH_2PHASE:\n            orderData.setOrderStatus(\"queued\");\n            queueOrder(orderData.getOrderID(), true);\n            break;\n        default:\n            throw new Exception(\"Invalid order processing mode\");\n    }\n\n    orderData.setOrderFee(TradeConfig.getOrderFee(\"buy\"));\n    return orderData;\n}",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6633803120088515,
+  "original_metrics": {
+    "loc": 80,
+    "sloc": 54,
+    "complexity": 12
+  }
+}

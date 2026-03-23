@@ -1,0 +1,271 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class HelpFormatter_printHelpTestGenerated {
+
+    private HelpFormatter helpFormatter;
+    private StringWriter stringWriter;
+    private PrintWriter printWriter;
+
+    @BeforeEach
+    public void setUp() {
+        helpFormatter = new HelpFormatter();
+        stringWriter = new StringWriter();
+        printWriter = new PrintWriter(stringWriter);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        printWriter.close();
+    }
+
+    @Test
+    public void testPrintHelpWithValidInputs() {
+        Options options = new Options();
+        options.addOption("a", "alpha", false, "Alpha option");
+        options.addOption("b", "beta", true, "Beta option");
+
+        helpFormatter.printHelp(printWriter, 80, "command [options]", "Header", options, 2, 5, "Footer", true);
+
+        String result = stringWriter.toString();
+        assertTrue(result.contains("Header"));
+        assertTrue(result.contains("command [options]"));
+        assertTrue(result.contains("a,--alpha"));
+        assertTrue(result.contains("b,--beta <arg>"));
+        assertTrue(result.contains("Footer"));
+    }
+
+    @Test
+    public void testPrintHelpWithNullCmdLineSyntax() {
+        Options options = new Options();
+        Executable executable = () -> helpFormatter.printHelp(printWriter, 80, null, "Header", options, 2, 5, "Footer", true);
+        assertThrows(IllegalArgumentException.class, executable);
+    }
+
+    @Test
+    public void testPrintHelpWithEmptyCmdLineSyntax() {
+        Options options = new Options();
+        Executable executable = () -> helpFormatter.printHelp(printWriter, 80, "", "Header", options, 2, 5, "Footer", true);
+        assertThrows(IllegalArgumentException.class, executable);
+    }
+
+    @Test
+    public void testPrintHelpWithNullHeader() {
+        Options options = new Options();
+        helpFormatter.printHelp(printWriter, 80, "command [options]", null, options, 2, 5, "Footer", true);
+        String result = stringWriter.toString();
+        assertFalse(result.contains("null"));
+    }
+
+    @Test
+    public void testPrintHelpWithEmptyHeader() {
+        Options options = new Options();
+        helpFormatter.printHelp(printWriter, 80, "command [options]", "", options, 2, 5, "Footer", true);
+        String result = stringWriter.toString();
+        assertFalse(result.contains(""));
+    }
+
+    @Test
+    public void testPrintHelpWithNullFooter() {
+        Options options = new Options();
+        helpFormatter.printHelp(printWriter, 80, "command [options]", "Header", options, 2, 5, null, true);
+        String result = stringWriter.toString();
+        assertFalse(result.contains("null"));
+    }
+
+    @Test
+    public void testPrintHelpWithEmptyFooter() {
+        Options options = new Options();
+        helpFormatter.printHelp(printWriter, 80, "command [options]", "Header", options, 2, 5, "", true);
+        String result = stringWriter.toString();
+        assertFalse(result.contains(""));
+    }
+
+    @Test
+    public void testPrintHelpWithNullOptions() {
+        Executable executable = () -> helpFormatter.printHelp(printWriter, 80, "command [options]", "Header", null, 2, 5, "Footer", true);
+        assertThrows(NullPointerException.class, executable);
+    }
+
+    @Test
+    public void testPrintHelpWithEmptyOptions() {
+        Options options = new Options();
+        helpFormatter.printHelp(printWriter, 80, "command [options]", "Header", options, 2, 5, "Footer", true);
+        String result = stringWriter.toString();
+        assertFalse(result.contains("a,--alpha"));
+        assertFalse(result.contains("b,--beta <arg>"));
+    }
+
+    @Test
+    public void testPrintHelpWithAutoUsageTrue() {
+        Options options = new Options();
+        options.addOption("a", "alpha", false, "Alpha option");
+        helpFormatter.printHelp(printWriter, 80, "command [options]", "Header", options, 2, 5, "Footer", true);
+        String result = stringWriter.toString();
+        assertTrue(result.contains("command [options]"));
+    }
+
+    @Test
+    public void testPrintHelpWithAutoUsageFalse() {
+        Options options = new Options();
+        options.addOption("a", "alpha", false, "Alpha option");
+        helpFormatter.printHelp(printWriter, 80, "command [options]", "Header", options, 2, 5, "Footer", false);
+        String result = stringWriter.toString();
+        assertTrue(result.contains("command [options]"));
+    }
+
+    @Test
+    public void testPrintHelpWithZeroWidth() {
+        Options options = new Options();
+        Executable executable = () -> helpFormatter.printHelp(printWriter, 0, "command [options]", "Header", options, 2, 5, "Footer", true);
+        assertThrows(IllegalStateException.class, executable);
+    }
+
+    @Test
+    public void testPrintHelpWithNegativeWidth() {
+        Options options = new Options();
+        Executable executable = () -> helpFormatter.printHelp(printWriter, -1, "command [options]", "Header", options, 2, 5, "Footer", true);
+        assertThrows(IllegalStateException.class, executable);
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 100.00%
+- Tests: 9/13 passed
+
+TEST STATUS:
+- PASSED (9): testPrintHelpWithValidInputs, testPrintHelpWithNullCmdLineSyntax, testPrintHelpWithEmptyCmdLineSyntax, testPrintHelpWithNullHeader, testPrintHelpWithNullFooter, testPrintHelpWithNullOptions, testPrintHelpWithEmptyOptions, testPrintHelpWithAutoUsageTrue, testPrintHelpWithAutoUsageFalse
+- FAILED (3): testPrintHelpWithEmptyHeader, testPrintHelpWithEmptyFooter, testPrintHelpWithNegativeWidth
+- ERRORS (1): testPrintHelpWithZeroWidth
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// === Imports of HelpFormatter ===
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Supplier;
+
+// === Class: HelpFormatter ===
+// Fields:
+    private boolean showDeprecated;
+    private PrintWriter printStream;
+    private long serialVersionUID;
+    private int DEFAULT_WIDTH;
+    private int DEFAULT_LEFT_PAD;
+    private int DEFAULT_DESC_PAD;
+    private String DEFAULT_SYNTAX_PREFIX;
+    private String DEFAULT_OPT_PREFIX;
+    private String DEFAULT_LONG_OPT_PREFIX;
+    private String DEFAULT_LONG_OPT_SEPARATOR;
+    private String DEFAULT_ARG_NAME;
+    private int defaultWidth;
+    private int defaultLeftPad;
+    private int defaultDescPad;
+    private String defaultSyntaxPrefix;
+    private String defaultNewLine;
+    private String defaultOptPrefix;
+    private String defaultLongOptPrefix;
+    private String defaultArgName;
+    private Comparator optionComparator;
+    private PrintWriter printWriter;
+    private String longOptSeparator;
+
+// Constructors:
+public HelpFormatter();
+private HelpFormatter(boolean showDeprecated, PrintWriter printStream);
+
+// Getter/Setter Methods (for test assertions):
+public Builder setPrintWriter(final PrintWriter printWriter);
+public Builder setShowDeprecated(final boolean showDeprecated);
+public String getArgName();
+public int getDescPadding();
+public int getLeftPadding();
+public String getLongOptPrefix();
+public String getLongOptSeparator();
+public String getNewLine();
+public Comparator<Option> getOptionComparator();
+public String getOptPrefix();
+public String getSyntaxPrefix();
+public int getWidth();
+public void setArgName(final String name);
+public void setDescPadding(final int padding);
+public void setLeftPadding(final int padding);
+public void setLongOptPrefix(final String prefix);
+public void setLongOptSeparator(final String longOptSeparator);
+public void setNewLine(final String newline);
+public void setOptionComparator(final Comparator<Option> comparator);
+public void setOptPrefix(final String prefix);
+public void setSyntaxPrefix(final String prefix);
+public void setWidth(final int width);
+
+// Internal Method Signatures (used by target method):
+public void printWrapped(final PrintWriter pw, final int width, final int nextLineTabStop, final String text);
+public void printUsage(final PrintWriter pw, final int width, final String cmdLineSyntax);
+public void printOptions(final PrintWriter pw, final int width, final Options options, final int leftPad, final int descPad);
+
+
+TASK:
+Regenerate ONLY the method "printHelp" OF CLASS "HelpFormatter" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void printHelp(final PrintWriter pw, final int width, final String cmdLineSyntax, final String header, final Options options, final int leftPad, final int descPad, final String footer, final boolean autoUsage) {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.cli
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in HelpFormatter
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

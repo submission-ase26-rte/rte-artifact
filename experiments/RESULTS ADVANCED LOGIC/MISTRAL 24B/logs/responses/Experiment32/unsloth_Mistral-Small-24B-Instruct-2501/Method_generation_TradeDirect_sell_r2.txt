@@ -1,0 +1,52 @@
+```java
+public OrderDataBean sell(String userID, Integer holdingID, int orderProcessingMode) throws Exception {
+    if (userID == null) {
+        throw new Exception("User ID cannot be null");
+    }
+    if (holdingID == null) {
+        throw new Exception("Holding ID cannot be null");
+    }
+    if (orderProcessingMode != TradeConfig.SYNCH && orderProcessingMode != TradeConfig.ASYNCH && orderProcessingMode != TradeConfig.ASYNCH_2PHASE) {
+        throw new Exception("Invalid order processing mode");
+    }
+
+    Connection conn = null;
+    try {
+        conn = getConn();
+        HoldingDataBean holdingData = getHoldingData(conn, holdingID);
+        AccountDataBean accountData = getAccountData(conn, userID);
+
+        // Check if the holding exists and belongs to the user
+        if (!holdingData.getUserID().equals(userID)) {
+            throw new Exception("Holding does not belong to the user");
+        }
+
+        // Calculate the selling price
+        BigDecimal sellingPrice = holdingData.getPurchasePrice().multiply(BigDecimal.valueOf(holdingData.getQuantity()));
+
+        // Deduct the selling price from the account balance
+        BigDecimal newBalance = accountData.getBalance().add(sellingPrice);
+        creditAccountBalance(conn, accountData, sellingPrice);
+
+        // Update the holding status
+        updateHoldingStatus(conn, holdingID, holdingData.getSymbol());
+
+        // Create an order for the sell operation
+        OrderDataBean orderData = createOrder(accountData, getQuoteData(conn, holdingData.getSymbol()), holdingData, "sell", holdingData.getQuantity());
+
+        commit(conn);
+        return orderData;
+
+    } catch (SQLException e) {
+        Log.error("TradeDirect:sell -- SQL error", e);
+        rollBack(conn, e);
+        throw e;
+    } catch (Exception e) {
+        Log.error("TradeDirect:sell -- error selling holding", e);
+        rollBack(conn, e);
+        throw e;
+    } finally {
+        releaseConn(conn);
+    }
+}
+```

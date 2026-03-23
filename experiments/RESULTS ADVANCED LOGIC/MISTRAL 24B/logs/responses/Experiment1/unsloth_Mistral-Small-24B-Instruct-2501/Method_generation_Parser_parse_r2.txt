@@ -1,0 +1,36 @@
+```java
+public CommandLine parse(final Options options, final String[] arguments, final Properties properties, final boolean stopAtNonOption) throws ParseException {
+    cmd = new CommandLine();
+    setOptions(options);
+
+    if (arguments == null) {
+        return cmd;
+    }
+
+    List<String> argsList = new ArrayList<>(Arrays.asList(arguments));
+    ListIterator<String> iter = argsList.listIterator();
+
+    while (iter.hasNext()) {
+        String arg = iter.next();
+        if ("--".equals(arg)) {
+            if (stopAtNonOption) {
+                while (iter.hasNext()) {
+                    cmd.addArg(iter.next());
+                }
+                break;
+            } else {
+                continue;
+            }
+        } else if (arg.startsWith("-")) {
+            processOption(arg, iter);
+        } else if (stopAtNonOption) {
+            cmd.addArg(arg);
+        }
+    }
+
+    processProperties(properties);
+    checkRequiredOptions();
+
+    return cmd;
+}
+```

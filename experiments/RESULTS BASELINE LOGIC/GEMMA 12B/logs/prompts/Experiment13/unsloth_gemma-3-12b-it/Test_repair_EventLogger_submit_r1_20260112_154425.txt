@@ -1,0 +1,222 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.interfaces.handling.mobile;
+Class name (MUST be exactly): EventLogger_submitTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.interfaces.handling.mobile;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.model.SelectItem;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.domain.model.cargo.Cargo;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class EventLogger_submitTestGenerated {
+
+    private EventLogger eventLogger;
+
+    @Inject
+    private ApplicationEvents applicationEvents;
+
+    @BeforeEach
+    void setUp() {
+        eventLogger = new EventLogger();
+        eventLogger.cargoRepository = mock(CargoRepository.class);
+        eventLogger.locationRepository = mock(LocationRepository.class);
+        eventLogger.voyageRepository = mock(VoyageRepository.class);
+        eventLogger.applicationEvents = Mockito.mock(ApplicationEvents.class);
+        eventLogger.context = Mockito.mock(FacesContext.class);
+        eventLogger.trackingIds = null;
+        eventLogger.locations = null;
+        eventLogger.voyages = null;
+        eventLogger.trackingId = null;
+        eventLogger.location = null;
+        eventLogger.eventType = null;
+        eventLogger.voyageNumber = null;
+        eventLogger.completionTime = null;
+    }
+
+    @AfterEach
+    void tearDown() {
+        eventLogger = null;
+    }
+
+    @Test
+    void submit_withVoyage() {
+        eventLogger.eventType = HandlingEvent.Type.valueOf("LOADED");
+        eventLogger.trackingId = "TRACK123";
+        eventLogger.location = "LOC456";
+        eventLogger.voyageNumber = "VOY789";
+        eventLogger.completionTime = LocalDateTime.now();
+
+        eventLogger.submit();
+
+        Mockito.verify(eventLogger.applicationEvents).receivedHandlingEventRegistrationAttempt(Mockito.any(HandlingEventRegistrationAttempt.class));
+    }
+
+    @Test
+    void submit_withoutVoyage() {
+        eventLogger.eventType = HandlingEvent.Type.valueOf("UNLOADED");
+        eventLogger.trackingId = "TRACK123";
+        eventLogger.location = "LOC456";
+        eventLogger.voyageNumber = null;
+        eventLogger.completionTime = LocalDateTime.now();
+
+        eventLogger.submit();
+
+        Mockito.verify(eventLogger.applicationEvents).receivedHandlingEventRegistrationAttempt(Mockito.any(HandlingEventRegistrationAttempt.class));
+    }
+
+    @Test
+    void submit_nullTrackingId() {
+        eventLogger.eventType = HandlingEvent.Type.valueOf("RECEIVED");
+        eventLogger.trackingId = null;
+        eventLogger.location = "LOC456";
+        eventLogger.voyageNumber = "VOY789";
+        eventLogger.completionTime = LocalDateTime.now();
+
+        eventLogger.submit();
+
+        Mockito.verify(eventLogger.applicationEvents).receivedHandlingEventRegistrationAttempt(Mockito.any(HandlingEventRegistrationAttempt.class));
+    }
+
+    @Test
+    void submit_nullLocation() {
+        eventLogger.eventType = HandlingEvent.Type.valueOf("DELIVERED");
+        eventLogger.trackingId = "TRACK123";
+        eventLogger.location = null;
+        eventLogger.voyageNumber = "VOY789";
+        eventLogger.completionTime = LocalDateTime.now();
+
+        eventLogger.submit();
+
+        Mockito.verify(eventLogger.applicationEvents).receivedHandlingEventRegistrationAttempt(Mockito.any(HandlingEventRegistrationAttempt.class));
+    }
+
+    @Test
+    void submit_nullVoyageNumber() {
+        eventLogger.eventType = HandlingEvent.Type.valueOf("LOADED");
+        eventLogger.trackingId = "TRACK123";
+        eventLogger.location = "LOC456";
+        eventLogger.voyageNumber = null;
+        eventLogger.completionTime = LocalDateTime.now();
+
+        eventLogger.submit();
+
+        Mockito.verify(eventLogger.applicationEvents).receivedHandlingEventRegistrationAttempt(Mockito.any(HandlingEventRegistrationAttempt.class));
+    }
+
+    @Test
+    void submit_nullCompletionTime() {
+        eventLogger.eventType = HandlingEvent.Type.valueOf("UNLOADED");
+        eventLogger.trackingId = "TRACK123";
+        eventLogger.location = "LOC456";
+        eventLogger.voyageNumber = "VOY789";
+        eventLogger.completionTime = null;
+
+        eventLogger.submit();
+
+        Mockito.verify(eventLogger.applicationEvents).receivedHandlingEventRegistrationAttempt(Mockito.any(HandlingEventRegistrationAttempt.class));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[41] cargoRepository has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[41] cannot find symbol
+  symbol:   class CargoRepository
+  location: class org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger_submitTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[42] locationRepository has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[42] cannot find symbol
+  symbol:   class LocationRepository
+  location: class org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger_submitTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[43] voyageRepository has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[43] cannot find symbol
+  symbol:   class VoyageRepository
+  location: class org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger_submitTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[44] applicationEvents has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[45] context has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[46] trackingIds has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[47] locations has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[48] voyages has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[49] trackingId has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[50] location has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[51] eventType has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[52] voyageNumber has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[53] completionTime has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[63] eventType has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[64] trackingId has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[65] location has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[66] voyageNumber has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[67] completionTime has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[71] applicationEvents has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[76] eventType has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[77] trackingId has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[78] location has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[79] voyageNumber has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[80] completionTime has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[84] applicationEvents has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[89] eventType has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[90] trackingId has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[91] location has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[92] voyageNumber has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[93] completionTime has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[97] applicationEvents has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[102] eventType has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[103] trackingId has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[104] location has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[105] voyageNumber has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[106] completionTime has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[110] applicationEvents has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[115] eventType has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[116] trackingId has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[117] location has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[118] voyageNumber has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[119] completionTime has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[123] applicationEvents has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[128] eventType has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[129] trackingId has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[130] location has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[131] voyageNumber has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[132] completionTime has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[136] applicationEvents has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: EventLogger_submitTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

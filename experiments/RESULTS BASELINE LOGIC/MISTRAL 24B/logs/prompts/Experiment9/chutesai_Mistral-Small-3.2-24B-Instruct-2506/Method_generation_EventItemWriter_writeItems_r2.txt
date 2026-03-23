@@ -1,0 +1,276 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.eclipse.cargotracker.interfaces.handling.file;
+
+import jakarta.batch.api.chunk.AbstractItemWriter;
+import jakarta.batch.runtime.context.JobContext;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.transaction.Transactional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class EventItemWriter_writeItemsTestGenerated {
+    @Mock
+    private JobContext jobContext;
+    @Mock
+    private ApplicationEvents applicationEvents;
+    @Mock
+    private HandlingEventRegistrationAttempt attempt;
+    private EventItemWriter eventItemWriter;
+    private AutoCloseable closeable;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        closeable = MockitoAnnotations.openMocks(this);
+        eventItemWriter = new EventItemWriter();
+        ReflectionTestUtils.setField(eventItemWriter, "jobContext", jobContext);
+        ReflectionTestUtils.setField(eventItemWriter, "applicationEvents", applicationEvents);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
+    }
+
+    @Test
+    void testWriteItemsWithEmptyList() throws Exception {
+        // Setup
+        List<Object> items = Collections.emptyList();
+        Properties properties = new Properties();
+        String tempDir = System.getProperty("java.io.tmpdir");
+        properties.setProperty("archive_directory", tempDir);
+        when(jobContext.getProperties()).thenReturn(properties);
+        when(jobContext.getJobName()).thenReturn("testJob");
+        when(jobContext.getInstanceId()).thenReturn(123L);
+        // Execute
+        eventItemWriter.writeItems(items);
+        // Verify
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any());
+        Path filePath = Path.of(tempDir, "archive_testJob_123.csv");
+        assertFalse(Files.exists(filePath));
+    }
+
+    @Test
+    void testWriteItemsWithNullList() throws Exception {
+        // Setup
+        Properties properties = new Properties();
+        String tempDir = System.getProperty("java.io.tmpdir");
+        properties.setProperty("archive_directory", tempDir);
+        when(jobContext.getProperties()).thenReturn(properties);
+        when(jobContext.getJobName()).thenReturn("testJob");
+        when(jobContext.getInstanceId()).thenReturn(123L);
+        // Execute & Verify
+        assertDoesNotThrow(() -> eventItemWriter.writeItems(null));
+        Path filePath = Path.of(tempDir, "archive_testJob_123.csv");
+        assertFalse(Files.exists(filePath));
+    }
+
+    @Test
+    void testWriteItemsWithNullAttemptInList() throws Exception {
+        // Setup
+        List<Object> items = Collections.singletonList(null);
+        Properties properties = new Properties();
+        String tempDir = System.getProperty("java.io.tmpdir");
+        properties.setProperty("archive_directory", tempDir);
+        when(jobContext.getProperties()).thenReturn(properties);
+        when(jobContext.getJobName()).thenReturn("testJob");
+        when(jobContext.getInstanceId()).thenReturn(123L);
+        // Execute & Verify
+        assertDoesNotThrow(() -> eventItemWriter.writeItems(items));
+        Path filePath = Path.of(tempDir, "archive_testJob_123.csv");
+        assertFalse(Files.exists(filePath));
+    }
+
+    @Test
+    void testWriteItemsWithNonEmptyList() throws Exception {
+        // Setup
+        List<Object> items = Collections.singletonList(attempt);
+        LocalDateTime registrationTime = LocalDateTime.now(ZoneId.systemDefault());
+        LocalDateTime completionTime = registrationTime.plusHours(1);
+        Properties properties = new Properties();
+        String tempDir = System.getProperty("java.io.tmpdir");
+        properties.setProperty("archive_directory", tempDir);
+        when(jobContext.getProperties()).thenReturn(properties);
+        when(jobContext.getJobName()).thenReturn("testJob");
+        when(jobContext.getInstanceId()).thenReturn(123L);
+        when(attempt.getRegistrationTime()).thenReturn(registrationTime);
+        when(attempt.getCompletionTime()).thenReturn(completionTime);
+        when(attempt.getTrackingId()).thenReturn(new TrackingId("tracking123"));
+        when(attempt.getVoyageNumber()).thenReturn(new VoyageNumber("voyage456"));
+        when(attempt.getUnLocode()).thenReturn(new UnLocode("ABC123"));
+        when(attempt.getType()).thenReturn(HandlingEvent.Type.valueOf("UNKNOWN"));
+        // Execute
+        eventItemWriter.writeItems(items);
+        // Verify
+        verify(applicationEvents).receivedHandlingEventRegistrationAttempt(attempt);
+        Path filePath = Path.of(tempDir, "archive_testJob_123.csv");
+        assertTrue(Files.exists(filePath));
+        assertTrue(Files.readString(filePath).contains("tracking123"));
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 0.00%
+- Tests: 0/4 passed
+
+TEST STATUS:
+- PASSED (0): none
+- FAILED (3): testWriteItemsWithEmptyList, testWriteItemsWithNullList, testWriteItemsWithNullAttemptInList
+- ERRORS (1): testWriteItemsWithNonEmptyList
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PREVIOUSLY GENERATED METHOD:
+@Override
+public void writeItems(List<Object> items) throws Exception {
+    if (items == null || items.isEmpty()) {
+        return;
+    }
+
+    for (Object item : items) {
+        if (item == null) {
+            continue;
+        }
+
+        HandlingEventRegistrationAttempt attempt = (HandlingEventRegistrationAttempt) item;
+        applicationEvents.receivedHandlingEventRegistrationAttempt(attempt);
+
+        Properties properties = jobContext.getProperties();
+        String archiveDirectory = properties.getProperty("archive_directory", System.getProperty("java.io.tmpdir"));
+        String jobName = jobContext.getJobName();
+        long instanceId = jobContext.getInstanceId();
+
+        String fileName = String.format("archive_%s_%d.csv", jobName, instanceId);
+        Path filePath = Path.of(archiveDirectory, fileName);
+
+        String csvLine = String.format("%s,%s,%s,%s,%s,%s,%s",
+            attempt.getTrackingId().toString(),
+            attempt.getVoyageNumber().toString(),
+            attempt.getUnLocode().toString(),
+            attempt.getType().toString(),
+            DateConverter.toString(attempt.getRegistrationTime()),
+            DateConverter.toString(attempt.getCompletionTime()),
+            attempt.getResult().toString());
+
+        Files.createDirectories(filePath.getParent());
+        Files.writeString(filePath, csvLine + System.lineSeparator(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+    }
+}
+
+ADDITIONAL INSTRUCTIONS:
+- Compare the previous method with the one you are about to generate
+- Improve quality and correctness compared to the previous version
+- Maintain compatibility with all provided tests
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   AbstractItemWriter -> jakarta.batch.api.chunk.AbstractItemWriter
+//   JobContext -> jakarta.batch.runtime.context.JobContext
+//   Dependent -> jakarta.enterprise.context.Dependent
+//   Inject -> jakarta.inject.Inject
+//   Named -> jakarta.inject.Named
+//   Transactional -> jakarta.transaction.Transactional
+//   List -> java.util.List
+//   ApplicationEvents -> org.eclipse.cargotracker.application.ApplicationEvents
+//   DateConverter -> org.eclipse.cargotracker.application.util.DateConverter
+//   HandlingEventRegistrationAttempt -> org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+
+// === Class: EventItemWriter ===
+// Fields (with actual visibility):
+    private static final String ARCHIVE_DIRECTORY;
+    private JobContext jobContext;
+    private ApplicationEvents applicationEvents;
+
+// === External Class: ApplicationEvents ===
+// Import paths:
+//   Cargo -> org.eclipse.cargotracker.domain.model.cargo.Cargo
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+//   HandlingEventRegistrationAttempt -> org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+// Method Signatures (used by target method):
+void receivedHandlingEventRegistrationAttempt(HandlingEventRegistrationAttempt attempt);
+
+// === External Class: DateConverter ===
+// Import paths:
+//   LocalDate -> java.time.LocalDate
+//   LocalDateTime -> java.time.LocalDateTime
+//   ZoneId -> java.time.ZoneId
+//   DateTimeFormatter -> java.time.format.DateTimeFormatter
+// Fields (with actual visibility):
+    public static final String DATE_FORMAT;
+    public static final String DATE_TIME_FORMAT;
+    private static final DateTimeFormatter DATE_FORMATTER;
+    private static final DateTimeFormatter DATE_TIME_FORMATTER;
+
+// Constructors:
+private DateConverter();
+
+// Method Signatures (used by target method):
+public static String toString(LocalDateTime dateTime);
+
+
+TASK:
+Regenerate ONLY the method "writeItems" OF CLASS "EventItemWriter" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void writeItems(List<Object> items) throws Exception {
+    // your implementation here
+}
+```
+
+
+- Package: org.eclipse.cargotracker.interfaces.handling.file
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in EventItemWriter
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

@@ -1,0 +1,60 @@
+```java
+public String nysiis(String str) {
+    if (str == null) {
+        return null;
+    }
+
+    String cleaned = SoundexUtils.clean(str);
+    if (cleaned.isEmpty()) {
+        return "";
+    }
+
+    StringBuilder nysiis = new StringBuilder(TRUE_LENGTH);
+    char prevChar = SPACE;
+    char currChar;
+    char nextChar;
+    char aNextChar;
+
+    int len = cleaned.length();
+    for (int i = 0; i < len; i++) {
+        currChar = cleaned.charAt(i);
+        nextChar = (i + 1 < len) ? cleaned.charAt(i + 1) : SPACE;
+        aNextChar = (i + 2 < len) ? cleaned.charAt(i + 2) : SPACE;
+
+        if (i > 0) {
+            if (currChar == prevChar) {
+                continue;
+            }
+        }
+
+        if (PAT_MAC.matcher(String.valueOf(currChar)).matches()) {
+            nysiis.append('M');
+        } else if (PAT_KN.matcher(String.valueOf(currChar)).matches()) {
+            nysiis.append('N');
+        } else if (PAT_K.matcher(String.valueOf(currChar)).matches()) {
+            nysiis.append('C');
+        } else if (PAT_PH_PF.matcher(String.valueOf(currChar)).matches()) {
+            nysiis.append('F');
+        } else if (PAT_SCH.matcher(String.valueOf(currChar)).matches()) {
+            nysiis.append('S');
+        } else if (PAT_EE_IE.matcher(String.valueOf(currChar)).matches()) {
+            nysiis.append('Y');
+        } else if (PAT_DT_ETC.matcher(String.valueOf(currChar)).matches()) {
+            nysiis.append('D');
+        } else {
+            char[] transcode = transcodeRemaining(prevChar, currChar, nextChar, aNextChar);
+            nysiis.append(transcode[0]);
+        }
+
+        prevChar = currChar;
+    }
+
+    if (strict) {
+        while (nysiis.length() > 4) {
+            nysiis.deleteCharAt(4);
+        }
+    }
+
+    return nysiis.toString();
+}
+```

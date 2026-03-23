@@ -1,0 +1,150 @@
+```java
+package org.apache.commons.jxpath.ri.model.dom;
+
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.ri.NamespaceResolver;
+import org.apache.commons.jxpath.ri.QName;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.ProcessingInstruction;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class DOMNodePointer_asPathTestGenerated {
+
+    private JXPathContext mockContext;
+
+    @BeforeEach
+    void setUp() {
+        mockContext = Mockito.mock(JXPathContext.class);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.reset(mockContext);
+    }
+
+    @Test
+    void testAsPathWithId() {
+        Document doc = Mockito.mock(Document.class);
+        Element element = Mockito.mock(Element.class);
+        Mockito.when(element.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        Mockito.when(element.getAttributeNode("id")).thenReturn(null);
+        DOMNodePointer pointer = new DOMNodePointer(element, Locale.getDefault(), "testId");
+        assertEquals("id('testId')", pointer.asPath());
+    }
+
+    @Test
+    void testAsPathWithElementNodeAndParent() {
+        Document doc = Mockito.mock(Document.class);
+        Element parentElement = Mockito.mock(Element.class);
+        Element element = Mockito.mock(Element.class);
+        Mockito.when(element.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        Mockito.when(element.getLocalName()).thenReturn("child");
+        Mockito.when(element.getNamespaceURI()).thenReturn("http://example.com");
+        DOMNodePointer parentPointer = new DOMNodePointer(parentElement, Locale.getDefault());
+        DOMNodePointer pointer = new DOMNodePointer(element, Locale.getDefault(), null);
+        parentPointer.setNode(parentElement);
+        pointer.setNode(element);
+        pointer.setParent(parentPointer);
+        NamespaceResolver resolver = Mockito.mock(NamespaceResolver.class);
+        Mockito.when(resolver.getPrefix("http://example.com")).thenReturn("prefix");
+        pointer.setNamespaceResolver(resolver);
+
+        assertEquals("/prefix:child[1]", pointer.asPath());
+    }
+
+    @Test
+    void testAsPathWithTextNode() {
+        Document doc = Mockito.mock(Document.class);
+        Element element = Mockito.mock(Element.class);
+        Node textNode = Mockito.mock(Node.class);
+        Mockito.when(textNode.getNodeType()).thenReturn(Node.TEXT_NODE);
+        DOMNodePointer pointer = new DOMNodePointer(textNode, Locale.getDefault());
+        pointer.setNode(textNode);
+
+        assertEquals("/text()[1]", pointer.asPath());
+    }
+
+    @Test
+    void testAsPathWithProcessingInstruction() {
+        Document doc = Mockito.mock(Document.class);
+        ProcessingInstruction pi = Mockito.mock(ProcessingInstruction.class);
+        Mockito.when(pi.getNodeType()).thenReturn(Node.PROCESSING_INSTRUCTION_NODE);
+        Mockito.when(pi.getTarget()).thenReturn("target");
+        DOMNodePointer pointer = new DOMNodePointer(pi, Locale.getDefault());
+        pointer.setNode(pi);
+
+        assertEquals("/processing-instruction('target')[1]", pointer.asPath());
+    }
+
+    @Test
+    void testAsPathWithDocumentNode() {
+        Document doc = Mockito.mock(Document.class);
+        DOMNodePointer pointer = new DOMNodePointer(doc, Locale.getDefault());
+        pointer.setNode(doc);
+
+        assertEquals("", pointer.asPath());
+    }
+
+    @Test
+    void testAsPathWithoutNamespace() {
+        Document doc = Mockito.mock(Document.class);
+        Element element = Mockito.mock(Element.class);
+        Mockito.when(element.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        Mockito.when(element.getLocalName()).thenReturn("localName");
+        Mockito.when(element.getNamespaceURI()).thenReturn(null);
+        DOMNodePointer pointer = new DOMNodePointer(element, Locale.getDefault());
+        pointer.setNode(element);
+        Mockito.when(element.getNamespaceURI()).thenReturn(null);
+        Mockito.when(pointer.getRelativePositionByQName()).thenReturn(1);
+        assertEquals("/localName[1]", pointer.asPath());
+    }
+
+    @Test
+    void testAsPathWithParentAndNoSlash() {
+        Document doc = Mockito.mock(Document.class);
+        Element parentElement = Mockito.mock(Element.class);
+        Element element = Mockito.mock(Element.class);
+        Mockito.when(element.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        Mockito.when(element.getLocalName()).thenReturn("child");
+        Mockito.when(element.getNamespaceURI()).thenReturn(null);
+        DOMNodePointer parentPointer = new DOMNodePointer(parentElement, Locale.getDefault());
+        DOMNodePointer pointer = new DOMNodePointer(element, Locale.getDefault(), null);
+        parentPointer.setNode(parentElement);
+        pointer.setNode(element);
+        pointer.setParent(parentPointer);
+        Mockito.when(pointer.getRelativePositionByQName()).thenReturn(1);
+
+        assertEquals("parent.asPath()", parentPointer.asPath());
+    }
+
+    @Test
+    void testAsPathWithElementAndNoNamespace() {
+        Document doc = Mockito.mock(Document.class);
+        Element element = Mockito.mock(Element.class);
+        Mockito.when(element.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        Mockito.when(element.getLocalName()).thenReturn("localName");
+        Mockito.when(element.getNamespaceURI()).thenReturn(null);
+        DOMNodePointer pointer = new DOMNodePointer(element, Locale.getDefault());
+        pointer.setNode(element);
+        Mockito.when(pointer.getRelativePositionByQName()).thenReturn(1);
+
+        assertEquals("/localName[1]", pointer.asPath());
+    }
+}
+```

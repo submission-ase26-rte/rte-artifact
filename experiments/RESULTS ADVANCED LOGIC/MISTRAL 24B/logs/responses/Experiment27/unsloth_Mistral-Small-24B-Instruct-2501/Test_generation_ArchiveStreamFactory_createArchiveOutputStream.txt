@@ -1,0 +1,107 @@
+```java
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Set;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.archivers.ArchiveStreamProvider;
+import org.apache.commons.compress.archivers.ArchiveOutputStream;
+import org.apache.commons.compress.archivers.ar.ArArchiveOutputStream;
+import org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream;
+import org.apache.commons.compress.archivers.jar.JarArchiveOutputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class ArchiveStreamFactory_createArchiveOutputStreamTestGenerated {
+
+    private ArchiveStreamFactory factory;
+
+    @BeforeEach
+    void setUp() {
+        factory = new ArchiveStreamFactory();
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamNullArchiverName() {
+        OutputStream out = new ByteArrayOutputStream();
+        assertThrows(IllegalArgumentException.class, () -> factory.createArchiveOutputStream(null, out, null));
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamNullOutputStream() {
+        assertThrows(IllegalArgumentException.class, () -> factory.createArchiveOutputStream("AR", null, null));
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamAR() {
+        OutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream result = factory.createArchiveOutputStream(ArchiveStreamFactory.AR, out, null);
+        assertNotNull(result);
+        assertTrue(result instanceof ArArchiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamZIP() {
+        OutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream result = factory.createArchiveOutputStream(ArchiveStreamFactory.ZIP, out, null);
+        assertNotNull(result);
+        assertTrue(result instanceof ZipArchiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamTAR() {
+        OutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream result = factory.createArchiveOutputStream(ArchiveStreamFactory.TAR, out, null);
+        assertNotNull(result);
+        assertTrue(result instanceof TarArchiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamJAR() {
+        OutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream result = factory.createArchiveOutputStream(ArchiveStreamFactory.JAR, out, null);
+        assertNotNull(result);
+        assertTrue(result instanceof JarArchiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamCPIO() {
+        OutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream result = factory.createArchiveOutputStream(ArchiveStreamFactory.CPIO, out, null);
+        assertNotNull(result);
+        assertTrue(result instanceof CpioArchiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamSEVEN_Z() {
+        OutputStream out = new ByteArrayOutputStream();
+        assertThrows(StreamingNotSupportedException.class, () -> factory.createArchiveOutputStream(ArchiveStreamFactory.SEVEN_Z, out, null));
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamCustomProvider() {
+        String customArchiverName = "CUSTOM";
+        OutputStream out = new ByteArrayOutputStream();
+        factory.getArchiveOutputStreamProviders().put(customArchiverName.toUpperCase(), new ArchiveStreamProvider() {
+            @Override
+            public <O extends ArchiveOutputStream<? extends ArchiveEntry>> O createArchiveOutputStream(String archiverName, OutputStream out, String encoding) {
+                return (O) new ByteArrayOutputStream();
+            }
+        });
+        ArchiveOutputStream result = factory.createArchiveOutputStream(customArchiverName, out, null);
+        assertNotNull(result);
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamUnknownArchiver() {
+        OutputStream out = new ByteArrayOutputStream();
+        assertThrows(ArchiveException.class, () -> factory.createArchiveOutputStream("UNKNOWN", out, null));
+    }
+}
+```

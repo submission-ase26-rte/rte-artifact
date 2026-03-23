@@ -1,0 +1,566 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.util;
+Class name (MUST be exactly): BasicTypeConverter_convertTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testConvertPointerToType --
+ERROR: java.util.concurrent.TimeoutException: testConvertPointerToType() timed out after 2 seconds
+Caused by: org.junit.jupiter.api.AssertTimeoutPreemptively$ExecutionTimeoutException: Execution timed out in thread junit-timeout-thread-2
+--------------------------------------------------
+TEST: testConvertNullToNumber --
+ERROR: org.opentest4j.AssertionFailedError: expected: <0> but was: <null>
+--------------------------------------------------
+TEST: testConvertNullToString --
+ERROR: org.opentest4j.AssertionFailedError: expected: <> but was: <null>
+--------------------------------------------------
+TEST: testConvertException --
+ERROR: org.opentest4j.AssertionFailedError: Expected org.apache.commons.jxpath.JXPathTypeConversionException to be thrown, but nothing was thrown.
+--------------------------------------------------
+TEST: testConvertNullToStringUsingPointer --
+ERROR: org.opentest4j.AssertionFailedError: expected: <> but was: <null>
+--------------------------------------------------
+TEST: testConvertBooleanToNumber --
+ERROR: java.lang.NullPointerException: Cannot invoke "java.lang.Number.doubleValue()" because "result" is null
+--------------------------------------------------
+TEST: testConvertNullToPrimitiveBoolean --
+ERROR: org.opentest4j.AssertionFailedError: expected: <false> but was: <true>
+--------------------------------------------------
+TEST: testConvertNullToStringUsingNodeSet --
+ERROR: org.opentest4j.AssertionFailedError: expected: <> but was: <null>
+
+TEST CODE TO FIX:
+package org.apache.commons.jxpath.util;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.util.TypeUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class BasicTypeConverter_convertTestGenerated {
+    private BasicTypeConverter basicTypeConverter;
+    @BeforeEach
+    void setUp() {
+        basicTypeConverter = new BasicTypeConverter();
+    }
+
+
+    @Test
+            void testConvertNullToNumber() {
+                Object result = basicTypeConverter.convert(null, Integer.class);
+                assertEquals(0, result);
+            }
+
+    @Test
+            void testConvertNullToPrimitiveBoolean() {
+                Object result = basicTypeConverter.convert(null, boolean.class);
+                assertFalse(result instanceof Boolean);
+                assertEquals(false, (Boolean) result);
+            }
+
+    @Test
+            void testConvertException() {
+                assertThrows(JXPathTypeConversionException.class, () -> {
+                    basicTypeConverter.convert(1, String.class);
+                });
+            }
+
+    @Test
+            void testConvertNullToString() {
+                Object result = basicTypeConverter.convert(null, String.class);
+                assertEquals("", result);
+            }
+
+    @Test
+            void testConvertNullToStringUsingNodeSet() {
+                NodeSet nodeSet = mock(NodeSet.class);
+                when(nodeSet.getValues()).thenReturn(null);
+                Object result = basicTypeConverter.convert(nodeSet, String.class);
+                assertEquals("", result);
+            }
+
+    @Test
+            void testConvertNullToStringUsingPointer() {
+                Pointer pointer = mock(Pointer.class);
+                when(pointer.getValue()).thenReturn(null);
+                Object result = basicTypeConverter.convert(pointer, String.class);
+                assertEquals("", result);
+            }
+
+    @Test
+            void testConvertPointerToType() {
+                Pointer pointer = mock(Pointer.class);
+                when(pointer.getValue()).thenReturn(4);
+                Object result = basicTypeConverter.convert(pointer, Integer.class);
+                assertEquals(4, result);
+            }
+
+    @Test
+            void testConvertBooleanToNumber() {
+                Object result = basicTypeConverter.convert(true, Number.class);
+                assertEquals(1, ((Number) result).doubleValue(), 0.0001);
+            }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    void testConvertNullToBoolean() {}
+    @Test
+    void testConvertToString() {}
+    @Test
+    void testConvertNumberToBoolean() {}
+    @Test
+    void testConvertStringToPrimitive() {}
+    @Test
+    void testConvertNullToPrimitiveLong() {}
+    @Test
+    void testConvertNullToPrimitiveDouble() {}
+    @Test
+    void testConvertNullToPrimitiveFloat() {}
+    @Test
+    void testConvertNullToPrimitiveInt() {}
+    @Test
+    void testConvertNullToPrimitiveShort() {}
+    @Test
+    void testConvertNullToPrimitiveByte() {}
+    @Test
+    void testConvertNullToPrimitiveChar() {}
+    @Test
+    void testConvertObjectArrayToCollection() {}
+    @Test
+    void testConvertPrimitiveArrayToCollection() {}
+    @Test
+    void testConvertCollectionToCollection() {}
+    @Test
+    void testConvertArrayToPrimitiveArray() {}
+    @Test
+    void testConvertCollectionToArray() {}
+    @Test
+    void testConvertObjectToType() {}
+    @Test
+    void testConvertNullToType() {}
+    @Test
+    void testConvertArrayOfPrimitivesToType() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Array -> java.lang.reflect.Array
+//   Modifier -> java.lang.reflect.Modifier
+//   BigDecimal -> java.math.BigDecimal
+//   BigInteger -> java.math.BigInteger
+//   ArrayList -> java.util.ArrayList
+//   Collection -> java.util.Collection
+//   Collections -> java.util.Collections
+//   HashSet -> java.util.HashSet
+//   Iterator -> java.util.Iterator
+//   List -> java.util.List
+//   Set -> java.util.Set
+//   SortedSet -> java.util.SortedSet
+//   ConvertUtils -> org.apache.commons.beanutils.ConvertUtils
+//   Converter -> org.apache.commons.beanutils.Converter
+//   JXPathInvalidAccessException -> org.apache.commons.jxpath.JXPathInvalidAccessException
+//   JXPathTypeConversionException -> org.apache.commons.jxpath.JXPathTypeConversionException
+//   NodeSet -> org.apache.commons.jxpath.NodeSet
+//   Pointer -> org.apache.commons.jxpath.Pointer
+//   BasicTypeConverter -> org.apache.commons.jxpath.util.BasicTypeConverter
+//   TypeUtils -> org.apache.commons.jxpath.util.TypeUtils
+
+// === Class: BasicTypeConverter ===
+// Fields (with actual visibility):
+    private final List values;
+    private List pointers;
+    private static final long serialVersionUID;
+    private final Object bean;
+
+// Constructors:
+public ValueNodeSet(List values);
+public ValuePointer(Object object);
+
+// Getter/Setter Methods (for test assertions):
+public List getValues();
+public List getNodes();
+public List getPointers();
+public Object getValue();
+public Object getNode();
+public Object getRootNode();
+public void setValue(final Object value);
+
+// Internal Methods (full implementation for context):
+    protected Collection allocateCollection(final Class type) {
+        if (!type.isInterface()
+                && (type.getModifiers() & Modifier.ABSTRACT) == 0) {
+            try {
+                return (Collection) type.getConstructor().newInstance();
+            }
+            catch (final Exception ex) {
+                throw new JXPathInvalidAccessException(
+                        "Cannot create collection of type: " + type, ex);
+            }
+        }
+
+        if (type == List.class || type == Collection.class) {
+            return new ArrayList();
+        }
+        if (type == Set.class) {
+            return new HashSet();
+        }
+        throw new JXPathInvalidAccessException(
+                "Cannot create collection of type: " + type);
+    }
+    protected Object convertNullToPrimitive(final Class toType) {
+        if (toType == boolean.class) {
+            return Boolean.FALSE;
+        }
+        if (toType == char.class) {
+            return Character.valueOf('\0');
+        }
+        if (toType == byte.class) {
+            return Byte.valueOf((byte) 0);
+        }
+        if (toType == short.class) {
+            return Short.valueOf((short) 0);
+        }
+        if (toType == int.class) {
+            return Integer.valueOf(0);
+        }
+        if (toType == long.class) {
+            return Long.valueOf(0L);
+        }
+        if (toType == float.class) {
+            return Float.valueOf(0.0f);
+        }
+        if (toType == double.class) {
+            return Double.valueOf(0.0);
+        }
+        return null;
+    }
+    protected Number allocateNumber(Class type, final double value) {
+        type = TypeUtils.wrapPrimitive(type);
+        if (type == Byte.class) {
+            return Byte.valueOf((byte) value);
+        }
+        if (type == Short.class) {
+            return Short.valueOf((short) value);
+        }
+        if (type == Integer.class) {
+            return Integer.valueOf((int) value);
+        }
+        if (type == Long.class) {
+            return Long.valueOf((long) value);
+        }
+        if (type == Float.class) {
+            return Float.valueOf((float) value);
+        }
+        if (type == Double.class) {
+            return Double.valueOf(value);
+        }
+        if (type == BigInteger.class) {
+            return BigInteger.valueOf((long) value);
+        }
+        if (type == BigDecimal.class) {
+            // TODO ? https://pmd.sourceforge.io/pmd-6.50.0/pmd_rules_java_errorprone.html#avoiddecimalliteralsinbigdecimalconstructor
+            return new BigDecimal(value); // NOPMD
+        }
+        final String className = type.getName();
+        Class initialValueType = null;
+        if ("java.util.concurrent.atomic.AtomicInteger".equals(className)) {
+            initialValueType = int.class;
+        }
+        if ("java.util.concurrent.atomic.AtomicLong".equals(className)) {
+            initialValueType = long.class;
+        }
+        if (initialValueType != null) {
+            try {
+                return (Number) type.getConstructor(
+                        new Class[] { initialValueType })
+                        .newInstance(
+                                allocateNumber(initialValueType,
+                                        value));
+            }
+            catch (final Exception e) {
+                throw new JXPathTypeConversionException(className, e);
+            }
+        }
+        return null;
+    }
+    protected Object convertStringToPrimitive(final Object object, Class toType) {
+        toType = TypeUtils.wrapPrimitive(toType);
+        if (toType == Boolean.class) {
+            return Boolean.valueOf((String) object);
+        }
+        if (toType == Character.class) {
+            return Character.valueOf(((String) object).charAt(0));
+        }
+        if (toType == Byte.class) {
+            return Byte.valueOf((String) object);
+        }
+        if (toType == Short.class) {
+            return Short.valueOf((String) object);
+        }
+        if (toType == Integer.class) {
+            return Integer.valueOf((String) object);
+        }
+        if (toType == Long.class) {
+            return Long.valueOf((String) object);
+        }
+        if (toType == Float.class) {
+            return Float.valueOf((String) object);
+        }
+        if (toType == Double.class) {
+            return Double.valueOf((String) object);
+        }
+        return null;
+    }
+    protected Collection unmodifiableCollection(final Collection collection) {
+        if (collection instanceof List) {
+            return Collections.unmodifiableList((List) collection);
+        }
+        if (collection instanceof SortedSet) {
+            return Collections.unmodifiableSortedSet((SortedSet) collection);
+        }
+        if (collection instanceof Set) {
+            return Collections.unmodifiableSet((Set) collection);
+        }
+        return Collections.unmodifiableCollection(collection);
+    }
+
+// === External Class: TypeUtils ===
+// Full import path: org.apache.commons.jxpath.util.TypeUtils
+// Import paths:
+//   HashMap -> java.util.HashMap
+// Fields (with actual visibility):
+    private static TypeConverter typeConverter;
+    private static final HashMap PRIMITIVE_TYPE_MAP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+
+// Method Signatures (used by target method):
+public static Class wrapPrimitive(final Class p);
+
+// Public Getter Methods (for test assertions):
+public static TypeConverter getTypeConverter();
+public static boolean canConvert(Object object, Class toType);
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() {
+        basicTypeConverter = new BasicTypeConverter();
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+    /**
+     * Converts the supplied object to the specified
+     * type. Throws a runtime exception if the conversion is
+     * not possible.
+     * @param object to convert
+     * @param toType destination class
+     * @return converted object
+     */
+    @Override
+    public Object convert(final Object object, final Class toType) {
+        if (object == null) {
+            return toType.isPrimitive() ? convertNullToPrimitive(toType) : null;
+        }
+
+        if (toType == Object.class) { // NOT COVERED BY TESTS
+            if (object instanceof NodeSet) { // NOT COVERED BY TESTS
+                return convert(((NodeSet) object).getValues(), toType); // NOT COVERED BY TESTS
+            }
+            if (object instanceof Pointer) { // NOT COVERED BY TESTS
+                return convert(((Pointer) object).getValue(), toType); // NOT COVERED BY TESTS
+            }
+            return object; // NOT COVERED BY TESTS
+        }
+        final Class useType = TypeUtils.wrapPrimitive(toType);
+        final Class fromType = object.getClass();
+
+        if (useType.isAssignableFrom(fromType)) {
+            return object;
+        }
+
+        if (fromType.isArray()) {
+            final int length = Array.getLength(object);
+            if (useType.isArray()) {
+                final Class cType = useType.getComponentType();
+
+                final Object array = Array.newInstance(cType, length);
+                for (int i = 0; i < length; i++) {
+                    final Object value = Array.get(object, i);
+                    Array.set(array, i, convert(value, cType));
+                }
+                return array;
+            }
+            if (Collection.class.isAssignableFrom(useType)) { // NOT COVERED BY TESTS
+                final Collection collection = allocateCollection(useType);
+                for (int i = 0; i < length; i++) {
+                    collection.add(Array.get(object, i));
+                }
+                return unmodifiableCollection(collection);
+            }
+            if (length > 0) { // NOT COVERED BY TESTS
+                final Object value = Array.get(object, 0); // NOT COVERED BY TESTS
+                return convert(value, useType); // NOT COVERED BY TESTS
+            }
+            return convert("", useType); // NOT COVERED BY TESTS
+        }
+        if (object instanceof Collection) {
+            final int length = ((Collection) object).size();
+            if (useType.isArray()) { // NOT COVERED BY TESTS
+                final Class cType = useType.getComponentType();
+                final Object array = Array.newInstance(cType, length);
+                final Iterator it = ((Collection) object).iterator();
+                for (int i = 0; i < length; i++) {
+                    final Object value = it.next();
+                    Array.set(array, i, convert(value, cType));
+                }
+                return array;
+            }
+            if (Collection.class.isAssignableFrom(useType)) { // NOT COVERED BY TESTS
+                final Collection collection = allocateCollection(useType); // NOT COVERED BY TESTS
+                collection.addAll((Collection) object); // NOT COVERED BY TESTS
+                return unmodifiableCollection(collection); // NOT COVERED BY TESTS
+            }
+            if (length > 0) { // NOT COVERED BY TESTS
+                Object value;
+                if (object instanceof List) { // NOT COVERED BY TESTS
+                    value = ((List) object).get(0); // NOT COVERED BY TESTS
+                }
+                else {
+                    final Iterator it = ((Collection) object).iterator(); // NOT COVERED BY TESTS
+                    value = it.next(); // NOT COVERED BY TESTS
+                }
+                return convert(value, useType); // NOT COVERED BY TESTS
+            }
+            return convert("", useType); // NOT COVERED BY TESTS
+        }
+        if (object instanceof NodeSet) {
+            return convert(((NodeSet) object).getValues(), useType);
+        }
+        if (object instanceof Pointer) {
+            return convert(((Pointer) object).getValue(), useType);
+        }
+        if (useType == String.class) {
+            return object.toString();
+        }
+        if (object instanceof Boolean) {
+            if (Number.class.isAssignableFrom(useType)) { // NOT COVERED BY TESTS
+                return allocateNumber(useType, ((Boolean) object).booleanValue() ? 1 : 0); // NOT COVERED BY TESTS
+            }
+            if ("java.util.concurrent.atomic.AtomicBoolean".equals(useType.getName())) { // NOT COVERED BY TESTS
+                try {
+                    return useType.getConstructor(new Class[] { boolean.class }) // NOT COVERED BY TESTS
+                            .newInstance(object); // NOT COVERED BY TESTS
+                }
+                catch (final Exception e) {
+                    throw new JXPathTypeConversionException(useType.getName(), e); // NOT COVERED BY TESTS
+                }
+            }
+        }
+        if (object instanceof Number) {
+            final double value = ((Number) object).doubleValue();
+            if (useType == Boolean.class) { // NOT COVERED BY TESTS
+                return value == 0.0 ? Boolean.FALSE : Boolean.TRUE; // NOT COVERED BY TESTS
+            }
+            if (Number.class.isAssignableFrom(useType)) { // NOT COVERED BY TESTS
+                return allocateNumber(useType, value); // NOT COVERED BY TESTS
+            }
+        }
+        if (object instanceof String) { // NOT COVERED BY TESTS
+            final Object value = convertStringToPrimitive(object, useType);
+            if (value != null) { // NOT COVERED BY TESTS
+                return value;
+            }
+        }
+
+        final Converter converter = ConvertUtils.lookup(useType); // NOT COVERED BY TESTS
+        if (converter != null) { // NOT COVERED BY TESTS
+            return converter.convert(useType, object); // NOT COVERED BY TESTS
+        }
+
+        throw new JXPathTypeConversionException("Cannot convert " // NOT COVERED BY TESTS
+                + object.getClass() + " to " + useType); // NOT COVERED BY TESTS
+    }
+
+
+COVERAGE ISSUES:
+Current line coverage: 60.00%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

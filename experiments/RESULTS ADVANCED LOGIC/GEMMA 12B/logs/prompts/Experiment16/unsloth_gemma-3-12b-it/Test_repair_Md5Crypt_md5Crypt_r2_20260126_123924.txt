@@ -1,0 +1,88 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.digest;
+Class name (MUST be exactly): Md5Crypt_md5CryptTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.codec.digest;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.apache.commons.codec.digest.B64;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.digest.Md5Crypt;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Md5Crypt_md5CryptTestGenerated {
+    private Md5Crypt md5Crypt;
+    private Random random;
+    @BeforeEach
+    void setUp() {
+        md5Crypt = new Md5Crypt();
+        random = mock(SecureRandom.class);
+    }
+
+
+    @Test
+    void testMd5CryptWithInvalidSalt() {
+        byte[] keyBytes = "test".getBytes(StandardCharsets.UTF_8);
+        String salt = "$apr1$invalidSalt";
+        String prefix = "$apr1$";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+        });
+        assertEquals("Invalid salt value: $apr1$invalidSalt", exception.getMessage());
+    }
+
+    @Test
+    void testMd5CryptWithNullKeyBytes() {
+        byte[] keyBytes = null;
+        String salt = "$apr1$someSalt";
+        String prefix = "$apr1$";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+        });
+        assertNotNull(exception);
+    }
+
+    @Test
+    void testMd5CryptWithNullSalt() {
+        byte[] keyBytes = "test".getBytes(StandardCharsets.UTF_8);
+        String salt = null;
+        String prefix = "$apr1$";
+        when(random.nextBytes(any())).thenReturn(new byte[8]);
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, prefix, random);
+        assertTrue(result.startsWith(prefix));
+        assertTrue(result.length() > prefix.length());
+    }
+
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/digest/Md5Crypt_md5CryptTestGenerated.java:[59] 'void' type not allowed here
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: Md5Crypt_md5CryptTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

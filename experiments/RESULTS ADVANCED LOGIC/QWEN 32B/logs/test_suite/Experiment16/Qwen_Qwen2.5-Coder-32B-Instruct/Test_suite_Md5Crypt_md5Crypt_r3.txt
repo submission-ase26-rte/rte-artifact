@@ -1,0 +1,135 @@
+package org.apache.commons.codec.digest;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Md5Crypt_md5CryptTestGenerated {
+
+    @Test
+    public void testMd5CryptWithInvalidSalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String invalidSalt = "invalidsalt";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, invalidSalt, Md5Crypt.MD5_PREFIX, new SecureRandom());
+        });
+        assertEquals("Invalid salt value: invalidsalt", exception.getMessage());
+    }
+
+    @Test
+    public void testMd5CryptWithNullKeyBytes() {
+        byte[] keyBytes = null;
+        String salt = "salt";
+        Exception exception = assertThrows(NullPointerException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, salt, Md5Crypt.MD5_PREFIX, new SecureRandom());
+        });
+        assertNotNull(exception);
+    }
+
+    @Test
+    public void testMd5CryptWithEmptySalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, salt, Md5Crypt.MD5_PREFIX, new SecureRandom());
+        });
+        assertEquals("Invalid salt value: ", exception.getMessage());
+    }
+
+    @Test
+    public void testMd5CryptWithNullSaltAndDefaultPrefix() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        Random random = mock(SecureRandom.class);
+        when(random.nextInt(64)).thenReturn(0, 1, 2, 3, 4, 5, 6, 7); // Mocking random salt generation
+        String result = Md5Crypt.md5Crypt(keyBytes, null, Md5Crypt.MD5_PREFIX, random);
+        assertNotNull(result);
+        assertTrue(result.startsWith(Md5Crypt.MD5_PREFIX));
+    }
+
+    @Test
+    public void testMd5CryptWithInvalidSaltPattern() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "invalidSalt!";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, salt, Md5Crypt.MD5_PREFIX, new SecureRandom());
+        });
+        assertEquals("Invalid salt value: invalidSalt!", exception.getMessage());
+    }
+
+    @Test
+    public void testMd5CryptWithNullSaltAndApr1Prefix() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        Random random = mock(SecureRandom.class);
+        when(random.nextInt(64)).thenReturn(0, 1, 2, 3, 4, 5, 6, 7); // Mocking random salt generation
+        String result = Md5Crypt.md5Crypt(keyBytes, null, Md5Crypt.APR1_PREFIX, random);
+        assertNotNull(result);
+        assertTrue(result.startsWith(Md5Crypt.APR1_PREFIX));
+        assertEquals(37, result.length()); // APR1_PREFIX + 8 random characters + 1 $ + 22 hash characters
+    }
+
+    @Test
+    public void testMd5CryptWithValidSaltAndDefaultPrefix() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "salt12";
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, Md5Crypt.MD5_PREFIX, new SecureRandom());
+        assertNotNull(result);
+        assertTrue(result.startsWith(Md5Crypt.MD5_PREFIX + salt));
+    }
+
+    @Test
+    public void testMd5CryptWithValidSaltAndApr1Prefix() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "salt12";
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, Md5Crypt.APR1_PREFIX, new SecureRandom());
+        assertNotNull(result);
+        assertTrue(result.startsWith(Md5Crypt.APR1_PREFIX + salt));
+    }
+
+    @Test
+    public void testMd5CryptWithEmptyKeyBytes() {
+        byte[] keyBytes = new byte[0];
+        String salt = "salt12";
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, Md5Crypt.MD5_PREFIX, new SecureRandom());
+        assertNotNull(result);
+        assertTrue(result.startsWith(Md5Crypt.MD5_PREFIX + salt));
+    }
+
+    @Test
+    public void testMd5CryptWithShortSalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "sa";
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, Md5Crypt.MD5_PREFIX, new SecureRandom());
+        assertNotNull(result);
+        assertTrue(result.startsWith(Md5Crypt.MD5_PREFIX + salt));
+    }
+
+    @Test
+    public void testMd5CryptWithLongSalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "salt123456789";
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, Md5Crypt.MD5_PREFIX, new SecureRandom());
+        assertNotNull(result);
+        assertTrue(result.startsWith(Md5Crypt.MD5_PREFIX + "salt12345678"));
+    }
+
+    @Test
+    public void testMd5CryptWithNullSaltGeneratesRandomSalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        Random random = mock(SecureRandom.class);
+        when(random.nextInt(64)).thenReturn(0, 1, 2, 3, 4, 5, 6, 7); // Mocking random salt generation
+        String result = Md5Crypt.md5Crypt(keyBytes, null, Md5Crypt.MD5_PREFIX, random);
+        assertNotNull(result);
+        assertTrue(result.startsWith(Md5Crypt.MD5_PREFIX));
+        assertEquals(22, result.length()); // MD5_PREFIX + 8 random characters + 1 $
+    }
+
+}

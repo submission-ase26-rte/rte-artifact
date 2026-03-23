@@ -1,0 +1,312 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language;
+Class name (MUST be exactly): Caverphone2_encodeTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testStartOptions --
+ERROR: org.opentest4j.AssertionFailedError: expected: <TOU2F11111> but was: <TF11111111>
+--------------------------------------------------
+TEST: testFinalResult --
+ERROR: org.opentest4j.AssertionFailedError: expected: <1111111111> but was: <A111111111>
+--------------------------------------------------
+TEST: testReplacements --
+ERROR: org.opentest4j.AssertionFailedError: expected: <SE11111111> but was: <K111111111>
+
+TEST CODE TO FIX:
+package org.apache.commons.codec.language;
+
+import org.apache.commons.codec.language.Caverphone2;
+import org.apache.commons.codec.language.SoundexUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Caverphone2_encodeTestGenerated {
+    private Caverphone2 caverphone2;
+    @BeforeEach
+    public void setUp() {
+        caverphone2 = new Caverphone2();
+    }
+
+
+    @Test
+        public void testStartOptions() {
+            assertEquals("KF11111111", caverphone2.encode("Cough"));
+            assertEquals("RF11111111", caverphone2.encode("Rough"));
+            assertEquals("TOU2F11111", caverphone2.encode("Tough"));
+            assertEquals("ENOU2F1111", caverphone2.encode("Enough"));
+            assertEquals("TROU2F1111", caverphone2.encode("Trough"));
+            assertEquals("2N11111111", caverphone2.encode("Gn"));
+        }
+
+    @Test
+        public void testReplacements() {
+            assertEquals("K111111111", caverphone2.encode("Cq"));
+            assertEquals("SA11111111", caverphone2.encode("Ci"));
+            assertEquals("SE11111111", caverphone2.encode("Ce"));
+            assertEquals("SY11111111", caverphone2.encode("Cy"));
+            assertEquals("2CH111111", caverphone2.encode("Tch"));
+            assertEquals("K111111111", caverphone2.encode("C"));
+            assertEquals("K111111111", caverphone2.encode("Q"));
+            assertEquals("K111111111", caverphone2.encode("X"));
+            assertEquals("F111111111", caverphone2.encode("V"));
+            assertEquals("2G11111111", caverphone2.encode("Dg"));
+            assertEquals("SIO1111111", caverphone2.encode("Tio"));
+            assertEquals("SIA1111111", caverphone2.encode("Tia"));
+            assertEquals("T111111111", caverphone2.encode("D"));
+            assertEquals("FH11111111", caverphone2.encode("Ph"));
+            assertEquals("P111111111", caverphone2.encode("B"));
+            assertEquals("S211111111", caverphone2.encode("Sh"));
+            assertEquals("S111111111", caverphone2.encode("Z"));
+            assertEquals("A111111111", caverphone2.encode("A"));
+            assertEquals("A111111111", caverphone2.encode("E"));
+            assertEquals("A111111111", caverphone2.encode("I"));
+            assertEquals("A111111111", caverphone2.encode("O"));
+            assertEquals("A111111111", caverphone2.encode("U"));
+            assertEquals("3111111111", caverphone2.encode("Aeio"));
+            assertEquals("Y111111111", caverphone2.encode("J"));
+            assertEquals("Y311111111", caverphone2.encode("Y3"));
+            assertEquals("A111111111", caverphone2.encode("Y"));
+            assertEquals("A111111111", caverphone2.encode("Yy"));
+            assertEquals("3KH3111111", caverphone2.encode("3gh3"));
+            assertEquals("2211111111", caverphone2.encode("Gh"));
+            assertEquals("K111111111", caverphone2.encode("G"));
+            assertEquals("S111111111", caverphone2.encode("S"));
+            assertEquals("T111111111", caverphone2.encode("T"));
+            assertEquals("P111111111", caverphone2.encode("P"));
+            assertEquals("K111111111", caverphone2.encode("K"));
+            assertEquals("F111111111", caverphone2.encode("F"));
+            assertEquals("M111111111", caverphone2.encode("M"));
+            assertEquals("N111111111", caverphone2.encode("N"));
+            assertEquals("W311111111", caverphone2.encode("W3"));
+            assertEquals("WH31111111", caverphone2.encode("Wh3"));
+            assertEquals("3111111111", caverphone2.encode("W"));
+            assertEquals("2111111111", caverphone2.encode("W"));
+            assertEquals("A111111111", caverphone2.encode("H"));
+            assertEquals("2111111111", caverphone2.encode("Hh"));
+            assertEquals("R311111111", caverphone2.encode("R3"));
+            assertEquals("3111111111", caverphone2.encode("Rr"));
+            assertEquals("2111111111", caverphone2.encode("R"));
+            assertEquals("L311111111", caverphone2.encode("L3"));
+            assertEquals("3111111111", caverphone2.encode("Ll"));
+            assertEquals("2111111111", caverphone2.encode("L"));
+        }
+
+    @Test
+        public void testFinalResult() {
+            assertEquals("KF11111111", caverphone2.encode("Cave"));
+            assertEquals("1111111111", caverphone2.encode("A"));
+            assertEquals("1111111111", caverphone2.encode("E"));
+            assertEquals("1111111111", caverphone2.encode("I"));
+            assertEquals("1111111111", caverphone2.encode("O"));
+            assertEquals("1111111111", caverphone2.encode("U"));
+            assertEquals("1111111111", caverphone2.encode("Y"));
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    public void testEmptyString() {}
+    @Test
+    public void testNullString() {}
+    @Test
+    public void testSingleCharacter() {}
+    @Test
+    public void testMultipleCharacters() {}
+    @Test
+    public void testUpperCaseString() {}
+    @Test
+    public void testSpecialCharacters() {}
+    @Test
+    public void testFinalE() {}
+    @Test
+    public void testEndOptions() {}
+    @Test
+    public void testRemovals() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Caverphone2 -> org.apache.commons.codec.language.Caverphone2
+//   SoundexUtils -> org.apache.commons.codec.language.SoundexUtils
+
+// === Class: Caverphone2 ===
+// Fields (with actual visibility):
+    private static final String TEN_1;
+
+// === Superclass: AbstractCaverphone (inherited members) ===
+// Inherited Method Signatures:
+public Object encode(final Object source);
+public boolean isEncodeEqual(final String str1, final String str2);
+
+// === External Class: SoundexUtils ===
+// Full import path: org.apache.commons.codec.language.SoundexUtils
+// Import paths:
+//   EncoderException -> org.apache.commons.codec.EncoderException
+//   StringEncoder -> org.apache.commons.codec.StringEncoder
+// Method Signatures (used by target method):
+static boolean isEmpty(final CharSequence cs);
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    public void setUp() {
+        caverphone2 = new Caverphone2();
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+The following is the complete original method that needs to be tested. NOTE: The current test suite achieves 100% line coverage on this method:
+
+
+    /**
+     * Encodes the given String into a Caverphone 2.0 value.
+     *
+     * @param source
+     *            String the source string
+     * @return A caverphone code for the given String
+     */
+    @Override
+    public String encode(final String source) {
+        String txt = source;
+        if (SoundexUtils.isEmpty(txt)) {
+            return TEN_1;
+        }
+
+        // 1. Convert to lowercase
+        txt = txt.toLowerCase(java.util.Locale.ENGLISH);
+
+        // 2. Remove anything not A-Z
+        txt = txt.replaceAll("[^a-z]", "");
+
+        // 2.5. Remove final e
+        txt = txt.replaceAll("e$", ""); // 2.0 only
+
+        // 3. Handle various start options
+        txt = txt.replaceAll("^cough", "cou2f");
+        txt = txt.replaceAll("^rough", "rou2f");
+        txt = txt.replaceAll("^tough", "tou2f");
+        txt = txt.replaceAll("^enough", "enou2f"); // 2.0 only
+        txt = txt.replaceAll("^trough", "trou2f"); // 2.0 only
+                                                   // note the spec says ^enough here again, c+p error I assume
+        txt = txt.replaceAll("^gn", "2n");
+
+        // End
+        txt = txt.replaceAll("mb$", "m2");
+
+        // 4. Handle replacements
+        txt = txt.replace("cq", "2q");
+        txt = txt.replace("ci", "si");
+        txt = txt.replace("ce", "se");
+        txt = txt.replace("cy", "sy");
+        txt = txt.replace("tch", "2ch");
+        txt = txt.replace("c", "k");
+        txt = txt.replace("q", "k");
+        txt = txt.replace("x", "k");
+        txt = txt.replace("v", "f");
+        txt = txt.replace("dg", "2g");
+        txt = txt.replace("tio", "sio");
+        txt = txt.replace("tia", "sia");
+        txt = txt.replace("d", "t");
+        txt = txt.replace("ph", "fh");
+        txt = txt.replace("b", "p");
+        txt = txt.replace("sh", "s2");
+        txt = txt.replace("z", "s");
+        txt = txt.replaceAll("^[aeiou]", "A");
+        txt = txt.replaceAll("[aeiou]", "3");
+        txt = txt.replace("j", "y"); // 2.0 only
+        txt = txt.replaceAll("^y3", "Y3"); // 2.0 only
+        txt = txt.replaceAll("^y", "A"); // 2.0 only
+        txt = txt.replace("y", "3"); // 2.0 only
+        txt = txt.replace("3gh3", "3kh3");
+        txt = txt.replace("gh", "22");
+        txt = txt.replace("g", "k");
+        txt = txt.replaceAll("s+", "S");
+        txt = txt.replaceAll("t+", "T");
+        txt = txt.replaceAll("p+", "P");
+        txt = txt.replaceAll("k+", "K");
+        txt = txt.replaceAll("f+", "F");
+        txt = txt.replaceAll("m+", "M");
+        txt = txt.replaceAll("n+", "N");
+        txt = txt.replace("w3", "W3");
+        txt = txt.replace("wh3", "Wh3");
+        txt = txt.replaceAll("w$", "3"); // 2.0 only
+        txt = txt.replace("w", "2");
+        txt = txt.replaceAll("^h", "A");
+        txt = txt.replace("h", "2");
+        txt = txt.replace("r3", "R3");
+        txt = txt.replaceAll("r$", "3"); // 2.0 only
+        txt = txt.replace("r", "2");
+        txt = txt.replace("l3", "L3");
+        txt = txt.replaceAll("l$", "3"); // 2.0 only
+        txt = txt.replace("l", "2");
+
+        // 5. Handle removals
+        txt = txt.replace("2", "");
+        txt = txt.replaceAll("3$", "A"); // 2.0 only
+        txt = txt.replace("3", "");
+
+        // 6. put ten 1s on the end
+        txt += TEN_1;
+
+        // 7. take the first ten characters as the code
+        return txt.substring(0, TEN_1.length());
+    }
+
+
+COVERAGE: 100% line coverage achieved.
+Focus on fixing failed tests, not adding new coverage tests.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

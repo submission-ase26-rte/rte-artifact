@@ -1,0 +1,244 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.compress.archivers.ar;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArArchiveInputStream_matchesTestGenerated {
+
+    @Test
+    public void testMatchesValidSignature() {
+        byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertTrue(ArArchiveInputStream.matches(validSignature, validSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidSignature() {
+        byte[] invalidSignature = "!<arch>\r".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesTooShortSignature() {
+        byte[] tooShortSignature = "!<arch>".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(tooShortSignature, tooShortSignature.length));
+    }
+
+    @Test
+    public void testMatchesNullSignature() {
+        assertFalse(ArArchiveInputStream.matches(null, 0));
+    }
+
+    @Test
+    public void testMatchesLengthZero() {
+        byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(validSignature, 0));
+    }
+
+    @Test
+    public void testMatchesLengthLessThanEight() {
+        byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(validSignature, 7));
+    }
+
+    @Test
+    public void testMatchesLengthGreaterThanEight() {
+        byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        byte[] longerSignature = Arrays.copyOf(validSignature, validSignature.length + 1);
+        assertTrue(ArArchiveInputStream.matches(longerSignature, validSignature.length));
+    }
+
+    @Test
+    public void testMatchesWithInputStreamMock() {
+        InputStream mockInputStream = mock(InputStream.class);
+        ArArchiveInputStream arArchiveInputStream = new ArArchiveInputStream(mockInputStream);
+        byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertTrue(ArArchiveInputStream.matches(validSignature, validSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidFirstByte() {
+        byte[] invalidSignature = "?<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidSecondByte() {
+        byte[] invalidSignature = "!>arch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidThirdByte() {
+        byte[] invalidSignature = "!!rarch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidFourthByte() {
+        byte[] invalidSignature = "!<rchr>\n".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidFifthByte() {
+        byte[] invalidSignature = "!<arch>\r".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidSixthByte() {
+        byte[] invalidSignature = "!<arch>\r".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidSeventhByte() {
+        byte[] invalidSignature = "!<arch>\r".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesInvalidEighthByte() {
+        byte[] invalidSignature = "!<arch>\r".getBytes(StandardCharsets.US_ASCII);
+        assertFalse(ArArchiveInputStream.matches(invalidSignature, invalidSignature.length));
+    }
+
+    @Test
+    public void testMatchesLengthExactlyEight() {
+        byte[] validSignature = "!<arch>\n".getBytes(StandardCharsets.US_ASCII);
+        assertTrue(ArArchiveInputStream.matches(validSignature, validSignature.length));
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 77.78%
+- Tests: 16/17 passed
+
+TEST STATUS:
+- PASSED (16): testMatchesValidSignature, testMatchesInvalidSignature, testMatchesTooShortSignature, testMatchesNullSignature, testMatchesLengthZero, testMatchesLengthLessThanEight, testMatchesLengthGreaterThanEight, testMatchesInvalidFirstByte, testMatchesInvalidSecondByte, testMatchesInvalidThirdByte, testMatchesInvalidFourthByte, testMatchesInvalidFifthByte, testMatchesInvalidSixthByte, testMatchesInvalidSeventhByte, testMatchesInvalidEighthByte, testMatchesLengthExactlyEight
+- FAILED (0): none
+- ERRORS (1): testMatchesWithInputStreamMock
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   EOFException -> java.io.EOFException
+//   IOException -> java.io.IOException
+//   InputStream -> java.io.InputStream
+//   StandardCharsets -> java.nio.charset.StandardCharsets
+//   Arrays -> java.util.Arrays
+//   Pattern -> java.util.regex.Pattern
+//   ArchiveInputStream -> org.apache.commons.compress.archivers.ArchiveInputStream
+//   ArchiveUtils -> org.apache.commons.compress.utils.ArchiveUtils
+//   IOUtils -> org.apache.commons.compress.utils.IOUtils
+//   ParsingUtils -> org.apache.commons.compress.utils.ParsingUtils
+//   ArArchiveInputStream -> org.apache.commons.compress.archivers.ar.ArArchiveInputStream
+
+// === Class: ArArchiveInputStream ===
+// Fields (with actual visibility):
+    private static final int NAME_OFFSET;
+    private static final int NAME_LEN;
+    private static final int LAST_MODIFIED_OFFSET;
+    private static final int LAST_MODIFIED_LEN;
+    private static final int USER_ID_OFFSET;
+    private static final int USER_ID_LEN;
+    private static final int GROUP_ID_OFFSET;
+    private static final int GROUP_ID_LEN;
+    private static final int FILE_MODE_OFFSET;
+    private static final int FILE_MODE_LEN;
+    private static final int LENGTH_OFFSET;
+    private static final int LENGTH_LEN;
+    package-private static final String BSD_LONGNAME_PREFIX;
+    private static final int BSD_LONGNAME_PREFIX_LEN;
+    private static final Pattern BSD_LONGNAME_PATTERN;
+    private static final String GNU_STRING_TABLE_NAME;
+    private static final Pattern GNU_LONGNAME_PATTERN;
+    private long offset;
+    private boolean closed;
+    private ArArchiveEntry currentEntry;
+    private byte[] namebuffer;
+    private long entryOffset;
+    private final byte[] metaData;
+
+// Constructors:
+public ArArchiveInputStream(InputStream inputStream);
+
+// Getter/Setter Methods (for test assertions):
+private static boolean isBSDLongName(final String name);
+private static boolean isGNUStringTable(final String name);
+private String getBSDLongName(final String bsdLongName) throws IOException;
+private String getExtendedName(final int offset) throws IOException;
+public ArArchiveEntry getNextArEntry() throws IOException;
+public ArArchiveEntry getNextEntry() throws IOException;
+private boolean isGNULongName(final String name);
+
+// === Superclass: ArchiveInputStream (inherited members) ===
+// Inherited Fields:
+
+// Inherited Method Signatures:
+public boolean canReadEntryData(final ArchiveEntry archiveEntry);
+protected void count(final int read);
+protected void count(final int read);
+public long getBytesRead();
+public Charset getCharset();
+public int getCount();
+abstract public E getNextEntry();
+synchronized public void mark(final int readlimit);
+public boolean markSupported();
+protected void pushedBackBytes(final long pushedBack);
+public int read();
+synchronized public void reset();
+
+
+TASK:
+Regenerate ONLY the method "matches" OF CLASS "ArArchiveInputStream" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public static boolean matches(final byte[] signature, final int length) {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.compress.archivers.ar
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "matches"
+– Allowed imports: exactly those already present in ArArchiveInputStream
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

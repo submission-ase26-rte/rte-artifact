@@ -1,0 +1,119 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): Parser_parseTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Parser_parseTestGenerated {
+    private Parser parser;
+
+    @BeforeEach
+    public void setUp() {
+        parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+        };
+    }
+
+    @AfterEach
+    public void tearDown() {
+        parser = null;
+    }
+
+    @Test
+    public void testParseWithStopAtNonOptionFalse() throws ParseException {
+        Options options = new Options();
+        options.addOption(new Option("a", "alpha", false, "Alpha option"));
+        String[] arguments = {"-a", "non-option"};
+        Properties properties = new Properties();
+        Exception exception = assertThrows(ParseException.class, () -> {
+            parser.parse(options, arguments, properties, false);
+        });
+        assertNotNull(exception);
+    }
+
+    @Test
+    public void testParseWithStopAtNonOptionTrueSingleDash() throws ParseException {
+        Options options = new Options();
+        options.addOption(new Option("a", "alpha", false, "Alpha option"));
+        String[] arguments = {"-"};
+        Properties properties = new Properties();
+        CommandLine cmd = parser.parse(options, arguments, properties, true);
+        assertTrue(cmd.getArgList().contains("-"));
+    }
+
+    @Test
+    public void testParseWithDoubleDashAndStopAtNonOptionFalse() throws ParseException {
+        Options options = new Options();
+        options.addOption(new Option("a", "alpha", false, "Alpha option"));
+        String[] arguments = {"-a", "--", "non-option"};
+        Properties properties = new Properties();
+        CommandLine cmd = parser.parse(options, arguments, properties, false);
+        assertTrue(cmd.getArgList().contains("non-option"));
+    }
+
+    @Test
+    public void testParseWithSingleDashAndStopAtNonOptionTrue() throws ParseException {
+        Options options = new Options();
+        options.addOption(new Option("a", "alpha", false, "Alpha option"));
+        String[] arguments = {"-"};
+        Properties properties = new Properties();
+        CommandLine cmd = parser.parse(options, arguments, properties, true);
+        assertTrue(cmd.getArgList().contains("-"));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[34] cannot find symbol
+  symbol:   class Properties
+  location: class org.apache.commons.cli.Parser_parseTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[46] cannot find symbol
+  symbol:   class Properties
+  location: class org.apache.commons.cli.Parser_parseTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[56] cannot find symbol
+  symbol:   class Properties
+  location: class org.apache.commons.cli.Parser_parseTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/Parser_parseTestGenerated.java:[66] cannot find symbol
+  symbol:   class Properties
+  location: class org.apache.commons.cli.Parser_parseTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: Parser_parseTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations
+
+IMPORTANT: The target class "Parser" is ABSTRACT and cannot be instantiated directly.
+- DO NOT use Mockito to mock the class itself (unless you need a partial mock).
+- INSTANTIATE using this REAL ANONYMOUS SUBCLASS template (copy exactly):
+```java
+new Parser() {
+    @Override
+    public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+        return arguments;
+    }
+
+}
+```
+- DO NOT create custom concrete subclasses files.
+- DO NOT invent classes that do not exist in the codebase.

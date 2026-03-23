@@ -1,0 +1,152 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language;
+Class name (MUST be exactly): ColognePhonetic_colognePhoneticTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.codec.language;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ColognePhonetic_colognePhoneticTestGenerated {
+
+    private ColognePhonetic colognePhonetic;
+
+    @BeforeEach
+    public void setUp() {
+        colognePhonetic = new ColognePhonetic() {
+            @Override
+            public char[] copyData(int start, int length) {
+                return new char[0];
+            }
+        };
+    }
+
+    @AfterEach
+    public void tearDown() {
+        colognePhonetic = null;
+    }
+
+    @Test
+    public void testColognePhoneticNullInput() {
+        assertNull(colognePhonetic.colognePhonetic(null));
+    }
+
+    @Test
+    public void testColognePhoneticEmptyString() {
+        assertEquals("", colognePhonetic.colognePhonetic(""));
+    }
+
+    @Test
+    public void testColognePhoneticSingleVowel() {
+        assertEquals("0", colognePhonetic.colognePhonetic("A"));
+        assertEquals("0", colognePhonetic.colognePhonetic("E"));
+        assertEquals("0", colognePhonetic.colognePhonetic("I"));
+        assertEquals("0", colognePhonetic.colognePhonetic("J"));
+        assertEquals("0", colognePhonetic.colognePhonetic("O"));
+        assertEquals("0", colognePhonetic.colognePhonetic("U"));
+        assertEquals("0", colognePhonetic.colognePhonetic("Y"));
+    }
+
+    @Test
+    public void testColognePhoneticSingleConsonant() {
+        assertEquals("1", colognePhonetic.colognePhonetic("B"));
+        assertEquals("1", colognePhonetic.colognePhonetic("P"));
+        assertEquals("2", colognePhonetic.colognePhonetic("D"));
+        assertEquals("2", colognePhonetic.colognePhonetic("T"));
+        assertEquals("3", colognePhonetic.colognePhonetic("F"));
+        assertEquals("3", colognePhonetic.colognePhonetic("P"));
+        assertEquals("3", colognePhonetic.colognePhonetic("V"));
+        assertEquals("3", colognePhonetic.colognePhonetic("W"));
+        assertEquals("4", colognePhonetic.colognePhonetic("G"));
+        assertEquals("4", colognePhonetic.colognePhonetic("K"));
+        assertEquals("4", colognePhonetic.colognePhonetic("Q"));
+        assertEquals("48", colognePhonetic.colognePhonetic("X"));
+        assertEquals("8", colognePhonetic.colognePhonetic("S"));
+        assertEquals("8", colognePhonetic.colognePhonetic("Z"));
+        assertEquals("8", colognePhonetic.colognePhonetic("C"));
+        assertEquals("8", colognePhonetic.colognePhonetic("D"));
+        assertEquals("8", colognePhonetic.colognePhonetic("T"));
+        assertEquals("8", colognePhonetic.colognePhonetic("X"));
+        assertEquals("7", colognePhonetic.colognePhonetic("R"));
+        assertEquals("5", colognePhonetic.colognePhonetic("L"));
+        assertEquals("6", colognePhonetic.colognePhonetic("M"));
+        assertEquals("6", colognePhonetic.colognePhonetic("N"));
+        assertEquals("", colognePhonetic.colognePhonetic("H"));
+    }
+
+    @Test
+    public void testColognePhoneticComplexWord() {
+        assertEquals("648686", colognePhonetic.colognePhonetic("Müller-Lüdenscheidt"));
+        assertEquals("0646", colognePhonetic.colognePhonetic("Augsburg"));
+        assertEquals("0648", colognePhonetic.colognePhonetic("August"));
+        assertEquals("4680", colognePhonetic.colognePhonetic("Koeln"));
+        assertEquals("4680", colognePhonetic.colognePhonetic("Köln"));
+        assertEquals("6486", colognePhonetic.colognePhonetic("Müller"));
+        assertEquals("6486", colognePhonetic.colognePhonetic("Muller"));
+        assertEquals("0648", colognePhonetic.colognePhonetic("Auch"));
+        assertEquals("0648", colognePhonetic.colognePhonetic("Auchh"));
+        assertEquals("0648", colognePhonetic.colognePhonetic("Auchhh"));
+    }
+
+    @Test
+    public void testColognePhoneticIgnoreNonAlphabetic() {
+        assertEquals("648686", colognePhonetic.colognePhonetic("Müller-Lüdenscheidt123"));
+        assertEquals("0646", colognePhonetic.colognePhonetic("Augsburg!"));
+        assertEquals("0648", colognePhonetic.colognePhonetic("August?"));
+        assertEquals("4680", colognePhonetic.colognePhonetic("Köln-"));
+        assertEquals("4680", colognePhonetic.colognePhonetic("Köln_"));
+        assertEquals("6486", colognePhonetic.colognePhonetic("Müller*"));
+        assertEquals("6486", colognePhonetic.colognePhonetic("Muller&"));
+        assertEquals("0648", colognePhonetic.colognePhonetic("Auch "));
+        assertEquals("0648", colognePhonetic.colognePhonetic("Auchh\t"));
+        assertEquals("0648", colognePhonetic.colognePhonetic("Auchhh\n"));
+    }
+
+    @Test
+    public void testColognePhoneticBoundaryConditions() {
+        assertEquals("", colognePhonetic.colognePhonetic("1234567890"));
+        assertEquals("", colognePhonetic.colognePhonetic("!@#$%^&*()"));
+        assertEquals("", colognePhonetic.colognePhonetic(" "));
+        assertEquals("", colognePhonetic.colognePhonetic("\t"));
+        assertEquals("", colognePhonetic.colognePhonetic("\n"));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/ColognePhonetic_colognePhoneticTestGenerated.java:[18] method does not override or implement a method from a supertype
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: ColognePhonetic_colognePhoneticTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations
+
+IMPORTANT: The target class "ColognePhonetic" is ABSTRACT and cannot be instantiated directly.
+- DO NOT use Mockito to mock the class itself (unless you need a partial mock).
+- INSTANTIATE using this REAL ANONYMOUS SUBCLASS template (copy exactly):
+```java
+new ColognePhonetic() {
+    @Override
+    public char[] copyData(int start, int length) {
+        return new char[0];
+    }
+
+}
+```
+- DO NOT create custom concrete subclasses files.
+- DO NOT invent classes that do not exist in the codebase.

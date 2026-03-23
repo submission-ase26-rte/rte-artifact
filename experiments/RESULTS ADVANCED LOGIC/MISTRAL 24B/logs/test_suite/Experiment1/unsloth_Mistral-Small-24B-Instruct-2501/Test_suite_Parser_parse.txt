@@ -1,0 +1,107 @@
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import java.util.Properties;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Parser_parseTestGenerated {
+
+    private Parser parser;
+    private Options options;
+    private Properties properties;
+
+    @BeforeEach
+    void setUp() {
+        parser = new Parser() {
+            @Override
+            public String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException {
+                return arguments;
+            }
+        };
+        options = new Options();
+        properties = new Properties();
+    }
+
+    @Test
+    void testParseWithValidOptions() throws ParseException {
+        Option option = new Option("a", "optionA");
+        options.addOption(option);
+        String[] arguments = {"-a", "value"};
+        CommandLine result = parser.parse(options, arguments, properties, true);
+        assertNotNull(result);
+        assertEquals("value", result.getOptionValue("a"));
+    }
+
+    @Test
+    void testParseWithStopAtNonOption() throws ParseException {
+        String[] arguments = {"--", "nonOption"};
+        CommandLine result = parser.parse(options, arguments, properties, true);
+        assertNotNull(result);
+        assertEquals("nonOption", result.getArgs());
+    }
+
+    @Test
+    void testParseWithUnrecognizedOption() {
+        String[] arguments = {"-b"};
+        assertThrows(ParseException.class, () -> parser.parse(options, arguments, properties, false));
+    }
+
+    @Test
+    void testParseWithNullArguments() throws ParseException {
+        CommandLine result = parser.parse(options, null, properties, true);
+        assertNotNull(result);
+    }
+
+    @Test
+    void testParseWithNullProperties() throws ParseException {
+        String[] arguments = {"-a", "value"};
+        CommandLine result = parser.parse(options, arguments, null, true);
+        assertNotNull(result);
+        assertEquals("value", result.getOptionValue("a"));
+    }
+
+    @Test
+    void testParseWithEmptyArguments() throws ParseException {
+        String[] arguments = {};
+        CommandLine result = parser.parse(options, arguments, properties, true);
+        assertNotNull(result);
+    }
+
+    @Test
+    void testParseWithProperties() throws ParseException {
+        properties.setProperty("a", "value");
+        Option option = new Option("a", "optionA");
+        options.addOption(option);
+        CommandLine result = parser.parse(options, new String[]{}, properties, true);
+        assertNotNull(result);
+        assertEquals("value", result.getOptionValue("a"));
+    }
+
+    @Test
+    void testParseWithDoubleDash() throws ParseException {
+        String[] arguments = {"--", "extraArg"};
+        CommandLine result = parser.parse(options, arguments, properties, true);
+        assertNotNull(result);
+        assertEquals("extraArg", result.getArgs());
+    }
+
+    @Test
+    void testParseWithSingleDash() throws ParseException {
+        String[] arguments = {"-", "extraArg"};
+        CommandLine result = parser.parse(options, arguments, properties, true);
+        assertNotNull(result);
+        assertEquals("extraArg", result.getArgs());
+    }
+
+    @Test
+    void testParseWithRequiredOption() {
+        Option option = new Option("a", "optionA");
+        option.setRequired(true);
+        options.addOption(option);
+        String[] arguments = {};
+        assertThrows(MissingOptionException.class, () -> parser.parse(options, arguments, properties, true));
+    }
+}

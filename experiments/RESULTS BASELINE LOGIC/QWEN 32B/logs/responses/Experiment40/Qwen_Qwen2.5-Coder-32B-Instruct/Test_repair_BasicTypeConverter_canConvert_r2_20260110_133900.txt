@@ -1,0 +1,169 @@
+```java
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.ri.model.beans.BeanPointer;
+import org.apache.commons.jxpath.ri.model.beans.NullPointer;
+import org.apache.commons.jxpath.ri.model.beans.PropertyPointer;
+import org.apache.commons.jxpath.ri.model.nodetype.NodeTest;
+import org.apache.commons.jxpath.ri.QName;
+import org.apache.commons.jxpath.ri.model.NodePointerFactory;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class BasicTypeConverter_canConvertTestGenerated {
+    private BasicTypeConverter converter;
+
+    @BeforeEach
+    public void setUp() {
+        converter = new BasicTypeConverter();
+    }
+
+    @Test
+    public void testCanConvertWithNoConverter() {
+        assertFalse(converter.canConvert("123", BigInteger.class));
+    }
+
+    @Test
+    public void testCanConvertBooleanToAtomicBoolean() {
+        try {
+            assertTrue(converter.canConvert(Boolean.TRUE, Class.forName("java.util.concurrent.atomic.AtomicBoolean")));
+        } catch (ClassNotFoundException e) {
+            fail("AtomicBoolean class not found");
+        }
+    }
+
+    @Test
+    public void testCanConvertNumberToBoolean() {
+        assertTrue(converter.canConvert(Integer.valueOf(1), Boolean.class));
+    }
+
+    @Test
+    public void testCanConvertBooleanToNumber() {
+        assertTrue(converter.canConvert(Boolean.TRUE, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertArrayToArray() {
+        Integer[] array = {1, 2, 3};
+        assertTrue(converter.canConvert(array, Integer[].class));
+    }
+
+    @Test
+    public void testCanConvertArrayToCollection() {
+        Integer[] array = {1, 2, 3};
+        assertTrue(converter.canConvert(array, List.class));
+    }
+
+    @Test
+    public void testCanConvertArrayToSingleElement() {
+        Integer[] array = {1};
+        assertTrue(converter.canConvert(array, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertEmptyArrayToSingleElement() {
+        Integer[] array = {};
+        assertTrue(converter.canConvert(array, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToArray() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        assertTrue(converter.canConvert(list, Integer[].class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToCollection() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        assertTrue(converter.canConvert(list, Set.class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToSingleElement() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        assertTrue(converter.canConvert(list, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertEmptyCollectionToSingleElement() {
+        List<Integer> list = new ArrayList<>();
+        assertTrue(converter.canConvert(list, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertNodeSet() {
+        NodeSet nodeSet = new NodeSet(new PropertyPointer(new BeanPointer(null, null, null), new QName("test"), 0, NodePointerFactory.WHOLE_COLLECTION, NodeTest.ALL));
+        assertTrue(converter.canConvert(nodeSet, List.class));
+    }
+
+    @Test
+    public void testCanConvertPointer() {
+        Pointer pointer = new NullPointer(new QName("test"), Locale.getDefault());
+        assertTrue(converter.canConvert(pointer, Object.class));
+    }
+
+    @Test
+    public void testCanConvertNullObject() {
+        assertTrue(converter.canConvert(null, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertSameType() {
+        assertTrue(converter.canConvert("test", String.class));
+    }
+
+    @Test
+    public void testCanConvertToAssignableFrom() {
+        assertTrue(converter.canConvert(new ArrayList<>(), Collection.class));
+    }
+
+    @Test
+    public void testCanConvertToBoolean() {
+        assertTrue(converter.canConvert("true", Boolean.class));
+    }
+
+    @Test
+    public void testCanConvertToNumber() {
+        assertTrue(converter.canConvert("123", Integer.class));
+    }
+
+    @Test
+    public void testCanConvertToString() {
+        assertTrue(converter.canConvert(Integer.valueOf(123), String.class));
+    }
+
+    @Test
+    public void testCanConvertWithCustomConverter() {
+        ConvertUtils.register(new Converter() {
+            @Override
+            public <T> T convert(Class<T> type, Object value) {
+                return null;
+            }
+        }, BigInteger.class);
+        assertTrue(converter.canConvert("123", BigInteger.class));
+    }
+}
+```

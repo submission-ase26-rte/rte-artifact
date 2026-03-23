@@ -1,0 +1,71 @@
+```java
+public String nysiis(String str) {
+    if (str == null) {
+        return null;
+    }
+
+    if (str.isEmpty()) {
+        return "";
+    }
+
+    str = SoundexUtils.clean(str);
+
+    StringBuilder sb = new StringBuilder();
+    boolean first = true;
+
+    for (int i = 0; i < str.length(); i++) {
+        char c = str.charAt(i);
+
+        if (first && (Pattern.matches(PAT_KN.pattern(), str.substring(i, i + 2)))) {
+            sb.append('N');
+            i++;
+            continue;
+        }
+
+        char[] transcodeChars;
+        if (i > 0 && i < str.length() - 1) {
+            transcodeChars = transcodeRemaining(str.charAt(i - 1), c, str.charAt(i + 1), str.length() > i + 2 ? str.charAt(i + 2) : '\0');
+        } else if (i > 0) {
+            transcodeChars = transcodeRemaining(str.charAt(i - 1), c, '\0', '\0');
+        } else if (i < str.length() - 1) {
+            transcodeChars = transcodeRemaining('\0', c, str.charAt(i + 1), str.length() > i + 2 ? str.charAt(i + 2) : '\0');
+        } else {
+            transcodeChars = transcodeRemaining('\0', c, '\0', '\0');
+        }
+
+        char transcodeChar = transcodeChars[0];
+
+        if (transcodeChar == SPACE) {
+            continue;
+        }
+
+        if (first && Character.isWhitespace(transcodeChar)) {
+            continue;
+        }
+
+        if (first && (Pattern.matches(PAT_MAC.pattern(), str.substring(i, i + 2)))) {
+            sb.append('M');
+            i++;
+            continue;
+        }
+
+        if (transcodeChar != c) {
+            sb.append(transcodeChar);
+        } else {
+            sb.append(c);
+        }
+
+        first = false;
+    }
+
+    if (sb.length() > TRUE_LENGTH && strict) {
+        return sb.substring(0, TRUE_LENGTH);
+    }
+
+    if (sb.length() > TRUE_LENGTH) {
+        return sb.substring(0, TRUE_LENGTH);
+    }
+
+    return sb.toString();
+}
+```

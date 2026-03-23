@@ -1,0 +1,293 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language;
+Class name (MUST be exactly): Caverphone2_encodeTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testEncode_enough --
+ERROR: org.opentest4j.AssertionFailedError: expected: <A322F> but was: <ANF1111111>
+--------------------------------------------------
+TEST: testEncode_trough --
+ERROR: org.opentest4j.AssertionFailedError: expected: <A22F> but was: <TRF1111111>
+--------------------------------------------------
+TEST: testEncode_wordWithGH --
+ERROR: org.opentest4j.AssertionFailedError: expected: <A22> but was: <1111111111>
+--------------------------------------------------
+TEST: testEncode_wordWithMB --
+ERROR: org.opentest4j.AssertionFailedError: expected: <A3M2> but was: <AM11111111>
+--------------------------------------------------
+TEST: testEncode_wordWithV --
+ERROR: org.opentest4j.AssertionFailedError: expected: <A3F3> but was: <FF11111111>
+--------------------------------------------------
+TEST: testEncode_wordWithZ --
+ERROR: org.opentest4j.AssertionFailedError: expected: <A3S> but was: <SA11111111>
+--------------------------------------------------
+TEST: testEncode_nullInput --
+ERROR: org.opentest4j.AssertionFailedError: Expected java.lang.NullPointerException to be thrown, but nothing was thrown.
+--------------------------------------------------
+TEST: testEncode_simpleWord --
+ERROR: org.opentest4j.AssertionFailedError: expected: <AT3AT3> but was: <AT11111111>
+--------------------------------------------------
+TEST: testEncode_emptyInput --
+ERROR: org.opentest4j.AssertionFailedError: expected: <TEN_1> but was: <1111111111>
+--------------------------------------------------
+TEST: testEncode_cough --
+ERROR: org.opentest4j.AssertionFailedError: expected: <A22F> but was: <KF11111111>
+--------------------------------------------------
+TEST: testEncode_rough --
+ERROR: org.opentest4j.AssertionFailedError: expected: <A22F> but was: <RF11111111>
+--------------------------------------------------
+TEST: testEncode_wordWithSpecialChars --
+ERROR: org.opentest4j.AssertionFailedError: expected: <AT3AT3> but was: <AT11111111>
+--------------------------------------------------
+TEST: testEncode_complexWord --
+ERROR: org.opentest4j.AssertionFailedError: expected: <A33232> but was: <AKMPA11111>
+
+TEST CODE TO FIX:
+package org.apache.commons.codec.language;
+
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.StringEncoder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Caverphone2_encodeTestGenerated {
+
+    @Test
+            public void testEncode_nullInput() {
+                Caverphone2 caverphone2 = new Caverphone2();
+                assertThrows(NullPointerException.class, () -> caverphone2.encode(null));
+            }
+
+    @Test
+            public void testEncode_emptyInput() {
+                Caverphone2 caverphone2 = new Caverphone2();
+                assertEquals("TEN_1", caverphone2.encode(""));
+            }
+
+    @Test
+            public void testEncode_simpleWord() {
+                Caverphone2 caverphone2 = new Caverphone2();
+                assertEquals("AT3AT3", caverphone2.encode("at"));
+            }
+
+    @Test
+            public void testEncode_wordWithSpecialChars() {
+                Caverphone2 caverphone2 = new Caverphone2();
+                assertEquals("AT3AT3", caverphone2.encode("at!"));
+            }
+
+    @Test
+            public void testEncode_cough() {
+                Caverphone2 caverphone2 = new Caverphone2();
+                assertEquals("A22F", caverphone2.encode("cough"));
+            }
+
+    @Test
+            public void testEncode_rough() {
+                Caverphone2 caverphone2 = new Caverphone2();
+                assertEquals("A22F", caverphone2.encode("rough"));
+            }
+
+    @Test
+            public void testEncode_enough() {
+                Caverphone2 caverphone2 = new Caverphone2();
+                assertEquals("A322F", caverphone2.encode("enough"));
+            }
+
+    @Test
+            public void testEncode_trough() {
+                Caverphone2 caverphone2 = new Caverphone2();
+                assertEquals("A22F", caverphone2.encode("trough"));
+            }
+
+    @Test
+            public void testEncode_complexWord() {
+                Caverphone2 caverphone2 = new Caverphone2();
+                assertEquals("A33232", caverphone2.encode("example"));
+            }
+
+    @Test
+            public void testEncode_wordWithV() {
+                Caverphone2 caverphone2 = new Caverphone2();
+                assertEquals("A3F3", caverphone2.encode("five"));
+            }
+
+    @Test
+            public void testEncode_wordWithZ() {
+                Caverphone2 caverphone2 = new Caverphone2();
+                assertEquals("A3S", caverphone2.encode("zoo"));
+            }
+
+    @Test
+            public void testEncode_wordWithGH() {
+                Caverphone2 caverphone2 = new Caverphone2();
+                assertEquals("A22", caverphone2.encode("gh"));
+            }
+
+    @Test
+            public void testEncode_wordWithMB() {
+                Caverphone2 caverphone2 = new Caverphone2();
+                assertEquals("A3M2", caverphone2.encode("amb"));
+            }
+
+}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Caverphone2 -> org.apache.commons.codec.language.Caverphone2
+//   SoundexUtils -> org.apache.commons.codec.language.SoundexUtils
+
+// === Class: Caverphone2 ===
+// Fields (with actual visibility):
+    private static final String TEN_1;
+
+// === Superclass: AbstractCaverphone (inherited members) ===
+// Inherited Method Signatures:
+public Object encode(final Object source);
+public boolean isEncodeEqual(final String str1, final String str2);
+
+// === External Class: SoundexUtils ===
+// Full import path: org.apache.commons.codec.language.SoundexUtils
+// Import paths:
+//   EncoderException -> org.apache.commons.codec.EncoderException
+//   StringEncoder -> org.apache.commons.codec.StringEncoder
+// Method Signatures (used by target method):
+static boolean isEmpty(final CharSequence cs);
+
+
+ORIGINAL METHOD TO TEST:
+The following is the complete original method that needs to be tested. NOTE: The current test suite achieves 100% line coverage on this method:
+
+
+    /**
+     * Encodes the given String into a Caverphone 2.0 value.
+     *
+     * @param source
+     *            String the source string
+     * @return A caverphone code for the given String
+     */
+    @Override
+    public String encode(final String source) {
+        String txt = source;
+        if (SoundexUtils.isEmpty(txt)) {
+            return TEN_1;
+        }
+
+        // 1. Convert to lowercase
+        txt = txt.toLowerCase(java.util.Locale.ENGLISH);
+
+        // 2. Remove anything not A-Z
+        txt = txt.replaceAll("[^a-z]", "");
+
+        // 2.5. Remove final e
+        txt = txt.replaceAll("e$", ""); // 2.0 only
+
+        // 3. Handle various start options
+        txt = txt.replaceAll("^cough", "cou2f");
+        txt = txt.replaceAll("^rough", "rou2f");
+        txt = txt.replaceAll("^tough", "tou2f");
+        txt = txt.replaceAll("^enough", "enou2f"); // 2.0 only
+        txt = txt.replaceAll("^trough", "trou2f"); // 2.0 only
+                                                   // note the spec says ^enough here again, c+p error I assume
+        txt = txt.replaceAll("^gn", "2n");
+
+        // End
+        txt = txt.replaceAll("mb$", "m2");
+
+        // 4. Handle replacements
+        txt = txt.replace("cq", "2q");
+        txt = txt.replace("ci", "si");
+        txt = txt.replace("ce", "se");
+        txt = txt.replace("cy", "sy");
+        txt = txt.replace("tch", "2ch");
+        txt = txt.replace("c", "k");
+        txt = txt.replace("q", "k");
+        txt = txt.replace("x", "k");
+        txt = txt.replace("v", "f");
+        txt = txt.replace("dg", "2g");
+        txt = txt.replace("tio", "sio");
+        txt = txt.replace("tia", "sia");
+        txt = txt.replace("d", "t");
+        txt = txt.replace("ph", "fh");
+        txt = txt.replace("b", "p");
+        txt = txt.replace("sh", "s2");
+        txt = txt.replace("z", "s");
+        txt = txt.replaceAll("^[aeiou]", "A");
+        txt = txt.replaceAll("[aeiou]", "3");
+        txt = txt.replace("j", "y"); // 2.0 only
+        txt = txt.replaceAll("^y3", "Y3"); // 2.0 only
+        txt = txt.replaceAll("^y", "A"); // 2.0 only
+        txt = txt.replace("y", "3"); // 2.0 only
+        txt = txt.replace("3gh3", "3kh3");
+        txt = txt.replace("gh", "22");
+        txt = txt.replace("g", "k");
+        txt = txt.replaceAll("s+", "S");
+        txt = txt.replaceAll("t+", "T");
+        txt = txt.replaceAll("p+", "P");
+        txt = txt.replaceAll("k+", "K");
+        txt = txt.replaceAll("f+", "F");
+        txt = txt.replaceAll("m+", "M");
+        txt = txt.replaceAll("n+", "N");
+        txt = txt.replace("w3", "W3");
+        txt = txt.replace("wh3", "Wh3");
+        txt = txt.replaceAll("w$", "3"); // 2.0 only
+        txt = txt.replace("w", "2");
+        txt = txt.replaceAll("^h", "A");
+        txt = txt.replace("h", "2");
+        txt = txt.replace("r3", "R3");
+        txt = txt.replaceAll("r$", "3"); // 2.0 only
+        txt = txt.replace("r", "2");
+        txt = txt.replace("l3", "L3");
+        txt = txt.replaceAll("l$", "3"); // 2.0 only
+        txt = txt.replace("l", "2");
+
+        // 5. Handle removals
+        txt = txt.replace("2", "");
+        txt = txt.replaceAll("3$", "A"); // 2.0 only
+        txt = txt.replace("3", "");
+
+        // 6. put ten 1s on the end
+        txt += TEN_1;
+
+        // 7. take the first ten characters as the code
+        return txt.substring(0, TEN_1.length());
+    }
+
+
+COVERAGE: 100% line coverage achieved.
+Focus on fixing failed tests, not adding new coverage tests.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

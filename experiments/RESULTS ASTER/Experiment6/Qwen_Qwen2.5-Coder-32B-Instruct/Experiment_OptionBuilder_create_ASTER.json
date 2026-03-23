@@ -1,0 +1,72 @@
+{
+  "method_id": 6,
+  "tested_method": "create",
+  "tested_class": "OptionBuilder",
+  "project": "CLI",
+  "timestamp": "2026-02-03T13:05:38.401044",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\GPT-4 - ASTER\\CLI\\Run-1\\src\\test\\java\\org\\apache\\commons\\cli\\Metodo6_create_OptionBuilder_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 4,
+    "tests_total": 4,
+    "tests_failed": 0,
+    "line_coverage": 100.0,
+    "branch_coverage": 0.0,
+    "has_compilation_errors": false,
+    "compilation_errors": null,
+    "test_info": {
+      "valid_tests": [
+        "testCreateWithSingleCharOption_ENDz0_1",
+        "testCreateWithSingleCharOption_ENDz0_2",
+        "testCreateWithNullLongOptionThrowsException_wEvc0",
+        "testCreateWithSingleCharOption_ENDz0"
+      ],
+      "invalid_tests": [],
+      "failed_assert_tests": [],
+      "runtime_error_tests": []
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 4,
+    "assertion_complexity": 0.375,
+    "pct_null_assertions": 0.3333,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.1667,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.6296,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 1.0,
+    "overall_naturalness_score": 0.8824
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.08342239219098724,
+    "string_similarity": 0.2539349422875131,
+    "token_similarity": 0.3023255813953488,
+    "ast_similarity": 0.26666666666666666,
+    "embedding_similarity": 0.7451369762420654,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.11428571428571428,
+      "similar_blocks": 2,
+      "total_blocks": 35
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.40181271938189034,
+    "passes_threshold": false
+  },
+  "original_method": "    public static Option create(final String opt) throws IllegalArgumentException {\n        Option option;\n        try {\n            // create the option\n            option = new Option(opt, description);\n\n            // set the option properties\n            option.setLongOpt(longOption);\n            option.setRequired(required);\n            option.setOptionalArg(optionalArg);\n            option.setArgs(argCount);\n            option.setType(type);\n            option.setConverter(TypeHandler.getDefault().getConverter(type));\n            option.setValueSeparator(valueSeparator);\n            option.setArgName(argName);\n        } finally {\n            // reset the OptionBuilder properties\n            OptionBuilder.reset();\n        }\n\n        // return the Option instance\n        return option;\n    }",
+  "regenerated_method": "public static Option create(final String opt) throws IllegalArgumentException {\n    if (opt == null || opt.isEmpty()) {\n        throw new IllegalArgumentException(\"must specify longopt\");\n    }\n    Option option = new Option(opt, null, false, null);\n    reset();\n    return option;\n}",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6884775539310862,
+  "original_metrics": {
+    "loc": 23,
+    "sloc": 17,
+    "complexity": 1
+  }
+}

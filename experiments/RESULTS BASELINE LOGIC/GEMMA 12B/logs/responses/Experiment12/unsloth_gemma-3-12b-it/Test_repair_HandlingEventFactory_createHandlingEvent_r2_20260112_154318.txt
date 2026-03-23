@@ -1,0 +1,137 @@
+```java
+package org.eclipse.cargotracker.domain.model.handling;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+
+import org.eclipse.cargotracker.domain.model.cargo.Cargo;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class HandlingEventFactory_createHandlingEventTestGenerated {
+
+    private HandlingEventFactory fixture;
+
+    @BeforeEach
+    void setUp() {
+        fixture = new HandlingEventFactory();
+        fixture.cargoRepository = Mockito.mock(CargoRepository.class);
+        fixture.voyageRepository = Mockito.mock(VoyageRepository.class);
+        fixture.locationRepository = Mockito.mock(LocationRepository.class);
+    }
+
+    @Test
+    void createHandlingEvent_withVoyage_success() throws CannotCreateHandlingEventException {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now();
+        TrackingId trackingId = new TrackingId("123");
+        VoyageNumber voyageNumber = new VoyageNumber("VOY123");
+        UnLocode unlocode = new UnLocode("UN123");
+
+        Cargo cargo = new Cargo(trackingId);
+        Voyage voyage = new Voyage(voyageNumber);
+        Location location = new Location(unlocode);
+
+        when(fixture.cargoRepository.findById(trackingId)).thenReturn(cargo);
+        when(fixture.voyageRepository.findById(voyageNumber)).thenReturn(voyage);
+        when(fixture.locationRepository.findById(unlocode)).thenReturn(location);
+
+
+        HandlingEvent event = fixture.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, HandlingEvent.Type.LOADING);
+
+        assert event != null;
+    }
+
+    @Test
+    void createHandlingEvent_withoutVoyage_success() throws CannotCreateHandlingEventException {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now();
+        TrackingId trackingId = new TrackingId("123");
+        VoyageNumber voyageNumber = new VoyageNumber("VOY123");
+        UnLocode unlocode = new UnLocode("UN123");
+
+        Cargo cargo = new Cargo(trackingId);
+        Location location = new Location(unlocode);
+
+        when(fixture.cargoRepository.findById(trackingId)).thenReturn(cargo);
+        when(fixture.voyageRepository.findById(voyageNumber)).thenReturn(null);
+        when(fixture.locationRepository.findById(unlocode)).thenReturn(location);
+
+        HandlingEvent event = fixture.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, HandlingEvent.Type.LOADING);
+
+        assert event != null;
+    }
+
+    @Test
+    void createHandlingEvent_unknownVoyage_throwsException() {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now();
+        TrackingId trackingId = new TrackingId("123");
+        VoyageNumber voyageNumber = new VoyageNumber("VOY123");
+        UnLocode unlocode = new UnLocode("UN123");
+
+        Cargo cargo = new Cargo(trackingId);
+        Location location = new Location(unlocode);
+
+        when(fixture.cargoRepository.findById(trackingId)).thenReturn(cargo);
+        when(fixture.voyageRepository.findById(voyageNumber)).thenReturn(null);
+        when(fixture.locationRepository.findById(unlocode)).thenReturn(location);
+
+        assertThrows(CannotCreateHandlingEventException.class, () -> {
+            fixture.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, HandlingEvent.Type.LOADING);
+        });
+
+    }
+
+    @Test
+    void createHandlingEvent_unknownCargo_throwsException() {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now();
+        TrackingId trackingId = new TrackingId("123");
+        VoyageNumber voyageNumber = new VoyageNumber("VOY123");
+        UnLocode unlocode = new UnLocode("UN123");
+
+        Voyage voyage = new Voyage(voyageNumber);
+        Location location = new Location(unlocode);
+
+        when(fixture.cargoRepository.findById(trackingId)).thenReturn(null);
+        when(fixture.voyageRepository.findById(voyageNumber)).thenReturn(voyage);
+        when(fixture.locationRepository.findById(unlocode)).thenReturn(location);
+
+        assertThrows(CannotCreateHandlingEventException.class, () -> {
+            fixture.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, HandlingEvent.Type.LOADING);
+        });
+    }
+
+    @Test
+    void createHandlingEvent_unknownLocation_throwsException() {
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now();
+        TrackingId trackingId = new TrackingId("123");
+        VoyageNumber voyageNumber = new VoyageNumber("VOY123");
+        UnLocode unlocode = new UnLocode("UN123");
+
+        Cargo cargo = new Cargo(trackingId);
+        Voyage voyage = new Voyage(voyageNumber);
+
+        when(fixture.cargoRepository.findById(trackingId)).thenReturn(cargo);
+        when(fixture.voyageRepository.findById(voyageNumber)).thenReturn(voyage);
+        when(fixture.locationRepository.findById(unlocode)).thenReturn(null);
+
+        assertThrows(CannotCreateHandlingEventException.class, () -> {
+            fixture.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, HandlingEvent.Type.LOADING);
+        });
+    }
+}
+```

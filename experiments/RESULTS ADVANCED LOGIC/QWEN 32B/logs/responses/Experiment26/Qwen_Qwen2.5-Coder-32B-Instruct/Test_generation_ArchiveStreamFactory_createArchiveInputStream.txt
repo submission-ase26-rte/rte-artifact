@@ -1,0 +1,170 @@
+```java
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Locale;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import org.apache.commons.compress.archivers.ar.ArArchiveInputStream;
+import org.apache.commons.compress.archivers.arj.ArjArchiveInputStream;
+import org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;
+import org.apache.commons.compress.archivers.dump.DumpArchiveInputStream;
+import org.apache.commons.compress.archivers.jar.JarArchiveInputStream;
+import org.apache.commons.compress.archivers.sevenz.StreamingNotSupportedException;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.utils.Sets;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class ArchiveStreamFactory_createArchiveInputStreamTestGenerated {
+
+    private ArchiveStreamFactory factory;
+    private InputStream mockInputStream;
+
+    @Mock
+    private ArchiveStreamProvider mockProvider;
+
+    @BeforeEach
+    void setUp() {
+        factory = new ArchiveStreamFactory();
+        mockInputStream = new ByteArrayInputStream(new byte[0]);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithNullArchiverName() {
+        assertThrows(IllegalArgumentException.class, () -> factory.createArchiveInputStream(null, mockInputStream, null));
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithNullInputStream() {
+        assertThrows(IllegalArgumentException.class, () -> factory.createArchiveInputStream(ArchiveStreamFactory.ZIP, null, null));
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithAr() throws IOException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.AR, mockInputStream, null);
+        assertTrue(result instanceof ArArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithArj() throws IOException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.ARJ, mockInputStream, null);
+        assertTrue(result instanceof ArjArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithArjAndEncoding() throws IOException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.ARJ, mockInputStream, "UTF-8");
+        assertTrue(result instanceof ArjArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithZip() throws IOException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.ZIP, mockInputStream, null);
+        assertTrue(result instanceof ZipArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithZipAndEncoding() throws IOException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.ZIP, mockInputStream, "UTF-8");
+        assertTrue(result instanceof ZipArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithTar() throws IOException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.TAR, mockInputStream, null);
+        assertTrue(result instanceof TarArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithTarAndEncoding() throws IOException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.TAR, mockInputStream, "UTF-8");
+        assertTrue(result instanceof TarArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithJar() throws IOException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.JAR, mockInputStream, null);
+        assertTrue(result instanceof JarArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithJarAndEncoding() throws IOException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.JAR, mockInputStream, "UTF-8");
+        assertTrue(result instanceof JarArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithApk() throws IOException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.APK, mockInputStream, null);
+        assertTrue(result instanceof JarArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithApkAndEncoding() throws IOException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.APK, mockInputStream, "UTF-8");
+        assertTrue(result instanceof JarArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithCpio() throws IOException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.CPIO, mockInputStream, null);
+        assertTrue(result instanceof CpioArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithCpioAndEncoding() throws IOException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.CPIO, mockInputStream, "UTF-8");
+        assertTrue(result instanceof CpioArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithDump() throws IOException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.DUMP, mockInputStream, null);
+        assertTrue(result instanceof DumpArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithDumpAndEncoding() throws IOException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.DUMP, mockInputStream, "UTF-8");
+        assertTrue(result instanceof DumpArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithSevenZThrowsException() {
+        assertThrows(StreamingNotSupportedException.class, () -> factory.createArchiveInputStream(ArchiveStreamFactory.SEVEN_Z, mockInputStream, null));
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithUnknownArchiver() {
+        assertThrows(ArchiveException.class, () -> factory.createArchiveInputStream("UNKNOWN", mockInputStream, null));
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithCustomProvider() throws IOException {
+        SortedMap<String, ArchiveStreamProvider> providers = new TreeMap<>();
+        providers.put(ArchiveStreamFactory.toKey("CUSTOM"), mockProvider);
+        factory = new ArchiveStreamFactory() {
+            @Override
+            public SortedMap<String, ArchiveStreamProvider> getArchiveInputStreamProviders() {
+                return providers;
+            }
+        };
+        when(mockProvider.createArchiveInputStream("CUSTOM", mockInputStream, null)).thenReturn(mock(ArchiveInputStream.class));
+        ArchiveInputStream result = factory.createArchiveInputStream("CUSTOM", mockInputStream, null);
+        assertNotNull(result);
+        verify(mockProvider).createArchiveInputStream("CUSTOM", mockInputStream, null);
+    }
+}
+```

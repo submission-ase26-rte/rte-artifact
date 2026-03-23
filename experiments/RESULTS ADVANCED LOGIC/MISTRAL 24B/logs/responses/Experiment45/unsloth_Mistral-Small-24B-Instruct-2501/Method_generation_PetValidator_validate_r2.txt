@@ -1,0 +1,17 @@
+```java
+public void validate(Object obj, Errors errors) {
+    Pet pet = (Pet) obj;
+
+    if (StringUtils.isEmpty(pet.getName())) {
+        errors.rejectValue("name", "required");
+    }
+
+    if (pet.getBirthDate() == null) {
+        errors.rejectValue("birthDate", "required");
+    }
+
+    if (pet.isNew() && pet.getType() == null) {
+        errors.rejectValue("type", "required");
+    }
+}
+```

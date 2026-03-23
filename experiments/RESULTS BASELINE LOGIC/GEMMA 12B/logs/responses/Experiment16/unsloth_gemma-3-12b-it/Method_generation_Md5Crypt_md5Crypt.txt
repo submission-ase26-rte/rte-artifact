@@ -1,0 +1,19 @@
+```java
+public static String md5Crypt(final byte[] keyBytes, final String salt, final String prefix, final Random random) {
+    if (salt != null && !salt.startsWith("$apr1$")) {
+        throw new IllegalArgumentException("Invalid salt value: " + salt);
+    }
+
+    if (!prefix.equals("$apr1$") && !prefix.equals("$md5$")) {
+        throw new IllegalArgumentException("Invalid salt value: " + salt);
+    }
+
+    String result = null;
+    if (salt == null) {
+        salt = B64.getRandomSalt(16);
+    }
+
+    result = prefix + salt + Md5Crypt.apr1Crypt(keyBytes);
+    return result;
+}
+```

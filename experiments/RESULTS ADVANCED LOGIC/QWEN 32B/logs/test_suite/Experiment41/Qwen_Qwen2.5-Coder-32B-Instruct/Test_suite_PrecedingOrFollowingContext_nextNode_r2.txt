@@ -1,0 +1,197 @@
+package org.apache.commons.jxpath.ri.axes;
+
+import java.util.Stack;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.EvalContext;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PrecedingOrFollowingContext_nextNodeTestGenerated {
+    @Mock
+    private EvalContext parentContext;
+    @Mock
+    private NodeTest nodeTest;
+    @Mock
+    private NodePointer currentNodePointer;
+    @Mock
+    private NodePointer currentRootLocation;
+    @Mock
+    private NodePointer parentPointer;
+    @Mock
+    private NodeIterator nodeIterator;
+    private PrecedingOrFollowingContext context;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, false);
+    }
+
+    @Test
+    public void testNextNode_InitialCallWithNoParent() {
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(null);
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    public void testNextNode_InitialCallWithParentAndNoChildren() {
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parentPointer);
+        when(parentPointer.childIterator(null, false, currentRootLocation)).thenReturn(nodeIterator);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(false);
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    public void testNextNode_InitialCallWithParentAndMatchingChild() {
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parentPointer);
+        when(parentPointer.childIterator(null, false, currentRootLocation)).thenReturn(nodeIterator);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer);
+        when(currentNodePointer.testNode(nodeTest)).thenReturn(true);
+        assertTrue(context.nextNode());
+    }
+
+    @Test
+    public void testNextNode_InitialCallWithParentAndNonMatchingChild() {
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parentPointer);
+        when(parentPointer.childIterator(null, false, currentRootLocation)).thenReturn(nodeIterator);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer);
+        when(currentNodePointer.testNode(nodeTest)).thenReturn(false);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(false);
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    public void testNextNode_ReverseIterationWithNonMatchingChild() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parentPointer);
+        when(parentPointer.childIterator(null, true, currentRootLocation)).thenReturn(nodeIterator);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer);
+        when(currentNodePointer.testNode(nodeTest)).thenReturn(false);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(false);
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    public void testNextNode_ReverseIterationWithNestedAndParentMatchingChild() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        NodePointer nestedNodePointer = mock(NodePointer.class);
+        NodeIterator nestedNodeIterator = mock(NodeIterator.class);
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parentPointer);
+        when(parentPointer.childIterator(null, true, currentRootLocation)).thenReturn(nodeIterator);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer);
+        when(currentNodePointer.isLeaf()).thenReturn(false);
+        when(currentNodePointer.childIterator(null, true, null)).thenReturn(nestedNodeIterator);
+        when(nestedNodeIterator.setPosition(anyInt())).thenReturn(true);
+        when(nestedNodeIterator.getNodePointer()).thenReturn(nestedNodePointer);
+        when(nestedNodePointer.testNode(nodeTest)).thenReturn(false);
+        when(nestedNodeIterator.setPosition(anyInt())).thenReturn(false);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(true);
+        when(currentNodePointer.testNode(nodeTest)).thenReturn(true);
+        assertTrue(context.nextNode());
+    }
+
+    @Test
+    public void testNextNode_UncoveredLines() {
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parentPointer);
+        when(parentPointer.childIterator(null, false, currentRootLocation)).thenReturn(nodeIterator);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer);
+        when(currentNodePointer.isLeaf()).thenReturn(true);
+        when(currentNodePointer.testNode(nodeTest)).thenReturn(false);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(false);
+        currentRootLocation = mock(NodePointer.class);
+        parentPointer = mock(NodePointer.class);
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parentPointer);
+        when(parentPointer.childIterator(null, false, currentRootLocation)).thenReturn(nodeIterator);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer);
+        when(currentNodePointer.isLeaf()).thenReturn(false);
+        when(currentNodePointer.childIterator(null, false, null)).thenReturn(nodeIterator);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer);
+        when(currentNodePointer.testNode(nodeTest)).thenReturn(false);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(false);
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    public void testNextNode_SecondCallWithMatchingChild() {
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parentPointer);
+        when(parentPointer.childIterator(null, false, currentRootLocation)).thenReturn(nodeIterator);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(true, true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer, currentNodePointer);
+        when(currentNodePointer.testNode(nodeTest)).thenReturn(false, true);
+        context.nextNode();
+        assertTrue(context.nextNode());
+    }
+
+    @Test
+    public void testNextNode_ReverseIterationWithMatchingChild() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parentPointer);
+        when(parentPointer.childIterator(null, true, currentRootLocation)).thenReturn(nodeIterator);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer);
+        when(currentNodePointer.testNode(nodeTest)).thenReturn(true);
+        assertTrue(context.nextNode());
+    }
+
+    @Test
+    public void testNextNode_ReverseIterationWithNestedMatchingChild() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        NodePointer nestedNodePointer = mock(NodePointer.class);
+        NodeIterator nestedNodeIterator = mock(NodeIterator.class);
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parentPointer);
+        when(parentPointer.childIterator(null, true, currentRootLocation)).thenReturn(nodeIterator);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer);
+        when(currentNodePointer.isLeaf()).thenReturn(false);
+        when(currentNodePointer.childIterator(null, true, null)).thenReturn(nestedNodeIterator);
+        when(nestedNodeIterator.setPosition(anyInt())).thenReturn(true);
+        when(nestedNodeIterator.getNodePointer()).thenReturn(nestedNodePointer);
+        when(nestedNodePointer.testNode(nodeTest)).thenReturn(true);
+        assertTrue(context.nextNode());
+    }
+
+    @Test
+    public void testNextNode_ReverseIterationWithNestedNonMatchingChild() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        NodePointer nestedNodePointer = mock(NodePointer.class);
+        NodeIterator nestedNodeIterator = mock(NodeIterator.class);
+        when(parentContext.getCurrentNodePointer()).thenReturn(currentRootLocation);
+        when(currentRootLocation.getParent()).thenReturn(parentPointer);
+        when(parentPointer.childIterator(null, true, currentRootLocation)).thenReturn(nodeIterator);
+        when(nodeIterator.setPosition(anyInt())).thenReturn(true);
+        when(nodeIterator.getNodePointer()).thenReturn(currentNodePointer);
+        when(currentNodePointer.isLeaf()).thenReturn(false);
+        when(currentNodePointer.childIterator(null, true, null)).thenReturn(nestedNodeIterator);
+        when(nestedNodeIterator.setPosition(anyInt())).thenReturn(true, false);
+        when(nestedNodeIterator.getNodePointer()).thenReturn(nestedNodePointer);
+        when(nestedNodePointer.testNode(nodeTest)).thenReturn(false);
+        assertFalse(context.nextNode());
+    }
+
+}

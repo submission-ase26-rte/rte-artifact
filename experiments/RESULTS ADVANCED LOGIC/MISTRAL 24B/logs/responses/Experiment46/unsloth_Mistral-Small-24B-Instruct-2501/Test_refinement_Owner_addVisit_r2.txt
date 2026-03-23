@@ -1,0 +1,65 @@
+```java
+package org.springframework.samples.petclinic.owner;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.samples.petclinic.owner.Owner;
+import org.springframework.samples.petclinic.owner.Pet;
+import org.springframework.samples.petclinic.owner.Visit;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Owner_addVisitTestGenerated {
+    @Mock
+    private Pet pet;
+    @Mock
+    private Visit visit;
+    @InjectMocks
+    private Owner owner;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        owner = new Owner();
+        ReflectionTestUtils.setField(owner, "pets", new ArrayList<>());
+    }
+
+    @Test
+    public void testAddVisit_ValidInput() {
+        Integer petId = 1;
+        when(pet.getId()).thenReturn(petId);
+        when(owner.getPet(petId)).thenReturn(pet);
+        owner.addVisit(petId, visit);
+        verify(pet, times(1)).addVisit(visit);
+    }
+
+    @Test
+    public void testAddVisit_InvalidPetId() {
+        Integer petId = 1;
+        when(owner.getPet(petId)).thenReturn(null);
+        assertThrows(IllegalArgumentException.class, () -> owner.addVisit(petId, visit));
+    }
+
+    @Test
+    public void testAddVisit_NullPetId() {
+        assertThrows(IllegalArgumentException.class, () -> owner.addVisit(null, visit));
+    }
+
+    @Test
+    public void testAddVisit_NullVisit() {
+        Integer petId = 1;
+        when(owner.getPet(petId)).thenReturn(pet);
+        assertThrows(IllegalArgumentException.class, () -> owner.addVisit(petId, null));
+    }
+}
+```

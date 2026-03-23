@@ -1,0 +1,33 @@
+```java
+public void contextInitialized(ServletContextEvent event) {
+    try (InputStream inputStream = event.getServletContext().getResourceAsStream("/properties/daytrader.properties")) {
+        if (inputStream != null) {
+            Properties prop = new Properties();
+            prop.load(inputStream);
+            TradeConfig.setRunTimeMode(Integer.parseInt(prop.getProperty("runtimeMode", "0")));
+            TradeConfig.setOrderProcessingMode(Integer.parseInt(prop.getProperty("orderProcessingMode", "0")));
+            TradeConfig.setMAX_USERS(Integer.parseInt(prop.getProperty("maxUsers", "0")));
+            TradeConfig.setMAX_QUOTES(Integer.parseInt(prop.getProperty("maxQuotes", "0")));
+            TradeConfig.setPublishQuotePriceChange(Boolean.parseBoolean(prop.getProperty("publishQuotePriceChange", "false")));
+            TradeConfig.setDisplayOrderAlerts(Boolean.parseBoolean(prop.getProperty("displayOrderAlerts", "false")));
+            TradeConfig.setWebInterface(Integer.parseInt(prop.getProperty("webInterface", "0")));
+            TradeConfig.setListQuotePriceChangeFrequency(Integer.parseInt(prop.getProperty("listQuotePriceChangeFrequency", "0")));
+            TradeConfig.setPrimIterations(Integer.parseInt(prop.getProperty("primIterations", "0")));
+            TradeConfig.setMarketSummaryInterval(Integer.parseInt(prop.getProperty("marketSummaryInterval", "0")));
+            TradeConfig.setLongRun(Boolean.parseBoolean(prop.getProperty("longRun", "false")));
+        } else {
+            TradeConfig.setRunTimeMode(Integer.parseInt(System.getProperty("RUNTIME_MODE", "0")));
+            TradeConfig.setOrderProcessingMode(Integer.parseInt(System.getProperty("ORDER_PROCESSING_MODE", "0")));
+            TradeConfig.setMAX_USERS(Integer.parseInt(System.getProperty("MAX_USERS", "0")));
+            TradeConfig.setMAX_QUOTES(Integer.parseInt(System.getProperty("MAX_QUOTES", "0")));
+            TradeConfig.setPublishQuotePriceChange(Boolean.parseBoolean(System.getProperty("PUBLISH_QUOTES", "false")));
+            TradeConfig.setDisplayOrderAlerts(Boolean.parseBoolean(System.getProperty("DISPLAY_ORDER_ALERTS", "false")));
+            TradeConfig.setWebInterface(Integer.parseInt(System.getProperty("WEB_INTERFACE", "0")));
+            TradeConfig.setListQuotePriceChangeFrequency(Integer.parseInt(System.getProperty("LIST_QUOTE_PRICE_CHANGE_FREQUENCY", "0")));
+        }
+    } catch (IOException e) {
+        Log.trace("Error reading daytrader.properties: " + e.getMessage());
+    }
+    Log.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect");
+}
+```

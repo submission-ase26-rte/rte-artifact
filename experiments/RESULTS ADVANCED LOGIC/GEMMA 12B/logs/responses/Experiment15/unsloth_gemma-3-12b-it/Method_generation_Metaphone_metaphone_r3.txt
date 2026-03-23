@@ -1,0 +1,160 @@
+```java
+public String metaphone(final String txt) {
+        if (txt == null || txt.isEmpty()) {
+            return "";
+        }
+
+        final StringBuilder string = new StringBuilder(txt.toUpperCase());
+        final int wdsz = string.length();
+        int n = 0;
+        final StringBuilder result = new StringBuilder();
+
+        while (n < wdsz) {
+            final char c = string.charAt(n);
+
+            if (c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') {
+                if (n == 0) {
+                    result.append('A');
+                }
+                n++;
+            } else if (c == 'B') {
+                if (n == wdsz - 1 || string.charAt(n + 1) != 'B') {
+                    result.append('B');
+                }
+                n++;
+            } else if (c == 'C') {
+                if (n > 1 && isPreviousChar(string, n - 2, 'S') && isNextChar(string, n, 'I')) {
+                    result.append('X');
+                } else if (isNextChar(string, n, 'H')) {
+                    if (n == 0 && wdsz >= 3 && string.charAt(2) == 'A') {
+                        result.append('K');
+                    } else {
+                        result.append('X');
+                    }
+                    n += 2;
+                } else if (isNextChar(string, n, 'I') || isNextChar(string, n, 'E') || isNextChar(string, n, 'Y')) {
+                    result.append('S');
+                } else {
+                    result.append('K');
+                }
+                n++;
+            } else if (c == 'D') {
+                if (isNextChar(string, n, 'G') && (isNextChar(string, n + 1, 'E') || isNextChar(string, n + 1, 'I'))) {
+                    result.append('J');
+                    n += 2;
+                } else {
+                    result.append('T');
+                    n++;
+                }
+            } else if (c == 'F') {
+                result.append('F');
+                n++;
+            } else if (c == 'G') {
+                if (isNextChar(string, n, 'H')) {
+                    if (n > 0 && !isVowel(string, n - 1)) {
+                        result.append('K');
+                    }
+                    n += 2;
+                } else if (isNextChar(string, n, 'N')) {
+                    n += 2;
+                } else if (isNextChar(string, n, 'I') || isNextChar(string, n, 'E') || isNextChar(string, n, 'Y')) {
+                    result.append('J');
+                } else {
+                    result.append('K');
+                }
+                n++;
+            } else if (c == 'H') {
+                if (n == 0 || isVowel(string, n - 1)) {
+                    if (isNextChar(string, n, 'A') || isNextChar(string, n, 'E') || isNextChar(string, n, 'I') || isNextChar(string, n, 'O') || isNextChar(string, n, 'U')) {
+                        result.append('H');
+                    }
+                }
+                n++;
+            } else if (c == 'J') {
+                result.append('J');
+                n++;
+            } else if (c == 'K') {
+                if (n > 0 && string.charAt(n - 1) == 'C') {
+                    n++;
+                } else {
+                    result.append('K');
+                    n++;
+                }
+            } else if (c == 'L') {
+                result.append('L');
+                n++;
+            } else if (c == 'M') {
+                result.append('M');
+                n++;
+            } else if (c == 'N') {
+                result.append('N');
+                n++;
+            } else if (c == 'P') {
+                if (isNextChar(string, n, 'H')) {
+                    result.append('F');
+                    n += 2;
+                } else {
+                    result.append('P');
+                    n++;
+                }
+            } else if (c == 'Q') {
+                result.append('K');
+                n++;
+            } else if (c == 'R') {
+                result.append('R');
+                n++;
+            } else if (c == 'S') {
+                if (isNextChar(string, n, 'H')) {
+                    result.append('X');
+                    n += 2;
+                } else {
+                    result.append('S');
+                    n++;
+                }
+            } else if (c == 'T') {
+                if (isNextChar(string, n, 'I')) {
+                    if (isNextChar(string, n + 1, 'O')) {
+                        result.append('X');
+                        n += 2;
+                    } else {
+                        result.append('T');
+                        n++;
+                    }
+                } else if (isNextChar(string, n, 'H')) {
+                    result.append('0');
+                    n += 2;
+                } else {
+                    result.append('T');
+                    n++;
+                }
+            } else if (c == 'V') {
+                result.append('F');
+                n++;
+            } else if (c == 'W') {
+                if (n == 0) {
+                    result.append('W');
+                }
+                n++;
+            } else if (c == 'X') {
+                result.append('S');
+                n++;
+            } else if (c == 'Y') {
+                if (n == 0) {
+                    result.append('Y');
+                }
+                n++;
+            } else if (c == 'Z') {
+                result.append('S');
+                n++;
+            } else {
+                n++;
+            }
+        }
+
+        if (result.length() > this.maxCodeLen) {
+            return result.substring(0, this.maxCodeLen);
+        }
+
+        return result.toString();
+    }
+```

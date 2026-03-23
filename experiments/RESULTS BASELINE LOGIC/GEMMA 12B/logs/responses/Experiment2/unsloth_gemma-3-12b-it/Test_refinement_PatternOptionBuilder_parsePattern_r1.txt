@@ -1,0 +1,95 @@
+```java
+package org.apache.commons.cli;
+
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PatternOptionBuilder_parsePatternTestGenerated {
+
+    @Test
+        void testParsePattern_patternWithOnlyType() {
+            Options options = PatternOptionBuilder.parsePattern("$");
+            assertEquals(0, options.getOptions().size());
+        }
+
+    @Test
+    void testParsePattern_emptyPattern() {}
+
+    @Test
+    void testParsePattern_patternWithOnlyRequired() {}
+
+    @Test
+    void testParsePattern_patternWithRequiredAndType() {
+        Options options = PatternOptionBuilder.parsePattern("!i");
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("i", option.getOption());
+        assertTrue(option.isRequired());
+        assertEquals(PatternOptionBuilder.INTEGER_VALUE, option.getType());
+    }
+
+    @Test
+    void testParsePattern_patternWithMultipleOptions() {
+        Options options = PatternOptionBuilder.parsePattern("ai!f");
+        assertEquals(2, options.getOptions().size());
+
+        Option option1 = options.getOptions().get(0);
+        assertEquals("a", option1.getOption());
+        assertEquals(PatternOptionBuilder.STRING_VALUE, option1.getType());
+
+        Option option2 = options.getOptions().get(1);
+        assertEquals("f", option2.getOption());
+        assertTrue(option2.isRequired());
+        assertEquals(PatternOptionBuilder.FILE_VALUE, option2.getType());
+    }
+
+    @Test
+    void testParsePattern_patternWithConverter() {
+        Options options = PatternOptionBuilder.parsePattern("d");
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("d", option.getOption());
+        assertEquals(PatternOptionBuilder.DOUBLE_VALUE, option.getType());
+    }
+
+    @Test
+    void testParsePattern_patternWithTrailingOption() {
+        Options options = PatternOptionBuilder.parsePattern("a!");
+        assertEquals(1, options.getOptions().size());
+
+        Option option = options.getOptions().get(0);
+        assertEquals("a", option.getOption());
+        assertTrue(option.isRequired());
+        assertEquals(PatternOptionBuilder.STRING_VALUE, option.getType());
+    }
+
+    @Test
+    void testParsePattern_patternWithUnrecognizedType() {
+        Options options = PatternOptionBuilder.parsePattern("z");
+        assertEquals(1, options.getOptions().size());
+        Option option = options.getOptions().get(0);
+        assertEquals("z", option.getOption());
+        assertEquals(PatternOptionBuilder.STRING_VALUE, option.getType());
+    }
+
+    @Test
+    void testParsePattern_patternWithMultipleRequiredOptions() {
+        Options options = PatternOptionBuilder.parsePattern("!a!b");
+        assertEquals(2, options.getOptions().size());
+
+        Option option1 = options.getOptions().get(0);
+        assertEquals("a", option1.getOption());
+        assertTrue(option1.isRequired());
+
+        Option option2 = options.getOptions().get(1);
+        assertEquals("b", option2.getOption());
+        assertTrue(option2.isRequired());
+    }
+}
+```

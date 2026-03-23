@@ -1,0 +1,111 @@
+```java
+package org.apache.commons.codec.language.bm;
+
+import org.apache.commons.codec.language.bm.Languages;
+import org.apache.commons.codec.language.bm.PhoneticEngine;
+import org.apache.commons.codec.language.bm.NameType;
+import org.apache.commons.codec.language.bm.RuleType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PhoneticEngine_encodeTestGenerated {
+
+    private PhoneticEngine phoneticEngine;
+    private Languages.LanguageSet languageSet;
+
+    @BeforeEach
+    public void setUp() {
+        languageSet = Languages.LanguageSet.NO_LANGUAGES;
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, false);
+    }
+
+    @Test
+    public void testEncodeWithSingleWord() {
+        String input = "test";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithMultiWord() {
+        String input = "test input";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithDashSeparatedWords() {
+        String input = "test-input";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithSpacesSeparatedWords() {
+        String input = "test input";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithDashPrefix() {
+        String input = "d'test";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithGenericPrefix() {
+        String input = "van test";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithSephardicPrefix() {
+        String input = "o'test";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithAshkenaziPrefix() {
+        String input = "ben test";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithConcatMode() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, true);
+        String input = "test input";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithEmptyInput() {
+        String input = "";
+        String result = phoneticEngine.encode(input, languageSet);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testEncodeWithNullInput() {
+        assertThrows(NullPointerException.class, () -> {
+            phoneticEngine.encode(null, languageSet);
+        });
+    }
+
+    @Test
+    public void testEncodeWithNullLanguageSet() {
+        assertThrows(NullPointerException.class, () -> {
+            phoneticEngine.encode("test", null);
+        });
+    }
+}
+```

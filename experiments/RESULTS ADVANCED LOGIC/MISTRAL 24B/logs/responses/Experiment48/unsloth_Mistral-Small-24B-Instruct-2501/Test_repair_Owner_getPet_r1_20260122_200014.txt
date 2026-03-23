@@ -1,0 +1,93 @@
+```java
+package org.springframework.samples.petclinic.owner;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.samples.petclinic.owner.Pet;
+import org.springframework.samples.petclinic.owner.PetType;
+import org.springframework.samples.petclinic.model.Person;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Owner_getPetTestGenerated {
+
+    private Owner owner;
+    private List<Pet> pets;
+
+    @BeforeEach
+    public void setUp() {
+        owner = new Owner();
+        pets = new ArrayList<>();
+        ReflectionTestUtils.setField(owner, "pets", pets);
+    }
+
+    @Test
+    public void testGetPet_ExistingPet_IgnoreNewFalse() {
+        Pet pet = new Pet();
+        pet.setName("Fido");
+        pets.add(pet);
+
+        Pet result = owner.getPet("fido", false);
+        assertEquals(pet, result);
+    }
+
+    @Test
+    public void testGetPet_ExistingPet_IgnoreNewTrue() {
+        Pet pet = new Pet();
+        pet.setName("Fido");
+        pets.add(pet);
+
+        Pet result = owner.getPet("fido", true);
+        assertEquals(pet, result);
+    }
+
+    @Test
+    public void testGetPet_ExistingPet_IgnoreNewTrue_NewPet() {
+        Pet pet = new Pet();
+        pet.setName("Fido");
+        pets.add(pet);
+        ReflectionTestUtils.setField(pet, "new", true);
+
+        Pet result = owner.getPet("fido", true);
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetPet_NonExistingPet() {
+        Pet result = owner.getPet("Fido", false);
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetPet_NullName() {
+        Pet result = owner.getPet(null, false);
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetPet_EmptyName() {
+        Pet result = owner.getPet("", false);
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetPet_IgnoreNewTrue_NewPet() {
+        Pet pet = new Pet();
+        pet.setName("Fido");
+        ReflectionTestUtils.setField(pet, "new", true);
+        pets.add(pet);
+
+        Pet result = owner.getPet("fido", true);
+        assertNull(result);
+    }
+}
+```

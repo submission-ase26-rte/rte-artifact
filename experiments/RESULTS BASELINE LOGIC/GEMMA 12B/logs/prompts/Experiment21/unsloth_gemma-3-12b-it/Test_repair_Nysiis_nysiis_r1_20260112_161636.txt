@@ -1,0 +1,150 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language;
+Class name (MUST be exactly): Nysiis_nysiisTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.codec.language;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.regex.Pattern;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.StringEncoder;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Nysiis_nysiisTestGenerated {
+
+    private Nysiis nysiis;
+
+    @BeforeEach
+    void setUp() {
+        nysiis = new Nysiis();
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.resetMocks();
+    }
+
+    @Test
+    void testNysiis_nullInput() {
+        assertNull(nysiis.nysiis(null));
+    }
+
+    @Test
+    void testNysiis_emptyInput() {
+        assertEquals("", nysiis.nysiis(""));
+    }
+
+    @Test
+    void testNysiis_simpleName() {
+        assertEquals("MCC", nysiis.nysiis("MAC"));
+    }
+
+    @Test
+    void testNysiis_knToNN() {
+        assertEquals("NN", nysiis.nysiis("KN"));
+    }
+
+    @Test
+    void testNysiis_kToC() {
+        assertEquals("C", nysiis.nysiis("K"));
+    }
+
+    @Test
+    void testNysiis_phPfToFF() {
+        assertEquals("FF", nysiis.nysiis("PH"));
+        assertEquals("FF", nysiis.nysiis("PF"));
+    }
+
+    @Test
+    void testNysiis_schToSSS() {
+        assertEquals("SSS", nysiis.nysiis("SCH"));
+    }
+
+    @Test
+    void testNysiis_eeToY() {
+        assertEquals("Y", nysiis.nysiis("EE"));
+    }
+
+    @Test
+    void testNysiis_ieToY() {
+        assertEquals("Y", nysiis.nysiis("IE"));
+    }
+
+    @Test
+    void testNysiis_dtRtRdNtNdToD() {
+        assertEquals("D", nysiis.nysiis("DT"));
+        assertEquals("D", nysiis.nysiis("RT"));
+        assertEquals("D", nysiis.nysiis("RD"));
+        assertEquals("D", nysiis.nysiis("NT"));
+        assertEquals("D", nysiis.nysiis("ND"));
+    }
+
+    @Test
+    void testNysiis_complexName() {
+        assertEquals("CBB", nysiis.nysiis("CKB"));
+    }
+
+    @Test
+    void testNysiis_removeTrailingS() {
+        assertEquals("MCC", nysiis.nysiis("MCS"));
+    }
+
+    @Test
+    void testNysiis_removeTrailingAy() {
+        assertEquals("MCC", nysiis.nysiis("MCAY"));
+    }
+
+    @Test
+    void testNysiis_removeTrailingA() {
+        assertEquals("MCC", nysiis.nysiis("MCA"));
+    }
+
+    @Test
+    void testNysiis_strictMode() {
+        Nysiis strictNysiis = new Nysiis(true);
+        assertEquals("MCC", strictNysiis.nysiis("MAC"));
+    }
+
+    @Test
+    void testNysiis_longName() {
+        assertEquals("CC", nysiis.nysiis("CK"));
+    }
+
+    @Test
+    void testNysiis_nameWithRepeatedChars() {
+        assertEquals("CC", nysiis.nysiis("CC"));
+    }
+
+    @Test
+    void testNysiis_nameWithSpecialChars() {
+        assertEquals("MCC", nysiis.nysiis("M@C"));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[27] cannot find symbol
+  symbol:   method resetMocks()
+  location: class org.mockito.Mockito
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: Nysiis_nysiisTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

@@ -1,0 +1,33 @@
+```java
+public String asPath() {
+    if (parent == null) {
+        if (id != null) {
+            return "id('" + id + "')";
+        }
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            final String name = getLocalName(node);
+            return "/" + name + "[1]";
+        } else if (node.getNodeType() == Node.TEXT_NODE
+                || node.getNodeType() == Node.CDATA_SECTION_NODE) {
+            return "/text()[1]";
+        } else if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
+            return "/processing-instruction('" + ((ProcessingInstruction) node).getTarget() + "')[1]";
+        } else {
+            return "/comment()[1]";
+        }
+    } else {
+        final String parentPath = parent.asPath();
+        final String name = getLocalName(node);
+        if (name == null) {
+            return parentPath + "/text()[1]";
+        }
+        final String namespaceURI = getNamespaceURI();
+        if (namespaceURI != null && namespaceURI.length() > 0) {
+            final String prefix = getNamespaceResolver().getPrefix(namespaceURI);
+            return parentPath + "/" + prefix + ":" + name + "[1]";
+        } else {
+            return parentPath + "/" + name + "[1]";
+        }
+    }
+}
+```

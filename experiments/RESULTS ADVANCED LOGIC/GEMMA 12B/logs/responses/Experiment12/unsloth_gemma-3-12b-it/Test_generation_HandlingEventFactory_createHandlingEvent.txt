@@ -1,0 +1,153 @@
+```java
+package org.eclipse.cargotracker.domain.model.handling;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import java.time.LocalDateTime;
+import org.eclipse.cargotracker.domain.model.cargo.Cargo;
+import org.eclipse.cargotracker.domain.model.cargo.CargoRepository;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+public class HandlingEventFactory_createHandlingEventTestGenerated {
+
+    private HandlingEventFactory handlingEventFactory;
+    private CargoRepository cargoRepositoryMock;
+    private VoyageRepository voyageRepositoryMock;
+    private LocationRepository locationRepositoryMock;
+
+    @BeforeEach
+    public void setup() {
+        cargoRepositoryMock = mock(CargoRepository.class);
+        voyageRepositoryMock = mock(VoyageRepository.class);
+        locationRepositoryMock = mock(LocationRepository.class);
+        handlingEventFactory = new HandlingEventFactory(cargoRepositoryMock, voyageRepositoryMock, locationRepositoryMock);
+    }
+
+    @Test
+    public void createHandlingEvent_withVoyage_success() throws Exception {
+        TrackingId trackingId = new TrackingId("123");
+        VoyageNumber voyageNumber = new VoyageNumber("456");
+        UnLocode unlocode = new UnLocode("789");
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now();
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+
+        Cargo cargo = mock(Cargo.class);
+        Voyage voyage = mock(Voyage.class);
+        Location location = mock(Location.class);
+
+        when(cargoRepositoryMock.find(trackingId)).thenReturn(cargo);
+        when(voyageRepositoryMock.find(voyageNumber)).thenReturn(voyage);
+        when(locationRepositoryMock.find(unlocode)).thenReturn(location);
+
+        HandlingEvent event = handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+
+        assertEquals(cargo, event.getCargo());
+        assertEquals(completionTime, event.getCompletionTime());
+        assertEquals(registrationTime, event.getRegistrationTime());
+        assertEquals(type, event.getType());
+        assertEquals(location, event.getLocation());
+        assertEquals(voyage, event.getVoyage());
+    }
+
+    @Test
+    public void createHandlingEvent_withoutVoyage_success() throws Exception {
+        TrackingId trackingId = new TrackingId("123");
+        VoyageNumber voyageNumber = null;
+        UnLocode unlocode = new UnLocode("789");
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now();
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+
+        Cargo cargo = mock(Cargo.class);
+        Location location = mock(Location.class);
+
+        when(cargoRepositoryMock.find(trackingId)).thenReturn(cargo);
+        when(voyageRepositoryMock.find(voyageNumber)).thenReturn(null);
+        when(locationRepositoryMock.find(unlocode)).thenReturn(location);
+
+        HandlingEvent event = handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+
+        assertEquals(cargo, event.getCargo());
+        assertEquals(completionTime, event.getCompletionTime());
+        assertEquals(registrationTime, event.getRegistrationTime());
+        assertEquals(type, event.getType());
+        assertEquals(location, event.getLocation());
+        assertNull(event.getVoyage());
+    }
+
+    @Test
+    public void createHandlingEvent_unknownVoyageException() {
+        TrackingId trackingId = new TrackingId("123");
+        VoyageNumber voyageNumber = new VoyageNumber("456");
+        UnLocode unlocode = new UnLocode("789");
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now();
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+
+        Cargo cargo = mock(Cargo.class);
+        Location location = mock(Location.class);
+
+        when(cargoRepositoryMock.find(trackingId)).thenReturn(cargo);
+        when(voyageRepositoryMock.find(voyageNumber)).thenThrow(UnknownVoyageException.class);
+        when(locationRepositoryMock.find(unlocode)).thenReturn(location);
+
+        assertThrows(CannotCreateHandlingEventException.class, () -> {
+            handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+        });
+    }
+
+    @Test
+    public void createHandlingEvent_unknownCargoException() {
+        TrackingId trackingId = new TrackingId("123");
+        VoyageNumber voyageNumber = new VoyageNumber("456");
+        UnLocode unlocode = new UnLocode("789");
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now();
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+
+        Location location = mock(Location.class);
+
+        when(cargoRepositoryMock.find(trackingId)).thenThrow(UnknownCargoException.class);
+        when(voyageRepositoryMock.find(voyageNumber)).thenReturn(null);
+        when(locationRepositoryMock.find(unlocode)).thenReturn(location);
+
+        assertThrows(CannotCreateHandlingEventException.class, () -> {
+            handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+        });
+    }
+
+    @Test
+    public void createHandlingEvent_unknownLocationException() {
+        TrackingId trackingId = new TrackingId("123");
+        VoyageNumber voyageNumber = new VoyageNumber("456");
+        UnLocode unlocode = new UnLocode("789");
+        LocalDateTime registrationTime = LocalDateTime.now();
+        LocalDateTime completionTime = LocalDateTime.now();
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+
+        Cargo cargo = mock(Cargo.class);
+        Voyage voyage = mock(Voyage.class);
+
+        when(cargoRepositoryMock.find(trackingId)).thenReturn(cargo);
+        when(voyageRepositoryMock.find(voyageNumber)).thenReturn(voyage);
+        when(locationRepositoryMock.find(unlocode)).thenThrow(UnknownLocationException.class);
+
+        assertThrows(CannotCreateHandlingEventException.class, () -> {
+            handlingEventFactory.createHandlingEvent(registrationTime, completionTime, trackingId, voyageNumber, unlocode, type);
+        });
+    }
+}
+```

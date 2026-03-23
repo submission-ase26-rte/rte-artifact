@@ -1,0 +1,237 @@
+ROLE:
+You are an expert Java developer. Task: improve coverage.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.ri.compiler;
+Class name (MUST be exactly): CoreFunction_computeValueTestGenerated
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+Test class structure (reference):
+package org.apache.commons.jxpath.ri.compiler;
+
+import org.apache.commons.jxpath.BasicNodeSet;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.ri.EvalContext;
+import org.apache.commons.jxpath.ri.axes.NodeSetContext;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class CoreFunction_computeValueTestGenerated {
+    private CoreFunction coreFunction;
+    private EvalContext evalContext;
+    @BeforeEach
+    public void setUp() {
+        evalContext = new NodeSetContext(null, new BasicNodeSet());
+    }
+
+
+}
+
+Valid test signatures:
+    @Test
+    public void testComputeValueDefault() {}
+}
+
+
+
+PROJECT CONTEXT:
+// === Imports of CoreFunction ===
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Collection;
+import java.util.Locale;
+import org.apache.commons.jxpath.BasicNodeSet;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.JXPathInvalidSyntaxException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.ri.Compiler;
+import org.apache.commons.jxpath.ri.EvalContext;
+import org.apache.commons.jxpath.ri.InfoSetUtil;
+import org.apache.commons.jxpath.ri.axes.NodeSetContext;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+
+// === Class: CoreFunction ===
+// Fields:
+    private Double ZERO;
+    private int functionCode;
+
+// Constructors:
+public CoreFunction(int functionCode, Expression args);
+
+// Getter/Setter Methods (for test assertions):
+public int getFunctionCode();
+protected String getFunctionName();
+public Expression getArg1();
+public Expression getArg2();
+public Expression getArg3();
+public int getArgumentCount();
+
+// Internal Method Signatures (used by target method):
+protected Object functionCeiling(final EvalContext context);
+protected Object functionTranslate(final EvalContext context);
+protected Object functionFloor(final EvalContext context);
+protected Object functionString(final EvalContext context);
+protected Object functionCount(final EvalContext context);
+protected Object functionBoolean(final EvalContext context);
+protected Object functionLang(final EvalContext context);
+protected Object functionConcat(final EvalContext context);
+protected Object functionKey(final EvalContext context);
+private Object functionFormatNumber(final EvalContext context);
+protected Object functionContains(final EvalContext context);
+protected Object functionSubstringBefore(final EvalContext context);
+protected Object functionStartsWith(final EvalContext context);
+protected Object functionNamespaceURI(final EvalContext context);
+protected Object functionNull(final EvalContext context);
+protected Object functionName(final EvalContext context);
+protected Object functionSubstringAfter(final EvalContext context);
+protected Object functionNormalizeSpace(final EvalContext context);
+protected Object functionTrue(final EvalContext context);
+protected Object functionSubstring(final EvalContext context);
+protected Object functionSum(final EvalContext context);
+protected Object functionNot(final EvalContext context);
+protected Object functionEndsWith(final EvalContext context);
+protected Object functionFalse(final EvalContext context);
+protected Object functionRound(final EvalContext context);
+protected Object functionLast(final EvalContext context);
+protected Object functionPosition(final EvalContext context);
+protected Object functionLocalName(final EvalContext context);
+protected Object functionID(final EvalContext context);
+protected Object functionNumber(final EvalContext context);
+protected Object functionStringLength(final EvalContext context);
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    public void setUp() {
+        evalContext = new NodeSetContext(null, new BasicNodeSet());
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+    @Override
+    public Object computeValue(final EvalContext context) {
+        switch (functionCode) { // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_LAST :
+                return functionLast(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_POSITION :
+                return functionPosition(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_COUNT :
+                return functionCount(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_LANG :
+                return functionLang(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_ID :
+                return functionID(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_LOCAL_NAME :
+                return functionLocalName(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_NAMESPACE_URI :
+                return functionNamespaceURI(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_NAME :
+                return functionName(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_STRING :
+                return functionString(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_CONCAT :
+                return functionConcat(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_STARTS_WITH :
+                return functionStartsWith(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_ENDS_WITH :
+                return functionEndsWith(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_CONTAINS :
+                return functionContains(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_SUBSTRING_BEFORE :
+                return functionSubstringBefore(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_SUBSTRING_AFTER :
+                return functionSubstringAfter(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_SUBSTRING :
+                return functionSubstring(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_STRING_LENGTH :
+                return functionStringLength(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_NORMALIZE_SPACE :
+                return functionNormalizeSpace(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_TRANSLATE :
+                return functionTranslate(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_BOOLEAN :
+                return functionBoolean(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_NOT :
+                return functionNot(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_TRUE :
+                return functionTrue(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_FALSE :
+                return functionFalse(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_NULL :
+                return functionNull(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_NUMBER :
+                return functionNumber(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_SUM :
+                return functionSum(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_FLOOR :
+                return functionFloor(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_CEILING :
+                return functionCeiling(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_ROUND :
+                return functionRound(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_KEY :
+                return functionKey(context); // NOT COVERED BY TESTS
+            case Compiler.FUNCTION_FORMAT_NUMBER :
+                return functionFormatNumber(context); // NOT COVERED BY TESTS
+            default:
+                return null;
+        }
+    }
+
+
+COVERAGE ANALYSIS:
+ STATUS: All tests are currently PASSING and there are NO compilation errors.
+  ISSUE: The test suite does not meet the minimum coverage threshold.
+
+COVERAGE METRICS:
+- Current line coverage: 6.06%
+- Target line coverage: 100%
+
+YOUR TASK:
+You MUST add NEW test cases to improve coverage from 6.06% to 100%.
+
+The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. 
+Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+IMPORTANT: Maintain all existing passing tests - do NOT modify or remove them. Only ADD new test cases.
+
+
+
+INSTRUCTIONS:
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers only if ensuring unique names.
+- DO NOT mock the target class
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

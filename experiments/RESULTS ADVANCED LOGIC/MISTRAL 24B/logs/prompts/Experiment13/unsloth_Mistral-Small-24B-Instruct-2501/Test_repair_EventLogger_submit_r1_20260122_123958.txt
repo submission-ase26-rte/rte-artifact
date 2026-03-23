@@ -1,0 +1,162 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.interfaces.handling.mobile;
+Class name (MUST be exactly): EventLogger_submitTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.interfaces.handling.mobile;
+
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.junit.jupiter.api.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class EventLogger_submitTestGenerated {
+
+    @Mock
+    private ApplicationEvents applicationEvents;
+
+    @Mock
+    private FacesContext facesContext;
+
+    @Mock
+    private FacesMessage facesMessage;
+
+    @Spy
+    private EventLogger eventLogger;
+
+    private AutoCloseable closeable;
+
+    @BeforeEach
+    void setUp() {
+        closeable = MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(eventLogger, "applicationEvents", applicationEvents);
+        ReflectionTestUtils.setField(eventLogger, "context", facesContext);
+        eventLogger.setTrackingId("trackingId123");
+        eventLogger.setLocation("USNYC");
+        eventLogger.setEventType(HandlingEvent.Type.LOAD);
+        eventLogger.setVoyageNumber("voyage123");
+        eventLogger.setCompletionTime(LocalDateTime.now());
+        eventLogger.getTrackingIds();
+        eventLogger.getLocations();
+        eventLogger.getVoyages();
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
+    }
+
+    @Test
+    void testSubmitWithVoyageRequired() {
+        HandlingEvent.Type type = HandlingEvent.Type.LOAD;
+        when(eventLogger.eventType.requiresVoyage()).thenReturn(true);
+
+        eventLogger.submit();
+
+        verify(applicationEvents, times(1)).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+        verify(facesContext, times(1)).addMessage(eq(null), any(FacesMessage.class));
+    }
+
+    @Test
+    void testSubmitWithoutVoyageRequired() {
+        HandlingEvent.Type type = HandlingEvent.Type.RECEIVE;
+        when(eventLogger.eventType.requiresVoyage()).thenReturn(false);
+
+        eventLogger.submit();
+
+        verify(applicationEvents, times(1)).receivedHandlingEventRegistrationAttempt(any(HandlingEventRegistrationAttempt.class));
+        verify(facesContext, times(1)).addMessage(eq(null), any(FacesMessage.class));
+    }
+
+    @Test
+    void testSubmitWithNullTrackingId() {
+        eventLogger.setTrackingId(null);
+
+        assertThrows(NullPointerException.class, eventLogger::submit);
+    }
+
+    @Test
+    void testSubmitWithNullLocation() {
+        eventLogger.setLocation(null);
+
+        assertThrows(NullPointerException.class, eventLogger::submit);
+    }
+
+    @Test
+    void testSubmitWithNullEventType() {
+        eventLogger.setEventType(null);
+
+        assertThrows(NullPointerException.class, eventLogger::submit);
+    }
+
+    @Test
+    void testSubmitWithNullVoyageNumber() {
+        eventLogger.setVoyageNumber(null);
+
+        assertThrows(NullPointerException.class, eventLogger::submit);
+    }
+
+    @Test
+    void testSubmitWithNullCompletionTime() {
+        eventLogger.setCompletionTime(null);
+
+        assertThrows(NullPointerException.class, eventLogger::submit);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[66] eventType has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[77] eventType has private access in org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[89] cannot find symbol
+  symbol:   method assertThrows(java.lang.Class<java.lang.NullPointerException>,eventLogger::submit)
+  location: class org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger_submitTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[96] cannot find symbol
+  symbol:   method assertThrows(java.lang.Class<java.lang.NullPointerException>,eventLogger::submit)
+  location: class org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger_submitTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[103] cannot find symbol
+  symbol:   method assertThrows(java.lang.Class<java.lang.NullPointerException>,eventLogger::submit)
+  location: class org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger_submitTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[110] cannot find symbol
+  symbol:   method assertThrows(java.lang.Class<java.lang.NullPointerException>,eventLogger::submit)
+  location: class org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger_submitTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/mobile/EventLogger_submitTestGenerated.java:[117] cannot find symbol
+  symbol:   method assertThrows(java.lang.Class<java.lang.NullPointerException>,eventLogger::submit)
+  location: class org.eclipse.cargotracker.interfaces.handling.mobile.EventLogger_submitTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: EventLogger_submitTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

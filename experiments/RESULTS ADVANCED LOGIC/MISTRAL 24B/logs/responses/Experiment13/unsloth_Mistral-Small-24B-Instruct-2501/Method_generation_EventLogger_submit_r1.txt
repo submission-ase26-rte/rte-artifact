@@ -1,0 +1,19 @@
+```java
+public void submit() {
+    if (trackingId == null || location == null || eventType == null || voyageNumber == null || completionTime == null) {
+        throw new NullPointerException();
+    }
+
+    HandlingEvent.Type type = eventType.getType();
+
+    Cargo cargo = cargoRepository.findByTrackingId(new TrackingId(trackingId));
+    Location loc = locationRepository.findByUnLocode(new UnLocode(location));
+    Voyage voyage = voyageRepository.findByNumber(new VoyageNumber(voyageNumber));
+
+    HandlingEvent handlingEvent = new HandlingEvent(cargo, completionTime, LocalDateTime.now(), type, loc, voyage);
+    HandlingEventRegistrationAttempt attempt = new HandlingEventRegistrationAttempt(handlingEvent, type.requiresVoyage());
+
+    applicationEvents.receivedHandlingEventRegistrationAttempt(attempt);
+    context.addMessage(null, new FacesMessage("Event submitted successfully"));
+}
+```

@@ -1,0 +1,15 @@
+```java
+public String encode(String input, final Languages.LanguageSet languageSet) {
+        if (languageSet == null) {
+            throw new NullPointerException("languageSet");
+        }
+
+        if (input == null || input.isEmpty()) {
+            return "";
+        }
+
+        final PhonemeBuilder phonemeBuilder = applyFinalRules(new PhonemeBuilder(Languages.ANY), finalRules);
+
+        return phonemeBuilder.toString();
+    }
+```

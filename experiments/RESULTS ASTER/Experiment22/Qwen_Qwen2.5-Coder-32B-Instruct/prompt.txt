@@ -1,0 +1,1494 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Extracted tests for method: crypt(final byte[] original, String salt)
+ * Original class: UnixCrypt
+ * Source: ASTER GPT-4
+ */
+package org.apache.commons.codec.digest;
+
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo22_crypt_UnixCrypt_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithValidInput_wwnM0_fid1() {
+    String original = "hello";
+    String salt = "xy";
+    String expectedOutput = "xya8V9w.cP8Jk"; // Expected output should be precomputed or known valid output
+    String result = UnixCrypt.crypt(original, salt);
+    assertEquals(expectedOutput, result);
+    }
+
+    @Test
+    public void testCryptWithInvalidSalt_iTrb3_EakB0() {
+    byte[] original = "password".getBytes();
+    String salt = "123"; // Invalid salt, should throw exception
+    assertThrows(IllegalArgumentException.class, () -> UnixCrypt.crypt(original, salt));
+    }
+
+    @Test
+    public void testCryptWithInvalidSalt_vmQD3_BZSx0() {
+    byte[] original = "password".getBytes();
+    String salt = "123"; // Invalid salt, should be two characters
+    assertThrows(IllegalArgumentException.class, () -> UnixCrypt.crypt(original, salt));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithValidInput_wwnM0() {
+    String original = "hello";
+    String salt = "xy";
+    String expectedOutput = "xyJ5nqog.skwc"; // Expected output should be precomputed or known valid output
+    String result = UnixCrypt.crypt(original, salt);
+    assertEquals(expectedOutput, result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNullSalt_uMXe0() {
+    byte[] original = "testString".getBytes();
+    String result = UnixCrypt.crypt(original);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithValidSalt_Aztj0_1() {
+    byte[] original = "password".getBytes();
+    String salt = "ab";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithValidSalt_Aztj0_2() {
+    byte[] original = "password".getBytes();
+    String salt = "ab";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("ab"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNullSalt_LgRH1_1() {
+    byte[] original = "password".getBytes();
+    String result = UnixCrypt.crypt(original, null);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNullSalt_LgRH1_2() {
+    byte[] original = "password".getBytes();
+    String result = UnixCrypt.crypt(original, null);
+    assertTrue(result.length() > 2);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithEmptyOriginal_SlSd2_1() {
+    byte[] original = new byte[0];
+    String salt = "xy";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithEmptyOriginal_SlSd2_2() {
+    byte[] original = new byte[0];
+    String salt = "xy";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("xy"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_sBZG4_1() {
+    byte[] original = "aVeryLongPasswordThatExceedsEightChars".getBytes();
+    String salt = "mn";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_sBZG4_2() {
+    byte[] original = "aVeryLongPasswordThatExceedsEightChars".getBytes();
+    String salt = "mn";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("mn"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_CARg5_1() {
+    byte[] original = "p@ssw0rd!".getBytes();
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_CARg5_2() {
+    byte[] original = "p@ssw0rd!".getBytes();
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("cd"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_Mygk6_1() {
+    byte[] original = new byte[8];
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_Mygk6_2() {
+    byte[] original = new byte[8];
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("ef"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNumericPassword_FRpv7_1() {
+    byte[] original = "12345678".getBytes();
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNumericPassword_FRpv7_2() {
+    byte[] original = "12345678".getBytes();
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("gh"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSpecialCharactersInPassword_WUYe8_1() {
+    byte[] original = "!@#$%^&*".getBytes();
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSpecialCharactersInPassword_WUYe8_2() {
+    byte[] original = "!@#$%^&*".getBytes();
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("ij"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNullSaltGeneratesSalt_HIKg1_2() {
+    byte[] original = "password".getBytes();
+    String result = UnixCrypt.crypt(original, null);
+    assertEquals(13, result.length());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithMaximumLengthOriginal_apBC4_1() {
+    byte[] original = new byte[8];
+    for (int i = 0; i < original.length; i++) {
+    original[i] = (byte) (i + 65); // A, B, C, D, E, F, G, H
+    }
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithMaximumLengthOriginal_apBC4_2() {
+    byte[] original = new byte[8];
+    for (int i = 0; i < original.length; i++) {
+    original[i] = (byte) (i + 65); // A, B, C, D, E, F, G, H
+    }
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("cd"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSingleCharacterOriginal_nkug5_1() {
+    byte[] original = "a".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSingleCharacterOriginal_nkug5_2() {
+    byte[] original = "a".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("ef"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_eWHI6_1() {
+    byte[] original = new byte[]{(byte) 0xE2, (byte) 0x98, (byte) 0x83}; // Unicode smiley face
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_eWHI6_2() {
+    byte[] original = new byte[]{(byte) 0xE2, (byte) 0x98, (byte) 0x83}; // Unicode smiley face
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("gh"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_refo7_1() {
+    byte[] original = new byte[8]; // All zeros
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_refo7_2() {
+    byte[] original = new byte[8]; // All zeros
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("ij"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAll255Original_Urgt8_1() {
+    byte[] original = new byte[8];
+    for (int i = 0; i < original.length; i++) {
+    original[i] = (byte) 255; // All 255
+    }
+    String salt = "kl";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAll255Original_Urgt8_2() {
+    byte[] original = new byte[8];
+    for (int i = 0; i < original.length; i++) {
+    original[i] = (byte) 255; // All 255
+    }
+    String salt = "kl";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("kl"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSingleCharacterOriginal_agsr4_1() {
+    byte[] original = "a".getBytes();
+    String salt = "mn";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSingleCharacterOriginal_agsr4_2() {
+    byte[] original = "a".getBytes();
+    String salt = "mn";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("mn"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_uMTn5_1() {
+    byte[] original = "aVeryLongPasswordThatExceedsEightChars".getBytes();
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_uMTn5_2() {
+    byte[] original = "aVeryLongPasswordThatExceedsEightChars".getBytes();
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("cd"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_pLHi6_1() {
+    byte[] original = "psswrd".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_pLHi6_2() {
+    byte[] original = "psswrd".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("ef"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_URoF7_1() {
+    byte[] original = new byte[8];
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_URoF7_2() {
+    byte[] original = new byte[8];
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("gh"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSpecialCharactersInOriginal_asTM8_1() {
+    byte[] original = "!@#$%^&*()".getBytes();
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSpecialCharactersInOriginal_asTM8_2() {
+    byte[] original = "!@#$%^&*()".getBytes();
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("ij"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_fkxh4_1() {
+    byte[] original = "longpasswordthatexceedsblocksize".getBytes();
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_fkxh4_2() {
+    byte[] original = "longpasswordthatexceedsblocksize".getBytes();
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("cd"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_Qbpp5_1() {
+    byte[] original = "p@ssw0rd!".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_Qbpp5_2() {
+    byte[] original = "p@ssw0rd!".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("ef"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithMaxByteValuesOriginal_Evjm7_1() {
+    byte[] original = {127, 127, 127, 127, 127, 127, 127, 127};
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithMaxByteValuesOriginal_Evjm7_2() {
+    byte[] original = {127, 127, 127, 127, 127, 127, 127, 127};
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("ij"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithMinByteValuesOriginal_PTXx8_1() {
+    byte[] original = {-128, -128, -128, -128, -128, -128, -128, -128};
+    String salt = "kl";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithMinByteValuesOriginal_PTXx8_2() {
+    byte[] original = {-128, -128, -128, -128, -128, -128, -128, -128};
+    String salt = "kl";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("kl"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_YuOO4_1() {
+    byte[] original = new byte[8]; // all zeros
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_YuOO4_2() {
+    byte[] original = new byte[8]; // all zeros
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("cd"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_rstG5_1() {
+    byte[] original = "thisisaverylongpasswordthatexceedsnormal".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_rstG5_2() {
+    byte[] original = "thisisaverylongpasswordthatexceedsnormal".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("ef"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_iIGU6_1() {
+    byte[] original = {(byte) 0xE2, (byte) 0x98, (byte) 0x83}; // Unicode characters
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_iIGU6_2() {
+    byte[] original = {(byte) 0xE2, (byte) 0x98, (byte) 0x83}; // Unicode characters
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("gh"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSingleCharacterOriginal_uDWL7_1() {
+    byte[] original = "a".getBytes();
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSingleCharacterOriginal_uDWL7_2() {
+    byte[] original = "a".getBytes();
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("ij"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNumericOriginal_EFlH8_1() {
+    byte[] original = "12345678".getBytes();
+    String salt = "kl";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNumericOriginal_EFlH8_2() {
+    byte[] original = "12345678".getBytes();
+    String salt = "kl";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("kl"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithEmptyOriginal_DhTG2_1() {
+    byte[] original = "".getBytes();
+    String salt = "xy";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithEmptyOriginal_DhTG2_2() {
+    byte[] original = "".getBytes();
+    String salt = "xy";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("xy"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_yXrh4_1() {
+    byte[] original = "thisisaverylongpasswordthatexceedstypicalusage".getBytes();
+    String salt = "mn";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_yXrh4_2() {
+    byte[] original = "thisisaverylongpasswordthatexceedstypicalusage".getBytes();
+    String salt = "mn";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("mn"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNumericOriginal_ZyKg6_1() {
+    byte[] original = "12345678".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNumericOriginal_ZyKg6_2() {
+    byte[] original = "12345678".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("ef"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllPossibleByteValues_GKAL7_1() {
+    byte[] original = new byte[256];
+    for (int i = 0; i < 256; i++) {
+    original[i] = (byte) i;
+    }
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllPossibleByteValues_GKAL7_2() {
+    byte[] original = new byte[256];
+    for (int i = 0; i < 256; i++) {
+    original[i] = (byte) i;
+    }
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("gh"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_tmDV8_1() {
+    byte[] original = new byte[]{(byte) 0xC3, (byte) 0xA9}; //  in UTF-8
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_tmDV8_2() {
+    byte[] original = new byte[]{(byte) 0xC3, (byte) 0xA9}; //  in UTF-8
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("ij"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithMaximumLengthOriginal_qHyM4_1() {
+    byte[] original = new byte[8];
+    for (int i = 0; i < original.length; i++) {
+    original[i] = (byte) (i + 65);
+    }
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithMaximumLengthOriginal_qHyM4_2() {
+    byte[] original = new byte[8];
+    for (int i = 0; i < original.length; i++) {
+    original[i] = (byte) (i + 65);
+    }
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("cd"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSpecialCharactersInOriginal_NxsI5_1() {
+    byte[] original = "!@#$%^&*()".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSpecialCharactersInOriginal_NxsI5_2() {
+    byte[] original = "!@#$%^&*()".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("ef"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_VRXI7_1() {
+    byte[] original = "thisisaverylongpasswordthatexceedstypicalbounds".getBytes();
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_VRXI7_2() {
+    byte[] original = "thisisaverylongpasswordthatexceedstypicalbounds".getBytes();
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("ij"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_sMQN8_1() {
+    byte[] original = new byte[8];
+    String salt = "kl";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_sMQN8_2() {
+    byte[] original = new byte[8];
+    String salt = "kl";
+    String result = UnixCrypt.crypt(original, salt);
+    assertTrue(result.startsWith("kl"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithValidSalt_dJWI1_2() {
+    byte[] original = "password".getBytes();
+    String salt = "ab";
+    String result = UnixCrypt.crypt(original, salt);
+    assertEquals(13, result.length());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithEmptyOriginal_ucEL3_2() {
+    byte[] original = "".getBytes();
+    String salt = "xy";
+    String result = UnixCrypt.crypt(original, salt);
+    assertEquals(13, result.length());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSingleCharacterOriginal_jshA4_2() {
+    byte[] original = "a".getBytes();
+    String salt = "mn";
+    String result = UnixCrypt.crypt(original, salt);
+    assertEquals(13, result.length());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_EWhi5_1() {
+    byte[] original = "longpasswordthatexceedsnormal".getBytes();
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_EWhi5_2() {
+    byte[] original = "longpasswordthatexceedsnormal".getBytes();
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertEquals(13, result.length());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_YXtZ6_2() {
+    byte[] original = "p@ssw0rd!".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertEquals(13, result.length());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_jabH7_2_fid1() {
+    byte[] original = new byte[8];
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertEquals(13, result.length());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllMaxByteOriginal_aQUj8_1() {
+    byte[] original = new byte[]{(byte) 255, (byte) 255, (byte) 255, (byte) 255, (byte) 255, (byte) 255, (byte) 255, (byte) 255};
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllMaxByteOriginal_aQUj8_2() {
+    byte[] original = new byte[]{(byte) 255, (byte) 255, (byte) 255, (byte) 255, (byte) 255, (byte) 255, (byte) 255, (byte) 255};
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertEquals(13, result.length());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSimpleString_fvIV0_1() {
+    String original = "hello";
+    String result = UnixCrypt.crypt(original);
+    assertNotNull(result);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSimpleString_fvIV0_2() {
+    String original = "hello";
+    String result = UnixCrypt.crypt(original);
+    assertNotEquals(original, result);
+    }
+
+    @Test
+    public void testCryptWithInvalidSalt_AqBR3_BkEs0() {
+    byte[] original = "password".getBytes();
+    String salt = "1";
+    assertThrows(IllegalArgumentException.class, () -> UnixCrypt.crypt(original, salt));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithValidSalt_Aztj0() {
+    byte[] original = "password".getBytes();
+    String salt = "ab";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("ab"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNullSalt_LgRH1() {
+    byte[] original = "password".getBytes();
+    String result = UnixCrypt.crypt(original, null);
+    assertNotNull(result);
+    assertTrue(result.length() > 2);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithEmptyOriginal_SlSd2() {
+    byte[] original = new byte[0];
+    String salt = "xy";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("xy"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_sBZG4() {
+    byte[] original = "aVeryLongPasswordThatExceedsEightChars".getBytes();
+    String salt = "mn";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("mn"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_CARg5() {
+    byte[] original = "p@ssw0rd!".getBytes();
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("cd"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_Mygk6() {
+    byte[] original = new byte[8];
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("ef"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNumericPassword_FRpv7() {
+    byte[] original = "12345678".getBytes();
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("gh"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSpecialCharactersInPassword_WUYe8() {
+    byte[] original = "!@#$%^&*".getBytes();
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("ij"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNullSaltGeneratesSalt_HIKg1() {
+    byte[] original = "password".getBytes();
+    String result = UnixCrypt.crypt(original, null);
+    assertNotNull(result);
+    assertEquals(13, result.length());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithMaximumLengthOriginal_apBC4() {
+    byte[] original = new byte[8];
+    for (int i = 0; i < original.length; i++) {
+    original[i] = (byte) (i + 65); // A, B, C, D, E, F, G, H
+    }
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("cd"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSingleCharacterOriginal_nkug5() {
+    byte[] original = "a".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("ef"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_eWHI6() {
+    byte[] original = new byte[]{(byte) 0xE2, (byte) 0x98, (byte) 0x83}; // Unicode smiley face
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("gh"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_refo7() {
+    byte[] original = new byte[8]; // All zeros
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("ij"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAll255Original_Urgt8() {
+    byte[] original = new byte[8];
+    for (int i = 0; i < original.length; i++) {
+    original[i] = (byte) 255; // All 255
+    }
+    String salt = "kl";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("kl"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSingleCharacterOriginal_agsr4() {
+    byte[] original = "a".getBytes();
+    String salt = "mn";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("mn"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_uMTn5() {
+    byte[] original = "aVeryLongPasswordThatExceedsEightChars".getBytes();
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("cd"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_pLHi6() {
+    byte[] original = "psswrd".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("ef"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_URoF7() {
+    byte[] original = new byte[8];
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("gh"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSpecialCharactersInOriginal_asTM8() {
+    byte[] original = "!@#$%^&*()".getBytes();
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("ij"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_fkxh4() {
+    byte[] original = "longpasswordthatexceedsblocksize".getBytes();
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("cd"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_Qbpp5() {
+    byte[] original = "p@ssw0rd!".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("ef"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithMaxByteValuesOriginal_Evjm7() {
+    byte[] original = {127, 127, 127, 127, 127, 127, 127, 127};
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("ij"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithMinByteValuesOriginal_PTXx8() {
+    byte[] original = {-128, -128, -128, -128, -128, -128, -128, -128};
+    String salt = "kl";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("kl"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_YuOO4() {
+    byte[] original = new byte[8]; // all zeros
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("cd"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_rstG5() {
+    byte[] original = "thisisaverylongpasswordthatexceedsnormal".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("ef"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_iIGU6() {
+    byte[] original = {(byte) 0xE2, (byte) 0x98, (byte) 0x83}; // Unicode characters
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("gh"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSingleCharacterOriginal_uDWL7() {
+    byte[] original = "a".getBytes();
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("ij"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNumericOriginal_EFlH8() {
+    byte[] original = "12345678".getBytes();
+    String salt = "kl";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("kl"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithEmptyOriginal_DhTG2() {
+    byte[] original = "".getBytes();
+    String salt = "xy";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("xy"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_yXrh4() {
+    byte[] original = "thisisaverylongpasswordthatexceedstypicalusage".getBytes();
+    String salt = "mn";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("mn"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNumericOriginal_ZyKg6() {
+    byte[] original = "12345678".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("ef"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllPossibleByteValues_GKAL7() {
+    byte[] original = new byte[256];
+    for (int i = 0; i < 256; i++) {
+    original[i] = (byte) i;
+    }
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("gh"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_tmDV8() {
+    byte[] original = new byte[]{(byte) 0xC3, (byte) 0xA9}; //  in UTF-8
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("ij"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithMaximumLengthOriginal_qHyM4() {
+    byte[] original = new byte[8];
+    for (int i = 0; i < original.length; i++) {
+    original[i] = (byte) (i + 65);
+    }
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("cd"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSpecialCharactersInOriginal_NxsI5() {
+    byte[] original = "!@#$%^&*()".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("ef"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_VRXI7() {
+    byte[] original = "thisisaverylongpasswordthatexceedstypicalbounds".getBytes();
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("ij"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_sMQN8() {
+    byte[] original = new byte[8];
+    String salt = "kl";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("kl"));
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllPossibleSingleCharOriginal_mtXu7() {
+    for (int i = 0; i < 256; i++) {
+    byte[] original = new byte[]{(byte) i};
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith("gh"));
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllPossibleDoubleCharSalt_CcpS8() {
+    byte[] original = "user".getBytes();
+    for (char i = 'a'; i <= 'z'; i++) {
+    for (char j = 'a'; j <= 'z'; j++) {
+    String salt = "" + i + j;
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertTrue(result.startsWith(salt));
+    }
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithValidSalt_dJWI1() {
+    byte[] original = "password".getBytes();
+    String salt = "ab";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertEquals(13, result.length());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithEmptyOriginal_ucEL3() {
+    byte[] original = "".getBytes();
+    String salt = "xy";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertEquals(13, result.length());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSingleCharacterOriginal_jshA4() {
+    byte[] original = "a".getBytes();
+    String salt = "mn";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertEquals(13, result.length());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithLongOriginal_EWhi5() {
+    byte[] original = "longpasswordthatexceedsnormal".getBytes();
+    String salt = "cd";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertEquals(13, result.length());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithNonAsciiCharacters_YXtZ6() {
+    byte[] original = "p@ssw0rd!".getBytes();
+    String salt = "ef";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertEquals(13, result.length());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllZeroOriginal_jabH7() {
+    byte[] original = new byte[8];
+    String salt = "gh";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertEquals(13, result.length());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithAllMaxByteOriginal_aQUj8() {
+    byte[] original = new byte[]{(byte) 255, (byte) 255, (byte) 255, (byte) 255, (byte) 255, (byte) 255, (byte) 255, (byte) 255};
+    String salt = "ij";
+    String result = UnixCrypt.crypt(original, salt);
+    assertNotNull(result);
+    assertEquals(13, result.length());
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testCryptWithSimpleString_fvIV0() {
+    String original = "hello";
+    String result = UnixCrypt.crypt(original);
+    assertNotNull(result);
+    assertNotEquals(original, result);
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 134/137 passed
+
+TEST STATUS:
+- PASSED (134): testCryptWithValidInput_wwnM0, testCryptWithNullSalt_uMXe0, testCryptWithValidSalt_Aztj0_1, testCryptWithValidSalt_Aztj0_2, testCryptWithNullSalt_LgRH1_1, testCryptWithNullSalt_LgRH1_2, testCryptWithEmptyOriginal_SlSd2_1, testCryptWithEmptyOriginal_SlSd2_2, testCryptWithLongOriginal_sBZG4_1, testCryptWithLongOriginal_sBZG4_2, testCryptWithNonAsciiCharacters_CARg5_1, testCryptWithNonAsciiCharacters_CARg5_2, testCryptWithAllZeroOriginal_Mygk6_1, testCryptWithAllZeroOriginal_Mygk6_2, testCryptWithNumericPassword_FRpv7_1, testCryptWithNumericPassword_FRpv7_2, testCryptWithSpecialCharactersInPassword_WUYe8_1, testCryptWithSpecialCharactersInPassword_WUYe8_2, testCryptWithNullSaltGeneratesSalt_HIKg1_2, testCryptWithMaximumLengthOriginal_apBC4_1, testCryptWithMaximumLengthOriginal_apBC4_2, testCryptWithSingleCharacterOriginal_nkug5_1, testCryptWithSingleCharacterOriginal_nkug5_2, testCryptWithNonAsciiCharacters_eWHI6_1, testCryptWithNonAsciiCharacters_eWHI6_2, testCryptWithAllZeroOriginal_refo7_1, testCryptWithAllZeroOriginal_refo7_2, testCryptWithAll255Original_Urgt8_1, testCryptWithAll255Original_Urgt8_2, testCryptWithSingleCharacterOriginal_agsr4_1, testCryptWithSingleCharacterOriginal_agsr4_2, testCryptWithLongOriginal_uMTn5_1, testCryptWithLongOriginal_uMTn5_2, testCryptWithNonAsciiCharacters_pLHi6_1, testCryptWithNonAsciiCharacters_pLHi6_2, testCryptWithAllZeroOriginal_URoF7_1, testCryptWithAllZeroOriginal_URoF7_2, testCryptWithSpecialCharactersInOriginal_asTM8_1, testCryptWithSpecialCharactersInOriginal_asTM8_2, testCryptWithLongOriginal_fkxh4_1, testCryptWithLongOriginal_fkxh4_2, testCryptWithNonAsciiCharacters_Qbpp5_1, testCryptWithNonAsciiCharacters_Qbpp5_2, testCryptWithMaxByteValuesOriginal_Evjm7_1, testCryptWithMaxByteValuesOriginal_Evjm7_2, testCryptWithMinByteValuesOriginal_PTXx8_1, testCryptWithMinByteValuesOriginal_PTXx8_2, testCryptWithAllZeroOriginal_YuOO4_1, testCryptWithAllZeroOriginal_YuOO4_2, testCryptWithLongOriginal_rstG5_1, testCryptWithLongOriginal_rstG5_2, testCryptWithNonAsciiCharacters_iIGU6_1, testCryptWithNonAsciiCharacters_iIGU6_2, testCryptWithSingleCharacterOriginal_uDWL7_1, testCryptWithSingleCharacterOriginal_uDWL7_2, testCryptWithNumericOriginal_EFlH8_1, testCryptWithNumericOriginal_EFlH8_2, testCryptWithEmptyOriginal_DhTG2_1, testCryptWithEmptyOriginal_DhTG2_2, testCryptWithLongOriginal_yXrh4_1, testCryptWithLongOriginal_yXrh4_2, testCryptWithNumericOriginal_ZyKg6_1, testCryptWithNumericOriginal_ZyKg6_2, testCryptWithAllPossibleByteValues_GKAL7_1, testCryptWithAllPossibleByteValues_GKAL7_2, testCryptWithNonAsciiCharacters_tmDV8_1, testCryptWithNonAsciiCharacters_tmDV8_2, testCryptWithMaximumLengthOriginal_qHyM4_1, testCryptWithMaximumLengthOriginal_qHyM4_2, testCryptWithSpecialCharactersInOriginal_NxsI5_1, testCryptWithSpecialCharactersInOriginal_NxsI5_2, testCryptWithLongOriginal_VRXI7_1, testCryptWithLongOriginal_VRXI7_2, testCryptWithAllZeroOriginal_sMQN8_1, testCryptWithAllZeroOriginal_sMQN8_2, testCryptWithValidSalt_dJWI1_2, testCryptWithEmptyOriginal_ucEL3_2, testCryptWithSingleCharacterOriginal_jshA4_2, testCryptWithLongOriginal_EWhi5_1, testCryptWithLongOriginal_EWhi5_2, testCryptWithNonAsciiCharacters_YXtZ6_2, testCryptWithAllZeroOriginal_jabH7_2_fid1, testCryptWithAllMaxByteOriginal_aQUj8_1, testCryptWithAllMaxByteOriginal_aQUj8_2, testCryptWithSimpleString_fvIV0_1, testCryptWithSimpleString_fvIV0_2, testCryptWithInvalidSalt_AqBR3_BkEs0, testCryptWithValidSalt_Aztj0, testCryptWithNullSalt_LgRH1, testCryptWithEmptyOriginal_SlSd2, testCryptWithLongOriginal_sBZG4, testCryptWithNonAsciiCharacters_CARg5, testCryptWithAllZeroOriginal_Mygk6, testCryptWithNumericPassword_FRpv7, testCryptWithSpecialCharactersInPassword_WUYe8, testCryptWithNullSaltGeneratesSalt_HIKg1, testCryptWithMaximumLengthOriginal_apBC4, testCryptWithSingleCharacterOriginal_nkug5, testCryptWithNonAsciiCharacters_eWHI6, testCryptWithAllZeroOriginal_refo7, testCryptWithAll255Original_Urgt8, testCryptWithSingleCharacterOriginal_agsr4, testCryptWithLongOriginal_uMTn5, testCryptWithNonAsciiCharacters_pLHi6, testCryptWithAllZeroOriginal_URoF7, testCryptWithSpecialCharactersInOriginal_asTM8, testCryptWithLongOriginal_fkxh4, testCryptWithNonAsciiCharacters_Qbpp5, testCryptWithMaxByteValuesOriginal_Evjm7, testCryptWithMinByteValuesOriginal_PTXx8, testCryptWithAllZeroOriginal_YuOO4, testCryptWithLongOriginal_rstG5, testCryptWithNonAsciiCharacters_iIGU6, testCryptWithSingleCharacterOriginal_uDWL7, testCryptWithNumericOriginal_EFlH8, testCryptWithEmptyOriginal_DhTG2, testCryptWithLongOriginal_yXrh4, testCryptWithNumericOriginal_ZyKg6, testCryptWithAllPossibleByteValues_GKAL7, testCryptWithNonAsciiCharacters_tmDV8, testCryptWithMaximumLengthOriginal_qHyM4, testCryptWithSpecialCharactersInOriginal_NxsI5, testCryptWithLongOriginal_VRXI7, testCryptWithAllZeroOriginal_sMQN8, testCryptWithAllPossibleSingleCharOriginal_mtXu7, testCryptWithAllPossibleDoubleCharSalt_CcpS8, testCryptWithValidSalt_dJWI1, testCryptWithEmptyOriginal_ucEL3, testCryptWithSingleCharacterOriginal_jshA4, testCryptWithLongOriginal_EWhi5, testCryptWithNonAsciiCharacters_YXtZ6, testCryptWithAllZeroOriginal_jabH7, testCryptWithAllMaxByteOriginal_aQUj8, testCryptWithSimpleString_fvIV0
+- FAILED (3): testCryptWithValidInput_wwnM0_fid1, testCryptWithInvalidSalt_iTrb3_EakB0, testCryptWithInvalidSalt_vmQD3_BZSx0
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   StandardCharsets -> java.nio.charset.StandardCharsets
+//   SecureRandom -> java.security.SecureRandom
+//   Arrays -> java.util.Arrays
+//   Pattern -> java.util.regex.Pattern
+//   UnixCrypt -> org.apache.commons.codec.digest.UnixCrypt
+
+// === Class: UnixCrypt ===
+// Fields (with actual visibility):
+    private static final String CRYPT_SALT_REGEX;
+    private static final Pattern CRYPT_SALT_PATTERN;
+    private static final int[] CON_SALT;
+    private static final int[] COV2CHAR;
+    private static final char[] SALT_CHARS;
+    private static final boolean[] SHIFT2;
+    private static final int[][] SKB;
+    private static final int[][] SPTRANS;
+
+// Constructors:
+public UnixCrypt();
+
+// Internal Methods (full implementation for context):
+    private static int[] desSetKey(final byte[] key) {
+        final int[] schedule = new int[32];
+        int c = fourBytesToInt(key, 0);
+        int d = fourBytesToInt(key, 4);
+        final int[] results = new int[2];
+        permOp(d, c, 4, 0xf0f0f0f, results);
+        d = results[0];
+        c = results[1];
+        c = hPermOp(c, -2, 0xcccc0000);
+        d = hPermOp(d, -2, 0xcccc0000);
+        permOp(d, c, 1, 0x55555555, results);
+        d = results[0];
+        c = results[1];
+        permOp(c, d, 8, 0xff00ff, results);
+        c = results[0];
+        d = results[1];
+        permOp(d, c, 1, 0x55555555, results);
+        d = results[0];
+        c = results[1];
+        d = (d & 0xff) << 16 | d & 0xff00 | (d & 0xff0000) >>> 16 | (c & 0xf0000000) >>> 4;
+        c &= 0xfffffff;
+        int j = 0;
+        for (int i = 0; i < 16; i++) {
+            if (SHIFT2[i]) {
+                c = c >>> 2 | c << 26;
+                d = d >>> 2 | d << 26;
+            } else {
+                c = c >>> 1 | c << 27;
+                d = d >>> 1 | d << 27;
+            }
+            c &= 0xfffffff;
+            d &= 0xfffffff;
+            int s = SKB[0][c & 0x3f] | SKB[1][c >>> 6 & 0x3 | c >>> 7 & 0x3c] |
+                    SKB[2][c >>> 13 & 0xf | c >>> 14 & 0x30] |
+                    SKB[3][c >>> 20 & 0x1 | c >>> 21 & 0x6 | c >>> 22 & 0x38];
+            final int t = SKB[4][d & 0x3f] | SKB[5][d >>> 7 & 0x3 | d >>> 8 & 0x3c] | SKB[6][d >>> 15 & 0x3f] |
+                    SKB[7][d >>> 21 & 0xf | d >>> 22 & 0x30];
+            schedule[j++] = t << 16 | s & 0xffff;
+            s = s >>> 16 | t & 0xffff0000;
+            s = s << 4 | s >>> 28;
+            schedule[j++] = s;
+        }
+
+        return schedule;
+    }
+    private static void intToFourBytes(final int iValue, final byte[] b, int offset) {
+        b[offset++] = (byte) (iValue & 0xff);
+        b[offset++] = (byte) (iValue >>> 8 & 0xff);
+        b[offset++] = (byte) (iValue >>> 16 & 0xff);
+        b[offset++] = (byte) (iValue >>> 24 & 0xff);
+    }
+    private static int[] body(final int[] schedule, final int eSwap0, final int eSwap1) {
+        int left = 0;
+        int right = 0;
+        int t = 0;
+        for (int j = 0; j < 25; j++) {
+            for (int i = 0; i < 32; i += 4) {
+                left = dEncrypt(left, right, i, eSwap0, eSwap1, schedule);
+                right = dEncrypt(right, left, i + 2, eSwap0, eSwap1, schedule);
+            }
+            t = left;
+            left = right;
+            right = t;
+        }
+
+        t = right;
+        right = left >>> 1 | left << 31;
+        left = t >>> 1 | t << 31;
+        final int[] results = new int[2];
+        permOp(right, left, 1, 0x55555555, results);
+        right = results[0];
+        left = results[1];
+        permOp(left, right, 8, 0xff00ff, results);
+        left = results[0];
+        right = results[1];
+        permOp(right, left, 2, 0x33333333, results);
+        right = results[0];
+        left = results[1];
+        permOp(left, right, 16, 65535, results);
+        left = results[0];
+        right = results[1];
+        permOp(right, left, 4, 0xf0f0f0f, results);
+        right = results[0];
+        left = results[1];
+        final int[] out = new int[2];
+        out[0] = left;
+        out[1] = right;
+        return out;
+    }
+
+
+
+
+TASK:
+Regenerate ONLY the method "crypt" OF CLASS "UnixCrypt" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public static String crypt(final byte[] original, String salt) {
+    // your implementation here
+}
+```
+
+- Package: org.apache.commons.codec.digest
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "crypt"
+- Allowed imports: exactly those already present in UnixCrypt
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

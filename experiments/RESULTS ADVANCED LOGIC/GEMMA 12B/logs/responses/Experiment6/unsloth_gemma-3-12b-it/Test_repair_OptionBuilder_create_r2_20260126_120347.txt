@@ -1,0 +1,134 @@
+```java
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.apache.commons.cli.OptionBuilder.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class OptionBuilder_createTestGenerated {
+
+    private static OptionValidator resetValidator;
+
+    @BeforeEach
+    public void setUp() {
+        resetValidator = new OptionValidator();
+        reset();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        resetValidator = null;
+        reset();
+    }
+
+    @Test
+    void testCreateWithDefaults() {
+        longOption = "longOpt";
+        description = "Description";
+        argName = "argName";
+        required = true;
+        argCount = 1;
+        type = String.class;
+        optionalArg = false;
+        valueSeparator = ' ';
+
+        Option option = create("o");
+        assertEquals("o", option.getOpt());
+        assertEquals("longOpt", option.getLongOpt());
+        assertTrue(option.isRequired());
+        assertFalse(option.isOptionalArg());
+        assertEquals(1, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals(" ", option.getValueSeparator());
+        assertEquals("argName", option.getArgName());
+        assertEquals("Description", option.getDescription());
+    }
+
+    @Test
+    void testCreateWithOptionalArg() {
+        longOption = "longOpt";
+        description = "Description";
+        argName = "argName";
+        required = false;
+        argCount = Option.UNLIMITED_VALUES;
+        type = Integer.class;
+        optionalArg = true;
+        valueSeparator = ',';
+
+        Option option = create("o");
+        assertEquals("o", option.getOpt());
+        assertEquals("longOpt", option.getLongOpt());
+        assertFalse(option.isRequired());
+        assertTrue(option.isOptionalArg());
+        assertEquals(Option.UNLIMITED_VALUES, option.getArgs());
+        assertEquals(Integer.class, option.getType());
+        assertEquals(',', option.getValueSeparator());
+        assertEquals("argName", option.getArgName());
+        assertEquals("Description", option.getDescription());
+    }
+
+    @Test
+    void testCreateWithConverter() {
+        longOption = "longOpt";
+        description = "Description";
+        argName = "argName";
+        required = false;
+        argCount = 1;
+        type = Integer.class;
+        optionalArg = false;
+        valueSeparator = ' ';
+
+        Option option = create("o");
+        assertEquals("o", option.getOpt());
+        assertEquals("longOpt", option.getLongOpt());
+        assertFalse(option.isRequired());
+        assertFalse(option.isOptionalArg());
+        assertEquals(1, option.getArgs());
+        assertEquals(Integer.class, option.getType());
+        assertEquals(" ", option.getValueSeparator());
+        assertEquals("argName", option.getArgName());
+        assertEquals("Description", option.getDescription());
+
+    }
+
+    @Test
+    void testCreateWithInvalidOptionCharacter() {
+        longOption = "longOpt";
+        description = "Description";
+        argName = "argName";
+        required = false;
+        argCount = 1;
+        type = String.class;
+        optionalArg = false;
+        valueSeparator = ' ';
+
+        assertThrows(IllegalArgumentException.class, () -> create("\0"));
+    }
+
+    private static String longOption;
+    private static String description;
+    private static String argName;
+    private static boolean required;
+    private static int argCount;
+    private static Class<?> type;
+    private static boolean optionalArg;
+    private static char valueSeparator;
+
+    private static void reset() {
+        longOption = null;
+        description = null;
+        argName = null;
+        required = false;
+        argCount = 0;
+        type = null;
+        optionalArg = false;
+        valueSeparator = ' ';
+    }
+}
+```

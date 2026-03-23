@@ -1,0 +1,113 @@
+```java
+package org.springframework.samples.petclinic.owner;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+
+public class OwnerController_processFindFormTestGenerated {
+
+	@Mock
+	private OwnerService ownerService;
+
+	@Mock
+	private Model model;
+
+	@Mock
+	private BindingResult result;
+
+	private MockMvc mockMvc;
+
+	@BeforeEach
+	public void setUp() {
+		MockitoAnnotations.initMocks(this);
+		mockMvc = MockMvcBuilders.standaloneSetup(new OwnerController(ownerService)).build();
+	}
+
+	@AfterEach
+	public void tearDown() {
+		// No resources to release in this test
+	}
+
+	@Test
+	public void testProcessFindFormNoLastName() throws Exception {
+		Page<Owner> page = PageImpl.of(List.of(new Owner()));
+		when(ownerService.findPaginatedForOwnersLastName(1, ""))
+				.thenReturn(page);
+		mockMvc.perform(get("/owners"))
+				.andExpect(view().name("owners/findOwners"))
+				.andExpect(model().attribute("ownersResults", page));
+	}
+
+	@Test
+	public void testProcessFindFormLastNameNotFound() throws Exception {
+		Owner owner = new Owner();
+		owner.setLastName("NonExistent");
+		when(ownerService.findPaginatedForOwnersLastName(1, "NonExistent")).thenReturn(PageImpl.empty());
+		mockMvc.perform(get("/owners").param("lastName", "NonExistent"))
+				.andExpect(view().name("owners/findOwners"))
+				.andExpect(model().attribute("owner", owner))
+				.andExpect(model().attribute("result", result));
+	}
+
+	@Test
+	public void testProcessFindFormLastNameSingleOwner() throws Exception {
+		Owner owner = new Owner();
+		owner.setId(1);
+		owner.setLastName("Smith");
+		Page<Owner> page = PageImpl.of(List.of(owner));
+		when(ownerService.findPaginatedForOwnersLastName(1, "Smith")).thenReturn(page);
+
+		mockMvc.perform(get("/owners").param("lastName", "Smith"))
+				.andExpect(view().name("redirect:/owners/1"));
+	}
+
+	@Test
+	public void testProcessFindFormLastNameMultipleOwners() throws Exception {
+		Owner owner1 = new Owner();
+		owner1.setId(1);
+		owner1.setLastName("Smith");
+		Owner owner2 = new Owner();
+		owner2.setId(2);
+		owner2.setLastName("Smith");
+
+		Page<Owner> page = PageImpl.of(List.of(owner1, owner2));
+		when(ownerService.findPaginatedForOwnersLastName(1, "Smith")).thenReturn(page);
+
+		mockMvc.perform(get("/owners").param("lastName", "Smith"))
+				.andExpect(view().name("owners/findOwners"))
+				.andExpect(model().attribute("ownersResults", page));
+	}
+
+	@Test
+	public void testProcessFindFormWithPageParameter() throws Exception {
+		Owner owner = new Owner();
+		owner.setLastName("Smith");
+		Page<Owner> page = PageImpl.of(List.of(new Owner()));
+		when(ownerService.findPaginatedForOwnersLastName(2, "Smith")).thenReturn(page);
+		mockMvc.perform(get("/owners").param("page", "2").param("lastName", "Smith"))
+				.andExpect(view().name("owners/findOwners"))
+				.andExpect(model().attribute("ownersResults", page));
+	}
+}
+```

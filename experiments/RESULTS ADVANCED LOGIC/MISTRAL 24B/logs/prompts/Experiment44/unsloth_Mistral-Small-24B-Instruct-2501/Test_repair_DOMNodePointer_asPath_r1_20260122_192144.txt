@@ -1,0 +1,242 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.ri.model.dom;
+Class name (MUST be exactly): DOMNodePointer_asPathTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.jxpath.ri.model.dom;
+
+import org.apache.commons.jxpath.JXPathAbstractFactoryException;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.ri.Compiler;
+import org.apache.commons.jxpath.ri.NamespaceResolver;
+import org.apache.commons.jxpath.ri.QName;
+import org.apache.commons.jxpath.ri.compiler.NodeNameTest;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.compiler.NodeTypeTest;
+import org.apache.commons.jxpath.ri.compiler.ProcessingInstructionTest;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.apache.commons.jxpath.ri.model.beans.NullPointer;
+import org.apache.commons.jxpath.util.TypeUtils;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Comment;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.ProcessingInstruction;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class DOMNodePointer_asPathTestGenerated {
+
+    @Mock
+    private Node node;
+    @Mock
+    private Locale locale;
+    @Mock
+    private NamespaceResolver namespaceResolver;
+    @Mock
+    private NodePointer parent;
+
+    private DOMNodePointer domNodePointer;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        domNodePointer = new DOMNodePointer(node, locale);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        domNodePointer = null;
+    }
+
+    @Test
+    public void testAsPathWithId() {
+        domNodePointer = new DOMNodePointer(node, locale, "testId");
+        String path = domNodePointer.asPath();
+        assertEquals("id('testId')", path);
+    }
+
+    @Test
+    public void testAsPathWithElementNode() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getParentNode()).thenReturn(null);
+        when(domNodePointer.getNamespaceURI()).thenReturn(null);
+        when(domNodePointer.getRelativePositionByQName()).thenReturn(1);
+        when(domNodePointer.getNamespaceResolver()).thenReturn(namespaceResolver);
+        when(namespaceResolver.getPrefix(null)).thenReturn(null);
+        String path = domNodePointer.asPath();
+        assertEquals("/element[1]", path);
+    }
+
+    @Test
+    public void testAsPathWithElementNodeWithNamespace() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(node.getParentNode()).thenReturn(null);
+        when(domNodePointer.getNamespaceURI()).thenReturn("http://example.com");
+        when(domNodePointer.getRelativePositionByQName()).thenReturn(1);
+        when(domNodePointer.getNamespaceResolver()).thenReturn(namespaceResolver);
+        when(namespaceResolver.getPrefix("http://example.com")).thenReturn("ns");
+        String path = domNodePointer.asPath();
+        assertEquals("/ns:element[1]", path);
+    }
+
+    @Test
+    public void testAsPathWithTextNode() {
+        when(node.getNodeType()).thenReturn(Node.TEXT_NODE);
+        when(domNodePointer.getRelativePositionOfTextNode()).thenReturn(1);
+        String path = domNodePointer.asPath();
+        assertEquals("/text()[1]", path);
+    }
+
+    @Test
+    public void testAsPathWithProcessingInstructionNode() {
+        when(node.getNodeType()).thenReturn(Node.PROCESSING_INSTRUCTION_NODE);
+        when(((ProcessingInstruction) node).getTarget()).thenReturn("target");
+        when(domNodePointer.getRelativePositionOfPI()).thenReturn(1);
+        String path = domNodePointer.asPath();
+        assertEquals("/processing-instruction('target')[1]", path);
+    }
+
+    @Test
+    public void testAsPathWithDocumentNode() {
+        when(node.getNodeType()).thenReturn(Node.DOCUMENT_NODE);
+        String path = domNodePointer.asPath();
+        assertEquals("", path);
+    }
+
+    @Test
+    public void testAsPathWithNullParent() {
+        when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(node.getLocalName()).thenReturn("element");
+        when(domNodePointer.getNamespaceURI()).thenReturn(null);
+        when(domNodePointer.getRelativePositionByQName()).thenReturn(1);
+        when(domNodePointer.getNamespaceResolver()).thenReturn(namespaceResolver);
+        when(namespaceResolver.getPrefix(null)).thenReturn(null);
+        String path = domNodePointer.asPath();
+        assertEquals("/element[1]", path);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[74] cannot find symbol
+  symbol:   method when(short)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[75] cannot find symbol
+  symbol:   method when(java.lang.String)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[76] cannot find symbol
+  symbol:   method when(org.w3c.dom.Node)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[77] cannot find symbol
+  symbol:   method when(java.lang.String)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[78] cannot find symbol
+  symbol:   method when(int)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[78] getRelativePositionByQName() has private access in org.apache.commons.jxpath.ri.model.dom.DOMNodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[79] cannot find symbol
+  symbol:   method when(org.apache.commons.jxpath.ri.NamespaceResolver)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[80] cannot find symbol
+  symbol:   method when(java.lang.String)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[87] cannot find symbol
+  symbol:   method when(short)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[88] cannot find symbol
+  symbol:   method when(java.lang.String)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[89] cannot find symbol
+  symbol:   method when(org.w3c.dom.Node)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[90] cannot find symbol
+  symbol:   method when(java.lang.String)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[91] cannot find symbol
+  symbol:   method when(int)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[91] getRelativePositionByQName() has private access in org.apache.commons.jxpath.ri.model.dom.DOMNodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[92] cannot find symbol
+  symbol:   method when(org.apache.commons.jxpath.ri.NamespaceResolver)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[93] cannot find symbol
+  symbol:   method when(java.lang.String)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[100] cannot find symbol
+  symbol:   method when(short)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[101] cannot find symbol
+  symbol:   method when(int)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[101] getRelativePositionOfTextNode() has private access in org.apache.commons.jxpath.ri.model.dom.DOMNodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[108] cannot find symbol
+  symbol:   method when(short)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[109] cannot find symbol
+  symbol:   method when(java.lang.String)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[110] cannot find symbol
+  symbol:   method when(int)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[110] getRelativePositionOfPI() has private access in org.apache.commons.jxpath.ri.model.dom.DOMNodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[117] cannot find symbol
+  symbol:   method when(short)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[124] cannot find symbol
+  symbol:   method when(short)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[125] cannot find symbol
+  symbol:   method when(java.lang.String)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[126] cannot find symbol
+  symbol:   method when(java.lang.String)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[127] cannot find symbol
+  symbol:   method when(int)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[127] getRelativePositionByQName() has private access in org.apache.commons.jxpath.ri.model.dom.DOMNodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[128] cannot find symbol
+  symbol:   method when(org.apache.commons.jxpath.ri.NamespaceResolver)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer_asPathTestGenerated.java:[129] cannot find symbol
+  symbol:   method when(java.lang.String)
+  location: class org.apache.commons.jxpath.ri.model.dom.DOMNodePointer_asPathTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: DOMNodePointer_asPathTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

@@ -1,0 +1,55 @@
+```java
+public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception {
+    Connection conn = null;
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
+    RunStatsDataBean result = new RunStatsDataBean();
+
+    try {
+        conn = datasource.getConnection();
+        conn.setAutoCommit(false);
+
+        if (deleteAll) {
+            stmt = getStatement(conn, "DELETE FROM ALL_TABLES");
+            stmt.executeUpdate();
+        } else {
+            stmt = getStatement(conn, "SELECT * FROM STATS_TABLE");
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                result.setTradeUserCount(rs.getInt("tradeUserCount"));
+                result.setTradeStockCount(rs.getInt("tradeStockCount"));
+                result.setNewUserCount(rs.getInt("newUserCount"));
+                result.setSumLoginCount(rs.getInt("sumLoginCount"));
+                result.setSumLogoutCount(rs.getInt("sumLogoutCount"));
+                result.setHoldingCount(rs.getInt("holdingCount"));
+                result.setOrderCount(rs.getInt("orderCount"));
+                result.setBuyOrderCount(rs.getInt("buyOrderCount"));
+                result.setSellOrderCount(rs.getInt("sellOrderCount"));
+                result.setCancelledOrderCount(rs.getInt("cancelledOrderCount"));
+                result.setOpenOrderCount(rs.getInt("openOrderCount"));
+                result.setDeletedOrderCount(rs.getInt("deletedOrderCount"));
+            }
+        }
+
+        conn.commit();
+    } catch (SQLException e) {
+        Log.error("Database operation failed: " + e.getMessage());
+        if (conn != null) {
+            conn.rollback();
+        }
+        throw e;
+    } finally {
+        if (rs != null) {
+            rs.close();
+        }
+        if (stmt != null) {
+            stmt.close();
+        }
+        if (conn != null) {
+            conn.close();
+        }
+    }
+
+    return result;
+}
+```

@@ -1,0 +1,172 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.MDBStats;
+import java.sql.*;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class TradeDirectDBUtils_resetTradeTestGenerated {
+    private DataSource datasource;
+    private TradeDirectDBUtils tradeDirectDBUtils;
+
+    @BeforeEach
+    void setUp() {
+        datasource = mock(DataSource.class);
+        tradeDirectDBUtils = new TradeDirectDBUtils();
+        ReflectionTestUtils.setField(tradeDirectDBUtils, "datasource", datasource);
+    }
+
+    @AfterEach
+    void tearDown() {
+        tradeDirectDBUtils = null;
+    }
+
+    @Test
+    void testResetTradeDeletesSpecificTables() throws Exception {
+        try (MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class);
+             MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            Connection conn = mock(Connection.class);
+            when(datasource.getConnection()).thenReturn(conn);
+            PreparedStatement stmt = mock(PreparedStatement.class);
+            when(conn.prepareStatement(anyString())).thenReturn(stmt);
+            ResultSet rs = mock(ResultSet.class);
+            when(stmt.executeQuery()).thenReturn(rs);
+            when(rs.next()).thenReturn(true);
+            mockedMDBStats.when(() -> MDBStats.getInstance()).thenReturn(mock(MDBStats.class));
+            mockedLog.when(() -> Log.error(anyString())).thenAnswer(i -> { throw new RuntimeException(); });
+            tradeDirectDBUtils.resetTrade(false);
+            verify(stmt, times(1)).executeUpdate();
+        }
+    }
+
+    @Test
+    void testResetTradeSetsCancelledOrderCount() throws Exception {
+        try (MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class);
+             MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            Connection conn = mock(Connection.class);
+            when(datasource.getConnection()).thenReturn(conn);
+            PreparedStatement stmt = mock(PreparedStatement.class);
+            when(conn.prepareStatement(anyString())).thenReturn(stmt);
+            when(stmt.executeUpdate()).thenReturn(100);
+            mockedMDBStats.when(() -> MDBStats.getInstance()).thenReturn(mock(MDBStats.class));
+            mockedLog.when(() -> Log.error(anyString())).thenAnswer(i -> { throw new RuntimeException(); });
+            RunStatsDataBean result = tradeDirectDBUtils.resetTrade(false);
+            assertEquals(100, result.getCancelledOrderCount());
+        }
+    }
+
+    @Test
+    void testResetTradeSetsDeletedOrderCount() throws Exception {
+        try (MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class);
+             MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            Connection conn = mock(Connection.class);
+            when(datasource.getConnection()).thenReturn(conn);
+            PreparedStatement stmt = mock(PreparedStatement.class);
+            when(conn.prepareStatement(anyString())).thenReturn(stmt);
+            when(stmt.executeUpdate()).thenReturn(120);
+            mockedMDBStats.when(() -> MDBStats.getInstance()).thenReturn(mock(MDBStats.class));
+            mockedLog.when(() -> Log.error(anyString())).thenAnswer(i -> { throw new RuntimeException(); });
+            RunStatsDataBean result = tradeDirectDBUtils.resetTrade(false);
+            assertEquals(120, result.getDeletedOrderCount());
+        }
+    }
+
+    @Test
+    void testResetTradeSetsNewUserCount() throws Exception {
+        try (MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class);
+             MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            Connection conn = mock(Connection.class);
+            when(datasource.getConnection()).thenReturn(conn);
+            PreparedStatement stmt = mock(PreparedStatement.class);
+            when(conn.prepareStatement(anyString())).thenReturn(stmt);
+            when(stmt.executeUpdate()).thenReturn(10);
+            mockedMDBStats.when(() -> MDBStats.getInstance()).thenReturn(mock(MDBStats.class));
+            mockedLog.when(() -> Log.error(anyString())).thenAnswer(i -> { throw new RuntimeException(); });
+            RunStatsDataBean result = tradeDirectDBUtils.resetTrade(false);
+            assertEquals(10, result.getNewUserCount());
+        }
+    }
+
+    @Test
+    void testResetTradeNotDeleteAll() throws Exception {
+        try (MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class);
+             MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            Connection conn = mock(Connection.class);
+            when(datasource.getConnection()).thenReturn(conn);
+            PreparedStatement stmt = mock(PreparedStatement.class);
+            when(conn.prepareStatement(anyString())).thenReturn(stmt);
+            ResultSet rs = mock(ResultSet.class);
+            when(stmt.executeQuery()).thenReturn(rs);
+            when(rs.next()).thenReturn(true);
+            mockedMDBStats.when(() -> MDBStats.getInstance()).thenReturn(mock(MDBStats.class));
+            mockedLog.when(() -> Log.error(anyString())).thenAnswer(i -> { throw new RuntimeException(); });
+            RunStatsDataBean result = tradeDirectDBUtils.resetTrade(false);
+            assertEquals(0, result.getTradeUserCount());
+            assertEquals(0, result.getNewUserCount());
+            assertEquals(0, result.getSumLoginCount());
+            assertEquals(0, result.getSumLogoutCount());
+            assertEquals(0, result.getHoldingCount());
+            assertEquals(0, result.getOrderCount());
+            assertEquals(0, result.getBuyOrderCount());
+            assertEquals(0, result.getSellOrderCount());
+            assertEquals(0, result.getCancelledOrderCount());
+            assertEquals(0, result.getOpenOrderCount());
+            assertEquals(0, result.getDeletedOrderCount());
+            assertEquals(0, result.getTradeStockCount());
+            verify(conn, times(1)).setAutoCommit(false);
+            verify(conn, times(1)).commit();
+            verify(conn, times(1)).close();
+        }
+    }
+
+    @Test
+    void testResetTradeInitializesRunStatsDataBean() throws Exception {
+        try (MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class);
+             MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            Connection conn = mock(Connection.class);
+            when(datasource.getConnection()).thenReturn(conn);
+            PreparedStatement stmt = mock(PreparedStatement.class);
+            when(conn.prepareStatement(anyString())).thenReturn(stmt);
+            ResultSet rs = mock(ResultSet.class);
+            when(stmt.executeQuery()).thenReturn(rs);
+            when(rs.next()).thenReturn(true);
+            mockedMDBStats.when(() -> MDBStats.getInstance()).thenReturn(mock(MDBStats.class));
+            mockedLog.when(() -> Log.error(anyString())).thenAnswer(i -> { throw new RuntimeException(); });
+            RunStatsDataBean result = tradeDirectDBUtils.resetTrade(true);
+            assertEquals(new RunStatsDataBean(), result);
+        }
+    }
+
+    @Test
+    void testResetTradeDeleteAllWithException() throws Exception {
+        try (MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class);
+             MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            Connection conn = mock(Connection.class);
+            when(datasource.getConnection()).thenReturn(conn);
+            when(conn.prepareStatement(anyString())).thenThrow(new SQLException("Test Exception"));
+            mockedMDBStats.when(() -> MDBStats.getInstance()).thenReturn(mock(MDBStats.class));
+            mockedLog.when(() -> Log.error(anyString())).thenAnswer(i -> { throw new RuntimeException(); });
+            assertThrows(SQLException.class, () -> tradeDirectDBUtils.resetTrade(true));
+            verify(conn, times(1)).setAutoCommit(false);
+            verify(conn, never()).commit();
+            verify(conn, times(1)).close();
+        }
+    }
+
+}
+```

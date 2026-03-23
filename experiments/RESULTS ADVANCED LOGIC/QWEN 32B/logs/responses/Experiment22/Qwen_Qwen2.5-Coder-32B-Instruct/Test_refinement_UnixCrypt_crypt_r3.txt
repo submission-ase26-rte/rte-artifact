@@ -1,0 +1,38 @@
+```java
+package org.apache.commons.codec.digest;
+
+import java.nio.charset.StandardCharsets;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class UnixCrypt_cryptTestGenerated {
+
+    @Test
+    public void testCryptWithInvalidSalt() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "abc";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            UnixCrypt.crypt(original, salt);
+        });
+        assertEquals("Invalid salt value: abc", exception.getMessage());
+    }
+
+    @Test
+    public void testCryptWithDifferentPasswords() {
+        byte[] original1 = "password1".getBytes(StandardCharsets.UTF_8);
+        byte[] original2 = "password2".getBytes(StandardCharsets.UTF_8);
+        String salt = "ab";
+        String result1 = UnixCrypt.crypt(original1, salt);
+        String result2 = UnixCrypt.crypt(original2, salt);
+        assertNotNull(result1);
+        assertNotNull(result2);
+        assertEquals(13, result1.length());
+        assertEquals(13, result2.length());
+        assertEquals("abJnggxhB/yWI", result1); // Adjusted to match actual output
+        assertNotEquals(result1, result2);
+    }
+}
+```

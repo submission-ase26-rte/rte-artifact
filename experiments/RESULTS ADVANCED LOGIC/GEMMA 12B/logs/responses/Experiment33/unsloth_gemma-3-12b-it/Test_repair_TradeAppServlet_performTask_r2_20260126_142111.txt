@@ -1,0 +1,171 @@
+```java
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+
+import java.io.IOException;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+
+import com.ibm.websphere.samples.daytrader.interfaces.Trace;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import com.ibm.websphere.samples.daytrader.web.servlet.TradeAppServlet;
+import com.ibm.websphere.samples.daytrader.web.servlet.TradeServletAction;
+import org.junit.jupiter.api.Timeout;
+
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeAppServlet_performTaskTestGenerated {
+
+    @Mock
+    private TradeServletAction tsAction;
+    @Mock
+    private ServletContext ctx;
+    @Mock
+    private HttpServletRequest req;
+    @Mock
+    private HttpServletResponse resp;
+    @Mock
+    private HttpSession session;
+
+    private TradeAppServlet tradeAppServlet;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        tradeAppServlet = new TradeAppServlet(tsAction);
+        when(req.getSession()).thenReturn(session);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(tsAction, ctx, req, resp, session);
+    }
+
+    @Test
+    void testPerformTaskNoAction() throws ServletException, IOException {
+        tradeAppServlet.performTask(req, resp);
+        verify(tsAction).doWelcome(ctx, req, resp, "");
+    }
+
+    @Test
+    void testPerformTaskLogin() throws ServletException, IOException {
+        when(req.getParameter("uid")).thenReturn("testuser");
+        when(req.getParameter("passwd")).thenReturn("testpassword");
+        tradeAppServlet.performTask(req, resp);
+        verify(tsAction).doLogin(ctx, req, resp, "testuser", "testpassword");
+    }
+
+    @Test
+    void testPerformTaskRegister() throws ServletException, IOException {
+        when(req.getParameter("user id")).thenReturn("newuser");
+        when(req.getParameter("passwd")).thenReturn("newpassword");
+        when(req.getParameter("confirm passwd")).thenReturn("newpassword");
+        when(req.getParameter("Full Name")).thenReturn("New User");
+        when(req.getParameter("Credit Card Number")).thenReturn("1234567890");
+        when(req.getParameter("money")).thenReturn("1000");
+        when(req.getParameter("email")).thenReturn("newuser@example.com");
+        when(req.getParameter("snail mail")).thenReturn("123 Main St");
+
+        tradeAppServlet.performTask(req, resp);
+
+        verify(tsAction).doRegister(ctx, req, resp, "newuser", "newpassword", "newpassword", "New User", "1234567890", "1000", "newuser@example.com", "123 Main St");
+    }
+
+    @Test
+    void testPerformTaskLoggedInQuotes() throws ServletException, IOException {
+        when(session.getAttribute("uidBean")).thenReturn("loggedinuser");
+        when(req.getParameter("symbols")).thenReturn("IBM,GOOG");
+        tradeAppServlet.performTask(req, resp);
+        verify(tsAction).doQuotes(ctx, req, resp, "loggedinuser", "IBM,GOOG");
+    }
+
+    @Test
+    void testPerformTaskLoggedInBuy() throws ServletException, IOException {
+        when(session.getAttribute("uidBean")).thenReturn("loggedinuser");
+        when(req.getParameter("symbol")).thenReturn("XYZ");
+        when(req.getParameter("quantity")).thenReturn("100");
+        tradeAppServlet.performTask(req, resp);
+        verify(tsAction).doBuy(ctx, req, resp, "loggedinuser", "XYZ", "100");
+    }
+
+    @Test
+    void testPerformTaskLoggedInSell() throws ServletException, IOException {
+        when(session.getAttribute("uidBean")).thenReturn("loggedinuser");
+        when(req.getParameter("holdingID")).thenReturn("123");
+        tradeAppServlet.performTask(req, resp);
+        verify(tsAction).doSell(ctx, req, resp, "loggedinuser", new Integer(123));
+    }
+
+    @Test
+    void testPerformTaskLoggedInPortfolio() throws ServletException, IOException {
+        when(session.getAttribute("uidBean")).thenReturn("loggedinuser");
+        tradeAppServlet.performTask(req, resp);
+        verify(tsAction).doPortfolio(ctx, req, resp, "loggedinuser", "Portfolio as of " + new java.util.Date());
+    }
+
+    @Test
+    void testPerformTaskLogout() throws ServletException, IOException {
+        when(session.getAttribute("uidBean")).thenReturn("loggedinuser");
+        tradeAppServlet.performTask(req, resp);
+        verify(tsAction).doLogout(ctx, req, resp, "loggedinuser");
+    }
+
+    @Test
+    void testPerformTaskHome() throws ServletException, IOException {
+        when(session.getAttribute("uidBean")).thenReturn("loggedinuser");
+        tradeAppServlet.performTask(req, resp);
+        verify(tsAction).doHome(ctx, req, resp, "loggedinuser", "Ready to Trade");
+    }
+
+    @Test
+    void testPerformTaskAccountUpdate() throws ServletException, IOException {
+        when(session.getAttribute("uidBean")).thenReturn("loggedinuser");
+        when(req.getParameter("password")).thenReturn("newpassword");
+        when(req.getParameter("cpassword")).thenReturn("newpassword");
+        when(req.getParameter("fullname")).thenReturn("Updated Name");
+        when(req.getParameter("address")).thenReturn("New Address");
+        when(req.getParameter("creditcard")).thenReturn("1111222233334444");
+        when(req.getParameter("email")).thenReturn("updated@example.com");
+        tradeAppServlet.performTask(req, resp);
+        verify(tsAction).doAccountUpdate(ctx, req, resp, "loggedinuser", "newpassword", "newpassword", "Updated Name", "New Address", "1111222233334444", "updated@example.com");
+    }
+
+    @Test
+    void testPerformTaskMarketSummary() throws ServletException, IOException {
+        when(session.getAttribute("uidBean")).thenReturn("loggedinuser");
+        tradeAppServlet.performTask(req, resp);
+        verify(tsAction).doMarketSummary(ctx, req, resp, "loggedinuser");
+    }
+
+    @Test
+    void testPerformTaskInvalidAction() throws ServletException, IOException {
+        when(session.getAttribute("uidBean")).thenReturn("loggedinuser");
+        tradeAppServlet.performTask(req, resp);
+        verify(tsAction).doWelcome(ctx, req, resp, "TradeAppServlet: Invalid Action");
+    }
+
+    @Test
+    void testPerformTaskUserNotLoggedIn() throws ServletException, IOException {
+        tradeAppServlet.performTask(req, resp);
+        verify(tsAction).doWelcome(ctx, req, resp, "User Not Logged in");
+    }
+}
+```

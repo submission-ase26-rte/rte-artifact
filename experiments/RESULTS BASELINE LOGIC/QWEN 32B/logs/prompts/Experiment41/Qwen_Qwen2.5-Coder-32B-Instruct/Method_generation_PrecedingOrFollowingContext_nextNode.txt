@@ -1,0 +1,270 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.jxpath.ri.axes;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.apache.commons.jxpath.ri.EvalContext;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.util.Stack;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class PrecedingOrFollowingContext_nextNodeTestGenerated {
+
+    private PrecedingOrFollowingContext context;
+    private EvalContext parentContext;
+    private NodeTest nodeTest;
+    private NodePointer nodePointer;
+    private NodeIterator nodeIterator;
+
+    @BeforeEach
+    void setUp() {
+        parentContext = Mockito.mock(EvalContext.class);
+        nodeTest = Mockito.mock(NodeTest.class);
+        nodePointer = Mockito.mock(NodePointer.class);
+        nodeIterator = Mockito.mock(NodeIterator.class);
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, false);
+    }
+
+    @Test
+    void testNextNode_InitialSetup() {
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(null);
+
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_WithParent() {
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.childIterator(null, false, nodePointer)).thenReturn(nodeIterator);
+        Mockito.when(nodeIterator.setPosition(1)).thenReturn(true);
+        Mockito.when(nodeIterator.getNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.testNode(nodeTest)).thenReturn(true);
+
+        assertTrue(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_WithParentAndChild() {
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        NodePointer child = Mockito.mock(NodePointer.class);
+        NodeIterator childIterator = Mockito.mock(NodeIterator.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.childIterator(null, false, nodePointer)).thenReturn(nodeIterator);
+        Mockito.when(nodeIterator.setPosition(1)).thenReturn(true);
+        Mockito.when(nodeIterator.getNodePointer()).thenReturn(child);
+        Mockito.when(child.isLeaf()).thenReturn(false);
+        Mockito.when(child.childIterator(null, false, null)).thenReturn(childIterator);
+        Mockito.when(childIterator.setPosition(1)).thenReturn(true);
+        Mockito.when(childIterator.getNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.testNode(nodeTest)).thenReturn(true);
+
+        assertTrue(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_NoMatchingNode() {
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.childIterator(null, false, nodePointer)).thenReturn(nodeIterator);
+        Mockito.when(nodeIterator.setPosition(1)).thenReturn(true);
+        Mockito.when(nodeIterator.getNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.testNode(nodeTest)).thenReturn(false);
+
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_ReverseOrder() {
+        context = new PrecedingOrFollowingContext(parentContext, nodeTest, true);
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.childIterator(null, true, nodePointer)).thenReturn(nodeIterator);
+        Mockito.when(nodeIterator.setPosition(1)).thenReturn(true);
+        Mockito.when(nodeIterator.getNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.testNode(nodeTest)).thenReturn(true);
+
+        assertTrue(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_EmptyStack() {
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(null);
+
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_WithMultipleParents() {
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        NodePointer grandParent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.getParent()).thenReturn(grandParent);
+        Mockito.when(parent.childIterator(null, false, nodePointer)).thenReturn(nodeIterator);
+        Mockito.when(nodeIterator.setPosition(1)).thenReturn(false);
+        Mockito.when(grandParent.childIterator(null, false, parent)).thenReturn(nodeIterator);
+        Mockito.when(nodeIterator.setPosition(1)).thenReturn(true);
+        Mockito.when(nodeIterator.getNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.testNode(nodeTest)).thenReturn(true);
+
+        assertTrue(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_WithNullNodePointer() {
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(null);
+
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_WithNullParent() {
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(null);
+
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_WithNullNodeIterator() {
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.childIterator(null, false, nodePointer)).thenReturn(null);
+
+        assertFalse(context.nextNode());
+    }
+
+    @Test
+    void testNextNode_WithEmptyNodeIterator() {
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        Mockito.when(parentContext.getCurrentNodePointer()).thenReturn(nodePointer);
+        Mockito.when(nodePointer.getParent()).thenReturn(parent);
+        Mockito.when(parent.childIterator(null, false, nodePointer)).thenReturn(nodeIterator);
+        Mockito.when(nodeIterator.setPosition(1)).thenReturn(false);
+
+        assertFalse(context.nextNode());
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 72.00% | Branch: 61.76%
+- Tests: 7/11 passed
+
+TEST STATUS:
+- PASSED (7): testNextNode_InitialSetup, testNextNode_WithParent, testNextNode_WithParentAndChild, testNextNode_EmptyStack, testNextNode_WithMultipleParents, testNextNode_WithNullParent, testNextNode_WithEmptyNodeIterator
+- FAILED (0): none
+- ERRORS (4): testNextNode_NoMatchingNode, testNextNode_ReverseOrder, testNextNode_WithNullNodePointer, testNextNode_WithNullNodeIterator
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// === Imports of PrecedingOrFollowingContext ===
+import java.util.Stack;
+import org.apache.commons.jxpath.ri.EvalContext;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+
+// === Class: PrecedingOrFollowingContext ===
+// Fields:
+    private NodeTest nodeTest;
+    private boolean setStarted;
+    private Stack stack;
+    private NodePointer currentNodePointer;
+    private NodePointer currentRootLocation;
+    private boolean reverse;
+
+// Constructors:
+public PrecedingOrFollowingContext(EvalContext parentContext, NodeTest nodeTest, boolean reverse);
+
+// Getter/Setter Methods (for test assertions):
+public NodePointer getCurrentNodePointer();
+public int getDocumentOrder();
+public boolean setPosition(final int position);
+
+// === External Class: NodePointer ===
+// Fields:
+    private long serialVersionUID;
+    private int WHOLE_COLLECTION;
+    private String UNKNOWN_NAMESPACE;
+    private int index;
+    private boolean attribute;
+    private NamespaceResolver namespaceResolver;
+    private ExceptionHandler exceptionHandler;
+    private Object rootNode;
+    private NodePointer parent;
+    private Locale locale;
+
+// Constructors:
+protected NodePointer(NodePointer parent);
+protected NodePointer(NodePointer parent, Locale locale);
+
+// Method Signatures (used by target method):
+public NodePointer getParent();
+public boolean isRoot();
+public boolean testNode(final NodeTest test);
+public abstract boolean isLeaf();
+public NodeIterator childIterator(final NodeTest test, final boolean reverse, final NodePointer startWith);
+
+// === External Class: NodeIterator ===
+// Method Signatures (used by target method):
+int getPosition();
+boolean setPosition(int position);
+NodePointer getNodePointer();
+
+
+TASK:
+Regenerate ONLY the method "nextNode" OF CLASS "PrecedingOrFollowingContext" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public boolean nextNode() {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.jxpath.ri.axes
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in PrecedingOrFollowingContext
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

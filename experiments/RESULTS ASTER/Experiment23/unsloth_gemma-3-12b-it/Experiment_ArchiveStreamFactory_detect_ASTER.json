@@ -1,0 +1,76 @@
+{
+  "method_id": 23,
+  "tested_method": "detect",
+  "tested_class": "ArchiveStreamFactory",
+  "project": "Compress",
+  "timestamp": "2026-01-27T18:43:58.647316",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\Compress\\Run-1\\src\\test\\java\\org\\apache\\commons\\compress\\archivers\\Metodo23_unit_detect_ArchiveStreamFactory_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 2,
+    "tests_total": 4,
+    "tests_failed": 2,
+    "line_coverage": 52.83018867924528,
+    "branch_coverage": 28.947368421052634,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testInputStreamWithoutMarkSupport_TDlP9_OkiI0_fid3 --\nERROR: org.opentest4j.AssertionFailedError: expected: <Mark is not supported.> but was: <No Archiver found for the stream signature>\n--------------------------------------------------\nTEST: testIOExceptionWhileReadingSignature_ZdfL10 --\nERROR: org.opentest4j.AssertionFailedError: expected: <IOException while reading signature.> but was: <No Archiver found for the stream signature>",
+    "test_info": {
+      "valid_tests": [
+        "testNoArchiverFound_AWwU11",
+        "testInputStreamWithoutMarkSupport_TDlP9_OkiI0"
+      ],
+      "invalid_tests": [
+        "testIOExceptionWhileReadingSignature_ZdfL10",
+        "testInputStreamWithoutMarkSupport_TDlP9_OkiI0_fid3"
+      ],
+      "failed_assert_tests": [
+        "testIOExceptionWhileReadingSignature_ZdfL10",
+        "testInputStreamWithoutMarkSupport_TDlP9_OkiI0_fid3"
+      ],
+      "runtime_error_tests": []
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 4,
+    "assertion_complexity": 0.261,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.6667,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.1627,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.8276,
+    "overall_naturalness_score": 0.7476
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.22214747726672382,
+    "string_similarity": 0.21739903931684754,
+    "token_similarity": 0.45217391304347826,
+    "ast_similarity": 0.0,
+    "embedding_similarity": 0.8872960805892944,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.18018018018018017,
+      "similar_blocks": 20,
+      "total_blocks": 222
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.44020113376146736,
+    "passes_threshold": false
+  },
+  "original_method": "    public static String detect(final InputStream in) throws ArchiveException {\n        if (in == null) {\n            throw new IllegalArgumentException(\"Stream must not be null.\");\n        }\n\n        if (!in.markSupported()) {\n            throw new IllegalArgumentException(\"Mark is not supported.\");\n        }\n\n        final byte[] signature = new byte[SIGNATURE_SIZE];\n        in.mark(signature.length);\n        int signatureLength = -1;\n        try {\n            signatureLength = IOUtils.readFully(in, signature);\n            in.reset();\n        } catch (final IOException e) {\n            throw new ArchiveException(\"IOException while reading signature.\", e);\n        }\n\n        // For now JAR files are detected as ZIP files.\n        if (ZipArchiveInputStream.matches(signature, signatureLength)) {\n            return ZIP;\n        }\n        // For now JAR files are detected as ZIP files.\n        if (JarArchiveInputStream.matches(signature, signatureLength)) {\n            return JAR;\n        }\n        if (ArArchiveInputStream.matches(signature, signatureLength)) {\n            return AR;\n        }\n        if (CpioArchiveInputStream.matches(signature, signatureLength)) {\n            return CPIO;\n        }\n        if (ArjArchiveInputStream.matches(signature, signatureLength)) {\n            return ARJ;\n        }\n        if (SevenZFile.matches(signature, signatureLength)) {\n            return SEVEN_Z;\n        }\n\n        // Dump needs a bigger buffer to check the signature;\n        final byte[] dumpsig = new byte[DUMP_SIGNATURE_SIZE];\n        in.mark(dumpsig.length);\n        try {\n            signatureLength = IOUtils.readFully(in, dumpsig);\n            in.reset();\n        } catch (final IOException e) {\n            throw new ArchiveException(\"IOException while reading dump signature\", e);\n        }\n        if (DumpArchiveInputStream.matches(dumpsig, signatureLength)) {\n            return DUMP;\n        }\n\n        // Tar needs an even bigger buffer to check the signature; read the first block\n        final byte[] tarHeader = new byte[TAR_HEADER_SIZE];\n        in.mark(tarHeader.length);\n        try {\n            signatureLength = IOUtils.readFully(in, tarHeader);\n            in.reset();\n        } catch (final IOException e) {\n            throw new ArchiveException(\"IOException while reading tar signature\", e);\n        }\n        if (TarArchiveInputStream.matches(tarHeader, signatureLength)) {\n            return TAR;\n        }\n\n        // COMPRESS-117\n        if (signatureLength >= TAR_HEADER_SIZE) {\n            try (TarArchiveInputStream inputStream = new TarArchiveInputStream(new ByteArrayInputStream(tarHeader))) {\n                // COMPRESS-191 - verify the header checksum\n                // COMPRESS-644 - do not allow zero byte file entries\n                TarArchiveEntry entry = inputStream.getNextEntry();\n                // try to find the first non-directory entry within the first 10 entries.\n                int count = 0;\n                while (entry != null && entry.isDirectory() && count++ < TAR_TEST_ENTRY_COUNT) {\n                    entry = inputStream.getNextEntry();\n                }\n                if (entry != null && entry.isCheckSumOK() && !entry.isDirectory() && entry.getSize() > 0 || count > 0) {\n                    return TAR;\n                }\n            } catch (final Exception e) { // NOPMD NOSONAR\n                // can generate IllegalArgumentException as well as IOException auto-detection, simply not a TAR ignored\n            }\n        }\n        throw new ArchiveException(\"No Archiver found for the stream signature\");\n    }",
+  "regenerated_method": "import java.io.ByteArrayInputStream;\nimport java.io.InputStream;\nimport java.util.*;\nimport java.util.HashSet;\nimport java.util.Set;\nimport java.util.TreeMap;\nimport java.util.concurrent.TimeUnit;\nimport org.apache.commons.compress.utils.Sets;\nimport org.junit.jupiter.api.Assertions;\nimport org.junit.jupiter.api.Test;\nimport org.junit.jupiter.api.Timeout;\nimport static org.junit.jupiter.api.Assertions.*;\nimport static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;\nimport org.apache.commons.compress.archivers.ArArchiveInputStream;\nimport org.apache.commons.compress.archivers.arj.ArjArchiveInputStream;\nimport org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveInputStream;\nimport org.apache.commons.compress.archivers.dump.DumpArchiveInputStream;\nimport org.apache.commons.compress.archivers.jar.JarArchiveInputStream;\nimport org.apache.commons.compress.archivers.sevenz.SevenZFile;\nimport org.apache.commons.compress.archivers.ArchiveStreamFactory;\n\n@Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)\npublic static String detect(final InputStream in) throws ArchiveException {\n    if (in == null) {\n        throw new IllegalArgumentException(\"Input stream may not be null\");\n    }\n    byte[] signature = new byte[ArchiveStreamFactory.SIGNATURE_SIZE];\n    int read = IOUtils.readFully(in, signature);\n    if (read < ArchiveStreamFactory.SIGNATURE_SIZE) {\n        throw new ArchiveException(\"IOException while reading signature.\");\n    }\n    if (ArArchiveInputStream.matches(signature, ArchiveStreamFactory.SIGNATURE_SIZE)) {\n        return AR;\n    }\n    if (ArjArchiveInputStream.matches(signature, ArchiveStreamFactory.SIGNATURE_SIZE)) {\n        return ARJ;\n    }\n    if (CpioArchiveInputStream.matches(signature, ArchiveStreamFactory.SIGNATURE_SIZE)) {\n        return CPIO;\n    }\n    if (DumpArchiveInputStream.matches(signature, ArchiveStreamFactory.SIGNATURE_SIZE)) {\n        return DUMP;\n    }\n    if (JarArchiveInputStream.matches(signature, ArchiveStreamFactory.SIGNATURE_SIZE)) {\n        return JAR;\n    }\n    if (ZipArchiveInputStream.matches(signature, ArchiveStreamFactory.SIGNATURE_SIZE)) {\n        return ZIP;\n    }\n    if (TarArchiveInputStream.matches(signature, ArchiveStreamFactory.SIGNATURE_SIZE)) {\n        return TAR;\n    }\n    if (SevenZFile.matches(signature, ArchiveStreamFactory.SIGNATURE_SIZE)) {\n        return SEVEN_Z;\n    }\n    throw new ArchiveException(\"No Archiver found for the stream signature\");\n}",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6574370825640462,
+  "original_metrics": {
+    "loc": 86,
+    "sloc": 71,
+    "complexity": 34
+  }
+}

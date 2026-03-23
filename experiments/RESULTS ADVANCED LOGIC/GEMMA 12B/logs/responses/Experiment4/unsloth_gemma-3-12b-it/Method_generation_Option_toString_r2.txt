@@ -1,0 +1,22 @@
+```java
+public String toString() {
+    StringBuilder buffer = new StringBuilder();
+    buffer.append("[ Option ");
+    buffer.append(option);
+    if (longOption != null) {
+        buffer.append(" ").append(longOption);
+    }
+    buffer.append(" :: ").append(description);
+    if (type != null) {
+        buffer.append(" :: class ").append(type.getName());
+    } else {
+        buffer.append(" :: null");
+    }
+    if (argCount == UNLIMITED_VALUES) {
+        buffer.append(" [ARG... ]");
+    } else if (argCount == 1) {
+        buffer.append(" [ARG]");
+    }
+    return buffer.toString();
+}
+```

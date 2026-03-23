@@ -1,0 +1,48 @@
+```java
+public boolean canConvert(final Object object, final Class toType) {
+    if (object == null) {
+        return true;
+    }
+    if (toType.isInstance(object)) {
+        return true;
+    }
+    if (toType.isAssignableFrom(object.getClass())) {
+        return true;
+    }
+    if (object instanceof String) {
+        if (Number.class.isAssignableFrom(toType) || Character.class == toType) {
+            return true;
+        }
+    }
+    if (object instanceof Number) {
+        if (toType == String.class || Number.class.isAssignableFrom(toType) || Character.class == toType || Boolean.class == toType) {
+            return true;
+        }
+    }
+    if (object instanceof Boolean) {
+        if (Number.class.isAssignableFrom(toType) || Character.class == toType || Boolean.class == toType) {
+            return true;
+        }
+    }
+    if (object.getClass().isArray()) {
+        if (toType.isArray()) {
+            return toType.getComponentType().isAssignableFrom(object.getClass().getComponentType());
+        }
+        if (Collection.class.isAssignableFrom(toType)) {
+            return true;
+        }
+        if (toType.isInstance(Array.get(object, 0))) {
+            return true;
+        }
+    }
+    if (object instanceof Collection) {
+        if (toType.isInstance(((Collection) object).iterator().next())) {
+            return true;
+        }
+    }
+    if (object instanceof Pointer) {
+        return canConvert(((Pointer) object).getValue(), toType);
+    }
+    return ConvertUtils.lookup(toType) != null;
+}
+```

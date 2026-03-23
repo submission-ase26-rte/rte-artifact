@@ -1,0 +1,205 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.cli;
+
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PatternOptionBuilder_parsePatternTestGenerated {
+
+    @Test
+    void testParsePattern_patternWithOnlyType() {
+        Options options = PatternOptionBuilder.parsePattern("$");
+        assertEquals(0, options.getOptions().size());
+    }
+
+    @Test
+    void testParsePattern_emptyPattern() {
+        Options options = PatternOptionBuilder.parsePattern("");
+        assertEquals(0, options.getOptions().size());
+    }
+
+    @Test
+    void testParsePattern_patternWithOnlyRequired() {
+        Options options = PatternOptionBuilder.parsePattern("!");
+        assertEquals(0, options.getOptions().size());
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 53.33% | Branch: 64.29%
+- Tests: 2/3 passed
+
+TEST STATUS:
+- PASSED (2): testParsePattern_emptyPattern, testParsePattern_patternWithOnlyRequired
+- FAILED (1): testParsePattern_patternWithOnlyType
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PREVIOUSLY GENERATED METHOD:
+public static Options parsePattern(final String pattern) {
+    Options options = new Options();
+    for (char c : pattern.toCharArray()) {
+        if (isValueCode(c)) {
+            // Ignore value codes for now, as tests expect empty options list
+        }
+    }
+    return options;
+}
+
+ADDITIONAL INSTRUCTIONS:
+- Compare the previous method with the one you are about to generate
+- Improve quality and correctness compared to the previous version
+- Maintain compatibility with all provided tests
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   File -> java.io.File
+//   FileInputStream -> java.io.FileInputStream
+//   URL -> java.net.URL
+//   Date -> java.util.Date
+//   Map -> java.util.Map
+
+// === Class: PatternOptionBuilder ===
+// Fields (with actual visibility):
+    public static final Class STRING_VALUE;
+    public static final Class OBJECT_VALUE;
+    public static final Class NUMBER_VALUE;
+    public static final Class DATE_VALUE;
+    public static final Class CLASS_VALUE;
+    public static final Class EXISTING_FILE_VALUE;
+    public static final Class FILE_VALUE;
+    public static final Class FILES_VALUE;
+    public static final Class URL_VALUE;
+    private static final Converter UNSUPPORTED;
+
+// Getter/Setter Methods (for test assertions):
+public static Object getValueClass(final char ch);
+public static boolean isValueCode(final char ch);
+
+// Internal Method Signatures (used by target method):
+public static Class getValueType(final char ch);
+static T unsupported();
+public static boolean isValueCode(final char ch);
+
+// === External Class: Option ===
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   Objects -> java.util.Objects
+// Fields (with actual visibility):
+    private static final Class DEFAULT_TYPE;
+    private int argCount;
+    private String argName;
+    private Converter converter;
+    private final DeprecatedAttributes deprecated;
+    private String description;
+    private String longOption;
+    private final String option;
+    private boolean optionalArg;
+    private boolean required;
+    private Class type;
+    private char valueSeparator;
+    package-private static final Option[] EMPTY_ARRAY;
+    private static final long serialVersionUID;
+    public static final int UNINITIALIZED;
+    public static final int UNLIMITED_VALUES;
+    private List values;
+    private char valuesep;
+
+// Constructors:
+private Builder(String option);
+private Option(Builder builder);
+public Option(String option, boolean hasArg, String description);
+public Option(String option, String description);
+public Option(String option, String longOption, boolean hasArg, String description);
+
+// Method Signatures (used by target method):
+public static Builder builder();
+
+// === External Class: Options ===
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   Collection -> java.util.Collection
+//   Collections -> java.util.Collections
+//   HashSet -> java.util.HashSet
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final Map shortOpts;
+    private final Map longOpts;
+    private final List requiredOpts;
+    private final Map optionGroups;
+
+// Method Signatures (used by target method):
+public Options addOption(final Option opt);
+
+// === External Class: TypeHandler ===
+// Import paths:
+//   File -> java.io.File
+//   FileInputStream -> java.io.FileInputStream
+//   BigDecimal -> java.math.BigDecimal
+//   BigInteger -> java.math.BigInteger
+//   URL -> java.net.URL
+// Fields (with actual visibility):
+    private static final TypeHandler DEFAULT;
+    private static final int HEX_RADIX;
+    private final Map converterMap;
+
+// Constructors:
+public TypeHandler();
+public TypeHandler(Map converterMap);
+
+// Method Signatures (used by target method):
+public static Map createDefaultMap();
+
+
+TASK:
+Regenerate ONLY the method "parsePattern" OF CLASS "PatternOptionBuilder" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public static Options parsePattern(final String pattern) {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.cli
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in PatternOptionBuilder
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

@@ -1,0 +1,313 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.eclipse.cargotracker.interfaces.handling.mobile;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.model.SelectItem;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.domain.model.cargo.CargoRepository;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class EventLogger_submitTestGenerated {
+
+    @Mock
+    private CargoRepository cargoRepository;
+
+    @Mock
+    private LocationRepository locationRepository;
+
+    @Mock
+    private VoyageRepository voyageRepository;
+
+    @Mock
+    private ApplicationEvents applicationEvents;
+
+    @Mock
+    private FacesContext context;
+
+    @InjectMocks
+    private EventLogger eventLogger;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void submit_WithVoyageRequiredEvent_ShouldCreateAttemptWithVoyage() {
+        // Arrange
+        eventLogger.setTrackingId("TST001");
+        eventLogger.setLocation("USNYC");
+        eventLogger.setVoyageNumber("VA001");
+        eventLogger.setEventType(HandlingEvent.Type.LOAD);
+        eventLogger.setCompletionTime(LocalDateTime.now());
+
+        // Act
+        eventLogger.submit();
+
+        // Assert
+        verify(applicationEvents).receivedHandlingEventRegistrationAttempt(
+            argThat(attempt ->
+                attempt.getVoyageNumber() != null &&
+                attempt.getVoyageNumber().toString().equals("VA001")
+            )
+        );
+    }
+
+    @Test
+    void submit_WithNonVoyageRequiredEvent_ShouldCreateAttemptWithoutVoyage() {
+        // Arrange
+        eventLogger.setTrackingId("TST001");
+        eventLogger.setLocation("USNYC");
+        eventLogger.setVoyageNumber("VA001");
+        eventLogger.setEventType(HandlingEvent.Type.RECEIVE);
+        eventLogger.setCompletionTime(LocalDateTime.now());
+
+        // Act
+        eventLogger.submit();
+
+        // Assert
+        verify(applicationEvents).receivedHandlingEventRegistrationAttempt(
+            argThat(attempt ->
+                attempt.getVoyageNumber() == null
+            )
+        );
+    }
+
+    @Test
+    void submit_WithNullTrackingId_ShouldThrowException() {
+        // Arrange
+        eventLogger.setTrackingId(null);
+        eventLogger.setLocation("USNYC");
+        eventLogger.setEventType(HandlingEvent.Type.RECEIVE);
+        eventLogger.setCompletionTime(LocalDateTime.now());
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> eventLogger.submit());
+    }
+
+    @Test
+    void submit_WithNullLocation_ShouldThrowException() {
+        // Arrange
+        eventLogger.setTrackingId("TST001");
+        eventLogger.setLocation(null);
+        eventLogger.setEventType(HandlingEvent.Type.RECEIVE);
+        eventLogger.setCompletionTime(LocalDateTime.now());
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> eventLogger.submit());
+    }
+
+    @Test
+    void submit_WithNullEventType_ShouldThrowException() {
+        // Arrange
+        eventLogger.setTrackingId("TST001");
+        eventLogger.setLocation("USNYC");
+        eventLogger.setEventType(null);
+        eventLogger.setCompletionTime(LocalDateTime.now());
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> eventLogger.submit());
+    }
+
+    @Test
+    void submit_WithNullCompletionTime_ShouldUseCurrentTime() {
+        // Arrange
+        eventLogger.setTrackingId("TST001");
+        eventLogger.setLocation("USNYC");
+        eventLogger.setEventType(HandlingEvent.Type.RECEIVE);
+        eventLogger.setCompletionTime(null);
+
+        // Act
+        eventLogger.submit();
+
+        // Assert
+        verify(applicationEvents).receivedHandlingEventRegistrationAttempt(
+            argThat(attempt ->
+                attempt.getCompletionTime() != null
+            )
+        );
+    }
+
+    @Test
+    void submit_WithValidInputs_ShouldAddFacesMessage() {
+        // Arrange
+        eventLogger.setTrackingId("TST001");
+        eventLogger.setLocation("USNYC");
+        eventLogger.setEventType(HandlingEvent.Type.RECEIVE);
+        eventLogger.setCompletionTime(LocalDateTime.now());
+
+        // Act
+        eventLogger.submit();
+
+        // Assert
+        verify(context).addMessage(eq(null), argThat(message ->
+            message.getSummary().equals("Event submitted")
+        ));
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 80.00% | Branch: 100.00%
+- Tests: 0/7 passed
+
+TEST STATUS:
+- PASSED (0): none
+- FAILED (3): submit_WithNullTrackingId_ShouldThrowException, submit_WithNullLocation_ShouldThrowException, submit_WithNullEventType_ShouldThrowException
+- ERRORS (4): submit_WithVoyageRequiredEvent_ShouldCreateAttemptWithVoyage, submit_WithNonVoyageRequiredEvent_ShouldCreateAttemptWithoutVoyage, submit_WithNullCompletionTime_ShouldUseCurrentTime, submit_WithValidInputs_ShouldAddFacesMessage
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   PostConstruct -> jakarta.annotation.PostConstruct
+//   FacesMessage -> jakarta.faces.application.FacesMessage
+//   FacesContext -> jakarta.faces.context.FacesContext
+//   SelectItem -> jakarta.faces.model.SelectItem
+//   ViewScoped -> jakarta.faces.view.ViewScoped
+//   Inject -> jakarta.inject.Inject
+//   Named -> jakarta.inject.Named
+//   Serializable -> java.io.Serializable
+//   LocalDateTime -> java.time.LocalDateTime
+//   Function -> java.util.function.Function
+//   ApplicationEvents -> org.eclipse.cargotracker.application.ApplicationEvents
+//   DateConverter -> org.eclipse.cargotracker.application.util.DateConverter
+//   Cargo -> org.eclipse.cargotracker.domain.model.cargo.Cargo
+//   CargoRepository -> org.eclipse.cargotracker.domain.model.cargo.CargoRepository
+//   TrackingId -> org.eclipse.cargotracker.domain.model.cargo.TrackingId
+//   TransportStatus -> org.eclipse.cargotracker.domain.model.cargo.TransportStatus
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+//   Location -> org.eclipse.cargotracker.domain.model.location.Location
+//   LocationRepository -> org.eclipse.cargotracker.domain.model.location.LocationRepository
+//   UnLocode -> org.eclipse.cargotracker.domain.model.location.UnLocode
+//   Voyage -> org.eclipse.cargotracker.domain.model.voyage.Voyage
+//   VoyageNumber -> org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+//   VoyageRepository -> org.eclipse.cargotracker.domain.model.voyage.VoyageRepository
+//   HandlingEventRegistrationAttempt -> org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+//   FlowEvent -> org.primefaces.event.FlowEvent
+
+// === Class: EventLogger ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private CargoRepository cargoRepository;
+    private LocationRepository locationRepository;
+    private VoyageRepository voyageRepository;
+    private ApplicationEvents applicationEvents;
+    private FacesContext context;
+    private List trackingIds;
+    private List locations;
+    private List voyages;
+    private String trackingId;
+    private String location;
+    private HandlingEvent eventType;
+    private String voyageNumber;
+    private LocalDateTime completionTime;
+
+// Getter/Setter Methods (for test assertions):
+public String getTrackingId();
+public void setTrackingId(String trackingId);
+public List<SelectItem> getTrackingIds();
+public String getLocation();
+public void setLocation(String location);
+public List<SelectItem> getLocations();
+public void setEventType(HandlingEvent.Type eventType);
+public String getVoyageNumber();
+public void setVoyageNumber(String voyageNumber);
+public List<SelectItem> getVoyages();
+public LocalDateTime getCompletionTime();
+public void setCompletionTime(LocalDateTime completionTime);
+public String getCompletionTimeValue();
+public String getCompletionTimePattern();
+
+// === External Class: HandlingEvent ===
+// Import paths:
+//   Column -> jakarta.persistence.Column
+//   Entity -> jakarta.persistence.Entity
+//   EnumType -> jakarta.persistence.EnumType
+//   Enumerated -> jakarta.persistence.Enumerated
+//   GeneratedValue -> jakarta.persistence.GeneratedValue
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private Long id;
+    private Type type;
+    private Voyage voyage;
+    private Location location;
+    private LocalDateTime completionTime;
+    private LocalDateTime registrationTime;
+    private Cargo cargo;
+    private String summary;
+    private final boolean voyageRequired;
+
+// Constructors:
+public HandlingEvent();
+public HandlingEvent(Cargo cargo, LocalDateTime completionTime, LocalDateTime registrationTime, Type type, Location location, Voyage voyage);
+public HandlingEvent(Cargo cargo, LocalDateTime completionTime, LocalDateTime registrationTime, Type type, Location location);
+private Type(boolean voyageRequired);
+
+// Method Signatures (used by target method):
+public boolean requiresVoyage();
+
+// === External Class: ApplicationEvents ===
+// Import paths:
+//   Cargo -> org.eclipse.cargotracker.domain.model.cargo.Cargo
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+//   HandlingEventRegistrationAttempt -> org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+// Method Signatures (used by target method):
+void receivedHandlingEventRegistrationAttempt(HandlingEventRegistrationAttempt attempt);
+
+
+TASK:
+Regenerate ONLY the method "submit" OF CLASS "EventLogger" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void submit() {
+    // your implementation here
+}
+```
+
+
+- Package: org.eclipse.cargotracker.interfaces.handling.mobile
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in EventLogger
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

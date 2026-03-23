@@ -1,0 +1,318 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+import java.util.function.Consumer;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class DefaultParser_parseTestGenerated {
+
+    private DefaultParser parser;
+
+    @BeforeEach
+    void setUp() {
+        parser = new DefaultParser();
+    }
+
+    @AfterEach
+    void tearDown() {
+        parser = null;
+    }
+
+    @Test
+    void testParseValidArguments() throws ParseException {
+        Options options = new Options();
+        options.addOption("a", true, "Option a");
+        options.addOption("b", false, "Option b");
+
+        String[] arguments = {"-a", "value", "-b"};
+        Properties properties = new Properties();
+
+        CommandLine cmd = parser.parse(options, arguments, properties, false);
+
+        assertEquals(2, cmd.getArgList().size());
+        assertEquals("value", cmd.getOptionValue("a"));
+        assertTrue(cmd.hasOption("b"));
+    }
+
+    @Test
+    void testParseWithRequiredOptions() throws ParseException {
+        Options options = new Options();
+        options.addRequiredOption("a", "value", true, "Option a");
+
+        String[] arguments = {"-a", "value"};
+        Properties properties = new Properties();
+
+        CommandLine cmd = parser.parse(options, arguments, properties, false);
+
+        assertEquals(0, cmd.getArgList().size());
+        assertEquals("value", cmd.getOptionValue("a"));
+    }
+
+    @Test
+    void testParseWithProperties() throws ParseException {
+        Options options = new Options();
+        options.addOption("a", true, "Option a");
+
+        String[] arguments = {};
+        Properties properties = new Properties();
+        properties.setProperty("a", "value");
+
+        CommandLine cmd = parser.parse(options, arguments, properties, false);
+
+        assertEquals(0, cmd.getArgList().size());
+        assertEquals("value", cmd.getOptionValue("a"));
+    }
+
+    @Test
+    void testParseStopAtNonOption() throws ParseException {
+        Options options = new Options();
+        options.addOption("a", true, "Option a");
+
+        String[] arguments = {"-a", "value", "extra"};
+        Properties properties = new Properties();
+
+        CommandLine cmd = parser.parse(options, arguments, properties, true);
+
+        assertEquals(1, cmd.getArgList().size());
+        assertEquals("extra", cmd.getArgList().get(0));
+        assertEquals("value", cmd.getOptionValue("a"));
+    }
+
+    @Test
+    void testParseParseException() {
+        Options options = new Options();
+        options.addRequiredOption("a", "value", true, "Option a");
+
+        String[] arguments = {};
+        Properties properties = new Properties();
+
+        assertThrows(ParseException.class, () -> parser.parse(options, arguments, properties, false));
+    }
+
+    @Test
+    void testParseNullArguments() throws ParseException {
+        Options options = new Options();
+        options.addOption("a", true, "Option a");
+
+        String[] arguments = null;
+        Properties properties = new Properties();
+
+        CommandLine cmd = parser.parse(options, arguments, properties, false);
+
+        assertEquals(0, cmd.getArgList().size());
+    }
+
+    @Test
+    void testParseEmptyOptions() throws ParseException {
+        Options options = new Options();
+
+        String[] arguments = {"-a", "value"};
+        Properties properties = new Properties();
+
+        assertThrows(ParseException.class, () -> parser.parse(options, arguments, properties, false));
+    }
+
+    @Test
+    void testParseAllowPartialMatching() throws ParseException {
+        Options options = new Options();
+        options.addOption("a", true, "Option a");
+        parser = new DefaultParser(true);
+        String[] arguments = {"-a", "value"};
+        Properties properties = new Properties();
+        CommandLine cmd = parser.parse(options, arguments, properties, false);
+        assertEquals("value", cmd.getOptionValue("a"));
+    }
+
+    @Test
+    void testParseWithOptionGroups() throws ParseException {
+        Options options = new Options();
+        OptionGroup group = new OptionGroup();
+        Option option1 = new Option("a", "Option a");
+        Option option2 = new Option("b", "Option b");
+        group.addOption(option1);
+        group.addOption(option2);
+        options.addOptionGroup(group);
+
+        String[] arguments = {"-a", "value"};
+        Properties properties = new Properties();
+        CommandLine cmd = parser.parse(options, arguments, properties, false);
+        assertTrue(cmd.hasOption("a"));
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 100.00%
+- Tests: 8/9 passed
+
+TEST STATUS:
+- PASSED (8): testParseWithRequiredOptions, testParseWithProperties, testParseStopAtNonOption, testParseParseException, testParseNullArguments, testParseEmptyOptions, testParseAllowPartialMatching, testParseWithOptionGroups
+- FAILED (1): testParseValidArguments
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ArrayList -> java.util.ArrayList
+//   Enumeration -> java.util.Enumeration
+//   List -> java.util.List
+//   Properties -> java.util.Properties
+//   Consumer -> java.util.function.Consumer
+
+// === Class: DefaultParser ===
+// Fields (with actual visibility):
+    private final boolean allowPartialMatching;
+    private final Consumer deprecatedHandler;
+    private final Boolean stripLeadingAndTrailingQuotes;
+    protected CommandLine cmd;
+    protected Options options;
+    protected boolean stopAtNonOption;
+    protected String currentToken;
+    protected Option currentOption;
+    protected boolean skipParsing;
+    protected List expectedOpts;
+
+// Constructors:
+private Builder();
+public DefaultParser();
+public DefaultParser(boolean allowPartialMatching);
+private DefaultParser(boolean allowPartialMatching, Boolean stripLeadingAndTrailingQuotes, Consumer deprecatedHandler);
+
+// Getter/Setter Methods (for test assertions):
+public Builder setAllowPartialMatching(final boolean allowPartialMatching);
+public Builder setDeprecatedHandler(final Consumer<Option> deprecatedHandler);
+public Builder setStripLeadingAndTrailingQuotes(final Boolean stripLeadingAndTrailingQuotes);
+private String getLongPrefix(final String token);
+private List<String> getMatchingLongOptions(final String token);
+private boolean isArgument(final String token);
+private boolean isJavaProperty(final String token);
+private boolean isLongOption(final String token);
+private boolean isNegativeNumber(final String token);
+private boolean isOption(final String token);
+private boolean isShortOption(final String token);
+
+// Internal Method Signatures (used by target method):
+protected void checkRequiredOptions();
+private void handleProperties(final Properties properties);
+private void handleToken(final String token);
+private void checkRequiredArgs();
+
+// === External Class: Options ===
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   Collection -> java.util.Collection
+//   Collections -> java.util.Collections
+//   HashSet -> java.util.HashSet
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final Map shortOpts;
+    private final Map longOpts;
+    private final List requiredOpts;
+    private final Map optionGroups;
+
+// Method Signatures (used by target method):
+public List getRequiredOptions();
+Collection getOptionGroups();
+
+// === External Class: OptionGroup ===
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   LinkedHashMap -> java.util.LinkedHashMap
+//   Map -> java.util.Map
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final Map optionMap;
+    private String selected;
+    private boolean required;
+
+// Method Signatures (used by target method):
+public void setSelected(final Option option);
+
+// === External Class: CommandLine ===
+// Import paths:
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   Iterator -> java.util.Iterator
+//   LinkedList -> java.util.LinkedList
+//   List -> java.util.List
+// Fields (with actual visibility):
+    package-private static final Consumer DEPRECATED_HANDLER;
+    private final List args;
+    private final List options;
+    private final Consumer deprecatedHandler;
+    private static final long serialVersionUID;
+
+// Constructors:
+protected CommandLine();
+private CommandLine(List args, List options, Consumer deprecatedHandler);
+
+// Method Signatures (used by target method):
+static public Builder builder();
+
+
+// === Exception Class: ParseException ===
+// NOTE: The target method throws this exception.
+// Constructors:
+public ParseException(String message);
+public ParseException(Throwable e);
+
+TASK:
+Regenerate ONLY the method "parse" OF CLASS "DefaultParser" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public CommandLine parse(final Options options, final String[] arguments, final Properties properties, final boolean stopAtNonOption) throws ParseException {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.cli
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in DefaultParser
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

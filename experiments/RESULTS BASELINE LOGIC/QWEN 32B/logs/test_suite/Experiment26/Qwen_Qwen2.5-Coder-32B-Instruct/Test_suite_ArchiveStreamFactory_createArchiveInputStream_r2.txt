@@ -1,0 +1,178 @@
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import org.apache.commons.compress.archivers.ar.ArArchiveInputStream;
+import org.apache.commons.compress.archivers.arj.ArjArchiveInputStream;
+import org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;
+import org.apache.commons.compress.archivers.dump.DumpArchiveInputStream;
+import org.apache.commons.compress.archivers.jar.JarArchiveInputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.utils.IOUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArchiveStreamFactory_createArchiveInputStreamTestGenerated {
+    private ArchiveStreamFactory factory;
+    private InputStream inputStream;
+
+    @BeforeEach
+    public void setUp() {
+        factory = new ArchiveStreamFactory();
+        inputStream = new ByteArrayInputStream(new byte[0]);
+    }
+
+    @AfterEach
+    public void tearDown() throws IOException {
+        if (inputStream != null) {
+            inputStream.close();
+        }
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithUnknownArchiver() {
+        assertThrows(ArchiveException.class, () -> {
+            factory.createArchiveInputStream("UNKNOWN", inputStream, null);
+        });
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithUnknownProvider() {
+        assertThrows(ArchiveException.class, () -> {
+            factory.createArchiveInputStream("UNKNOWN_PROVIDER", inputStream, null);
+        });
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithArj() throws ArchiveException {
+        InputStream arjInputStream = new ByteArrayInputStream(new byte[]{(byte) 0x60, (byte) 0xea});
+        ArchiveInputStream<?> result = factory.createArchiveInputStream("ARJ", arjInputStream, null);
+        assertTrue(result instanceof ArjArchiveInputStream);
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithArjAndEncoding() throws ArchiveException {
+        InputStream arjInputStream = new ByteArrayInputStream(new byte[]{(byte) 0x60, (byte) 0xea});
+        ArchiveInputStream<?> result = factory.createArchiveInputStream("ARJ", arjInputStream, "UTF-8");
+        assertTrue(result instanceof ArjArchiveInputStream);
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithDump() throws ArchiveException {
+        InputStream dumpInputStream = new ByteArrayInputStream(new byte[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00});
+        ArchiveInputStream<?> result = factory.createArchiveInputStream("DUMP", dumpInputStream, null);
+        assertTrue(result instanceof DumpArchiveInputStream);
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithDumpAndEncoding() throws ArchiveException {
+        InputStream dumpInputStream = new ByteArrayInputStream(new byte[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00});
+        ArchiveInputStream<?> result = factory.createArchiveInputStream("DUMP", dumpInputStream, "UTF-8");
+        assertTrue(result instanceof DumpArchiveInputStream);
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithNullArchiverName() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            factory.createArchiveInputStream(null, inputStream, null);
+        });
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithNullInputStream() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            factory.createArchiveInputStream("ARJ", null, null);
+        });
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithSevenZ() {
+        assertThrows(StreamingNotSupportedException.class, () -> {
+            factory.createArchiveInputStream("7Z", inputStream, null);
+        });
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithAr() throws ArchiveException {
+        InputStream arInputStream = new ByteArrayInputStream(new byte[]{(byte) 0x21, (byte) 0x3c, (byte) 0x61, (byte) 0x72, (byte) 0x63, (byte) 0x68, (byte) 0x3e});
+        ArchiveInputStream<?> result = factory.createArchiveInputStream("AR", arInputStream, null);
+        assertTrue(result instanceof ArArchiveInputStream);
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithZip() throws ArchiveException {
+        InputStream zipInputStream = new ByteArrayInputStream(new byte[]{(byte) 0x50, (byte) 0x4b, (byte) 0x03, (byte) 0x04});
+        ArchiveInputStream<?> result = factory.createArchiveInputStream("ZIP", zipInputStream, null);
+        assertTrue(result instanceof ZipArchiveInputStream);
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithZipAndEncoding() throws ArchiveException {
+        InputStream zipInputStream = new ByteArrayInputStream(new byte[]{(byte) 0x50, (byte) 0x4b, (byte) 0x03, (byte) 0x04});
+        ArchiveInputStream<?> result = factory.createArchiveInputStream("ZIP", zipInputStream, "UTF-8");
+        assertTrue(result instanceof ZipArchiveInputStream);
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithTar() throws ArchiveException {
+        InputStream tarInputStream = new ByteArrayInputStream(new byte[]{(byte) 0x75, (byte) 0x73, (byte) 0x74, (byte) 0x61, (byte) 0x72, (byte) 0x00});
+        ArchiveInputStream<?> result = factory.createArchiveInputStream("TAR", tarInputStream, null);
+        assertTrue(result instanceof TarArchiveInputStream);
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithTarAndEncoding() throws ArchiveException {
+        InputStream tarInputStream = new ByteArrayInputStream(new byte[]{(byte) 0x75, (byte) 0x73, (byte) 0x74, (byte) 0x61, (byte) 0x72, (byte) 0x00});
+        ArchiveInputStream<?> result = factory.createArchiveInputStream("TAR", tarInputStream, "UTF-8");
+        assertTrue(result instanceof TarArchiveInputStream);
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithJar() throws ArchiveException {
+        InputStream jarInputStream = new ByteArrayInputStream(new byte[]{(byte) 0x50, (byte) 0x4b, (byte) 0x03, (byte) 0x04});
+        ArchiveInputStream<?> result = factory.createArchiveInputStream("JAR", jarInputStream, null);
+        assertTrue(result instanceof JarArchiveInputStream);
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithJarAndEncoding() throws ArchiveException {
+        InputStream jarInputStream = new ByteArrayInputStream(new byte[]{(byte) 0x50, (byte) 0x4b, (byte) 0x03, (byte) 0x04});
+        ArchiveInputStream<?> result = factory.createArchiveInputStream("JAR", jarInputStream, "UTF-8");
+        assertTrue(result instanceof JarArchiveInputStream);
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithApk() throws ArchiveException {
+        InputStream apkInputStream = new ByteArrayInputStream(new byte[]{(byte) 0x50, (byte) 0x4b, (byte) 0x03, (byte) 0x04});
+        ArchiveInputStream<?> result = factory.createArchiveInputStream("APK", apkInputStream, null);
+        assertTrue(result instanceof JarArchiveInputStream);
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithApkAndEncoding() throws ArchiveException {
+        InputStream apkInputStream = new ByteArrayInputStream(new byte[]{(byte) 0x50, (byte) 0x4b, (byte) 0x03, (byte) 0x04});
+        ArchiveInputStream<?> result = factory.createArchiveInputStream("APK", apkInputStream, "UTF-8");
+        assertTrue(result instanceof JarArchiveInputStream);
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithCpio() throws ArchiveException {
+        InputStream cpioInputStream = new ByteArrayInputStream(new byte[]{(byte) 0x71, (byte) 0xc7, (byte) 0x66, (byte) 0x60});
+        ArchiveInputStream<?> result = factory.createArchiveInputStream("CPIO", cpioInputStream, null);
+        assertTrue(result instanceof CpioArchiveInputStream);
+    }
+
+    @Test
+    public void testCreateArchiveInputStreamWithCpioAndEncoding() throws ArchiveException {
+        InputStream cpioInputStream = new ByteArrayInputStream(new byte[]{(byte) 0x71, (byte) 0xc7, (byte) 0x66, (byte) 0x60});
+        ArchiveInputStream<?> result = factory.createArchiveInputStream("CPIO", cpioInputStream, "UTF-8");
+        assertTrue(result instanceof CpioArchiveInputStream);
+    }
+
+}

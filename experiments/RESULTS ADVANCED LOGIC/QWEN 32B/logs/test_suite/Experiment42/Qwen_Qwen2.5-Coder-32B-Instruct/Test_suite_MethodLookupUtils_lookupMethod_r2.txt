@@ -1,0 +1,138 @@
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import org.apache.commons.jxpath.ExpressionContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.util.MethodLookupUtils;
+import org.apache.commons.jxpath.util.TypeUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class MethodLookupUtils_lookupMethodTestGenerated {
+    private TypeUtils typeUtils;
+
+    @BeforeEach
+    public void setUp() {
+        typeUtils = mock(TypeUtils.class);
+    }
+
+    public void ambiguousMethod(int param) {}
+
+    public void nonStaticMethod() {}
+
+    public static void ambiguousStaticMethod(int param) {}
+
+    @Test
+    public void testLookupMethodWithNullParameters() {
+        Method result = MethodLookupUtils.lookupMethod(String.class, "valueOf", null);
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethodWithEmptyParameters() {
+        Method result = MethodLookupUtils.lookupMethod(String.class, "valueOf", new Object[0]);
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethodWithFirstParameterNull() {
+        Method result = MethodLookupUtils.lookupMethod(String.class, "valueOf", new Object[]{null});
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethodWithNonMatchingTargetClass() {
+        Method result = MethodLookupUtils.lookupMethod(String.class, "valueOf", new Object[]{"123", 456});
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethodWithStaticMethod() {
+        Method result = MethodLookupUtils.lookupMethod(String.class, "format", new Object[]{"%s", "test"});
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethodWithNonStaticMethod() throws Exception {
+        Method expectedMethod = MethodLookupUtils.class.getMethod("lookupMethod", Class.class, String.class, Object[].class);
+        Method result = MethodLookupUtils.lookupMethod(MethodLookupUtils.class, "lookupMethod", new Object[]{String.class, "valueOf", new Object[]{123}});
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethodWithExactMatch() throws Exception {
+        Method expectedMethod = String.class.getMethod("valueOf", int.class);
+        Method result = MethodLookupUtils.lookupMethod(String.class, "valueOf", new Object[]{123});
+        assertEquals(expectedMethod, result);
+    }
+
+    @Test
+    public void testLookupMethodWithAmbiguousMethodCall() {
+        Exception exception = assertThrows(JXPathException.class, () -> {
+            MethodLookupUtils.lookupMethod(String.class, "valueOf", new Object[]{"123"});
+        });
+        assertEquals("Ambiguous method call: valueOf", exception.getMessage());
+    }
+
+    @Test
+    public void testLookupMethodWithNullInParameters() throws Exception {
+        Method expectedMethod = String.class.getMethod("format", String.class, Object[].class);
+        Method result = MethodLookupUtils.lookupMethod(String.class, "format", new Object[]{"%s", null});
+        assertEquals(expectedMethod, result);
+    }
+
+    @Test
+    public void testLookupMethodWithApproximateMatch() throws Exception {
+        when(TypeUtils.canConvert(any(), any())).thenReturn(true);
+        Method expectedMethod = String.class.getMethod("valueOf", Object.class);
+        Method result = MethodLookupUtils.lookupMethod(String.class, "valueOf", new Object[]{123});
+        assertEquals(expectedMethod, result);
+    }
+
+    @Test
+    public void testLookupMethodWithNoMatchInType() throws Exception {
+        when(TypeUtils.canConvert(any(), any())).thenReturn(false);
+        Method result = MethodLookupUtils.lookupMethod(String.class, "valueOf", new Object[]{123});
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethodWithAmbiguousMatch() throws Exception {
+        when(TypeUtils.canConvert(any(), any())).thenReturn(true);
+        Exception exception = assertThrows(JXPathException.class, () -> {
+            MethodLookupUtils.lookupMethod(MethodLookupUtils_lookupMethodTestGenerated.class, "ambiguousMethod", new Object[]{123});
+        });
+        assertEquals("Ambiguous method call: ambiguousMethod", exception.getMessage());
+    }
+
+    @Test
+    public void testLookupMethodWithoutTypeConversion() throws Exception {
+        Method expectedMethod = String.class.getMethod("valueOf", int.class);
+        when(TypeUtils.canConvert(any(), any())).thenReturn(false);
+        Method result = MethodLookupUtils.lookupMethod(String.class, "valueOf", new Object[]{123});
+        assertEquals(expectedMethod, result);
+    }
+
+    @Test
+    public void testLookupMethodWithNonStaticMethodInClass() {
+        Exception exception = assertThrows(JXPathException.class, () -> {
+            MethodLookupUtils.lookupMethod(MethodLookupUtils_lookupMethodTestGenerated.class, "nonStaticMethod", new Object[]{});
+        });
+        assertEquals("Ambiguous method call: nonStaticMethod", exception.getMessage());
+    }
+
+    @Test
+    public void testLookupMethodWithAmbiguousStaticMethods() {
+        Exception exception = assertThrows(JXPathException.class, () -> {
+            MethodLookupUtils.lookupMethod(MethodLookupUtils_lookupMethodTestGenerated.class, "ambiguousStaticMethod", new Object[]{123});
+        });
+        assertEquals("Ambiguous method call: ambiguousStaticMethod", exception.getMessage());
+    }
+}

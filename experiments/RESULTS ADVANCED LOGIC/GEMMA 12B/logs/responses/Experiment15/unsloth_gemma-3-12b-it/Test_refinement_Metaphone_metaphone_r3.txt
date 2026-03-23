@@ -1,0 +1,78 @@
+```java
+package org.apache.commons.codec.language;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Metaphone_metaphoneTestGenerated {
+    private Metaphone metaphone;
+    @BeforeEach
+    public void setUp() {
+        metaphone = new Metaphone();
+    }
+
+
+    @Test
+                public void testMetaphone_wh() {
+                    Assertions.assertEquals("W", metaphone.metaphone("WH").toUpperCase());
+                }
+
+    @Test
+                public void testMetaphone_x() {
+                    Assertions.assertEquals("S", metaphone.metaphone("X").toUpperCase());
+                }
+
+    @Test
+                public void testMetaphone_smith() {
+                    Assertions.assertEquals("SMT", metaphone.metaphone("SMITH").toUpperCase());
+                }
+
+    @Test
+                public void testMetaphone_gibson() {
+                    Assertions.assertEquals("GSN", metaphone.metaphone("GIBSON").toUpperCase());
+                }
+
+    @Test
+                public void testMetaphone_gh() {
+                    Assertions.assertEquals("K", metaphone.metaphone("GH").toUpperCase());
+                }
+
+    @Test
+                public void testMetaphone_maxCodeLen() {
+                    metaphone.setMaxCodeLen(5);
+                    Assertions.assertEquals(5, metaphone.getMaxCodeLen());
+                    Assertions.assertEquals("SMT", metaphone.metaphone("SMITH").toUpperCase());
+                }
+
+    @Test
+            public void testMetaphone_initialG() {
+                Assertions.assertEquals("K", metaphone.metaphone("G").toUpperCase());
+    }
+
+    @Test
+            public void testMetaphone_InitialX() {
+                Assertions.assertEquals("S", metaphone.metaphone("X").toUpperCase());
+    }
+
+    @Test
+    public void testMetaphone_AE() {
+        Assertions.assertEquals("AE", metaphone.metaphone("AE").toUpperCase());
+    }
+
+    @Test
+    public void testMetaphone_initialP_KN() {
+        Assertions.assertEquals("KN", metaphone.metaphone("KN").toUpperCase());
+    }
+
+    @Test
+    public void testMetaphone_initialG_AE() {
+        Assertions.assertEquals("K", metaphone.metaphone("GAE").toUpperCase());
+    }
+}
+```

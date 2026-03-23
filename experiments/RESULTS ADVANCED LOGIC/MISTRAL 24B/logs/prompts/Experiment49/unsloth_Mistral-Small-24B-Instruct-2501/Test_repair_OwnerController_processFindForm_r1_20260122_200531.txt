@@ -1,0 +1,171 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.springframework.samples.petclinic.owner;
+Class name (MUST be exactly): OwnerController_processFindFormTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.springframework.samples.petclinic.owner;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.MapBindingResult;
+import org.springframework.web.bind.support.SessionStatus;
+
+import java.util.Collections;
+import java.util.HashMap;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+public class OwnerController_processFindFormTestGenerated {
+
+    @Mock
+    private OwnerService ownerService;
+
+    @InjectMocks
+    private OwnerController ownerController;
+
+    @Mock
+    private Model model;
+
+    @BeforeEach
+    public void setUp() {
+        ownerController = new OwnerController(ownerService);
+    }
+
+    @Test
+    public void testProcessFindForm_EmptyLastName_ReturnsFindOwnersView() {
+        Owner owner = new Owner();
+        BindingResult result = new MapBindingResult(new HashMap<>(), "owner");
+        Page<Owner> ownersResults = new PageImpl<>(Collections.emptyList());
+
+        when(ownerService.findPaginatedForOwnersLastName(anyInt(), anyString())).thenReturn(ownersResults);
+
+        String view = ownerController.processFindForm(1, owner, result, model);
+
+        assertEquals("owners/findOwners", view);
+        verify(result).rejectValue("lastName", "notFound", "not found");
+    }
+
+    @Test
+    public void testProcessFindForm_SingleOwner_RedirectsToOwnerView() {
+        Owner owner = new Owner();
+        owner.setLastName("Smith");
+        BindingResult result = new MapBindingResult(new HashMap<>(), "owner");
+
+        Owner singleOwner = new Owner();
+        singleOwner.setId(1);
+        Page<Owner> ownersResults = new PageImpl<>(Collections.singletonList(singleOwner));
+
+        when(ownerService.findPaginatedForOwnersLastName(anyInt(), anyString())).thenReturn(ownersResults);
+
+        String view = ownerController.processFindForm(1, owner, result, model);
+
+        assertEquals("redirect:/owners/1", view);
+    }
+
+    @Test
+    public void testProcessFindForm_MultipleOwners_ReturnsPaginationView() {
+        Owner owner = new Owner();
+        owner.setLastName("Smith");
+        BindingResult result = new MapBindingResult(new HashMap<>(), "owner");
+
+        Owner owner1 = new Owner();
+        owner1.setId(1);
+        Owner owner2 = new Owner();
+        owner2.setId(2);
+        Page<Owner> ownersResults = new PageImpl<>(Collections.singletonList(owner1));
+
+        when(ownerService.findPaginatedForOwnersLastName(anyInt(), anyString())).thenReturn(ownersResults);
+
+        String view = ownerController.processFindForm(1, owner, result, model);
+
+        assertEquals("owners/ownersList", view);
+    }
+
+    @Test
+    public void testProcessFindForm_NullOwner_ReturnsFindOwnersView() {
+        Owner owner = null;
+        BindingResult result = new MapBindingResult(new HashMap<>(), "owner");
+        Page<Owner> ownersResults = new PageImpl<>(Collections.emptyList());
+
+        when(ownerService.findPaginatedForOwnersLastName(anyInt(), anyString())).thenReturn(ownersResults);
+
+        String view = ownerController.processFindForm(1, owner, result, model);
+
+        assertEquals("owners/findOwners", view);
+        verify(result).rejectValue("lastName", "notFound", "not found");
+    }
+}
+java.util.Collections;
+java.util.HashMap;
+
+org.junit.jupiter.api.BeforeEach;
+org.junit.jupiter.api.Test;
+org.junit.jupiter.api.extension.ExtendWith;
+org.mockito.InjectMocks;
+org.mockito.Mock;
+org.mockito.junit.jupiter.MockitoExtension;
+
+org.springframework.data.domain.Page;
+org.springframework.data.domain.PageImpl;
+org.springframework.data.domain.PageRequest;
+org.springframework.data.domain.Pageable;
+org.springframework.ui.Model;
+org.springframework.validation.BindingResult;
+org.springframework.validation.MapBindingResult;
+org.springframework.web.bind.support.SessionStatus;
+
+static org.junit.jupiter.api.Assertions.*;
+static org.mockito.Mockito.*;
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[107] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[108] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[110] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[111] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[112] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[113] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[114] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[115] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[117] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[118] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[119] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[120] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[121] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[122] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[123] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[124] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[126] class, interface, enum, or record expected
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/OwnerController_processFindFormTestGenerated.java:[127] class, interface, enum, or record expected
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: OwnerController_processFindFormTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

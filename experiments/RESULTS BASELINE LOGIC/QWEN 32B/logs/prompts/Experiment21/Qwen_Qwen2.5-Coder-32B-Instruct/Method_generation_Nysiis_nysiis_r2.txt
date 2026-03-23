@@ -1,0 +1,308 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.codec.language;
+
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.StringEncoder;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Nysiis_nysiisTestGenerated {
+    private Nysiis nysiis;
+
+    @BeforeEach
+    public void setUp() {
+        nysiis = new Nysiis();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        nysiis = null;
+    }
+
+    @Test
+    public void testNysiisMacTranslation() {
+        assertEquals("MCCAR", nysiis.nysiis("MACAR"));
+    }
+
+    @Test
+    public void testNysiisKnTranslation() {
+        assertEquals("NNSON", nysiis.nysiis("KNSON"));
+    }
+
+    @Test
+    public void testNysiisPhTranslation() {
+        assertEquals("FFRAN", nysiis.nysiis("PHRAN"));
+    }
+
+    @Test
+    public void testNysiisPfTranslation() {
+        assertEquals("FFRAN", nysiis.nysiis("PFRAN"));
+    }
+
+    @Test
+    public void testNysiisSchTranslation() {
+        assertEquals("SSSSON", nysiis.nysiis("SCHSON"));
+    }
+
+    @Test
+    public void testNysiisEeTranslation() {
+        assertEquals("SONY", nysiis.nysiis("SONEE"));
+    }
+
+    @Test
+    public void testNysiisIeTranslation() {
+        assertEquals("SONY", nysiis.nysiis("SONIE"));
+    }
+
+    @Test
+    public void testNysiisRtTranslation() {
+        assertEquals("SAND", nysiis.nysiis("SANDR"));
+    }
+
+    @Test
+    public void testNysiisNtTranslation() {
+        assertEquals("SAND", nysiis.nysiis("SANDN"));
+    }
+
+    @Test
+    public void testNysiisNdTranslation() {
+        assertEquals("SAND", nysiis.nysiis("SANDN"));
+    }
+
+    @Test
+    public void testNysiisTrailingSTranslation() {
+        assertEquals("SON", nysiis.nysiis("SONS"));
+    }
+
+    @Test
+    public void testNysiisTrailingAYTranslation() {
+        assertEquals("SON", nysiis.nysiis("SONAY"));
+    }
+
+    @Test
+    public void testNysiisTrailingATranslation() {
+        assertEquals("SON", nysiis.nysiis("SONA"));
+    }
+
+    @Test
+    public void testNysiisComplexName() {
+        assertEquals("SMYTH", nysiis.nysiis("SMYTHE"));
+        assertEquals("SMYTH", nysiis.nysiis("SMYTHS"));
+        assertEquals("SMYTH", nysiis.nysiis("SMYTHY"));
+    }
+
+    @Test
+    public void testNysiisStrictMode() {
+        Nysiis strictNysiis = new Nysiis(true);
+        assertEquals("SMYTH", strictNysiis.nysiis("SMYTHE"));
+        assertEquals("SMYTH", strictNysiis.nysiis("SMYTHS"));
+        assertEquals("SMYTH", strictNysiis.nysiis("SMYTHY"));
+    }
+
+    @Test
+    public void testNysiisNullInput() {
+        assertNull(nysiis.nysiis(null));
+    }
+
+    @Test
+    public void testNysiisEmptyString() {
+        assertEquals("", nysiis.nysiis(""));
+    }
+
+    @Test
+    public void testNysiisSingleCharacter() {
+        assertEquals("A", nysiis.nysiis("A"));
+        assertEquals("B", nysiis.nysiis("B"));
+    }
+
+    @Test
+    public void testNysiisKTranslation() {
+        assertEquals("CAN", nysiis.nysiis("KAN"));
+    }
+
+    @Test
+    public void testNysiisDtTranslation() {
+        assertEquals("SAND", nysiis.nysiis("SANDT"));
+    }
+
+    @Test
+    public void testNysiisRdTranslation() {
+        assertEquals("SAND", nysiis.nysiis("SANDD"));
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 92.31%
+- Tests: 6/21 passed
+
+TEST STATUS:
+- PASSED (6): testNysiisNullInput, testNysiisEmptyString, testNysiisSingleCharacter, testNysiisKTranslation, testNysiisDtTranslation, testNysiisRdTranslation
+- FAILED (15): testNysiisMacTranslation, testNysiisKnTranslation, testNysiisPhTranslation, testNysiisPfTranslation, testNysiisSchTranslation, testNysiisEeTranslation, testNysiisIeTranslation, testNysiisRtTranslation, testNysiisNtTranslation, testNysiisNdTranslation, testNysiisTrailingSTranslation, testNysiisTrailingAYTranslation, testNysiisTrailingATranslation, testNysiisComplexName, testNysiisStrictMode
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PREVIOUSLY GENERATED METHOD:
+public String nysiis(String str) {
+    if (str == null) {
+        return null;
+    }
+    str = SoundexUtils.clean(str);
+    if (str.length() == 0) {
+        return "";
+    }
+    if (str.length() == 1) {
+        return str.toUpperCase();
+    }
+
+    str = str.toUpperCase();
+    StringBuilder nysiis = new StringBuilder();
+
+    // Handle MAC, KN, K, PH, PF, SCH
+    if (str.startsWith("MAC")) {
+        str = "MCC" + str.substring(3);
+    } else if (str.startsWith("KN")) {
+        str = "NN" + str.substring(2);
+    } else if (str.startsWith("K")) {
+        str = "C" + str.substring(1);
+    } else if (str.startsWith("PH") || str.startsWith("PF")) {
+        str = "FF" + str.substring(2);
+    } else if (str.startsWith("SCH")) {
+        str = "SSS" + str.substring(3);
+    }
+
+    // Handle EE, IE
+    str = str.replaceAll("EE", "Y");
+    str = str.replaceAll("IE", "Y");
+
+    // Handle DT, RT, RD, NT, ND
+    str = str.replaceAll("(DT|RT|RD|NT|ND)$", "D");
+
+    // Handle trailing S, AY, A
+    str = str.replaceAll("(S|AY|A)$", "");
+
+    nysiis.append(str.charAt(0));
+    for (int i = 1; i < str.length(); i++) {
+        char curr = str.charAt(i);
+        char prev = str.charAt(i - 1);
+        if (curr != prev && isVowel(curr) && isVowel(prev)) {
+            continue;
+        }
+        if (curr != 'Y' || prev != 'S') {
+            nysiis.append(curr);
+        }
+    }
+
+    // Handle final S
+    if (nysiis.length() > 1 && nysiis.charAt(nysiis.length() - 1) == 'S') {
+        nysiis.setLength(nysiis.length() - 1);
+    }
+
+    // Ensure length is 6
+    while (nysiis.length() < TRUE_LENGTH) {
+        nysiis.append('A');
+    }
+    if (nysiis.length() > TRUE_LENGTH) {
+        nysiis.setLength(TRUE_LENGTH);
+    }
+
+    return nysiis.toString();
+}
+
+ADDITIONAL INSTRUCTIONS:
+- Compare the previous method with the one you are about to generate
+- Improve quality and correctness compared to the previous version
+- Maintain compatibility with all provided tests
+
+
+PROJECT CONTEXT:
+// === Imports of Nysiis ===
+import java.util.regex.Pattern;
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.StringEncoder;
+
+// === Class: Nysiis ===
+// Fields:
+    private char CHARS_A;
+    private char CHARS_AF;
+    private char CHARS_C;
+    private char CHARS_FF;
+    private char CHARS_G;
+    private char CHARS_N;
+    private char CHARS_NN;
+    private char CHARS_S;
+    private char CHARS_SSS;
+    private Pattern PAT_MAC;
+    private Pattern PAT_KN;
+    private Pattern PAT_K;
+    private Pattern PAT_PH_PF;
+    private Pattern PAT_SCH;
+    private Pattern PAT_EE_IE;
+    private Pattern PAT_DT_ETC;
+    private char SPACE;
+    private int TRUE_LENGTH;
+    private boolean strict;
+
+// Constructors:
+public Nysiis();
+public Nysiis(boolean strict);
+
+// Getter/Setter Methods (for test assertions):
+private static boolean isVowel(final char c);
+public boolean isStrict();
+
+// Internal Method Signatures (used by target method):
+private static char transcodeRemaining(final char prev, final char curr, final char next, final char aNext);
+public boolean isStrict();
+
+// === External Class: SoundexUtils ===
+// Method Signatures (used by target method):
+static String clean(final String str);
+
+
+TASK:
+Regenerate ONLY the method "nysiis" OF CLASS "Nysiis" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public String nysiis(String str) {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.codec.language
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in Nysiis
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

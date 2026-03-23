@@ -1,0 +1,48 @@
+```java
+public String asPath() {
+    if (id != null) {
+        return "id('" + id + "')";
+    }
+
+    if (node.getNodeType() == Node.DOCUMENT_NODE || node.getNodeType() == Node.COMMENT_NODE || node.getNodeType() == Node.ATTRIBUTE_NODE) {
+        return "";
+    }
+
+    if (node.getNodeType() == Node.TEXT_NODE || node.getNodeType() == Node.CDATA_SECTION_NODE) {
+        int position = getRelativePositionOfTextNode();
+        return "/text()[" + position + "]/text()[" + position + "]";
+    }
+
+    if (node.getNodeType() == Node.ELEMENT_NODE) {
+        String localName = getLocalName(node);
+        String namespaceURI = getNamespaceURI();
+        String prefix = null;
+
+        if (namespaceURI != null && !namespaceURI.isEmpty()) {
+            NamespaceResolver resolver = getNamespaceResolver();
+            prefix = resolver.getPrefix(namespaceURI);
+        }
+
+        if (prefix != null && !prefix.isEmpty()) {
+            localName = prefix + ":" + localName;
+        } else if (namespaceURI != null && !namespaceURI.isEmpty()) {
+            localName = "node()";
+        }
+
+        int position = getRelativePositionByQName();
+        return "/" + localName + "[" + position + "]";
+    }
+
+    if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
+        String target = ((ProcessingInstruction) node).getTarget();
+        int position = getRelativePositionOfPI();
+        return "/processing-instruction('" + target + "')[" + position + "]";
+    }
+
+    if (parent != null) {
+        return parent.asPath();
+    }
+
+    return "";
+}
+```

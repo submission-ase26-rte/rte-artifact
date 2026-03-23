@@ -1,0 +1,55 @@
+```java
+    public String asPath() {
+        if (node.getNodeType() == Node.DOCUMENT_NODE) {
+            return "";
+        }
+
+        if (parent == null) {
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                String localName = node.getLocalName();
+                if (localName == null) {
+                    localName = node.getNodeName();
+                    int index = localName.lastIndexOf(':');
+                    if (index < 0) {
+                        localName = localName;
+                    } else {
+                        localName = localName.substring(index + 1);
+                    }
+                }
+                return "/" + localName + "[1]";
+            } else if (node.getNodeType() == Node.TEXT_NODE || node.getNodeType() == Node.CDATA_SECTION_NODE) {
+                return "/text()[1]";
+            } else if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
+                String target = ((ProcessingInstruction) node).getTarget();
+                return "/processing-instruction('" + target + "')[1]";
+            } else {
+                return String.valueOf(node.getNodeType());
+            }
+        } else {
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                String localName = node.getLocalName();
+                if (localName == null) {
+                    localName = node.getNodeName();
+                    int index = localName.lastIndexOf(':');
+                    if (index < 0) {
+                        localName = localName;
+                    } else {
+                        localName = localName.substring(index + 1);
+                    }
+                }
+                String parentPath = parent.asPath();
+                if (parentPath.isEmpty()) {
+                    return "/" + localName + "[1]";
+                }
+                return parentPath + "/" + localName + "[1]";
+            } else if (node.getNodeType() == Node.TEXT_NODE || node.getNodeType() == Node.CDATA_SECTION_NODE) {
+                return parent.asPath() + "/text()[1]";
+            } else if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
+                String target = ((ProcessingInstruction) node).getTarget();
+                return parent.asPath() + "/processing-instruction('" + target + "')[1]";
+            } else {
+                return parent.asPath() + "/" + String.valueOf(node.getNodeType());
+            }
+        }
+    }
+```

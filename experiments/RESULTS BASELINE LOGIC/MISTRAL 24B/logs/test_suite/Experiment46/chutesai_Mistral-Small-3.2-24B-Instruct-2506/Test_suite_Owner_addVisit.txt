@@ -1,0 +1,60 @@
+package org.springframework.samples.petclinic.owner;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.Assert;
+import java.util.ArrayList;
+import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Owner_addVisitTestGenerated {
+
+    private Owner owner;
+    private Pet pet;
+    private Visit visit;
+
+    @BeforeEach
+    void setUp() {
+        owner = new Owner();
+        pet = mock(Pet.class);
+        visit = mock(Visit.class);
+        List<Pet> pets = new ArrayList<>();
+        pets.add(pet);
+        ReflectionTestUtils.setField(owner, "pets", pets);
+    }
+
+    @Test
+    void addVisit_WithValidPetIdAndVisit_ShouldAddVisit() {
+        Integer petId = 1;
+        owner.addVisit(petId, visit);
+
+        verify(pet, times(1)).addVisit(visit);
+    }
+
+    @Test
+    void addVisit_WithNullPetId_ShouldThrowIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            owner.addVisit(null, visit);
+        });
+    }
+
+    @Test
+    void addVisit_WithNullVisit_ShouldThrowIllegalArgumentException() {
+        Integer petId = 1;
+        assertThrows(IllegalArgumentException.class, () -> {
+            owner.addVisit(petId, null);
+        });
+    }
+
+    @Test
+    void addVisit_WithInvalidPetId_ShouldThrowIllegalArgumentException() {
+        Integer invalidPetId = 999;
+        assertThrows(IllegalArgumentException.class, () -> {
+            owner.addVisit(invalidPetId, visit);
+        });
+    }
+}

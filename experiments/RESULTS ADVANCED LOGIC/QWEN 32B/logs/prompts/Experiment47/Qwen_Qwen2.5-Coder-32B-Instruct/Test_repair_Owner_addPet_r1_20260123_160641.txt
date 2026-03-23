@@ -1,0 +1,97 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.springframework.samples.petclinic.owner;
+Class name (MUST be exactly): Owner_addPetTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.springframework.samples.petclinic.owner;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.samples.petclinic.owner.Pet;
+import org.springframework.samples.petclinic.owner.PetType;
+import java.time.LocalDate;
+import java.util.Set;
+import java.util.LinkedHashSet;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Owner_addPetTestGenerated {
+
+    @Mock
+    private PetType mockPetType;
+
+    @Mock
+    private Set mockVisits;
+
+    private Owner owner;
+    private Pet pet;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        owner = new Owner();
+        pet = new Pet();
+        pet.setType(mockPetType);
+        pet.setBirthDate(LocalDate.now());
+        pet.setVisits(mockVisits);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        owner = null;
+        pet = null;
+    }
+
+    @Test
+    public void testAddPet_NewPet() {
+        pet.setId(null);
+        owner.addPet(pet);
+        assertTrue(owner.getPets().contains(pet));
+    }
+
+    @Test
+    public void testAddPet_ExistingPet() {
+        pet.setId(1);
+        owner.addPet(pet);
+        assertFalse(owner.getPets().contains(pet));
+    }
+
+    @Test
+    public void testAddPet_NullPet() {
+        assertThrows(NullPointerException.class, () -> {
+            owner.addPet(null);
+        });
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/Owner_addPetTestGenerated.java:[39] cannot find symbol
+  symbol:   method setVisits(java.util.Set)
+  location: variable pet of type org.springframework.samples.petclinic.owner.Pet
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: Owner_addPetTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

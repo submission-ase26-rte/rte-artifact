@@ -1,0 +1,26 @@
+```java
+public static Method lookupMethod( Class targetClass, final String name, final Object[] parameters) {
+        Method method = null;
+        if (targetClass != null && name != null) {
+            method = findMethod(targetClass, name, parameters);
+        }
+        return method;
+    }
+
+    private static Method findMethod(Class targetClass, String name, Object[] parameters) {
+        Method method = null;
+        final Method[] methods = targetClass.getDeclaredMethods();
+        int match = NO_MATCH;
+        for (Method m : methods) {
+            if (name.equals(m.getName())) {
+                final Class<?>[] parameterTypes = m.getParameterTypes();
+                int currentMatch = matchParameterTypes(parameterTypes, parameters);
+                if (currentMatch > match) {
+                    method = m;
+                    match = currentMatch;
+                }
+            }
+        }
+        return method;
+    }
+```

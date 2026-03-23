@@ -1,0 +1,132 @@
+```java
+package org.apache.commons.cli;
+
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.OptionGroup;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.function.Consumer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Timeout;
+import java.util.Arrays;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class DefaultParser_parseTestGenerated {
+
+    private DefaultParser parser;
+
+    @BeforeEach
+    void setUp() {
+        parser = new DefaultParser();
+    }
+
+    @Test
+    void testParseWithValidArguments() throws ParseException {
+        Options options = new Options();
+        options.addOption("a", false);
+        options.addOption("b", true, "value for b");
+
+        Properties properties = new Properties();
+        CommandLine result = parser.parse(options, new String[]{"-a", "-b", "test"}, properties, false);
+
+        assertNotNull(result);
+    }
+
+    @Test
+    void testParseWithRequiredOptionMissing() {
+        Options options = new Options();
+        options.addOption("r", true, "required option");
+        options.addOption("a", false);
+        options.addOption("b", true, "value for b");
+
+        Option rOption = options.getOptions().getOption("r");
+        rOption.setRequired(true);
+
+        assertThrows(MissingOptionException.class, () -> parser.parse(options, new String[]{"-a", "-b", "test"}, new Properties(), false));
+    }
+
+    @Test
+    void testParseWithUnknownOption() {
+        Options options = new Options();
+        options.addOption("a", false);
+        options.addOption("b", true, "value for b");
+
+        assertThrows(UnrecognizedOptionException.class, () -> parser.parse(options, new String[]{"-a", "-c"}, new Properties(), false));
+    }
+
+    @Test
+    void testParseWithProperties() throws ParseException {
+        Options options = new Options();
+        options.addOption("p", true, "property option");
+
+        Properties properties = new Properties();
+        properties.setProperty("p", "propertyValue");
+
+        CommandLine result = parser.parse(options, new String[]{}, properties, false);
+
+        assertNotNull(result);
+    }
+
+    @Test
+    void testParseWithStopAtNonOption() throws ParseException {
+        Options options = new Options();
+        options.addOption("a", false);
+
+        CommandLine result = parser.parse(options, new String[]{"-a", "extraArg"}, new Properties(), true);
+
+        assertNotNull(result);
+    }
+
+    @Test
+    void testParseWithNullArguments() throws ParseException {
+        Options options = new Options();
+        options.addOption("a", false);
+
+        CommandLine result = parser.parse(options, null, new Properties(), false);
+
+        assertNotNull(result);
+    }
+
+    @Test
+    void testParseWithNullProperties() throws ParseException {
+        Options options = new Options();
+        options.addOption("a", false);
+
+        CommandLine result = parser.parse(options, new String[]{"-a"}, null, false);
+
+        assertNotNull(result);
+    }
+
+    @Test
+    void testParseWithEmptyOptions() throws ParseException {
+        Options options = new Options();
+
+        CommandLine result = parser.parse(options, new String[]{}, new Properties(), false);
+
+        assertNotNull(result);
+    }
+
+    @Test
+    void testParseWithRequiredOptionAndProperties() throws ParseException {
+        Options options = new Options();
+        options.addOption("r", true, "required option");
+
+        Option rOption = options.getOptions().getOption("r");
+        rOption.setRequired(true);
+
+        Properties properties = new Properties();
+        properties.setProperty("r", "propertyValue");
+
+        CommandLine result = parser.parse(options, new String[]{}, properties, false);
+
+        assertNotNull(result);
+    }
+}
+```

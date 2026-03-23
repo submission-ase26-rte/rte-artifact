@@ -1,0 +1,188 @@
+```java
+package org.apache.commons.jxpath.ri.axes;
+
+import org.apache.commons.jxpath.ri.EvalContext;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import java.util.Stack;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+class PrecedingOrFollowingContext_nextNodeTestGenerated {
+
+    private EvalContext mockEvalContext;
+    private NodeTest mockNodeTest;
+    private PrecedingOrFollowingContext target;
+
+    @BeforeEach
+    void setUp() {
+        mockEvalContext = mock(EvalContext.class);
+        mockNodeTest = mock(NodeTest.class);
+        target = new PrecedingOrFollowingContext(mockEvalContext, mockNodeTest, false);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mockEvalContext = null;
+        mockNodeTest = null;
+        target = null;
+    }
+
+    @Test
+    void testNextNode_noStack_rootHasParent_pushIterator() {
+        NodePointer root = new NodePointer(null) {
+            @Override
+            protected boolean isLeaf() {
+                return false;
+            }
+        };
+        root.setParent(new NodePointer(null));
+        when(mockEvalContext.getCurrentNodePointer()).thenReturn(root);
+
+        NodeIterator iterator = Mockito.mock(NodeIterator.class);
+        when(root.childIterator(null, false, root)).thenReturn(iterator);
+
+        target.nextNode();
+        verify(root).childIterator(null, false, root);
+    }
+
+    @Test
+    void testNextNode_noStack_rootIsRoot_returnsFalse() {
+        NodePointer root = new NodePointer(null) {
+            @Override
+            protected boolean isLeaf() {
+                return false;
+            }
+        };
+        root.setParent(null);
+        root.setActual(true);
+        when(mockEvalContext.getCurrentNodePointer()).thenReturn(root);
+
+        assertFalse(target.nextNode());
+    }
+
+    @Test
+    void testNextNode_stackNotEmpty_reverseFalse_iteratorHasNext_testNodeTrue_returnsTrue() {
+        NodePointer parent = new NodePointer(null) {
+            @Override
+            protected boolean isLeaf() {
+                return false;
+            }
+        };
+        NodePointer currentNode = new NodePointer(parent) {
+            @Override
+            protected boolean isLeaf() {
+                return false;
+            }
+        };
+
+        Stack stack = new Stack();
+        NodeIterator iterator = Mockito.mock(NodeIterator.class);
+        when(iterator.setPosition(anyInt())).thenReturn(true);
+        when(iterator.getNodePointer()).thenReturn(currentNode);
+        when(currentNode.testNode(mockNodeTest)).thenReturn(true);
+
+        stack.push(iterator);
+        target.stack = stack;
+
+        assertTrue(target.nextNode());
+        verify(currentNode).testNode(mockNodeTest);
+
+    }
+
+    @Test
+    void testNextNode_stackNotEmpty_reverseFalse_iteratorHasNext_testNodeFalse_popIterator() {
+        NodePointer parent = new NodePointer(null) {
+            @Override
+            protected boolean isLeaf() {
+                return false;
+            }
+        };
+        NodePointer currentNode = new NodePointer(parent) {
+            @Override
+            protected boolean isLeaf() {
+                return false;
+            }
+        };
+
+        Stack stack = new Stack();
+        NodeIterator iterator = Mockito.mock(NodeIterator.class);
+        when(iterator.setPosition(anyInt())).thenReturn(true);
+        when(iterator.getNodePointer()).thenReturn(currentNode);
+        when(currentNode.testNode(mockNodeTest)).thenReturn(false);
+
+        stack.push(iterator);
+        target.stack = stack;
+
+        assertFalse(target.nextNode());
+        verify(iterator).setPosition(anyInt());
+        verify(stack).pop();
+
+    }
+
+    @Test
+    void testNextNode_stackNotEmpty_reverseTrue_iteratorHasNext_testNodeTrue_returnsTrue() {
+        NodePointer parent = new NodePointer(null) {
+            @Override
+            protected boolean isLeaf() {
+                return false;
+            }
+        };
+        NodePointer currentNode = new NodePointer(parent) {
+            @Override
+            protected boolean isLeaf() {
+                return false;
+            }
+        };
+
+        Stack stack = new Stack();
+        NodeIterator iterator = Mockito.mock(NodeIterator.class);
+        when(iterator.setPosition(anyInt())).thenReturn(true);
+        when(iterator.getNodePointer()).thenReturn(currentNode);
+        when(currentNode.testNode(mockNodeTest)).thenReturn(true);
+
+        stack.push(iterator);
+        target.stack = stack;
+        target.reverse = true;
+
+        assertTrue(target.nextNode());
+        verify(currentNode).testNode(mockNodeTest);
+    }
+
+    @Test
+    void testNextNode_stackNotEmpty_reverseTrue_iteratorHasNext_testNodeFalse_popIteratorAndCheckNext() {
+        NodePointer parent = new NodePointer(null) {
+            @Override
+            protected boolean isLeaf() {
+                return false;
+            }
+        };
+        NodePointer currentNode = new NodePointer(parent) {
+            @Override
+            protected boolean isLeaf() {
+                return false;
+            }
+        };
+
+        Stack stack = new Stack();
+        NodeIterator iterator = Mockito.mock(NodeIterator.class);
+        when(iterator.setPosition(anyInt())).thenReturn(true);
+        when(iterator.getNodePointer()).thenReturn(currentNode);
+        when(currentNode.testNode(mockNodeTest)).thenReturn(false);
+
+        stack.push(iterator);
+        target.stack = stack;
+        target.reverse = true;
+
+        assertFalse(target.nextNode());
+        verify(iterator).setPosition(anyInt());
+        verify(stack).pop();
+    }
+}
+```

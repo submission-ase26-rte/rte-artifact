@@ -1,0 +1,146 @@
+```java
+public void performTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    String action = req.getParameter("action");
+    HttpSession session = req.getSession();
+    ServletContext ctx = servletConfig.getServletContext();
+
+    if (action == null || action.isEmpty()) {
+        tsAction.doWelcome(ctx, req, resp, "");
+        resp.setContentType("text/html");
+    } else {
+        switch (action) {
+            case "login":
+                String uid = req.getParameter("uid");
+                String passwd = req.getParameter("passwd");
+                tsAction.doLogin(ctx, req, resp, uid, passwd);
+                resp.setContentType("text/html");
+                break;
+
+            case "register":
+                String userID = req.getParameter("user id");
+                String passwdReg = req.getParameter("passwd");
+                String confirmPasswd = req.getParameter("confirm passwd");
+                String fullName = req.getParameter("Full Name");
+                String creditCardNumber = req.getParameter("Credit Card Number");
+                String openBalance = req.getParameter("money");
+                String email = req.getParameter("email");
+                String address = req.getParameter("snail mail");
+                tsAction.doRegister(ctx, req, resp, userID, passwdReg, confirmPasswd, fullName, creditCardNumber, openBalance, email, address);
+                resp.setContentType("text/html");
+                break;
+
+            case "home":
+                String userIDHome = (String) session.getAttribute("uidBean");
+                if (userIDHome == null) {
+                    tsAction.doWelcome(ctx, req, resp, "User Not Logged in");
+                } else {
+                    tsAction.doHome(ctx, req, resp, userIDHome, "Ready to Trade");
+                }
+                resp.setContentType("text/html");
+                break;
+
+            case "account":
+                String userIDAccount = (String) session.getAttribute("uidBean");
+                if (userIDAccount == null) {
+                    tsAction.doWelcome(ctx, req, resp, "User Not Logged in");
+                } else {
+                    tsAction.doAccount(ctx, req, resp, userIDAccount, "");
+                }
+                resp.setContentType("text/html");
+                break;
+
+            case "update_profile":
+                String userIDUpdate = (String) session.getAttribute("uidBean");
+                if (userIDUpdate == null) {
+                    tsAction.doWelcome(ctx, req, resp, "User Not Logged in");
+                } else {
+                    String password = req.getParameter("password");
+                    String cpassword = req.getParameter("cpassword");
+                    String fullname = req.getParameter("fullname");
+                    String address = req.getParameter("address");
+                    String creditcard = req.getParameter("creditcard");
+                    String email = req.getParameter("email");
+                    tsAction.doAccountUpdate(ctx, req, resp, userIDUpdate, password, cpassword, fullname, address, creditcard, email);
+                }
+                resp.setContentType("text/html");
+                break;
+
+            case "portfolio":
+                String userIDPortfolio = (String) session.getAttribute("uidBean");
+                if (userIDPortfolio == null) {
+                    tsAction.doWelcome(ctx, req, resp, "User Not Logged in");
+                } else {
+                    tsAction.doPortfolio(ctx, req, resp, userIDPortfolio, "");
+                }
+                resp.setContentType("text/html");
+                break;
+
+            case "buy":
+                String userIDBuy = (String) session.getAttribute("uidBean");
+                if (userIDBuy == null) {
+                    tsAction.doWelcome(ctx, req, resp, "User Not Logged in");
+                } else {
+                    String symbol = req.getParameter("symbol");
+                    String quantity = req.getParameter("quantity");
+                    tsAction.doBuy(ctx, req, resp, userIDBuy, symbol, quantity);
+                }
+                resp.setContentType("text/html");
+                break;
+
+            case "sell":
+                String userIDSell = (String) session.getAttribute("uidBean");
+                if (userIDSell == null) {
+                    tsAction.doWelcome(ctx, req, resp, "User Not Logged in");
+                } else {
+                    String holdingID = req.getParameter("holdingID");
+                    tsAction.doSell(ctx, req, resp, userIDSell, Integer.valueOf(holdingID));
+                }
+                resp.setContentType("text/html");
+                break;
+
+            case "quotes":
+                String userIDQuotes = (String) session.getAttribute("uidBean");
+                if (userIDQuotes == null) {
+                    tsAction.doWelcome(ctx, req, resp, "User Not Logged in");
+                } else {
+                    String symbols = req.getParameter("symbols");
+                    tsAction.doQuotes(ctx, req, resp, userIDQuotes, symbols);
+                }
+                if (TradeConfig.getWebInterface() == TradeConfig.JSP_Images_HTTP2) {
+                    pushHeaderImages(req.newPushBuilder());
+                }
+                resp.setContentType("text/html");
+                break;
+
+            case "logout":
+                String userIDLogout = (String) session.getAttribute("uidBean");
+                if (userIDLogout == null) {
+                    tsAction.doWelcome(ctx, req, resp, "User Not Logged in");
+                } else {
+                    tsAction.doLogout(ctx, req, resp, userIDLogout);
+                    session.invalidate();
+                }
+                if (TradeConfig.getWebInterface() == TradeConfig.JSP_Images_HTTP2) {
+                    pushHeaderImages(req.newPushBuilder());
+                }
+                resp.setContentType("text/html");
+                break;
+
+            case "mksummary":
+                String userIDMarketSummary = (String) session.getAttribute("uidBean");
+                if (userIDMarketSummary == null) {
+                    tsAction.doWelcome(ctx, req, resp, "User Not Logged in");
+                } else {
+                    tsAction.doMarketSummary(ctx, req, resp, userIDMarketSummary);
+                }
+                resp.setContentType("text/html");
+                break;
+
+            default:
+                tsAction.doWelcome(ctx, req, resp, "TradeAppServlet: Invalid Action" + action);
+                resp.setContentType("text/html");
+                break;
+        }
+    }
+}
+```

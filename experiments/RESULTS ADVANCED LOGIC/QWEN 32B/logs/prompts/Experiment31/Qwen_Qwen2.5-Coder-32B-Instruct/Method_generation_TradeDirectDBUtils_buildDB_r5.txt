@@ -1,0 +1,814 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeDB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeJDBC;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.MDBStats;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeDirectDBUtils_buildDBTestGenerated {
+    @Mock
+    private DataSource datasource;
+    @Mock
+    private TradeServices ts;
+    @InjectMocks
+    private TradeDirectDBUtils tradeDirectDBUtils;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    public void tearDown() {
+    }
+
+    @Test
+    public void testBuildDBWithoutDDLFile() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true);
+        when(rs.getInt(anyString())).thenReturn(10);
+        when(ts.createQuote(anyString(), anyString(), any(BigDecimal.class))).thenReturn(null);
+        when(ts.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class))).thenReturn(new AccountDataBean());
+        tradeDirectDBUtils.buildDB(out, null);
+        verify(ts, times(TradeConfig.getMAX_QUOTES())).createQuote(anyString(), anyString(), any(BigDecimal.class));
+        verify(ts, times(TradeConfig.getMAX_USERS())).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class));
+    }
+
+    @Test
+    public void testBuildDBWithoutDDLFileAndCreateQuoteFlush() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true);
+        when(rs.getInt(anyString())).thenReturn(10);
+        when(ts.createQuote(anyString(), anyString(), any(BigDecimal.class))).thenReturn(null);
+        when(ts.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class))).thenReturn(new AccountDataBean());
+        tradeDirectDBUtils.buildDB(out, null);
+        assertTrue(outputStream.toString().contains(".....s:0"));
+        assertTrue(outputStream.toString().contains(".....s:10"));
+        assertTrue(outputStream.toString().contains(".....s:20"));
+        assertTrue(outputStream.toString().contains(".....s:30"));
+        assertTrue(outputStream.toString().contains(".....s:40"));
+        assertTrue(outputStream.toString().contains(".....s:50"));
+        assertTrue(outputStream.toString().contains(".....s:60"));
+        assertTrue(outputStream.toString().contains(".....s:70"));
+        assertTrue(outputStream.toString().contains(".....s:80"));
+        assertTrue(outputStream.toString().contains(".....s:90"));
+    }
+
+    @Test
+    public void testBuildDBWithoutDDLFileAndRegisterFlush() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true);
+        when(rs.getInt(anyString())).thenReturn(10);
+        when(ts.createQuote(anyString(), anyString(), any(BigDecimal.class))).thenReturn(null);
+        when(ts.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class))).thenReturn(new AccountDataBean());
+        tradeDirectDBUtils.buildDB(out, null);
+        assertTrue(outputStream.toString().contains("Account#"));
+        assertTrue(outputStream.toString().contains("has 0 holdings."));
+        assertTrue(outputStream.toString().contains("has 1 holdings."));
+        assertTrue(outputStream.toString().contains("has 2 holdings."));
+        assertTrue(outputStream.toString().contains("has 3 holdings."));
+        assertTrue(outputStream.toString().contains("has 4 holdings."));
+        assertTrue(outputStream.toString().contains("has 5 holdings."));
+        assertTrue(outputStream.toString().contains("has 6 holdings."));
+        assertTrue(outputStream.toString().contains("has 7 holdings."));
+        assertTrue(outputStream.toString().contains("has 8 holdings."));
+        assertTrue(outputStream.toString().contains("has 9 holdings."));
+    }
+
+    @Test
+    public void testBuildDBWithoutDDLFileAndFlush() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true);
+        when(rs.getInt(anyString())).thenReturn(50);
+        when(ts.createQuote(anyString(), anyString(), any(BigDecimal.class))).thenReturn(null);
+        when(ts.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class))).thenReturn(mock(AccountDataBean.class));
+        tradeDirectDBUtils.buildDB(out, null);
+        assertTrue(outputStream.toString().contains(".....s:0"));
+        assertTrue(outputStream.toString().contains(".....s:10"));
+        assertTrue(outputStream.toString().contains(".....s:20"));
+        assertTrue(outputStream.toString().contains(".....s:30"));
+        assertTrue(outputStream.toString().contains(".....s:40"));
+        assertTrue(outputStream.toString().contains(".....s:50"));
+        assertTrue(outputStream.toString().contains("Account#"));
+        assertTrue(outputStream.toString().contains(" has 0 holdings."));
+    }
+
+    @Test
+    public void testBuildDBWithoutDDLFileAndRegisterAlreadyRegistered() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true);
+        when(rs.getInt(anyString())).thenReturn(1);
+        when(ts.createQuote(anyString(), anyString(), any(BigDecimal.class))).thenReturn(null);
+        when(ts.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class))).thenReturn(null);
+        tradeDirectDBUtils.buildDB(out, null);
+        assertTrue(outputStream.toString().contains("UID uid:0 already registered."));
+    }
+
+    @Test
+    public void testBuildDBWithoutDDLFileAndAlreadyRegistered() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true);
+        when(rs.getInt(anyString())).thenReturn(10);
+        when(ts.createQuote(anyString(), anyString(), any(BigDecimal.class))).thenReturn(null);
+        when(ts.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class))).thenReturn(null);
+        tradeDirectDBUtils.buildDB(out, null);
+        assertTrue(outputStream.toString().contains("already registered."));
+    }
+
+    @Test
+    public void testBuildDBWithDDLFile() throws Exception {
+        String ddlContent = "CREATE TABLE test_table (id INT);";
+        InputStream ddlFile = new ByteArrayInputStream(ddlContent.getBytes());
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        Statement stmt = mock(Statement.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.createStatement()).thenReturn(stmt);
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+        verify(stmt, times(1)).executeUpdate("CREATE TABLE test_table (id INT);");
+        verify(conn, times(1)).commit();
+        verify(conn, times(1)).close();
+    }
+
+    @Test
+    public void testBuildDBWithDDLFileAndParseError() throws Exception {
+        InputStream ddlFile = mock(InputStream.class);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        when(ddlFile.read()).thenThrow(new IOException("Parse error"));
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            tradeDirectDBUtils.buildDB(out, ddlFile);
+            mockedLog.verify(() -> Log.error(anyString(), any(IOException.class)));
+        }
+        assertTrue(outputStream.toString().contains("Unable to parse DDL file"));
+    }
+
+    @Test
+    public void testBuildDBWithDDLFileAndRecreateError() throws Exception {
+        String ddlContent = "CREATE TABLE test_table (id INT);";
+        InputStream ddlFile = new ByteArrayInputStream(ddlContent.getBytes());
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        Statement stmt = mock(Statement.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.createStatement()).thenReturn(stmt);
+        when(stmt.executeUpdate(anyString())).thenThrow(new SQLException("Recreate error"));
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            tradeDirectDBUtils.buildDB(out, ddlFile);
+            mockedLog.verify(() -> Log.error(anyString(), any(SQLException.class)));
+        }
+        assertTrue(outputStream.toString().contains("Unable to drop and recreate DayTrader Db Tables"));
+    }
+
+    @Test
+    public void testBuildDBWithoutDDLFileAndCreateQuoteError() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true);
+        when(rs.getInt(anyString())).thenReturn(10);
+        when(ts.createQuote(anyString(), anyString(), any(BigDecimal.class))).thenThrow(new Exception("Create quote error"));
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(out, null));
+            mockedLog.verify(() -> Log.error(anyString(), any(Exception.class)));
+        }
+        assertTrue(outputStream.toString().contains("Populate Trade DB aborting after 10 create quote errors"));
+    }
+
+    @Test
+    public void testBuildDBWithoutDDLFileAndRegisterError() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        when(datasource.getConnection()).thenReturn(conn);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true);
+        when(rs.getInt(anyString())).thenReturn(10);
+        when(ts.createQuote(anyString(), anyString(), any(BigDecimal.class))).thenReturn(null);
+        when(ts.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class))).thenThrow(new Exception("Register error"));
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            assertThrows(Exception.class, () -> tradeDirectDBUtils.buildDB(out, null));
+            mockedLog.verify(() -> Log.error(anyString(), any(Exception.class)));
+        }
+        assertTrue(outputStream.toString().contains("Populate Trade DB aborting after 10 user registration errors"));
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 88.24% | Branch: 90.00%
+- Tests: 6/11 passed
+
+TEST STATUS:
+- PASSED (6): testBuildDBWithoutDDLFile, testBuildDBWithoutDDLFileAndCreateQuoteFlush, testBuildDBWithoutDDLFileAndRegisterFlush, testBuildDBWithoutDDLFileAndFlush, testBuildDBWithoutDDLFileAndRegisterAlreadyRegistered, testBuildDBWithoutDDLFileAndAlreadyRegistered
+- FAILED (3): testBuildDBWithDDLFile, testBuildDBWithDDLFileAndParseError, testBuildDBWithDDLFileAndRecreateError
+- ERRORS (2): testBuildDBWithoutDDLFileAndCreateQuoteError, testBuildDBWithoutDDLFileAndRegisterError
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   RunStatsDataBean -> com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean
+//   AccountDataBean -> com.ibm.websphere.samples.daytrader.entities.AccountDataBean
+//   TradeDB -> com.ibm.websphere.samples.daytrader.interfaces.TradeDB
+//   TradeJDBC -> com.ibm.websphere.samples.daytrader.interfaces.TradeJDBC
+//   TradeServices -> com.ibm.websphere.samples.daytrader.interfaces.TradeServices
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   MDBStats -> com.ibm.websphere.samples.daytrader.util.MDBStats
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   BufferedReader -> java.io.BufferedReader
+//   IOException -> java.io.IOException
+//   InputStream -> java.io.InputStream
+//   InputStreamReader -> java.io.InputStreamReader
+//   BigDecimal -> java.math.BigDecimal
+//   Connection -> java.sql.Connection
+//   DatabaseMetaData -> java.sql.DatabaseMetaData
+//   PreparedStatement -> java.sql.PreparedStatement
+//   ResultSet -> java.sql.ResultSet
+//   SQLException -> java.sql.SQLException
+//   Statement -> java.sql.Statement
+//   ArrayList -> java.util.ArrayList
+//   Resource -> javax.annotation.Resource
+//   ApplicationScoped -> javax.enterprise.context.ApplicationScoped
+//   Inject -> javax.inject.Inject
+//   DataSource -> javax.sql.DataSource
+//   TradeDirectDBUtils -> com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils
+
+// === Class: TradeDirectDBUtils ===
+// Fields (with actual visibility):
+    private DataSource datasource;
+    package-private TradeServices ts;
+
+// Getter/Setter Methods (for test assertions):
+private PreparedStatement getStatement(Connection conn, String sql) throws Exception;
+
+// Internal Methods (full implementation for context):
+  public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception {
+    // Clear MDB Statistics
+    MDBStats.getInstance().reset();
+    // Reset Trade
+
+    RunStatsDataBean runStatsData = new RunStatsDataBean();
+    Connection conn = null;
+    try {
+
+      conn = datasource.getConnection();
+      conn.setAutoCommit(false);
+      PreparedStatement stmt = null;
+      ResultSet rs = null;
+
+      if (deleteAll) {
+        try {
+          stmt = getStatement(conn, "delete from quoteejb");
+          stmt.executeUpdate();
+          stmt.close();
+          stmt = getStatement(conn, "delete from accountejb");
+          stmt.executeUpdate();
+          stmt.close();
+          stmt = getStatement(conn, "delete from accountprofileejb");
+          stmt.executeUpdate();
+          stmt.close();
+          stmt = getStatement(conn, "delete from holdingejb");
+          stmt.executeUpdate();
+          stmt.close();
+          stmt = getStatement(conn, "delete from orderejb");
+          stmt.executeUpdate();
+          stmt.close();
+          // FUTURE: - DuplicateKeyException - For now, don't start at
+          // zero as KeySequenceDirect and KeySequenceBean will still
+          // give out
+          // the cached Block and then notice this change. Better
+          // solution is
+          // to signal both classes to drop their cached blocks
+          // stmt = getStatement(conn, "delete from keygenejb");
+          // stmt.executeUpdate();
+          // stmt.close();
+          conn.commit();
+        } catch (Exception e) {
+          Log.error(e, "TradeDirect:resetTrade(deleteAll) -- Error deleting Trade users and stock from the Trade database");
+        }
+        return runStatsData;
+      }
+
+      stmt = getStatement(conn, "delete from holdingejb where holdingejb.account_accountid is null");
+      stmt.executeUpdate();
+      stmt.close();
+
+      // Count and Delete newly registered users (users w/ id that start
+      // "ru:%":
+      stmt = getStatement(conn, "delete from accountprofileejb where userid like 'ru:%'");
+      stmt.executeUpdate();
+      stmt.close();
+
+      stmt = getStatement(conn, "delete from orderejb where account_accountid in (select accountid from accountejb a where a.profile_userid like 'ru:%')");
+      stmt.executeUpdate();
+      stmt.close();
+
+      stmt = getStatement(conn,
+          "delete from holdingejb where account_accountid in (select accountid from accountejb a where a.profile_userid like 'ru:%')");
+      stmt.executeUpdate();
+      stmt.close();
+
+      stmt = getStatement(conn, "delete from accountejb where profile_userid like 'ru:%'");
+      int newUserCount = stmt.executeUpdate();
+      runStatsData.setNewUserCount(newUserCount);
+      stmt.close();
+
+      // Count of trade users
+      stmt = getStatement(conn, "select count(accountid) as \"tradeUserCount\" from accountejb a where a.profile_userid like 'uid:%'");
+      rs = stmt.executeQuery();
+      rs.next();
+      int tradeUserCount = rs.getInt("tradeUserCount");
+      runStatsData.setTradeUserCount(tradeUserCount);
+      stmt.close();
+
+      rs.close();
+      // Count of trade stocks
+      stmt = getStatement(conn, "select count(symbol) as \"tradeStockCount\" from quoteejb a where a.symbol like 's:%'");
+      rs = stmt.executeQuery();
+      rs.next();
+      int tradeStockCount = rs.getInt("tradeStockCount");
+      runStatsData.setTradeStockCount(tradeStockCount);
+      stmt.close();
+
+      // Count of trade users login, logout
+      stmt = getStatement(conn,
+          "select sum(loginCount) as \"sumLoginCount\", sum(logoutCount) as \"sumLogoutCount\" from accountejb a where  a.profile_userID like 'uid:%'");
+      rs = stmt.executeQuery();
+      rs.next();
+      int sumLoginCount = rs.getInt("sumLoginCount");
+      int sumLogoutCount = rs.getInt("sumLogoutCount");
+      runStatsData.setSumLoginCount(sumLoginCount);
+      runStatsData.setSumLogoutCount(sumLogoutCount);
+      stmt.close();
+
+      rs.close();
+      // Update logoutcount and loginCount back to zero
+
+      stmt = getStatement(conn, "update accountejb set logoutCount=0,loginCount=0 where profile_userID like 'uid:%'");
+      stmt.executeUpdate();
+      stmt.close();
+
+      // count holdings for trade users
+      stmt = getStatement(conn, "select count(holdingid) as \"holdingCount\" from holdingejb h where h.account_accountid in "
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')");
+
+      rs = stmt.executeQuery();
+      rs.next();
+      int holdingCount = rs.getInt("holdingCount");
+      runStatsData.setHoldingCount(holdingCount);
+      stmt.close();
+      rs.close();
+
+      // count orders for trade users
+      stmt = getStatement(conn, "select count(orderid) as \"orderCount\" from orderejb o where o.account_accountid in "
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')");
+
+      rs = stmt.executeQuery();
+      rs.next();
+      int orderCount = rs.getInt("orderCount");
+      runStatsData.setOrderCount(orderCount);
+      stmt.close();
+      rs.close();
+
+      // count orders by type for trade users
+      stmt = getStatement(conn, "select count(orderid) \"buyOrderCount\"from orderejb o where (o.account_accountid in "
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')) AND " + " (o.orderType='buy')");
+
+      rs = stmt.executeQuery();
+      rs.next();
+      int buyOrderCount = rs.getInt("buyOrderCount");
+      runStatsData.setBuyOrderCount(buyOrderCount);
+      stmt.close();
+      rs.close();
+
+      // count orders by type for trade users
+      stmt = getStatement(conn, "select count(orderid) \"sellOrderCount\"from orderejb o where (o.account_accountid in "
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')) AND " + " (o.orderType='sell')");
+
+      rs = stmt.executeQuery();
+      rs.next();
+      int sellOrderCount = rs.getInt("sellOrderCount");
+      runStatsData.setSellOrderCount(sellOrderCount);
+      stmt.close();
+      rs.close();
+
+      // Delete cancelled orders
+      stmt = getStatement(conn, "delete from orderejb where orderStatus='cancelled'");
+      int cancelledOrderCount = stmt.executeUpdate();
+      runStatsData.setCancelledOrderCount(cancelledOrderCount);
+      stmt.close();
+      rs.close();
+
+      // count open orders by type for trade users
+      stmt = getStatement(conn, "select count(orderid) \"openOrderCount\"from orderejb o where (o.account_accountid in "
+          + "(select accountid from accountejb a where a.profile_userid like 'uid:%')) AND " + " (o.orderStatus='open')");
+
+      rs = stmt.executeQuery();
+      rs.next();
+      int openOrderCount = rs.getInt("openOrderCount");
+      runStatsData.setOpenOrderCount(openOrderCount);
+
+      stmt.close();
+      rs.close();
+      // Delete orders for holding which have been purchased and sold
+      stmt = getStatement(conn, "delete from orderejb where holding_holdingid is null");
+      int deletedOrderCount = stmt.executeUpdate();
+      runStatsData.setDeletedOrderCount(deletedOrderCount);
+      stmt.close();
+      rs.close();
+
+      conn.commit();
+
+      System.out.println("TradeDirect:reset Run stats data\n\n" + runStatsData);
+    } catch (Exception e) {
+      Log.error(e, "Failed to reset Trade");
+      conn.rollback();
+      throw e;
+    } finally {
+      conn.close();
+    }
+    return runStatsData;
+
+  }
+  public Object[] parseDDLToBuffer(InputStream ddlFile) throws Exception {
+    BufferedReader br = null;
+    ArrayList<String> sqlBuffer = new ArrayList<String>(30); //initial capacity 30 assuming we have 30 ddl-sql statements to read
+
+    try {
+      br = new BufferedReader(new InputStreamReader(ddlFile));
+      String s;
+      String sql = new String();
+      while ((s = br.readLine()) != null) {
+        s = s.trim();
+        if ((s.length() != 0) && (s.charAt(0) != '#')) // Empty lines or lines starting with "#" are ignored
+          {
+            sql = sql + " " + s;
+            if (s.endsWith(";")) { // reached end of sql statement
+              sql = sql.replace(';', ' '); //remove the semicolon
+              sqlBuffer.add(sql);
+              sql = "";
+            }
+          }
+      }
+    } catch (IOException ex) {
+      Log.error("TradeBuildDB:parseDDLToBuffer Exeception during open/read of File: " + ddlFile, ex);
+      throw ex;
+    } finally {
+      if (br != null) {
+        try {
+          br.close();
+        } catch (IOException ex) {
+          Log.error("TradeBuildDB:parseDDLToBuffer Failed to close BufferedReader", ex);
+        }
+      }
+    }
+    return sqlBuffer.toArray();
+  }
+  private boolean recreateDBTables(Object[] sqlBuffer, java.io.PrintWriter out) throws Exception {
+    // Clear MDB Statistics
+    MDBStats.getInstance().reset();
+
+    Connection conn = null;
+    boolean success = false;
+    try {
+      conn = datasource.getConnection();
+      Statement stmt = conn.createStatement();
+      int bufferLength = sqlBuffer.length;
+      for (int i = 0; i < bufferLength; i++) {
+        try {
+          stmt.executeUpdate((String) sqlBuffer[i]);
+          // commit(conn);
+        } catch (SQLException ex) {
+          // Ignore DROP statements as tables won't always exist.
+          if (((String) sqlBuffer[i]).indexOf("DROP ") < 0) {
+            Log.error("TradeDirect:recreateDBTables SQL Exception thrown on executing the foll sql command: " + sqlBuffer[i], ex);
+            out.println("<BR>SQL Exception thrown on executing the foll sql command: <I>" + sqlBuffer[i] + "</I> . Check log for details.</BR>");
+          }
+        }
+      }
+      stmt.close();
+      conn.commit();
+      success = true;
+    } catch (Exception e) {
+      Log.error(e, "TradeDirect:recreateDBTables() -- Error dropping and recreating the database tables");
+    } finally {
+      conn.close();
+    }
+    return success;
+  }
+
+// === External Class: Log ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.Log
+// Import paths:
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   Level -> java.util.logging.Level
+//   Logger -> java.util.logging.Logger
+// Fields (with actual visibility):
+    private static final Logger log;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+
+// Method Signatures (used by target method):
+public static void error(String message);
+
+// === External Class: TradeConfig ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.TradeConfig
+// Import paths:
+//   BigDecimal -> java.math.BigDecimal
+//   ArrayList -> java.util.ArrayList
+//   Random -> java.util.Random
+// Fields (with actual visibility):
+    private static String[] runTimeModeNames;
+    public static final int EJB3;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int DIRECT;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int SESSION_TO_DIRECT;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int runTimeMode;
+    private static String[] orderProcessingModeNames;
+    public static final int SYNCH;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ASYNCH;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ASYNCH_2PHASE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int orderProcessingMode;
+    private static String[] accessModeNames;
+    public static final int STANDARD;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int accessMode;
+    private static String[] webInterfaceNames;
+    public static final int JSP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int JSP_Images;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int JSP_Images_HTTP2;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int webInterface;
+    private static int MAX_USERS;
+    private static int MAX_QUOTES;
+    public static boolean JDBCDriverNeedsGlobalTransation;
+    public static String DATASOURCE;
+    public static int KEYBLOCKSIZE;
+    public static int QUOTES_PER_PAGE;
+    public static boolean RND_USER;
+    private static int MAX_HOLDINGS;
+    private static int count;
+    private static Object userID_count_semaphore;
+    private static int userID_count;
+    private static String hostName;
+    private static Random r0;
+    private static Random randomNumberGenerator;
+    public static final String newUserPrefix;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int verifyPercent;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static boolean updateQuotePrices;
+    private static int primIterations;
+    private static boolean longRun;
+    private static boolean publishQuotePriceChange;
+    private static int listQuotePriceChangeFrequency;
+    private static boolean displayOrderAlerts;
+    private static int marketSummaryInterval;
+    public static BigDecimal PENNY_STOCK_PRICE;
+    public static BigDecimal PENNY_STOCK_RECOVERY_MIRACLE_MULTIPLIER;
+    public static BigDecimal MAXIMUM_STOCK_PRICE;
+    public static BigDecimal MAXIMUM_STOCK_SPLIT_MULTIPLIER;
+    public static final int HOME_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int QUOTE_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int LOGIN_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int LOGOUT_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int REGISTER_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ACCOUNT_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int PORTFOLIO_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int BUY_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int SELL_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int UPDATEACCOUNT_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int[][] scenarioMixes;
+    private static char[] actions;
+    private static int sellDeficit;
+    public static final int WELCOME_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int REGISTER_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int PORTFOLIO_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int QUOTE_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int HOME_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ACCOUNT_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ORDER_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int CONFIG_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int STATS_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int MARKET_SUMMARY_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static String[][] webUI;
+    private static int scenarioCount;
+    private static final BigDecimal orderFee;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final BigDecimal cashFee;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final BigDecimal ONE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static ArrayList deck;
+    private static int card;
+
+// Method Signatures (used by target method):
+public static int getMAX_HOLDINGS();
+public static int getMAX_QUOTES();
+public static int getMAX_USERS();
+public static float rndPrice();
+public static float rndQuantity();
+public static String rndEmail(String userID);
+public static String rndCreditCard();
+public static int rndInt(int i);
+public static String rndSymbol();
+public static String rndAddress();
+public static String rndFullName();
+public static int getOrderProcessingMode();
+
+// Public Getter Methods (for test assertions):
+public static String getPage(int pageNumber);
+public static java getRunTimeModeNames();
+public static char getScenarioAction(boolean newUser);
+public static String getUserID();
+public static BigDecimal getOrderFee(String orderType);
+public static BigDecimal getRandomPriceChangeFactor();
+public static String getOrderProcessingModeNames();
+public static String getWebInterfaceNames();
+public static int getScenarioMixes();
+public static int getScenarioCount();
+public static boolean getJDBCDriverNeedsGlobalTransation();
+public static boolean getUpdateQuotePrices();
+public static int getPrimIterations();
+public static boolean getLongRun();
+public static boolean getPublishQuotePriceChange();
+
+// === External Class: TradeServices ===
+// Full import path: com.ibm.websphere.samples.daytrader.interfaces.TradeServices
+// Type: INTERFACE (cannot instantiate - use Mockito.mock(TradeServices.class) instead)
+// Import paths:
+//   MarketSummaryDataBean -> com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean
+//   BigDecimal -> java.math.BigDecimal
+//   Collection -> java.util.Collection
+//   Future -> java.util.concurrent.Future
+//   AccountDataBean -> com.ibm.websphere.samples.daytrader.entities.AccountDataBean
+// Method Signatures (used by target method):
+QuoteDataBean createQuote(String symbol, String companyName, BigDecimal price);
+OrderDataBean buy(String userID, String symbol, double quantity, int orderProcessingMode);
+AccountDataBean register(String userID, String password, String fullname, String address, String email, String creditcard, BigDecimal openBalance);
+
+// === External Class: AccountDataBean ===
+// Full import path: com.ibm.websphere.samples.daytrader.entities.AccountDataBean
+// Import paths:
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   Serializable -> java.io.Serializable
+//   BigDecimal -> java.math.BigDecimal
+//   Timestamp -> java.sql.Timestamp
+// Fields (with actual visibility):
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private Integer accountID;
+    private int loginCount;
+    private int logoutCount;
+    private Date lastLogin;
+    private Date creationDate;
+    private BigDecimal balance;
+    private BigDecimal openBalance;
+    private Collection orders;
+    private Collection holdings;
+    private AccountProfileDataBean profile;
+    private String profileID;
+
+// Constructors:
+public AccountDataBean();
+public AccountDataBean(Integer accountID, int loginCount, int logoutCount, Date lastLogin, Date creationDate, BigDecimal balance, BigDecimal openBalance, String profileID);
+public AccountDataBean(int loginCount, int logoutCount, Date lastLogin, Date creationDate, BigDecimal balance, BigDecimal openBalance, String profileID);
+
+// Method Signatures (used by target method):
+public Integer getAccountID();
+
+// Public Getter Methods (for test assertions):
+public static AccountDataBean getRandomInstance();
+public String toString();
+public String toHTML();
+public int getLoginCount();
+public int getLogoutCount();
+public Date getLastLogin();
+public Date getCreationDate();
+public BigDecimal getBalance();
+public BigDecimal getOpenBalance();
+public String getProfileID();
+public Collection<OrderDataBean> getOrders();
+public Collection<HoldingDataBean> getHoldings();
+public AccountProfileDataBean getProfile();
+
+
+TASK:
+Regenerate ONLY the method "buildDB" OF CLASS "TradeDirectDBUtils" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void buildDB(java.io.PrintWriter out, InputStream ddlFile) throws Exception {
+    // your implementation here
+}
+```
+
+
+- Package: com.ibm.websphere.samples.daytrader.impl.direct
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "buildDB"
+– Allowed imports: exactly those already present in TradeDirectDBUtils
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

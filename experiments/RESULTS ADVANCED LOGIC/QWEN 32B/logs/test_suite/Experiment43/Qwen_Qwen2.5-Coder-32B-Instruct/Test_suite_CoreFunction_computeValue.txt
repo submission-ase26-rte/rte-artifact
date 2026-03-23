@@ -1,0 +1,276 @@
+package org.apache.commons.jxpath.ri.compiler;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Collection;
+import java.util.Locale;
+
+import org.apache.commons.jxpath.BasicNodeSet;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.ri.Compiler;
+import org.apache.commons.jxpath.ri.EvalContext;
+import org.apache.commons.jxpath.ri.InfoSetUtil;
+import org.apache.commons.jxpath.ri.axes.NodeSetContext;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class CoreFunction_computeValueTestGenerated {
+
+    @Mock
+    private EvalContext mockEvalContext;
+    @Mock
+    private Expression mockExpression;
+    @Mock
+    private NodePointer mockNodePointer;
+    @Mock
+    private JXPathContext mockJXPathContext;
+    @Mock
+    private Compiler mockCompiler;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        when(mockEvalContext.getJXPathContext()).thenReturn(mockJXPathContext);
+        when(mockEvalContext.getCurrentNodePointer()).thenReturn(mockNodePointer);
+    }
+
+    @Test
+    public void testComputeValueFunctionLast() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_LAST, null);
+        when(mockEvalContext.nextNode()).thenReturn(true, false);
+        assertEquals(Double.valueOf(1), function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionPosition() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_POSITION, null);
+        when(mockEvalContext.getCurrentPosition()).thenReturn(3);
+        assertEquals(Integer.valueOf(3), function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionCount() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_COUNT, new Expression[]{mockExpression});
+        when(mockExpression.compute(mockEvalContext)).thenReturn(mockEvalContext);
+        when(mockEvalContext.hasNext()).thenReturn(true, false);
+        assertEquals(Double.valueOf(1), function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionLang() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_LANG, new Expression[]{mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn("en");
+        when(mockNodePointer.isLanguage("en")).thenReturn(true);
+        assertEquals(Boolean.TRUE, function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionID() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_ID, new Expression[]{mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn("id1");
+        when(mockNodePointer.getPointerByID(mockJXPathContext, "id1")).thenReturn(mockNodePointer);
+        assertEquals(mockNodePointer, function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionLocalName() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_LOCAL_NAME, null);
+        when(mockNodePointer.getName().getName()).thenReturn("localName");
+        assertEquals("localName", function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionNamespaceURI() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_NAMESPACE_URI, null);
+        when(mockNodePointer.getNamespaceURI()).thenReturn("namespaceURI");
+        assertEquals("namespaceURI", function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionName() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_NAME, null);
+        when(mockNodePointer.getName().toString()).thenReturn("nodeName");
+        assertEquals("nodeName", function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionString() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_STRING, new Expression[]{mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn("string");
+        assertEquals("string", function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionConcat() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_CONCAT, new Expression[]{mockExpression, mockExpression});
+        when(mockExpression.compute(mockEvalContext)).thenReturn(mockExpression);
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn("part1", "part2");
+        assertEquals("part1part2", function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionStartsWith() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_STARTS_WITH, new Expression[]{mockExpression, mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn("string", "str");
+        assertEquals(Boolean.TRUE, function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionEndsWith() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_ENDS_WITH, new Expression[]{mockExpression, mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn("string", "ing");
+        assertEquals(Boolean.TRUE, function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionContains() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_CONTAINS, new Expression[]{mockExpression, mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn("string", "rin");
+        assertEquals(Boolean.TRUE, function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionSubstringBefore() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_SUBSTRING_BEFORE, new Expression[]{mockExpression, mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn("string", "rin");
+        assertEquals("st", function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionSubstringAfter() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_SUBSTRING_AFTER, new Expression[]{mockExpression, mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn("string", "rin");
+        assertEquals("g", function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionSubstring() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_SUBSTRING, new Expression[]{mockExpression, mockExpression, mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn("string", "2", "3");
+        assertEquals("tri", function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionStringLength() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_STRING_LENGTH, new Expression[]{mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn("string");
+        assertEquals(Double.valueOf(6), function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionNormalizeSpace() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_NORMALIZE_SPACE, new Expression[]{mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn("  string  ");
+        assertEquals("string", function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionTranslate() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_TRANSLATE, new Expression[]{mockExpression, mockExpression, mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn("string", "st", "xy");
+        assertEquals("xyring", function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionBoolean() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_BOOLEAN, new Expression[]{mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn(Boolean.TRUE);
+        assertEquals(Boolean.TRUE, function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionNot() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_NOT, new Expression[]{mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn(Boolean.TRUE);
+        assertEquals(Boolean.FALSE, function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionTrue() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_TRUE, null);
+        assertEquals(Boolean.TRUE, function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionFalse() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_FALSE, null);
+        assertEquals(Boolean.FALSE, function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionNull() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_NULL, null);
+        assertNull(function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionNumber() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_NUMBER, new Expression[]{mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn("123");
+        assertEquals(Double.valueOf(123), function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionSum() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_SUM, new Expression[]{mockExpression});
+        when(mockExpression.compute(mockEvalContext)).thenReturn(mockEvalContext);
+        when(mockEvalContext.hasNext()).thenReturn(true, false);
+        when(mockEvalContext.next()).thenReturn(mockNodePointer);
+        when(InfoSetUtil.doubleValue(mockNodePointer)).thenReturn(123.0);
+        assertEquals(Double.valueOf(123), function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionFloor() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_FLOOR, new Expression[]{mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn(123.7);
+        assertEquals(Double.valueOf(123), function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionCeiling() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_CEILING, new Expression[]{mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn(123.2);
+        assertEquals(Double.valueOf(124), function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionRound() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_ROUND, new Expression[]{mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn(123.5);
+        assertEquals(Double.valueOf(124), function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionKey() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_KEY, new Expression[]{mockExpression, mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn("key", "value");
+        when(mockJXPathContext.getNodeSetByKey("key", "value")).thenReturn(new BasicNodeSet());
+        assertEquals(new NodeSetContext(mockEvalContext, new BasicNodeSet()), function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionFormatNumber() {
+        CoreFunction function = new CoreFunction(Compiler.FUNCTION_FORMAT_NUMBER, new Expression[]{mockExpression, mockExpression});
+        when(mockExpression.computeValue(mockEvalContext)).thenReturn(123.45, "#.00");
+        when(mockJXPathContext.getDecimalFormatSymbols(anyString())).thenReturn(new DecimalFormatSymbols(Locale.US));
+        assertEquals("123.45", function.computeValue(mockEvalContext));
+    }
+
+    @Test
+    public void testComputeValueFunctionDefault() {
+        CoreFunction function = new CoreFunction(-1, null);
+        assertNull(function.computeValue(mockEvalContext));
+    }
+}

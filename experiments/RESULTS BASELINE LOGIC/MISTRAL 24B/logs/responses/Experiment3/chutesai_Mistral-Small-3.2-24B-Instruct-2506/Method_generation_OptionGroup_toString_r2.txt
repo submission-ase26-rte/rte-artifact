@@ -1,0 +1,34 @@
+```java
+public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("[");
+    boolean first = true;
+
+    if (optionMap != null) {
+        for (Option option : optionMap) {
+            if (option != null) {
+                String optionString = null;
+                if (option.getOpt() != null) {
+                    optionString = "-" + option.getOpt();
+                } else if (option.getLongOpt() != null) {
+                    optionString = "--" + option.getLongOpt();
+                }
+
+                if (optionString != null) {
+                    if (!first) {
+                        sb.append(", ");
+                    }
+                    sb.append(optionString);
+                    if (option.getDescription() != null) {
+                        sb.append(" ").append(option.getDescription());
+                    }
+                    first = false;
+                }
+            }
+        }
+    }
+
+    sb.append("]");
+    return sb.toString();
+}
+```

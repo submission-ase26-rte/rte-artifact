@@ -1,0 +1,391 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   HoldingDataBean -> com.ibm.websphere.samples.daytrader.entities.HoldingDataBean
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   IOException -> java.io.IOException
+//   PrintWriter -> java.io.PrintWriter
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   ServletConfig -> javax.servlet.ServletConfig
+//   ServletContext -> javax.servlet.ServletContext
+//   ServletException -> javax.servlet.ServletException
+//   WebServlet -> javax.servlet.annotation.WebServlet
+//   HttpServlet -> javax.servlet.http.HttpServlet
+//   HttpServletRequest -> javax.servlet.http.HttpServletRequest
+//   HttpServletResponse -> javax.servlet.http.HttpServletResponse
+//   HttpSession -> javax.servlet.http.HttpSession
+
+// === Class: TradeScenarioServlet ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private static final String tasPathPrefix;
+
+// === External Class: Log ===
+// Import paths:
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   Level -> java.util.logging.Level
+//   Logger -> java.util.logging.Logger
+// Fields (with actual visibility):
+    private static final Logger log;
+
+// Method Signatures (used by target method):
+static public void trace(String message);
+static public void error(String message);
+
+// === External Class: TradeConfig ===
+// Import paths:
+//   BigDecimal -> java.math.BigDecimal
+//   ArrayList -> java.util.ArrayList
+//   Random -> java.util.Random
+// Fields (with actual visibility):
+    private static String[] runTimeModeNames;
+    public static final int EJB3;
+    public static final int DIRECT;
+    public static final int SESSION_TO_DIRECT;
+    private static int runTimeMode;
+    private static String[] orderProcessingModeNames;
+    public static final int SYNCH;
+    public static final int ASYNCH;
+    public static final int ASYNCH_2PHASE;
+    private static int orderProcessingMode;
+    private static String[] accessModeNames;
+    public static final int STANDARD;
+    private static int accessMode;
+    private static String[] webInterfaceNames;
+    public static final int JSP;
+    public static final int JSP_Images;
+    public static final int JSP_Images_HTTP2;
+    private static int webInterface;
+    private static int MAX_USERS;
+    private static int MAX_QUOTES;
+    public static boolean JDBCDriverNeedsGlobalTransation;
+    public static String DATASOURCE;
+    public static int KEYBLOCKSIZE;
+    public static int QUOTES_PER_PAGE;
+    public static boolean RND_USER;
+    private static int MAX_HOLDINGS;
+    private static int count;
+    private static Object userID_count_semaphore;
+    private static int userID_count;
+    private static String hostName;
+    private static Random r0;
+    private static Random randomNumberGenerator;
+    public static final String newUserPrefix;
+    public static final int verifyPercent;
+    private static boolean updateQuotePrices;
+    private static int primIterations;
+    private static boolean longRun;
+    private static boolean publishQuotePriceChange;
+    private static int listQuotePriceChangeFrequency;
+    private static boolean displayOrderAlerts;
+    private static int marketSummaryInterval;
+    public static BigDecimal PENNY_STOCK_PRICE;
+    public static BigDecimal PENNY_STOCK_RECOVERY_MIRACLE_MULTIPLIER;
+    public static BigDecimal MAXIMUM_STOCK_PRICE;
+    public static BigDecimal MAXIMUM_STOCK_SPLIT_MULTIPLIER;
+    public static final int HOME_OP;
+    public static final int QUOTE_OP;
+    public static final int LOGIN_OP;
+    public static final int LOGOUT_OP;
+    public static final int REGISTER_OP;
+    public static final int ACCOUNT_OP;
+    public static final int PORTFOLIO_OP;
+    public static final int BUY_OP;
+    public static final int SELL_OP;
+    public static final int UPDATEACCOUNT_OP;
+    private static int[][] scenarioMixes;
+    private static char[] actions;
+    private static int sellDeficit;
+    public static final int WELCOME_PAGE;
+    public static final int REGISTER_PAGE;
+    public static final int PORTFOLIO_PAGE;
+    public static final int QUOTE_PAGE;
+    public static final int HOME_PAGE;
+    public static final int ACCOUNT_PAGE;
+    public static final int ORDER_PAGE;
+    public static final int CONFIG_PAGE;
+    public static final int STATS_PAGE;
+    public static final int MARKET_SUMMARY_PAGE;
+    public static String[][] webUI;
+    private static int scenarioCount;
+    private static final BigDecimal orderFee;
+    private static final BigDecimal cashFee;
+    private static final BigDecimal ONE;
+    private static ArrayList deck;
+    private static int card;
+
+// Method Signatures (used by target method):
+static public float rndQuantity();
+static public String rndBalance();
+static public String rndEmail(String userID);
+static public String rndFullName();
+static public String rndSymbol();
+static public synchronized String rndNewUserID();
+static public synchronized void incrementScenarioCount();
+static public synchronized void incrementSellDeficit();
+static public String rndSymbols();
+static public String rndAddress();
+static public String rndCreditCard();
+static public String getUserID();
+static public char getScenarioAction(boolean newUser);
+
+// === External Class: HoldingDataBean ===
+// Import paths:
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   Serializable -> java.io.Serializable
+//   BigDecimal -> java.math.BigDecimal
+//   Date -> java.util.Date
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private Integer holdingID;
+    private double quantity;
+    private BigDecimal purchasePrice;
+    private Date purchaseDate;
+    private String quoteID;
+    private AccountDataBean account;
+    private QuoteDataBean quote;
+
+// Constructors:
+public HoldingDataBean();
+public HoldingDataBean(Integer holdingID, double quantity, BigDecimal purchasePrice, Date purchaseDate, String quoteID);
+public HoldingDataBean(double quantity, BigDecimal purchasePrice, Date purchaseDate, AccountDataBean account, QuoteDataBean quote);
+
+// Method Signatures (used by target method):
+public Integer getHoldingID();
+public Date getPurchaseDate();
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+  /**
+   * Main service method for TradeScenarioServlet
+   *
+   * @param request
+     *            Object that encapsulates the request to the servlet
+   * @param response
+     *            Object that encapsulates the response from the servlet
+   */
+  public void performTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+    // Scenario generator for Trade2
+    char action = ' ';
+    String userID = null;
+
+    // String to create full dispatch path to TradeAppServlet w/ request
+    // Parameters
+    String dispPath = null; // Dispatch Path to TradeAppServlet
+
+    resp.setContentType("text/html");
+
+    String scenarioAction = req.getParameter("action");
+    if ((scenarioAction != null) && (scenarioAction.length() >= 1)) {
+      action = scenarioAction.charAt(0);
+      if (action == 'n') { // null;
+        try {
+          // resp.setContentType("text/html");
+          PrintWriter out = new PrintWriter(resp.getOutputStream());
+          out.println("<HTML><HEAD>TradeScenarioServlet</HEAD><BODY>Hello</BODY></HTML>");
+          out.close();
+          return;
+
+        } catch (Exception e) {
+          Log.error("trade_client.TradeScenarioServlet.service(...)" + "error creating printwriter from responce.getOutputStream", e);
+
+          resp.sendError(500,
+              "trade_client.TradeScenarioServlet.service(...): erorr creating and writing to PrintStream created from response.getOutputStream()");
+        } // end of catch
+
+      } // end of action=='n'
+    }
+
+    ServletContext ctx = null;
+    HttpSession session = null;
+    try {
+      ctx = getServletConfig().getServletContext();
+      // These operations require the user to be logged in. Verify the
+      // user and if not logged in
+      // change the operation to a login
+      session = req.getSession(true);
+      userID = (String) session.getAttribute("uidBean");
+    } catch (Exception e) {
+      Log.error("trade_client.TradeScenarioServlet.service(...): performing " + scenarioAction
+          + "error getting ServletContext,HttpSession, or UserID from session" + "will make scenarioAction a login and try to recover from there", e);
+      userID = null;
+      action = 'l';
+    }
+
+    if (userID == null) {
+      action = 'l'; // change to login
+      TradeConfig.incrementScenarioCount();
+    } else if (action == ' ') {
+      // action is not specified perform a random operation according to
+      // current mix
+      // Tell getScenarioAction if we are an original user or a registered
+      // user
+      // -- sellDeficits should only be compensated for with original
+      // users.
+      action = TradeConfig.getScenarioAction(userID.startsWith(TradeConfig.newUserPrefix));
+    }
+    switch(action) {
+
+      case 'q': // quote
+        dispPath = tasPathPrefix + "quotes&symbols=" + TradeConfig.rndSymbols();
+        ctx.getRequestDispatcher(dispPath).include(req, resp);
+        break;
+      case 'a': // account
+        dispPath = tasPathPrefix + "account";
+        ctx.getRequestDispatcher(dispPath).include(req, resp);
+        break;
+      case 'u': // update account profile
+        dispPath = tasPathPrefix + "account";
+        ctx.getRequestDispatcher(dispPath).include(req, resp);
+
+        String fullName = "rnd" + System.currentTimeMillis();
+        String address = "rndAddress";
+        String password = "xxx";
+        String email = "rndEmail";
+        String creditcard = "rndCC";
+        dispPath = tasPathPrefix + "update_profile&fullname=" + fullName + "&password=" + password + "&cpassword=" + password + "&address=" + address
+            + "&email=" + email + "&creditcard=" + creditcard;
+        ctx.getRequestDispatcher(dispPath).include(req, resp);
+        break;
+      case 'h': // home
+        dispPath = tasPathPrefix + "home";
+        ctx.getRequestDispatcher(dispPath).include(req, resp);
+        break;
+      case 'l': // login
+        userID = TradeConfig.getUserID();
+        String password2 = "xxx";
+        dispPath = tasPathPrefix + "login&inScenario=true&uid=" + userID + "&passwd=" + password2;
+        ctx.getRequestDispatcher(dispPath).include(req, resp);
+
+        // login is successful if the userID is written to the HTTP session
+        if (session.getAttribute("uidBean") == null) {
+          System.out.println("TradeScenario login failed. Reset DB between runs");
+        }
+        break;
+      case 'o': // logout
+        dispPath = tasPathPrefix + "logout";
+        ctx.getRequestDispatcher(dispPath).include(req, resp);
+        break;
+      case 'p': // portfolio
+        dispPath = tasPathPrefix + "portfolio";
+        ctx.getRequestDispatcher(dispPath).include(req, resp);
+        break;
+      case 'r': // register
+        // Logout the current user to become a new user
+        // see note in TradeServletAction
+        req.setAttribute("TSS-RecreateSessionInLogout", Boolean.TRUE);
+        dispPath = tasPathPrefix + "logout";
+        ctx.getRequestDispatcher(dispPath).include(req, resp);
+
+        userID = TradeConfig.rndNewUserID();
+        String passwd = "yyy";
+        fullName = TradeConfig.rndFullName();
+        creditcard = TradeConfig.rndCreditCard();
+        String money = TradeConfig.rndBalance();
+        email = TradeConfig.rndEmail(userID);
+        String smail = TradeConfig.rndAddress();
+        dispPath = tasPathPrefix + "register&Full Name=" + fullName + "&snail mail=" + smail + "&email=" + email + "&user id=" + userID + "&passwd="
+            + passwd + "&confirm passwd=" + passwd + "&money=" + money + "&Credit Card Number=" + creditcard;
+        ctx.getRequestDispatcher(dispPath).include(req, resp);
+        break;
+      case 's': // sell
+        dispPath = tasPathPrefix + "portfolioNoEdge";
+        ctx.getRequestDispatcher(dispPath).include(req, resp);
+
+        Collection<?> holdings = (Collection<?>) req.getAttribute("holdingDataBeans");
+        int numHoldings = holdings.size();
+        if (numHoldings > 0) {
+          // sell first available security out of holding
+
+          Iterator<?> it = holdings.iterator();
+          boolean foundHoldingToSell = false;
+          while (it.hasNext()) {
+            HoldingDataBean holdingData = (HoldingDataBean) it.next();
+            if (!(holdingData.getPurchaseDate().equals(new java.util.Date(0)))) {
+              Integer holdingID = holdingData.getHoldingID();
+
+              dispPath = tasPathPrefix + "sell&holdingID=" + holdingID;
+              ctx.getRequestDispatcher(dispPath).include(req, resp);
+              foundHoldingToSell = true;
+              break;
+            }
+          }
+          if (foundHoldingToSell) {
+            break;
+          }
+
+          Log.trace("TradeScenario: No holding to sell -switch to buy -- userID = " + userID + "  Collection count = " + numHoldings);
+
+
+        }
+        // At this point: A TradeScenario Sell was requested with No Stocks
+        // in Portfolio
+        // This can happen when a new registered user happens to request a
+        // sell before a buy
+        // In this case, fall through and perform a buy instead
+
+        /*
+         * Trade 2.037: Added sell_deficit counter to maintain correct
+         * buy/sell mix. When a users portfolio is reduced to 0 holdings, a
+         * buy is requested instead of a sell. This throws off the buy/sell
+         * mix by 1. This results in unwanted holding table growth To fix
+         * this we increment a sell deficit counter to maintain the correct
+         * ratio in getScenarioAction The 'z' action from getScenario
+         * denotes that this is a sell action that was switched from a buy
+         * to reduce a sellDeficit
+         */
+        if (userID.startsWith(TradeConfig.newUserPrefix) == false) {
+          TradeConfig.incrementSellDeficit();
+        }
+      case 'b': // buy
+        String symbol = TradeConfig.rndSymbol();
+        String amount = TradeConfig.rndQuantity() + "";
+
+        dispPath = tasPathPrefix + "quotes&symbols=" + symbol;
+        ctx.getRequestDispatcher(dispPath).include(req, resp);
+
+        dispPath = tasPathPrefix + "buy&quantity=" + amount + "&symbol=" + symbol;
+        ctx.getRequestDispatcher(dispPath).include(req, resp);
+        break;
+    } // end of switch statement
+  }
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "performTask" of class "TradeScenarioServlet".
+
+REQUIREMENTS:
+- Test class name: TradeScenarioServlet_performTaskTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths, edge cases, and boundary conditions
+- Test both valid inputs and error scenarios (null values, empty collections, invalid arguments)
+- Cover expected exceptions declared in the method signature
+- The target method throws ServletException, IOException. Tests MUST properly handle or expect this exception in error scenarios.
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- DO NOT use getter/setter methods that are not present in the provided class context
+- DO NOT mock the target class
+- For creating test instances of the target class, PREFER MOCKING constructor parameters (using @Mock) rather than instantiating domain objects directly, to avoid validation errors in value objects
+- Generate ONLY the test class without explanations or comments outside the code
+- DO NOT mock javax.servlet classes directly (ServletOutputStream, etc.) - use MockHttpServletRequest/Response from spring-test instead
+- For static method calls (e.g., Log.error(), TradeConfig.getUserID()), use Mockito.mockStatic() to mock static methods. Example: try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) { ... }
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

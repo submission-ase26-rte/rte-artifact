@@ -1,0 +1,71 @@
+{
+  "method_id": 13,
+  "tested_method": "submit",
+  "tested_class": "EventLogger",
+  "project": "Cargotracker",
+  "timestamp": "2026-01-27T18:32:23.781759",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\Cargotracker\\Run-1\\src\\test\\java\\org\\eclipse\\cargotracker\\interfaces\\handling\\mobile\\Metodo13_unit_submit_EventLogger_Test.java",
+  "test_results": {
+    "success": false,
+    "tests_passed": 0,
+    "tests_total": 1,
+    "tests_failed": 1,
+    "line_coverage": 0.0,
+    "branch_coverage": 0.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testSubmitTrackingId_mqYd0 --\nERROR: java.lang.NullPointerException: The validated object is null",
+    "test_info": {
+      "valid_tests": [],
+      "invalid_tests": [
+        "testSubmitTrackingId_mqYd0"
+      ],
+      "failed_assert_tests": [],
+      "runtime_error_tests": [
+        "testSubmitTrackingId_mqYd0"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 1,
+    "assertion_complexity": 0.0,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.0,
+    "pct_no_assertion": 1.0,
+    "naturalness_method_name": 0.55,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.0,
+    "overall_naturalness_score": 0.5125
+  },
+  "metrics": {
+    "crystalbleu_similarity": 1.921678577226187e-31,
+    "string_similarity": 0.08529411764705883,
+    "token_similarity": 0.1,
+    "ast_similarity": 0.0,
+    "embedding_similarity": 0.41728970408439636,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.0,
+      "similar_blocks": 0,
+      "total_blocks": 25
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.16787492584130342,
+    "passes_threshold": false
+  },
+  "original_method": "  public void submit() {\n    VoyageNumber voyage;\n\n    TrackingId trackingId = new TrackingId(this.trackingId);\n    UnLocode location = new UnLocode(this.location);\n\n    if (eventType.requiresVoyage()) {\n      voyage = new VoyageNumber(voyageNumber);\n    } else {\n      voyage = null;\n    }\n\n    HandlingEventRegistrationAttempt attempt =\n        new HandlingEventRegistrationAttempt(\n            LocalDateTime.now(), completionTime, trackingId, voyage, eventType, location);\n\n    applicationEvents.receivedHandlingEventRegistrationAttempt(attempt);\n\n    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(\"Event submitted\", \"\"));\n  }",
+  "regenerated_method": "public void submit() {\n    // your implementation here\n}",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6911954370472159,
+  "original_metrics": {
+    "loc": 20,
+    "sloc": 15,
+    "complexity": 2
+  }
+}

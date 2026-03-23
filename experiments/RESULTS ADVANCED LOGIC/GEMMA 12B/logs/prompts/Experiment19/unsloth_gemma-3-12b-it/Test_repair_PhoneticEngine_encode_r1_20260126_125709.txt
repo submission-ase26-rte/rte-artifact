@@ -1,0 +1,225 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language.bm;
+Class name (MUST be exactly): PhoneticEngine_encodeTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.codec.language.bm;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+import org.apache.commons.codec.language.bm.Languages.LanguageSet;
+import org.apache.commons.codec.language.bm.Rule.Phoneme;
+import org.apache.commons.codec.language.bm.PhoneticEngine;
+import org.apache.commons.codec.language.bm.Rule;
+import org.apache.commons.codec.language.bm.Languages;
+import org.apache.commons.codec.language.bm.RuleType;
+import org.apache.commons.codec.language.bm.NameType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class PhoneticEngine_encodeTestGenerated {
+
+    private PhoneticEngine phoneticEngine;
+
+    @BeforeEach
+    void setUp() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, false);
+    }
+
+    @Test
+    void testEncodeSimpleName() {
+        String input = "John";
+        LanguageSet languageSet = new HashSet<>();
+        languageSet.add("en");
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals("jhon", result);
+    }
+
+    @Test
+    void testEncodeNameWithDPrime() {
+        String input = "d'Arcy";
+        LanguageSet languageSet = new HashSet<>();
+        languageSet.add("en");
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals("(darcy)", result);
+    }
+
+    @Test
+    void testEncodeNameWithGenericPrefix() {
+        String input = "MacDonald";
+        LanguageSet languageSet = new HashSet<>();
+        languageSet.add("en");
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals("(macdonal)", result);
+    }
+
+    @Test
+    void testEncodeSephardicName() {
+        phoneticEngine = new PhoneticEngine(NameType.SEPHARDIC, RuleType.RULES, false);
+        String input = "Ben-David";
+        LanguageSet languageSet = new HashSet<>();
+        languageSet.add("he");
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals("david", result);
+    }
+
+    @Test
+    void testEncodeAshkenaziName() {
+        phoneticEngine = new PhoneticEngine(NameType.ASHKENAZI, RuleType.RULES, false);
+        String input = "Ben-David";
+        LanguageSet languageSet = new HashSet<>();
+        languageSet.add("he");
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals("ben-david", result);
+    }
+
+    @Test
+    void testEncodeMultiWordName() {
+        String input = "John Smith";
+        LanguageSet languageSet = new HashSet<>();
+        languageSet.add("en");
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals("jhon-smith", result);
+    }
+
+    @Test
+    void testEncodeConcatMode() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, true);
+        String input = "John Smith";
+        LanguageSet languageSet = new HashSet<>();
+        languageSet.add("en");
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals("john smith", result);
+    }
+
+    @Test
+    void testEncodeEmptyInput() {
+        String input = "";
+        LanguageSet languageSet = new HashSet<>();
+        languageSet.add("en");
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals("", result);
+    }
+
+    @Test
+    void testEncodeNullInput() {
+        String input = null;
+        LanguageSet languageSet = new HashSet<>();
+        languageSet.add("en");
+        assertThrows(NullPointerException.class, () -> phoneticEngine.encode(input, languageSet));
+    }
+
+    @Test
+    void testEncodeNullLanguageSet() {
+        String input = "John";
+        LanguageSet languageSet = null;
+        assertThrows(NullPointerException.class, () -> phoneticEngine.encode(input, languageSet));
+    }
+
+    @Test
+    void testEncodeWithSpecialCharacters() {
+        String input = "John-O'Malley";
+        LanguageSet languageSet = new HashSet<>();
+        languageSet.add("en");
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals("jhon-omalley", result);
+    }
+
+    @Test
+    void testEncodeWithNumbers() {
+        String input = "John123";
+        LanguageSet languageSet = new HashSet<>();
+        languageSet.add("en");
+        String result = phoneticEngine.encode(input, languageSet);
+        assertEquals("john123", result);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[44] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[45] cannot find symbol
+  symbol:   method add(java.lang.String)
+  location: variable languageSet of type org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[53] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[54] cannot find symbol
+  symbol:   method add(java.lang.String)
+  location: variable languageSet of type org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[62] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[63] cannot find symbol
+  symbol:   method add(java.lang.String)
+  location: variable languageSet of type org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[72] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[73] cannot find symbol
+  symbol:   method add(java.lang.String)
+  location: variable languageSet of type org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[82] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[83] cannot find symbol
+  symbol:   method add(java.lang.String)
+  location: variable languageSet of type org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[91] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[92] cannot find symbol
+  symbol:   method add(java.lang.String)
+  location: variable languageSet of type org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[101] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[102] cannot find symbol
+  symbol:   method add(java.lang.String)
+  location: variable languageSet of type org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[110] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[111] cannot find symbol
+  symbol:   method add(java.lang.String)
+  location: variable languageSet of type org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[119] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[120] cannot find symbol
+  symbol:   method add(java.lang.String)
+  location: variable languageSet of type org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[134] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[135] cannot find symbol
+  symbol:   method add(java.lang.String)
+  location: variable languageSet of type org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[143] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[144] cannot find symbol
+  symbol:   method add(java.lang.String)
+  location: variable languageSet of type org.apache.commons.codec.language.bm.Languages.LanguageSet
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: PhoneticEngine_encodeTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

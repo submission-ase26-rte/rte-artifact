@@ -1,0 +1,59 @@
+```java
+public CommandLine parse(final Options options, final String[] arguments, final Properties properties, final boolean stopAtNonOption) throws ParseException {
+    this.cmd = new CommandLine();
+    setOptions(options);
+    String[] flat = flatten(options, arguments, stopAtNonOption);
+    ListIterator<String> iter = Arrays.asList(flat).listIterator();
+
+    while (iter.hasNext()) {
+        String arg = iter.next();
+
+        if (arg.startsWith("--")) {
+            if (arg.length() == 2) { // "--" encountered, stop processing options
+                processArgs(null, iter);
+                break;
+            } else {
+                String opt = arg.substring(2);
+                processOption(opt, iter);
+            }
+        } else if (arg.startsWith("-")) {
+            if (arg.length() == 1) { // "-" encountered, stop processing options if stopAtNonOption is true
+                if (stopAtNonOption) {
+                    processArgs(null, iter);
+                    break;
+                } else {
+                    cmd.addArg(arg);
+                }
+            } else {
+                for (int i = 1; i < arg.length(); i++) {
+                    String opt = String.valueOf(arg.charAt(i));
+                    if (options.hasOption(opt)) {
+                        processOption(opt, iter);
+                    } else {
+                        if (stopAtNonOption) {
+                            cmd.addArg(arg.substring(i));
+                            processArgs(null, iter);
+                            break;
+                        } else {
+                            cmd.addArg(opt);
+                        }
+                    }
+                }
+            }
+        } else {
+            if (stopAtNonOption) {
+                cmd.addArg(arg);
+                processArgs(null, iter);
+                break;
+            } else {
+                cmd.addArg(arg);
+            }
+        }
+    }
+
+    processProperties(properties);
+    checkRequiredOptions();
+
+    return cmd;
+}
+```

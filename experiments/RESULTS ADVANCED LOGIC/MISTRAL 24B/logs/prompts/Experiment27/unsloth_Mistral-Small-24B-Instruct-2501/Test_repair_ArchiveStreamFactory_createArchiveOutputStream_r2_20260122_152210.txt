@@ -1,0 +1,139 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.compress.archivers;
+Class name (MUST be exactly): ArchiveStreamFactory_createArchiveOutputStreamTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Set;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.archivers.ArchiveStreamProvider;
+import org.apache.commons.compress.archivers.ArchiveOutputStream;
+import org.apache.commons.compress.archivers.ar.ArArchiveOutputStream;
+import org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream;
+import org.apache.commons.compress.archivers.jar.JarArchiveOutputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArchiveStreamFactory_createArchiveOutputStreamTestGenerated {
+
+    private ArchiveStreamFactory factory;
+
+    @BeforeEach
+    void setUp() {
+        factory = new ArchiveStreamFactory();
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamNullArchiverName() {
+        OutputStream out = new ByteArrayOutputStream();
+        assertThrows(IllegalArgumentException.class, () -> factory.createArchiveOutputStream(null, out, null));
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamNullOutputStream() {
+        assertThrows(IllegalArgumentException.class, () -> factory.createArchiveOutputStream("AR", null, null));
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamAR() {
+        OutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream result = factory.createArchiveOutputStream(ArchiveStreamFactory.AR, out, null);
+        assertNotNull(result);
+        assertTrue(result instanceof ArArchiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamZIP() {
+        OutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream result = factory.createArchiveOutputStream(ArchiveStreamFactory.ZIP, out, null);
+        assertNotNull(result);
+        assertTrue(result instanceof ZipArchiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamTAR() {
+        OutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream result = factory.createArchiveOutputStream(ArchiveStreamFactory.TAR, out, null);
+        assertNotNull(result);
+        assertTrue(result instanceof TarArchiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamJAR() {
+        OutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream result = factory.createArchiveOutputStream(ArchiveStreamFactory.JAR, out, null);
+        assertNotNull(result);
+        assertTrue(result instanceof JarArchiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamCPIO() {
+        OutputStream out = new ByteArrayOutputStream();
+        ArchiveOutputStream result = factory.createArchiveOutputStream(ArchiveStreamFactory.CPIO, out, null);
+        assertNotNull(result);
+        assertTrue(result instanceof CpioArchiveOutputStream);
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamSEVEN_Z() {
+        OutputStream out = new ByteArrayOutputStream();
+        assertThrows(IllegalArgumentException.class, () -> factory.createArchiveOutputStream(ArchiveStreamFactory.SEVEN_Z, out, null));
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamCustomProvider() {
+        String customArchiverName = "CUSTOM";
+        OutputStream out = new ByteArrayOutputStream();
+        factory.getArchiveOutputStreamProviders().put(customArchiverName.toUpperCase(), new ArchiveStreamProvider() {
+            @Override
+            public <O extends ArchiveOutputStream<? extends ArchiveEntry>> O createArchiveOutputStream(String archiverName, OutputStream out, String encoding) {
+                return (O) new ByteArrayOutputStream();
+            }
+
+            @Override
+            public Set<String> getOutputStreamArchiveNames() {
+                return Set.of(customArchiverName.toUpperCase());
+            }
+        });
+        ArchiveOutputStream result = factory.createArchiveOutputStream(customArchiverName, out, null);
+        assertNotNull(result);
+    }
+
+    @Test
+    void testCreateArchiveOutputStreamUnknownArchiver() {
+        OutputStream out = new ByteArrayOutputStream();
+        assertThrows(IllegalArgumentException.class, () -> factory.createArchiveOutputStream("UNKNOWN", out, null));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveOutputStreamTestGenerated.java:[92] <anonymous org.apache.commons.compress.archivers.ArchiveStreamFactory_createArchiveOutputStreamTestGenerated$1> is not abstract and does not override abstract method getInputStreamArchiveNames() in org.apache.commons.compress.archivers.ArchiveStreamProvider
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveOutputStreamTestGenerated.java:[95] incompatible types: java.io.ByteArrayOutputStream cannot be converted to O
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveOutputStreamTestGenerated.java:[100] cannot find symbol
+  symbol:   method of(java.lang.String)
+  location: interface java.util.Set
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: ArchiveStreamFactory_createArchiveOutputStreamTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

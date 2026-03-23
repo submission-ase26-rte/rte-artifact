@@ -1,0 +1,166 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.util;
+Class name (MUST be exactly): BasicTypeConverter_convertTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.jxpath.util;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.util.BasicTypeConverter;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class BasicTypeConverter_convertTestGenerated {
+    private BasicTypeConverter converter;
+
+    @BeforeEach
+    public void setUp() {
+        converter = new BasicTypeConverter();
+    }
+
+    @Test
+    public void testConvertUsingConverter() {
+        ConvertUtils.register(new Converter() {
+            @Override
+            public Object convert(Class type, Object value) {
+                return "converted";
+            }
+        }, String.class);
+        assertEquals("converted", converter.convert("test", String.class));
+    }
+
+    @Test
+    public void testConvertInvalidType() {
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert("test", Object.class));
+    }
+
+    @Test
+    public void testConvertNullToPrimitive() {
+        assertEquals(Boolean.FALSE, converter.convert(null, boolean.class));
+        assertEquals(Character.valueOf('\0'), converter.convert(null, char.class));
+        assertEquals(Byte.valueOf((byte) 0), converter.convert(null, byte.class));
+        assertEquals(Short.valueOf((short) 0), converter.convert(null, short.class));
+        assertEquals(Integer.valueOf(0), converter.convert(null, int.class));
+        assertEquals(Long.valueOf(0L), converter.convert(null, long.class));
+        assertEquals(Float.valueOf(0.0f), converter.convert(null, float.class));
+        assertEquals(Double.valueOf(0.0), converter.convert(null, double.class));
+        assertNull(converter.convert(null, Object.class));
+    }
+
+    @Test
+    public void testConvertNodeSetToObject() {
+        NodeSet nodeSet = new NodeSet(new ArrayList<>());
+        assertEquals(new ArrayList<>(), converter.convert(nodeSet, Object.class));
+    }
+
+    @Test
+    public void testConvertPointerToObject() {
+        Pointer pointer = new Pointer("test") {
+            @Override
+            public Object getValue() {
+                return "testValue";
+            }
+        };
+        assertEquals("testValue", converter.convert(pointer, Object.class));
+    }
+
+    @Test
+    public void testConvertArrayToArray() {
+        Integer[] array = {1, 2, 3};
+        Integer[] result = (Integer[]) converter.convert(array, Integer[].class);
+        assertArrayEquals(array, result);
+    }
+
+    @Test
+    public void testConvertArrayToCollection() {
+        Integer[] array = {1, 2, 3};
+        Collection<?> result = (Collection<?>) converter.convert(array, ArrayList.class);
+        assertEquals(3, result.size());
+        assertTrue(result.contains(1));
+        assertTrue(result.contains(2));
+        assertTrue(result.contains(3));
+    }
+
+    @Test
+    public void testConvertCollectionToArray() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        Integer[] result = (Integer[]) converter.convert(list, Integer[].class);
+        assertArrayEquals(new Integer[]{1, 2, 3}, result);
+    }
+
+    @Test
+    public void testConvertCollectionToCollection() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        Collection<?> result = (Collection<?>) converter.convert(list, ArrayList.class);
+        assertEquals(3, result.size());
+        assertTrue(result.contains(1));
+        assertTrue(result.contains(2));
+        assertTrue(result.contains(3));
+    }
+
+    @Test
+    public void testConvertObjectToString() {
+        assertEquals("test", converter.convert("test", String.class));
+    }
+
+    @Test
+    public void testConvertBooleanToNumber() {
+        assertEquals(1, converter.convert(true, Integer.class));
+        assertEquals(0, converter.convert(false, Integer.class));
+    }
+
+    @Test
+    public void testConvertNumberToBoolean() {
+        assertEquals(Boolean.TRUE, converter.convert(1, Boolean.class));
+        assertEquals(Boolean.FALSE, converter.convert(0, Boolean.class));
+    }
+
+    @Test
+    public void testConvertStringToPrimitive() {
+        assertEquals(1, converter.convert("1", Integer.class));
+        assertEquals(1.0, converter.convert("1.0", Double.class));
+    }
+
+    @Test
+    public void testConvertStringToPrimitiveInvalid() {
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert("invalid", Integer.class));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[59] org.apache.commons.jxpath.NodeSet is abstract; cannot be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[65] anonymous class implements interface; cannot have arguments
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_convertTestGenerated.java:[65] <anonymous org.apache.commons.jxpath.util.BasicTypeConverter_convertTestGenerated$2> is not abstract and does not override abstract method asPath() in org.apache.commons.jxpath.Pointer
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: BasicTypeConverter_convertTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

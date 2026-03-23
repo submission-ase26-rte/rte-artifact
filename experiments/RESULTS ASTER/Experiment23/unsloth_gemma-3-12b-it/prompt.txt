@@ -1,0 +1,498 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Filtered unit tests for method: detect(final InputStream in)
+ * Original class: ArchiveStreamFactory
+ * Tests that actually call the target method
+ */
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.compress.utils.Sets;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+
+public class Metodo23_unit_detect_ArchiveStreamFactory_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testIOExceptionWhileReadingSignature_ZdfL10() throws ArchiveException {
+    InputStream in = new ByteArrayInputStream(new byte[0]);
+    try {
+    ArchiveStreamFactory.detect(in);
+    fail("Expected ArchiveException");
+    } catch (ArchiveException e) {
+    assertEquals("IOException while reading signature.", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testInputStreamWithoutMarkSupport_TDlP9_OkiI0_fid3() {
+    InputStream in = new ByteArrayInputStream(new byte[0]);
+    try {
+    try {
+    ArchiveStreamFactory.detect(in);
+    fail("Expected ArchiveException");
+    } catch (ArchiveException e) {
+    assertEquals("Mark is not supported.", e.getMessage());
+    }
+    } catch (Exception e) {
+    fail("Unexpected exception");
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testNoArchiverFound_AWwU11() throws ArchiveException {
+    InputStream in = new ByteArrayInputStream(new byte[0]);
+    try {
+    ArchiveStreamFactory.detect(in);
+    fail("Expected ArchiveException");
+    } catch (ArchiveException e) {
+    assertEquals("No Archiver found for the stream signature", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testInputStreamWithoutMarkSupport_TDlP9_OkiI0() {
+    InputStream in = new ByteArrayInputStream(new byte[0]);
+    try {
+    try {
+    ArchiveStreamFactory.detect(in);
+    fail("Expected ArchiveException");
+    } catch (ArchiveException e) {
+    }
+    } catch (Exception e) {
+    fail("Unexpected exception");
+    }
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 2/4 passed
+
+TEST STATUS:
+- PASSED (2): testNoArchiverFound_AWwU11, testInputStreamWithoutMarkSupport_TDlP9_OkiI0
+- FAILED (2): testIOExceptionWhileReadingSignature_ZdfL10, testInputStreamWithoutMarkSupport_TDlP9_OkiI0_fid3
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ByteArrayInputStream -> java.io.ByteArrayInputStream
+//   IOException -> java.io.IOException
+//   InputStream -> java.io.InputStream
+//   OutputStream -> java.io.OutputStream
+//   AccessController -> java.security.AccessController
+//   PrivilegedAction -> java.security.PrivilegedAction
+//   Collections -> java.util.Collections
+//   Locale -> java.util.Locale
+//   ServiceLoader -> java.util.ServiceLoader
+//   Set -> java.util.Set
+//   SortedMap -> java.util.SortedMap
+//   TreeMap -> java.util.TreeMap
+//   ArArchiveInputStream -> org.apache.commons.compress.archivers.ar.ArArchiveInputStream
+//   ArArchiveOutputStream -> org.apache.commons.compress.archivers.ar.ArArchiveOutputStream
+//   ArjArchiveInputStream -> org.apache.commons.compress.archivers.arj.ArjArchiveInputStream
+//   CpioArchiveInputStream -> org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream
+//   CpioArchiveOutputStream -> org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream
+//   DumpArchiveInputStream -> org.apache.commons.compress.archivers.dump.DumpArchiveInputStream
+//   JarArchiveInputStream -> org.apache.commons.compress.archivers.jar.JarArchiveInputStream
+//   JarArchiveOutputStream -> org.apache.commons.compress.archivers.jar.JarArchiveOutputStream
+//   SevenZFile -> org.apache.commons.compress.archivers.sevenz.SevenZFile
+//   TarArchiveEntry -> org.apache.commons.compress.archivers.tar.TarArchiveEntry
+//   TarArchiveInputStream -> org.apache.commons.compress.archivers.tar.TarArchiveInputStream
+//   TarArchiveOutputStream -> org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
+//   ZipArchiveInputStream -> org.apache.commons.compress.archivers.zip.ZipArchiveInputStream
+//   ZipArchiveOutputStream -> org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream
+//   IOUtils -> org.apache.commons.compress.utils.IOUtils
+//   Sets -> org.apache.commons.compress.utils.Sets
+//   ArchiveStreamFactory -> org.apache.commons.compress.archivers.ArchiveStreamFactory
+
+// === Class: ArchiveStreamFactory ===
+// Fields (with actual visibility):
+    private static final int TAR_HEADER_SIZE;
+    private static final int TAR_TEST_ENTRY_COUNT;
+    private static final int DUMP_SIGNATURE_SIZE;
+    private static final int SIGNATURE_SIZE;
+    public static final ArchiveStreamFactory DEFAULT;
+    public static final String APK;
+    public static final String XAPK;
+    public static final String APKS;
+    public static final String APKM;
+    public static final String AR;
+    public static final String ARJ;
+    public static final String CPIO;
+    public static final String DUMP;
+    public static final String JAR;
+    public static final String TAR;
+
+// Constructors:
+public ArchiveStreamFactory();
+public ArchiveStreamFactory(String encoding);
+
+// Getter/Setter Methods (for test assertions):
+public SortedMap<String, ArchiveStreamProvider> getArchiveInputStreamProviders();
+public SortedMap<String, ArchiveStreamProvider> getArchiveOutputStreamProviders();
+public String getEntryEncoding();
+public Set<String> getInputStreamArchiveNames();
+public Set<String> getOutputStreamArchiveNames();
+public void setEntryEncoding(final String entryEncoding);
+
+// === External Class: IOUtils ===
+// Full import path: org.apache.commons.compress.utils.IOUtils
+// Fields (with actual visibility):
+    public static final LinkOption[] EMPTY_LINK_OPTIONS;
+// Constructors:
+private IOUtils();
+// Method Signatures (used by target method):
+public static int readFully(final InputStream input, final byte[] array);
+// Public Getter Methods (for test assertions):
+public static byte toByteArray(InputStream input);
+
+// === External Class: ZipArchiveInputStream ===
+// Full import path: org.apache.commons.compress.archivers.zip.ZipArchiveInputStream
+// Fields (with actual visibility):
+    private final ZipArchiveEntry entry;
+    private boolean hasDataDescriptor;
+    private boolean usesZip64;
+    private long bytesRead;
+    private long bytesReadFromStream;
+    private final CRC32 crc;
+    private InputStream inputStream;
+    public static final int PREAMBLE_GARBAGE_MAX_SIZE;
+    private static final int LFH_LEN;
+    private static final int CFH_LEN;
+    private static final long TWO_EXP_32;
+    private static final String USE_ZIPFILE_INSTEAD_OF_STREAM_DISCLAIMER;
+    private static final byte[] LFH;
+    private static final byte[] CFH;
+    private static final byte[] DD;
+    private static final byte[] APK_SIGNING_BLOCK_MAGIC;
+    private static final BigInteger LONG_MAX;
+    private final ZipEncoding zipEncoding;
+    private final boolean useUnicodeExtraFields;
+    private final Inflater inf;
+    private final ByteBuffer buf;
+    private CurrentEntry current;
+    private boolean closed;
+    private boolean hitCentralDirectory;
+    private ByteArrayInputStream lastStoredEntry;
+    private final boolean allowStoredEntriesWithDataDescriptor;
+    private long uncompressedCount;
+    private final boolean skipSplitSig;
+    private final byte[] lfhBuf;
+    private final byte[] skipBuf;
+    private final byte[] shortBuf;
+    private final byte[] wordBuf;
+    private final byte[] twoDwordBuf;
+    private int entriesRead;
+    private Function extraFieldSupport;
+// Constructors:
+BoundCountInputStream(InputStream in, long max);
+public ZipArchiveInputStream(InputStream inputStream);
+public ZipArchiveInputStream(InputStream inputStream, String encoding);
+public ZipArchiveInputStream(InputStream inputStream, String encoding, boolean useUnicodeExtraFields);
+public ZipArchiveInputStream(InputStream inputStream, String encoding, boolean useUnicodeExtraFields, boolean allowStoredEntriesWithDataDescriptor);
+public ZipArchiveInputStream(InputStream inputStream, String encoding, boolean useUnicodeExtraFields, boolean allowStoredEntriesWithDataDescriptor, boolean skipSplitSig);
+// Method Signatures (used by target method):
+public static boolean matches(final byte[] signature, final int length);
+// Public Getter Methods (for test assertions):
+public boolean canReadEntryData(ArchiveEntry ae);
+public long getCompressedCount();
+public ZipArchiveEntry getNextEntry();
+public ZipArchiveEntry getNextZipEntry();
+public long getUncompressedCount();
+
+// === External Class: JarArchiveInputStream ===
+// Full import path: org.apache.commons.compress.archivers.jar.JarArchiveInputStream
+// Constructors:
+public JarArchiveInputStream(InputStream inputStream);
+public JarArchiveInputStream(InputStream inputStream, String encoding);
+// Method Signatures (used by target method):
+public static boolean matches(final byte[] signature, final int length);
+// Public Getter Methods (for test assertions):
+public JarArchiveEntry getNextEntry();
+public JarArchiveEntry getNextJarEntry();
+
+// === External Class: ArArchiveInputStream ===
+// Full import path: org.apache.commons.compress.archivers.ar.ArArchiveInputStream
+// Fields (with actual visibility):
+    private static final int NAME_OFFSET;
+    private static final int NAME_LEN;
+    private static final int LAST_MODIFIED_OFFSET;
+    private static final int LAST_MODIFIED_LEN;
+    private static final int USER_ID_OFFSET;
+    private static final int USER_ID_LEN;
+    private static final int GROUP_ID_OFFSET;
+    private static final int GROUP_ID_LEN;
+    private static final int FILE_MODE_OFFSET;
+    private static final int FILE_MODE_LEN;
+    private static final int LENGTH_OFFSET;
+    private static final int LENGTH_LEN;
+    package-private static final String BSD_LONGNAME_PREFIX;
+    private static final int BSD_LONGNAME_PREFIX_LEN;
+    private static final Pattern BSD_LONGNAME_PATTERN;
+    private static final String GNU_STRING_TABLE_NAME;
+    private static final Pattern GNU_LONGNAME_PATTERN;
+    private long offset;
+    private boolean closed;
+    private ArArchiveEntry currentEntry;
+    private byte[] namebuffer;
+    private long entryOffset;
+    private final byte[] metaData;
+// Constructors:
+public ArArchiveInputStream(InputStream inputStream);
+// Method Signatures (used by target method):
+public static boolean matches(final byte[] signature, final int length);
+// Public Getter Methods (for test assertions):
+public ArArchiveEntry getNextArEntry();
+public ArArchiveEntry getNextEntry();
+
+// === External Class: CpioArchiveInputStream ===
+// Full import path: org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream
+// Fields (with actual visibility):
+    private boolean closed;
+    private CpioArchiveEntry entry;
+    private long entryBytesRead;
+    private boolean entryEOF;
+    private final byte[] tmpbuf;
+    private long crc;
+    private final byte[] twoBytesBuf;
+    private final byte[] fourBytesBuf;
+    private final byte[] sixBytesBuf;
+    private final int blockSize;
+    private final ZipEncoding zipEncoding;
+// Constructors:
+public CpioArchiveInputStream(InputStream in);
+public CpioArchiveInputStream(InputStream in, int blockSize);
+public CpioArchiveInputStream(InputStream in, int blockSize, String encoding);
+public CpioArchiveInputStream(InputStream in, String encoding);
+// Method Signatures (used by target method):
+public static boolean matches(final byte[] signature, final int length);
+// Public Getter Methods (for test assertions):
+public CpioArchiveEntry getNextCPIOEntry();
+public CpioArchiveEntry getNextEntry();
+
+// === External Class: ArjArchiveInputStream ===
+// Full import path: org.apache.commons.compress.archivers.arj.ArjArchiveInputStream
+// Fields (with actual visibility):
+    private static final String ENCODING_NAME;
+    private static final int ARJ_MAGIC_1;
+    private static final int ARJ_MAGIC_2;
+    private final DataInputStream dis;
+    private final MainHeader mainHeader;
+    private LocalFileHeader currentLocalFileHeader;
+    private InputStream currentInputStream;
+// Constructors:
+public ArjArchiveInputStream(InputStream inputStream);
+public ArjArchiveInputStream(InputStream inputStream, String charsetName);
+// Method Signatures (used by target method):
+public static boolean matches(final byte[] signature, final int length);
+// Public Getter Methods (for test assertions):
+public boolean canReadEntryData(ArchiveEntry ae);
+public String getArchiveComment();
+public String getArchiveName();
+public ArjArchiveEntry getNextEntry();
+
+// === External Class: SevenZFile ===
+// Full import path: org.apache.commons.compress.archivers.sevenz.SevenZFile
+// Method Signatures (used by target method):
+public static boolean matches(final byte[] signature, final int length);
+
+// === External Class: DumpArchiveInputStream ===
+// Full import path: org.apache.commons.compress.archivers.dump.DumpArchiveInputStream
+// Fields (with actual visibility):
+    private static final String CURRENT_PATH_SEGMENT;
+    private static final String PARENT_PATH_SEGMENT;
+    private final DumpArchiveSummary summary;
+    private DumpArchiveEntry active;
+    private boolean isClosed;
+    private boolean hasHitEOF;
+    private long entrySize;
+    private long entryOffset;
+    private int readIdx;
+    private final byte[] readBuf;
+    private byte[] blockBuffer;
+    private int recordOffset;
+    private long filepos;
+    protected TapeInputStream raw;
+    private final Map names;
+    private final Map pending;
+    private final Queue queue;
+    private final ZipEncoding zipEncoding;
+// Constructors:
+public DumpArchiveInputStream(InputStream is);
+public DumpArchiveInputStream(InputStream is, String encoding);
+// Method Signatures (used by target method):
+public static boolean matches(final byte[] buffer, final int length);
+// Public Getter Methods (for test assertions):
+public long getBytesRead();
+public int getCount();
+public DumpArchiveEntry getNextDumpEntry();
+public DumpArchiveEntry getNextEntry();
+public DumpArchiveSummary getSummary();
+
+// === External Class: TarArchiveInputStream ===
+// Full import path: org.apache.commons.compress.archivers.tar.TarArchiveInputStream
+// Fields (with actual visibility):
+    private static final int SMALL_BUFFER_SIZE;
+    private final byte[] smallBuf;
+    private final byte[] recordBuffer;
+    private final int blockSize;
+    private boolean atEof;
+    private long entrySize;
+    private long entryOffset;
+    private List sparseInputStreams;
+    private int currentSparseInputStreamIndex;
+    private TarArchiveEntry currEntry;
+    private final ZipEncoding zipEncoding;
+    private Map globalPaxHeaders;
+    private final List globalSparseHeaders;
+    private final boolean lenient;
+// Constructors:
+public TarArchiveInputStream(InputStream inputStream);
+public TarArchiveInputStream(InputStream inputStream, boolean lenient);
+public TarArchiveInputStream(InputStream inputStream, int blockSize);
+public TarArchiveInputStream(InputStream inputStream, int blockSize, int recordSize);
+public TarArchiveInputStream(InputStream inputStream, int blockSize, int recordSize, String encoding);
+public TarArchiveInputStream(InputStream inputStream, int blockSize, int recordSize, String encoding, boolean lenient);
+public TarArchiveInputStream(InputStream inputStream, int blockSize, String encoding);
+public TarArchiveInputStream(InputStream inputStream, String encoding);
+// Method Signatures (used by target method):
+public TarArchiveEntry getNextEntry();
+public static boolean matches(final byte[] signature, final int length);
+// Public Getter Methods (for test assertions):
+public boolean canReadEntryData(ArchiveEntry archiveEntry);
+public TarArchiveEntry getCurrentEntry();
+public TarArchiveEntry getNextTarEntry();
+public int getRecordSize();
+
+// === External Class: TarArchiveEntry ===
+// Full import path: org.apache.commons.compress.archivers.tar.TarArchiveEntry
+// Fields (with actual visibility):
+    private static final TarArchiveEntry[] EMPTY_TAR_ARCHIVE_ENTRY_ARRAY;
+    public static final long UNKNOWN;
+    public static final int MAX_NAMELEN;
+    public static final int DEFAULT_DIR_MODE;
+    public static final int DEFAULT_FILE_MODE;
+    public static final int MILLIS_PER_SECOND;
+    private static final Pattern PAX_EXTENDED_HEADER_FILE_TIMES_PATTERN;
+    private String name;
+    private final boolean preserveAbsolutePath;
+    private int mode;
+    private long userId;
+    private long groupId;
+    private long size;
+    private FileTime mTime;
+    private FileTime cTime;
+    private FileTime aTime;
+    private FileTime birthTime;
+    private boolean checkSumOK;
+    private byte linkFlag;
+    private String linkName;
+    private String magic;
+    private String version;
+    private String userName;
+    private String groupName;
+    private int devMajor;
+    private int devMinor;
+    private List sparseHeaders;
+    private boolean isExtended;
+    private long realSize;
+    private boolean paxGNUSparse;
+    private boolean paxGNU1XSparse;
+    private boolean starSparse;
+    private final Path file;
+    private final LinkOption[] linkOptions;
+    private final Map extraPaxHeaders;
+    private long dataOffset;
+// Constructors:
+private TarArchiveEntry(boolean preserveAbsolutePath);
+public TarArchiveEntry(byte headerBuf);
+public TarArchiveEntry(byte headerBuf, ZipEncoding encoding);
+public TarArchiveEntry(byte headerBuf, ZipEncoding encoding, boolean lenient);
+public TarArchiveEntry(byte headerBuf, ZipEncoding encoding, boolean lenient, long dataOffset);
+public TarArchiveEntry(File file);
+public TarArchiveEntry(File file, String fileName);
+public TarArchiveEntry(Map globalPaxHeaders, byte headerBuf, ZipEncoding encoding, boolean lenient);
+public TarArchiveEntry(Map globalPaxHeaders, byte headerBuf, ZipEncoding encoding, boolean lenient, long dataOffset);
+public TarArchiveEntry(Path file);
+public TarArchiveEntry(Path file, String fileName, LinkOption linkOptions);
+public TarArchiveEntry(String name);
+public TarArchiveEntry(String name, boolean preserveAbsolutePath);
+public TarArchiveEntry(String name, byte linkFlag);
+public TarArchiveEntry(String name, byte linkFlag, boolean preserveAbsolutePath);
+// Method Signatures (used by target method):
+public long getSize();
+public boolean isCheckSumOK();
+public boolean isDirectory();
+// Public Getter Methods (for test assertions):
+public FileTime getCreationTime();
+public long getDataOffset();
+public int getDevMajor();
+public int getDevMinor();
+public TarArchiveEntry getDirectoryEntries();
+public String getExtraPaxHeader(String name);
+public Map<String, String> getExtraPaxHeaders();
+public File getFile();
+public int getGroupId();
+public String getGroupName();
+
+// === Exception Class: ArchiveException ===
+// Constructors:
+public ArchiveException(String message);
+public ArchiveException(String message, Exception cause);
+
+
+TASK:
+Regenerate ONLY the method "detect" OF CLASS "ArchiveStreamFactory" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public static String detect(final InputStream in) throws ArchiveException {
+    // your implementation here
+}
+```
+
+- Package: org.apache.commons.compress.archivers
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "detect"
+- Allowed imports: exactly those already present in ArchiveStreamFactory
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

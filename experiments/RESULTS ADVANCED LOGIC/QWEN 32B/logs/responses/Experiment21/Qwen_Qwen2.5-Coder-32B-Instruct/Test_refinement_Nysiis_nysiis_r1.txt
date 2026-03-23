@@ -1,0 +1,95 @@
+```java
+package org.apache.commons.codec.language;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Nysiis_nysiisTestGenerated {
+    private Nysiis nysiis;
+
+    @BeforeEach
+    void setUp() {
+        nysiis = new Nysiis();
+    }
+
+    @Test
+    void testNysiisWithMACPattern() {
+        assertEquals("MCAR", nysiis.nysiis("MACAR"));
+    }
+
+    @Test
+    void testNysiisWithKNPattern() {
+        assertEquals("NAL", nysiis.nysiis("KNEL"));
+    }
+
+    @Test
+    void testNysiisWithPHPattern() {
+        assertEquals("FAL", nysiis.nysiis("PHIL"));
+    }
+
+    @Test
+    void testNysiisWithSCHPattern() {
+        assertEquals("SASAN", nysiis.nysiis("SCHASON"));
+    }
+
+    @Test
+    void testNysiisWithTrailingSPattern() {
+        assertEquals("MC", nysiis.nysiis("MCCS"));
+    }
+
+    @Test
+    void testNysiisWithTrailingAYPattern() {
+        assertEquals("MCY", nysiis.nysiis("MCCAY"));
+    }
+
+    @Test
+    void testNysiisWithTrailingAPattern() {
+        assertEquals("MC", nysiis.nysiis("MCCA"));
+    }
+
+    @Test
+    void testNysiisWithVowelReplacement() {
+        assertEquals("MC", nysiis.nysiis("MAC"));
+    }
+
+    @Test
+    void testNysiisWithQPattern() {
+        assertEquals("QAT", nysiis.nysiis("QOT"));
+    }
+
+    @Test
+    void testNysiisWithZPattern() {
+        assertEquals("ZAT", nysiis.nysiis("ZOT"));
+    }
+
+    @Test
+    void testNysiisWithMPattern() {
+        assertEquals("MAT", nysiis.nysiis("MAT"));
+    }
+
+    @Test
+    void testNysiisWithHPattern() {
+        assertEquals("HAPT", nysiis.nysiis("HAPT"));
+    }
+
+    @Test
+    void testNysiisWithWPattern() {
+        assertEquals("WAL", nysiis.nysiis("WEAL"));
+    }
+
+    @Test
+    void testNysiisWithStrictMode() {
+        Nysiis strictNysiis = new Nysiis(true);
+        assertEquals("MCAR", strictNysiis.nysiis("MACAR"));
+    }
+
+    @Test
+    void testNysiisWithNonStrictMode() {
+        assertEquals("MCAR", nysiis.nysiis("MACAR"));
+    }
+}
+```

@@ -1,0 +1,128 @@
+```java
+public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception {
+    RunStatsDataBean result = new RunStatsDataBean();
+    Connection conn = null;
+    String sql = "";
+
+    try {
+        conn = datasource.getConnection();
+        conn.setAutoCommit(false);
+
+        if (deleteAll) {
+            sql = "DELETE FROM TABLE_1";
+            try (PreparedStatement stmt = this.getStatement(conn, sql)) {
+                stmt.executeUpdate();
+            }
+            sql = "DELETE FROM TABLE_2";
+            try (PreparedStatement stmt = this.getStatement(conn, sql)) {
+                stmt.executeUpdate();
+            }
+            // Add more DELETE statements for all tables if needed
+        } else {
+            sql = "DELETE FROM TABLE_3";
+            try (PreparedStatement stmt = this.getStatement(conn, sql)) {
+                stmt.executeUpdate();
+            }
+            sql = "DELETE FROM TABLE_4";
+            try (PreparedStatement stmt = this.getStatement(conn, sql)) {
+                stmt.executeUpdate();
+            }
+            // Add more DELETE statements for specific tables if needed
+        }
+
+        sql = "SELECT COUNT(*) AS tradeUserCount FROM TABLE_5";
+        try (PreparedStatement stmt = this.getStatement(conn, sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                result.setTradeUserCount(rs.getInt("tradeUserCount"));
+            }
+        }
+
+        sql = "SELECT COUNT(*) AS newUserCount FROM TABLE_6";
+        try (PreparedStatement stmt = this.getStatement(conn, sql)) {
+            result.setNewUserCount(stmt.executeUpdate());
+        }
+
+        sql = "SELECT SUM(loginCount) AS sumLoginCount, SUM(logoutCount) AS sumLogoutCount FROM TABLE_7";
+        try (PreparedStatement stmt = this.getStatement(conn, sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                result.setSumLoginCount(rs.getInt("sumLoginCount"));
+                result.setSumLogoutCount(rs.getInt("sumLogoutCount"));
+            }
+        }
+
+        sql = "SELECT COUNT(*) AS holdingCount FROM TABLE_8";
+        try (PreparedStatement stmt = this.getStatement(conn, sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                result.setHoldingCount(rs.getInt("holdingCount"));
+            }
+        }
+
+        sql = "SELECT COUNT(*) AS orderCount FROM TABLE_9";
+        try (PreparedStatement stmt = this.getStatement(conn, sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                result.setOrderCount(rs.getInt("orderCount"));
+            }
+        }
+
+        sql = "SELECT COUNT(*) AS buyOrderCount FROM TABLE_10";
+        try (PreparedStatement stmt = this.getStatement(conn, sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                result.setBuyOrderCount(rs.getInt("buyOrderCount"));
+            }
+        }
+
+        sql = "SELECT COUNT(*) AS sellOrderCount FROM TABLE_11";
+        try (PreparedStatement stmt = this.getStatement(conn, sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                result.setSellOrderCount(rs.getInt("sellOrderCount"));
+            }
+        }
+
+        sql = "SELECT COUNT(*) AS cancelledOrderCount FROM TABLE_12";
+        try (PreparedStatement stmt = this.getStatement(conn, sql)) {
+            result.setCancelledOrderCount(stmt.executeUpdate());
+        }
+
+        sql = "SELECT COUNT(*) AS openOrderCount FROM TABLE_13";
+        try (PreparedStatement stmt = this.getStatement(conn, sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                result.setOpenOrderCount(rs.getInt("openOrderCount"));
+            }
+        }
+
+        sql = "SELECT COUNT(*) AS deletedOrderCount FROM TABLE_14";
+        try (PreparedStatement stmt = this.getStatement(conn, sql)) {
+            result.setDeletedOrderCount(stmt.executeUpdate());
+        }
+
+        sql = "SELECT COUNT(*) AS tradeStockCount FROM TABLE_15";
+        try (PreparedStatement stmt = this.getStatement(conn, sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                result.setTradeStockCount(rs.getInt("tradeStockCount"));
+            }
+        }
+
+        conn.commit();
+    } catch (SQLException e) {
+        if (conn != null) {
+            conn.rollback();
+        }
+        Log.error("Error resetting trade: " + e.getMessage());
+        throw e;
+    } finally {
+        if (conn != null) {
+            conn.close();
+        }
+    }
+
+    return result;
+}
+```

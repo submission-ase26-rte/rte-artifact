@@ -1,0 +1,19 @@
+```java
+public <I extends ArchiveInputStream<? extends ArchiveEntry>> I createArchiveInputStream(final String archiverName, final InputStream in, final String actualEncoding) throws ArchiveException {
+    if (archiverName == null) {
+        throw new IllegalArgumentException("Archiver name must not be null.");
+    }
+    if (in == null) {
+        throw new IllegalArgumentException("Input stream must not be null.");
+    }
+    String key = toKey(archiverName);
+    ArchiveStreamProvider provider = getArchiveInputStreamProviders().get(key);
+    if (provider != null) {
+        return (I) provider.createArchiveInputStream(archiverName, in, actualEncoding);
+    }
+    if (archiverName.equalsIgnoreCase("7Z")) {
+        throw new StreamingNotSupportedException("7z is not supported.");
+    }
+    throw new ArchiveException("Archiver not found for name: " + archiverName);
+}
+```

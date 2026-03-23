@@ -1,0 +1,152 @@
+```java
+package org.apache.commons.cli;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class OptionGroup_toStringTestGenerated {
+    private void assertEquals(String expected, String actual) {
+        org.junit.jupiter.api.Assertions.assertEquals(expected, actual);
+    }
+
+
+    @Test
+        public void testToString_singleOption() {
+            Option option = new Option("a", false, "Option a");
+            OptionGroup group = new OptionGroup();
+            try {
+                group.setSelected(option);
+                assertEquals("[a]", group.toString());
+            } catch (AlreadySelectedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    @Test
+        public void testToString_singleLongOption() {
+            Option option = new Option("","longopt", false, "Long Option");
+            option.setLongOpt("longopt");
+            OptionGroup group = new OptionGroup();
+            try {
+                group.setSelected(option);
+                assertEquals("[--longopt]", group.toString());
+            } catch (AlreadySelectedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    @Test
+        public void testToString_multipleOptionsWithLongOptions() {
+            Option option1 = new Option("a", false, "Option a");
+            Option option2 = new Option("","longopt", false, "Long Option");
+            option2.setLongOpt("longopt");
+            OptionGroup group = new OptionGroup();
+            try {
+                group.setSelected(option1);
+                group.setSelected(option2);
+                assertEquals("[a, --longopt]", group.toString());
+            } catch (AlreadySelectedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    @Test
+        public void testToString_longOptionsWithDescriptions() {
+            Option option1 = new Option("","longopt1", false, "Long Option 1");
+            option1.setLongOpt("longopt1");
+            Option option2 = new Option("","longopt2", false, "Long Option 2");
+            option2.setLongOpt("longopt2");
+            OptionGroup group = new OptionGroup();
+            try {
+                group.setSelected(option1);
+                group.setSelected(option2);
+                assertEquals("[--longopt1, --longopt2]", group.toString());
+            } catch (AlreadySelectedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    @Test
+        public void testToString_mixedOptions() {
+            Option option1 = new Option("a", false, "Option a");
+            Option option2 = new Option("","longopt", false, "Long Option");
+            option2.setLongOpt("longopt");
+            OptionGroup group = new OptionGroup();
+            try {
+                group.setSelected(option1);
+                group.setSelected(option2);
+                assertEquals("[a, --longopt]", group.toString());
+            } catch (AlreadySelectedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    @Test
+    public void testToString_emptyOptionGroup() {
+        OptionGroup group = new OptionGroup();
+        assertEquals("[]", group.toString());
+    }
+
+    @Test
+    public void testToString_multipleOptions() {
+        Option option1 = new Option("b", false, "Option b");
+        Option option2 = new Option("c", false, "Option c");
+        OptionGroup group = new OptionGroup();
+        try {
+            group.setSelected(option1);
+            group.setSelected(option2);
+            assertEquals("[b, c]", group.toString());
+        } catch (AlreadySelectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testToString_optionsWithDescriptions() {
+        Option option1 = new Option("d", false, "Option d");
+        Option option2 = new Option("e", false, "Option e");
+        OptionGroup group = new OptionGroup();
+        try {
+            group.setSelected(option1);
+            group.setSelected(option2);
+            assertEquals("[d, e]", group.toString());
+        } catch (AlreadySelectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testToString_longOptionWithDescription() {
+        Option option = new Option("","longopt", false, "Long Option");
+        option.setLongOpt("longopt");
+        OptionGroup group = new OptionGroup();
+        try {
+            group.setSelected(option);
+            assertEquals("[--longopt]", group.toString());
+        } catch (AlreadySelectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testToString_shortOptionWithDescription() {
+        Option option = new Option("f", false, "Option f");
+        option.setDescription("Option f Description");
+        OptionGroup group = new OptionGroup();
+        try {
+            group.setSelected(option);
+            assertEquals("[f Option f Description]", group.toString());
+        } catch (AlreadySelectedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```

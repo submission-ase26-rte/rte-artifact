@@ -1,0 +1,29 @@
+```java
+public void submit() {
+    if (trackingId == null || location == null || eventType == null || voyageNumber == null || completionTime == null) {
+        throw new NullPointerException("One or more required fields are null");
+    }
+
+    HandlingEvent handlingEvent = new HandlingEvent();
+    handlingEvent.setType(eventType);
+    handlingEvent.setCompletionTime(completionTime);
+    handlingEvent.setRegistrationTime(LocalDateTime.now());
+    handlingEvent.setLocation(new Location(new UnLocode(location)));
+    if (eventType.requiresVoyage()) {
+        VoyageNumber voyageNumberValue = new VoyageNumber(voyageNumber);
+        Voyage voyage = new Voyage(voyageNumberValue);
+        handlingEvent.setVoyage(voyage);
+    }
+
+    Cargo cargo = cargoRepository.findByTrackingId(new TrackingId(trackingId));
+    if (cargo == null) {
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Cargo not found", null));
+        return;
+    }
+
+    handlingEvent.setCargo(cargo);
+    HandlingEventRegistrationAttempt attempt = new HandlingEventRegistrationAttempt(handlingEvent);
+    applicationEvents.receivedHandlingEventRegistrationAttempt(attempt);
+    context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Handling event submitted successfully", null));
+}
+```

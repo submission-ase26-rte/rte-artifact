@@ -1,0 +1,149 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language.bm;
+Class name (MUST be exactly): PhoneticEngine_encodeTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.codec.language.bm;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+import org.apache.commons.codec.language.bm.Languages.LanguageSet;
+import org.apache.commons.codec.language.bm.Languages;
+import org.apache.commons.codec.language.bm.NameType;
+import org.apache.commons.codec.language.bm.PhoneticEngine;
+import org.apache.commons.codec.language.bm.Rule.Phoneme;
+import org.apache.commons.codec.language.bm.Rule;
+import org.apache.commons.codec.language.bm.RuleType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class PhoneticEngine_encodeTestGenerated {
+    private PhoneticEngine phoneticEngine;
+    @BeforeEach
+    void setUp() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, false);
+    }
+
+
+    @Test
+        void testEncodeNullLanguageSet() {
+            String input = "John";
+            LanguageSet languageSet = null;
+            assertThrows(NullPointerException.class, () -> phoneticEngine.encode(input, languageSet));
+        }
+
+    @Test
+    void testEncodeWithDPrimePrefix() {
+        String input = "d'Angelo";
+        String expected = "(dAngelo)";
+        assertEquals(expected, phoneticEngine.encode(input, new HashSet<>()));
+    }
+
+    @Test
+    void testEncodeWithGenericPrefix() {
+        String input = "Van Morrison";
+        String expected = "(vanMorrison)";
+        assertEquals(expected, phoneticEngine.encode(input, new HashSet<>()));
+    }
+
+    @Test
+    void testEncodeSephardicName() {
+        phoneticEngine = new PhoneticEngine(NameType.SEPHARDIC, RuleType.RULES, false);
+        String input = "Abravanel";
+        String expected = "abranel";
+        assertEquals(expected, phoneticEngine.encode(input, new HashSet<>()));
+    }
+
+    @Test
+    void testEncodeAshkenaziName() {
+        phoneticEngine = new PhoneticEngine(NameType.ASHKENAZIC, RuleType.RULES, false);
+        String input = "Goldberg";
+        String expected = "goldberg";
+        assertEquals(expected, phoneticEngine.encode(input, new HashSet<>()));
+    }
+
+    @Test
+    void testEncodeConcatMode() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, true);
+        String input = "John Smith";
+        String expected = "john-smith";
+        assertEquals(expected, phoneticEngine.encode(input, new HashSet<>()));
+    }
+
+    @Test
+    void testEncodeMultiWordName() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, false);
+        String input = "John Smith";
+        String expected = "john-smith";
+        assertEquals(expected, phoneticEngine.encode(input, new HashSet<>()));
+    }
+
+    @Test
+    void testEncodeEmptyInput() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, false);
+        String input = "";
+        String expected = "";
+        assertEquals(expected, phoneticEngine.encode(input, new HashSet<>()));
+    }
+
+    @Test
+    void testEncodeSpecificLanguageSet() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, false);
+        String input = "John";
+        Set<String> languageSet = new HashSet<>(Arrays.asList("en"));
+        String expected = "john";
+        assertEquals(expected, phoneticEngine.encode(input, languageSet));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[51] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[58] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[66] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[71] cannot find symbol
+  symbol:   variable ASHKENAZIC
+  location: class org.apache.commons.codec.language.bm.NameType
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[74] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[82] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[90] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[98] incompatible types: cannot infer type arguments for java.util.HashSet<>
+  reason: no instance(s) of type variable(s) E exist so that java.util.HashSet<E> conforms to org.apache.commons.codec.language.bm.Languages.LanguageSet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[107] incompatible types: java.util.Set<java.lang.String> cannot be converted to org.apache.commons.codec.language.bm.Languages.LanguageSet
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: PhoneticEngine_encodeTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

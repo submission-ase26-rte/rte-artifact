@@ -1,0 +1,289 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.codec.digest;
+
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class UnixCrypt_cryptTestGenerated {
+
+    @Test
+    public void testCryptWithNullSalt() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String result = UnixCrypt.crypt(original, null);
+        assertNotNull(result);
+        assertEquals(13, result.length());
+    }
+
+    @Test
+    public void testCryptWithValidSalt() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "ab";
+        String result = UnixCrypt.crypt(original, salt);
+        assertNotNull(result);
+        assertEquals(13, result.length());
+        assertTrue(result.startsWith(salt));
+    }
+
+    @Test
+    public void testCryptWithEmptySalt() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            UnixCrypt.crypt(original, salt);
+        });
+        assertEquals("Invalid salt value: ", exception.getMessage());
+    }
+
+    @Test
+    public void testCryptWithSpecialCharactersInSalt() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "a/";
+        String result = UnixCrypt.crypt(original, salt);
+        assertNotNull(result);
+        assertEquals(13, result.length());
+        assertTrue(result.startsWith(salt));
+    }
+
+    @Test
+    public void testCryptWithNumericSalt() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "12";
+        String result = UnixCrypt.crypt(original, salt);
+        assertNotNull(result);
+        assertEquals(13, result.length());
+        assertTrue(result.startsWith(salt));
+    }
+
+    @Test
+    public void testCryptWithUpperCaseSalt() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "AB";
+        String result = UnixCrypt.crypt(original, salt);
+        assertNotNull(result);
+        assertEquals(13, result.length());
+        assertTrue(result.startsWith(salt));
+    }
+
+    @Test
+    public void testCryptWithMixedCaseSalt() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "aB";
+        String result = UnixCrypt.crypt(original, salt);
+        assertNotNull(result);
+        assertEquals(13, result.length());
+        assertTrue(result.startsWith(salt));
+    }
+
+    @Test
+    public void testCryptWithSamePasswordDifferentSalts() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String salt1 = "ab";
+        String salt2 = "cd";
+        String result1 = UnixCrypt.crypt(original, salt1);
+        String result2 = UnixCrypt.crypt(original, salt2);
+        assertNotNull(result1);
+        assertNotNull(result2);
+        assertEquals(13, result1.length());
+        assertEquals(13, result2.length());
+        assertNotEquals(result1, result2);
+    }
+
+    @Test
+    public void testCryptWithInvalidSalt() {
+        byte[] original = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "abc";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            UnixCrypt.crypt(original, salt);
+        });
+        assertEquals("Invalid salt value: abc", exception.getMessage());
+    }
+
+    @Test
+    public void testCryptWithDifferentPasswords() {
+        byte[] original1 = "password1".getBytes(StandardCharsets.UTF_8);
+        byte[] original2 = "password2".getBytes(StandardCharsets.UTF_8);
+        String salt = "ab";
+        String result1 = UnixCrypt.crypt(original1, salt);
+        String result2 = UnixCrypt.crypt(original2, salt);
+        assertNotNull(result1);
+        assertNotNull(result2);
+        assertEquals(13, result1.length());
+        assertEquals(13, result2.length());
+        assertNotEquals(result1, result2);
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 93.75%
+- Tests: 8/10 passed
+
+TEST STATUS:
+- PASSED (8): testCryptWithNullSalt, testCryptWithValidSalt, testCryptWithEmptySalt, testCryptWithSpecialCharactersInSalt, testCryptWithNumericSalt, testCryptWithUpperCaseSalt, testCryptWithMixedCaseSalt, testCryptWithSamePasswordDifferentSalts
+- FAILED (2): testCryptWithInvalidSalt, testCryptWithDifferentPasswords
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   StandardCharsets -> java.nio.charset.StandardCharsets
+//   SecureRandom -> java.security.SecureRandom
+//   Arrays -> java.util.Arrays
+//   Pattern -> java.util.regex.Pattern
+//   UnixCrypt -> org.apache.commons.codec.digest.UnixCrypt
+
+// === Class: UnixCrypt ===
+// Fields (with actual visibility):
+    private static final String CRYPT_SALT_REGEX;
+    private static final Pattern CRYPT_SALT_PATTERN;
+    private static final int[] CON_SALT;
+    private static final int[] COV2CHAR;
+    private static final char[] SALT_CHARS;
+    private static final boolean[] SHIFT2;
+    private static final int[][] SKB;
+    private static final int[][] SPTRANS;
+
+// Constructors:
+public UnixCrypt();
+
+// Internal Methods (full implementation for context):
+    private static void intToFourBytes(final int iValue, final byte[] b, int offset) {
+        b[offset++] = (byte) (iValue & 0xff);
+        b[offset++] = (byte) (iValue >>> 8 & 0xff);
+        b[offset++] = (byte) (iValue >>> 16 & 0xff);
+        b[offset++] = (byte) (iValue >>> 24 & 0xff);
+    }
+    private static int[] desSetKey(final byte[] key) {
+        final int[] schedule = new int[32];
+        int c = fourBytesToInt(key, 0);
+        int d = fourBytesToInt(key, 4);
+        final int[] results = new int[2];
+        permOp(d, c, 4, 0xf0f0f0f, results);
+        d = results[0];
+        c = results[1];
+        c = hPermOp(c, -2, 0xcccc0000);
+        d = hPermOp(d, -2, 0xcccc0000);
+        permOp(d, c, 1, 0x55555555, results);
+        d = results[0];
+        c = results[1];
+        permOp(c, d, 8, 0xff00ff, results);
+        c = results[0];
+        d = results[1];
+        permOp(d, c, 1, 0x55555555, results);
+        d = results[0];
+        c = results[1];
+        d = (d & 0xff) << 16 | d & 0xff00 | (d & 0xff0000) >>> 16 | (c & 0xf0000000) >>> 4;
+        c &= 0xfffffff;
+        int j = 0;
+        for (int i = 0; i < 16; i++) {
+            if (SHIFT2[i]) {
+                c = c >>> 2 | c << 26;
+                d = d >>> 2 | d << 26;
+            } else {
+                c = c >>> 1 | c << 27;
+                d = d >>> 1 | d << 27;
+            }
+            c &= 0xfffffff;
+            d &= 0xfffffff;
+            int s = SKB[0][c & 0x3f] | SKB[1][c >>> 6 & 0x3 | c >>> 7 & 0x3c] |
+                    SKB[2][c >>> 13 & 0xf | c >>> 14 & 0x30] |
+                    SKB[3][c >>> 20 & 0x1 | c >>> 21 & 0x6 | c >>> 22 & 0x38];
+            final int t = SKB[4][d & 0x3f] | SKB[5][d >>> 7 & 0x3 | d >>> 8 & 0x3c] | SKB[6][d >>> 15 & 0x3f] |
+                    SKB[7][d >>> 21 & 0xf | d >>> 22 & 0x30];
+            schedule[j++] = t << 16 | s & 0xffff;
+            s = s >>> 16 | t & 0xffff0000;
+            s = s << 4 | s >>> 28;
+            schedule[j++] = s;
+        }
+
+        return schedule;
+    }
+    private static int[] body(final int[] schedule, final int eSwap0, final int eSwap1) {
+        int left = 0;
+        int right = 0;
+        int t = 0;
+        for (int j = 0; j < 25; j++) {
+            for (int i = 0; i < 32; i += 4) {
+                left = dEncrypt(left, right, i, eSwap0, eSwap1, schedule);
+                right = dEncrypt(right, left, i + 2, eSwap0, eSwap1, schedule);
+            }
+            t = left;
+            left = right;
+            right = t;
+        }
+
+        t = right;
+        right = left >>> 1 | left << 31;
+        left = t >>> 1 | t << 31;
+        final int[] results = new int[2];
+        permOp(right, left, 1, 0x55555555, results);
+        right = results[0];
+        left = results[1];
+        permOp(left, right, 8, 0xff00ff, results);
+        left = results[0];
+        right = results[1];
+        permOp(right, left, 2, 0x33333333, results);
+        right = results[0];
+        left = results[1];
+        permOp(left, right, 16, 65535, results);
+        left = results[0];
+        right = results[1];
+        permOp(right, left, 4, 0xf0f0f0f, results);
+        right = results[0];
+        left = results[1];
+        final int[] out = new int[2];
+        out[0] = left;
+        out[1] = right;
+        return out;
+    }
+
+
+TASK:
+Regenerate ONLY the method "crypt" OF CLASS "UnixCrypt" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public static String crypt(final byte[] original, String salt) {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.codec.digest
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "crypt"
+– Allowed imports: exactly those already present in UnixCrypt
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

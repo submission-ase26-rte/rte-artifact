@@ -1,0 +1,126 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.springframework.samples.petclinic.owner;
+Class name (MUST be exactly): Owner_getPetTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.springframework.samples.petclinic.owner;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.samples.petclinic.owner.Pet;
+import org.springframework.samples.petclinic.owner.PetType;
+import org.springframework.samples.petclinic.model.Person;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Owner_getPetTestGenerated {
+
+    private Owner owner;
+    private List<Pet> pets;
+
+    @BeforeEach
+    public void setUp() {
+        owner = new Owner();
+        pets = new ArrayList<>();
+        owner.setPets(pets);
+    }
+
+    @Test
+    public void testGetPet_ExistingPet_IgnoreNewFalse() {
+        Pet pet = new Pet();
+        pet.setName("Fido");
+        pets.add(pet);
+
+        Pet result = owner.getPet("fido", false);
+        assertEquals(pet, result);
+    }
+
+    @Test
+    public void testGetPet_ExistingPet_IgnoreNewTrue() {
+        Pet pet = new Pet();
+        pet.setName("Fido");
+        pets.add(pet);
+
+        Pet result = owner.getPet("fido", true);
+        assertEquals(pet, result);
+    }
+
+    @Test
+    public void testGetPet_ExistingPet_IgnoreNewTrue_NewPet() {
+        Pet pet = new Pet();
+        pet.setName("Fido");
+        pets.add(pet);
+
+        pet.setNew(true);
+
+        Pet result = owner.getPet("fido", true);
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetPet_NonExistingPet() {
+        Pet result = owner.getPet("Fido", false);
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetPet_NullName() {
+        Pet result = owner.getPet(null, false);
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetPet_EmptyName() {
+        Pet result = owner.getPet("", false);
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetPet_IgnoreNewTrue_NewPet() {
+        Pet pet = new Pet();
+        pet.setName("Fido");
+        pet.setNew(true);
+        pets.add(pet);
+
+        Pet result = owner.getPet("fido", true);
+        assertNull(result);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/Owner_getPetTestGenerated.java:[28] cannot find symbol
+  symbol:   method setPets(java.util.List<org.springframework.samples.petclinic.owner.Pet>)
+  location: variable owner of type org.springframework.samples.petclinic.owner.Owner
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/Owner_getPetTestGenerated.java:[57] cannot find symbol
+  symbol:   method setNew(boolean)
+  location: variable pet of type org.springframework.samples.petclinic.owner.Pet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/Owner_getPetTestGenerated.java:[85] cannot find symbol
+  symbol:   method setNew(boolean)
+  location: variable pet of type org.springframework.samples.petclinic.owner.Pet
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: Owner_getPetTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

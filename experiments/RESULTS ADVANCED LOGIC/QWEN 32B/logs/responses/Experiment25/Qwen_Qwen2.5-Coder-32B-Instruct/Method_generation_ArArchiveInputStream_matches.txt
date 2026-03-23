@@ -1,0 +1,13 @@
+```java
+public static boolean matches(final byte[] signature, final int length) {
+    if (signature == null || length < 8) {
+        return false;
+    }
+    for (int i = 0; i < 7; i++) {
+        if (signature[i] != "!<arch>\n".getBytes(StandardCharsets.US_ASCII)[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+```

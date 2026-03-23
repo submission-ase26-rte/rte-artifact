@@ -1,0 +1,484 @@
+{
+  "experiments": {
+    "version_": {
+      "tested_method": "crypt",
+      "similarity_threshold": 0.7,
+      "passes_evaluation": false,
+      "timestamp": "2026-01-12T16:22:41.646286",
+      "executed_phases": {
+        "first_phase": true,
+        "second_phase": true
+      },
+      "metrics": {
+        "crystalbleu_similarity": 0.030218516599666095,
+        "string_similarity": 0.1619887730553328,
+        "token_similarity": 0.2463768115942029,
+        "ast_similarity": 0.24489795918367346,
+        "embedding_similarity": 0.7280212640762329,
+        "clone_detection": {
+          "exact_match": false,
+          "clone_percentage": 0.061855670103092786,
+          "similar_blocks": 3,
+          "total_blocks": 97
+        },
+        "weights": {
+          "crystalbleu_similarity": 0.2,
+          "string_similarity": 0.08,
+          "token_similarity": 0.15,
+          "ast_similarity": 0.22,
+          "embedding_similarity": 0.35
+        },
+        "overall_similarity": 0.36464432035058,
+        "passes_threshold": false
+      },
+      "test_results": {
+        "original": {
+          "success": true,
+          "tests_passed": 1,
+          "tests_total": 14,
+          "tests_failed": 13,
+          "line_coverage": 100.0,
+          "branch_coverage": 100.0,
+          "has_compilation_errors": false,
+          "test_info": {
+            "valid_tests": [
+              "testCrypt_nullSalt"
+            ],
+            "invalid_tests": [
+              "testCrypt_validSalt",
+              "testCrypt_invalidSalt",
+              "testCrypt_emptyPassword",
+              "testCrypt_longPassword",
+              "testCrypt_saltWithSpecialCharacters",
+              "testCrypt_saltWithNumbers",
+              "testCrypt_saltWithMixedCharacters",
+              "testCrypt_saltWithLengthGreaterThanOne",
+              "testCrypt_saltWithSpecialCharactersAndNumbers",
+              "testCrypt_saltWithLengthTwoAndSpecialCharacters",
+              "testCrypt_saltWithLengthTwoAndNumbers",
+              "testCrypt_saltWithLengthTwoAndMixedCharacters",
+              "testCrypt_emptySalt"
+            ],
+            "failed_assert_tests": [
+              "testCrypt_validSalt",
+              "testCrypt_invalidSalt",
+              "testCrypt_emptyPassword",
+              "testCrypt_longPassword",
+              "testCrypt_saltWithSpecialCharacters",
+              "testCrypt_saltWithNumbers",
+              "testCrypt_saltWithMixedCharacters",
+              "testCrypt_saltWithLengthGreaterThanOne",
+              "testCrypt_saltWithSpecialCharactersAndNumbers",
+              "testCrypt_saltWithLengthTwoAndSpecialCharacters",
+              "testCrypt_saltWithLengthTwoAndNumbers",
+              "testCrypt_saltWithLengthTwoAndMixedCharacters"
+            ],
+            "runtime_error_tests": [
+              "testCrypt_emptySalt"
+            ]
+          }
+        },
+        "regenerated": {
+          "success": false,
+          "tests_passed": 0,
+          "tests_total": 0,
+          "tests_failed": 0,
+          "line_coverage": 0.0,
+          "branch_coverage": 0.0,
+          "has_compilation_errors": true,
+          "test_info": {
+            "valid_tests": [],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          }
+        }
+      },
+      "test_filtering": {},
+      "context": {
+        "dependency_selection": {
+          "active": true,
+          "method": "structural",
+          "top_k": null,
+          "weights": null,
+          "selected_classes": [],
+          "rankings": {},
+          "project_type_flags": {
+            "has_servlet": false,
+            "has_spring": false,
+            "has_jpa": false,
+            "has_ejb": false,
+            "has_cdi": false,
+            "has_jndi": false,
+            "has_static_utils": false
+          }
+        }
+      },
+      "paths": {
+        "original_file": "./../JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/main/java/org/apache/commons/codec/digest/UnixCrypt.java",
+        "regenerated_file": "results/outputs\\Final_UnixCrypt_crypt.java"
+      },
+      "original_metrics": {
+        "loc": 68,
+        "sloc": 50,
+        "complexity": 13
+      },
+      "retry_history": [
+        {
+          "type": "initial_test_execution",
+          "test_results_originale": {
+            "tests_passed": 1,
+            "tests_total": 8,
+            "tests_failed": 7,
+            "line_coverage": 97.61904761904762,
+            "branch_coverage": 93.75,
+            "test_info": {
+              "valid_tests": [
+                "testCrypt_nullSalt"
+              ],
+              "invalid_tests": [
+                "testCrypt_validSalt",
+                "testCrypt_invalidSalt",
+                "testCrypt_emptyPassword",
+                "testCrypt_longPassword",
+                "testCrypt_saltWithSpecialCharacters",
+                "testCrypt_saltWithNumbers",
+                "testCrypt_saltWithMixedCharacters"
+              ],
+              "failed_assert_tests": [
+                "testCrypt_validSalt",
+                "testCrypt_invalidSalt",
+                "testCrypt_emptyPassword",
+                "testCrypt_longPassword",
+                "testCrypt_saltWithSpecialCharacters",
+                "testCrypt_saltWithNumbers",
+                "testCrypt_saltWithMixedCharacters"
+              ],
+              "runtime_error_tests": []
+            }
+          }
+        },
+        {
+          "type": "initial_regenerated_test_execution",
+          "test_results_rigenerato": {
+            "tests_passed": 0,
+            "tests_total": 0,
+            "tests_failed": 0,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "test_info": {
+              "valid_tests": [],
+              "invalid_tests": [],
+              "failed_assert_tests": [],
+              "runtime_error_tests": []
+            }
+          }
+        },
+        {
+          "type": "initial_method_generation",
+          "refinement_iteration": 0,
+          "original_method": "    /**\n     * Generates a crypt(3) compatible hash using the DES algorithm.\n     * <p>\n     * Using unspecified characters as salt results incompatible hash values.\n     * </p>\n     *\n     * @param original\n     *            plaintext password\n     * @param salt\n     *            a two character string drawn from [a-zA-Z0-9./]. The salt may be null, in which case a salt is\n     *            generated for you using {@link SecureRandom}.\n     * @return a 13 character string starting with the salt string\n     * @throws IllegalArgumentException\n     *             if the salt does not match the allowed pattern\n     */\n    public static String crypt(final byte[] original, String salt) {\n        if (salt == null) {\n            final SecureRandom randomGenerator = new SecureRandom();\n            final int numSaltChars = SALT_CHARS.length;\n            salt = \"\" + SALT_CHARS[randomGenerator.nextInt(numSaltChars)] +\n                    SALT_CHARS[randomGenerator.nextInt(numSaltChars)];\n        } else if (!CRYPT_SALT_PATTERN.matcher(salt).matches()) {\n            throw new IllegalArgumentException(\"Invalid salt value: \" + salt);\n        }\n\n        final StringBuilder buffer = new StringBuilder(\"             \");\n        final char charZero = salt.charAt(0);\n        final char charOne = salt.charAt(1);\n        buffer.setCharAt(0, charZero);\n        buffer.setCharAt(1, charOne);\n        final int eSwap0 = CON_SALT[charZero];\n        final int eSwap1 = CON_SALT[charOne] << 4;\n        final byte[] key = new byte[8];\n        Arrays.fill(key, (byte) 0);\n\n        final int originalLength = original.length;\n        for (int i = 0; i < key.length && i < originalLength; i++) {\n            final int iChar = original[i];\n            key[i] = (byte) (iChar << 1);\n        }\n\n        final int[] schedule = desSetKey(key);\n        final int[] out = body(schedule, eSwap0, eSwap1);\n        final byte[] b = new byte[9];\n        intToFourBytes(out[0], b, 0);\n        intToFourBytes(out[1], b, 4);\n        b[8] = 0;\n        int i = 2;\n        int y = 0;\n        int u = 128;\n        for (; i < 13; i++) {\n            int j = 0;\n            int c = 0;\n            for (; j < 6; j++) {\n                c <<= 1;\n                if ((b[y] & u) != 0) {\n                    c |= 0x1;\n                }\n                u >>>= 1;\n                if (u == 0) {\n                    y++;\n                    u = 128;\n                }\n                buffer.setCharAt(i, (char) COV2CHAR[c]);\n            }\n        }\n        return buffer.toString();\n    }",
+          "regenerated_method": "public static String crypt(final byte[] original, String salt) {\n    if (salt == null) {\n        SecureRandom random = new SecureRandom();\n        byte[] saltBytes = new byte[8];\n        random.nextBytes(saltBytes);\n        salt = bytesToHex(saltBytes);\n    }\n\n    if (salt.length() < 2) {\n        throw new IllegalArgumentException(\"Salt must be at least two characters long\");\n    }\n\n    if (!Pattern.matches(\"[a-zA-Z0-9./+]\", salt)) {\n        throw new IllegalArgumentException(\"Salt contains invalid characters\");\n    }\n\n    String result = UnixCrypt.crypt(original, salt, true);\n    return result;\n}",
+          "overall_similarity": 0.36739406026002,
+          "passes_threshold": false,
+          "similarity_metrics": {
+            "crystalbleu_similarity": 0.03594479766466835,
+            "string_similarity": 0.1500789889415482,
+            "token_similarity": 0.23943661971830985,
+            "ast_similarity": 0.2653061224489796,
+            "embedding_similarity": 0.7254741191864014,
+            "clone_detection": {
+              "exact_match": false,
+              "clone_percentage": 0.06060606060606061,
+              "similar_blocks": 3,
+              "total_blocks": 99
+            },
+            "weights": {
+              "crystalbleu_similarity": 0.2,
+              "string_similarity": 0.08,
+              "token_similarity": 0.15,
+              "ast_similarity": 0.22,
+              "embedding_similarity": 0.35
+            },
+            "overall_similarity": 0.36739406026002,
+            "passes_threshold": false
+          },
+          "test_results_originale": {
+            "tests_passed": 1,
+            "tests_total": 8,
+            "tests_failed": 0,
+            "line_coverage": 97.61904761904762,
+            "branch_coverage": 93.75,
+            "test_info": {
+              "valid_tests": [
+                "testCrypt_nullSalt"
+              ],
+              "invalid_tests": [
+                "testCrypt_validSalt",
+                "testCrypt_invalidSalt",
+                "testCrypt_emptyPassword",
+                "testCrypt_longPassword",
+                "testCrypt_saltWithSpecialCharacters",
+                "testCrypt_saltWithNumbers",
+                "testCrypt_saltWithMixedCharacters"
+              ],
+              "failed_assert_tests": [
+                "testCrypt_validSalt",
+                "testCrypt_invalidSalt",
+                "testCrypt_emptyPassword",
+                "testCrypt_longPassword",
+                "testCrypt_saltWithSpecialCharacters",
+                "testCrypt_saltWithNumbers",
+                "testCrypt_saltWithMixedCharacters"
+              ],
+              "runtime_error_tests": []
+            }
+          },
+          "test_results_rigenerato": {
+            "tests_passed": 0,
+            "tests_total": 0,
+            "tests_failed": 0,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "test_info": {
+              "valid_tests": [],
+              "invalid_tests": [],
+              "failed_assert_tests": [],
+              "runtime_error_tests": []
+            }
+          }
+        },
+        {
+          "refinement_iteration": 1,
+          "overall_similarity": 0.36438783031384375,
+          "passes_threshold": false,
+          "similarity_metrics": {
+            "crystalbleu_similarity": 0.030218516599666095,
+            "string_similarity": 0.16205375050140394,
+            "token_similarity": 0.2463768115942029,
+            "ast_similarity": 0.24489795918367346,
+            "embedding_similarity": 0.7272735834121704,
+            "clone_detection": {
+              "exact_match": false,
+              "clone_percentage": 0.061855670103092786,
+              "similar_blocks": 3,
+              "total_blocks": 97
+            },
+            "weights": {
+              "crystalbleu_similarity": 0.2,
+              "string_similarity": 0.08,
+              "token_similarity": 0.15,
+              "ast_similarity": 0.22,
+              "embedding_similarity": 0.35
+            },
+            "overall_similarity": 0.36438783031384375,
+            "passes_threshold": false
+          },
+          "original_method": "    /**\n     * Generates a crypt(3) compatible hash using the DES algorithm.\n     * <p>\n     * Using unspecified characters as salt results incompatible hash values.\n     * </p>\n     *\n     * @param original\n     *            plaintext password\n     * @param salt\n     *            a two character string drawn from [a-zA-Z0-9./]. The salt may be null, in which case a salt is\n     *            generated for you using {@link SecureRandom}.\n     * @return a 13 character string starting with the salt string\n     * @throws IllegalArgumentException\n     *             if the salt does not match the allowed pattern\n     */\n    public static String crypt(final byte[] original, String salt) {\n        if (salt == null) {\n            final SecureRandom randomGenerator = new SecureRandom();\n            final int numSaltChars = SALT_CHARS.length;\n            salt = \"\" + SALT_CHARS[randomGenerator.nextInt(numSaltChars)] +\n                    SALT_CHARS[randomGenerator.nextInt(numSaltChars)];\n        } else if (!CRYPT_SALT_PATTERN.matcher(salt).matches()) {\n            throw new IllegalArgumentException(\"Invalid salt value: \" + salt);\n        }\n\n        final StringBuilder buffer = new StringBuilder(\"             \");\n        final char charZero = salt.charAt(0);\n        final char charOne = salt.charAt(1);\n        buffer.setCharAt(0, charZero);\n        buffer.setCharAt(1, charOne);\n        final int eSwap0 = CON_SALT[charZero];\n        final int eSwap1 = CON_SALT[charOne] << 4;\n        final byte[] key = new byte[8];\n        Arrays.fill(key, (byte) 0);\n\n        final int originalLength = original.length;\n        for (int i = 0; i < key.length && i < originalLength; i++) {\n            final int iChar = original[i];\n            key[i] = (byte) (iChar << 1);\n        }\n\n        final int[] schedule = desSetKey(key);\n        final int[] out = body(schedule, eSwap0, eSwap1);\n        final byte[] b = new byte[9];\n        intToFourBytes(out[0], b, 0);\n        intToFourBytes(out[1], b, 4);\n        b[8] = 0;\n        int i = 2;\n        int y = 0;\n        int u = 128;\n        for (; i < 13; i++) {\n            int j = 0;\n            int c = 0;\n            for (; j < 6; j++) {\n                c <<= 1;\n                if ((b[y] & u) != 0) {\n                    c |= 0x1;\n                }\n                u >>>= 1;\n                if (u == 0) {\n                    y++;\n                    u = 128;\n                }\n                buffer.setCharAt(i, (char) COV2CHAR[c]);\n            }\n        }\n        return buffer.toString();\n    }",
+          "regenerated_method": "public static String crypt(final byte[] original, String salt) {\n    if (salt == null) {\n        SecureRandom random = new SecureRandom();\n        byte[] saltBytes = new byte[8];\n        random.nextBytes(saltBytes);\n        salt = bytesToHex(saltBytes);\n    }\n\n    if (salt.length() < 2) {\n        throw new IllegalArgumentException(\"Salt must be at least two characters long\");\n    }\n    if (!Pattern.matches(\"[a-zA-Z0-9./+]\", salt)) {\n        throw new IllegalArgumentException(\"Salt contains invalid characters\");\n    }\n\n    return crypt(original, salt, true);\n}",
+          "test_results_originale": {
+            "tests_passed": 1,
+            "tests_total": 10,
+            "tests_failed": 9,
+            "line_coverage": 97.61904761904762,
+            "branch_coverage": 93.75,
+            "valid_tests": [
+              "testCrypt_nullSalt"
+            ],
+            "invalid_tests": [
+              "testCrypt_validSalt",
+              "testCrypt_invalidSalt",
+              "testCrypt_emptyPassword",
+              "testCrypt_longPassword",
+              "testCrypt_saltWithSpecialCharacters",
+              "testCrypt_saltWithNumbers",
+              "testCrypt_saltWithMixedCharacters",
+              "testCrypt_saltWithLengthGreaterThanOne",
+              "testCrypt_saltWithSpecialCharactersAndNumbers"
+            ],
+            "failed_assert_tests": [
+              "testCrypt_validSalt",
+              "testCrypt_invalidSalt",
+              "testCrypt_emptyPassword",
+              "testCrypt_longPassword",
+              "testCrypt_saltWithSpecialCharacters",
+              "testCrypt_saltWithNumbers",
+              "testCrypt_saltWithMixedCharacters",
+              "testCrypt_saltWithLengthGreaterThanOne",
+              "testCrypt_saltWithSpecialCharactersAndNumbers"
+            ],
+            "runtime_error_tests": []
+          },
+          "test_results_rigenerato": {
+            "tests_passed": 0,
+            "tests_total": 0,
+            "tests_failed": 0,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "valid_tests": [],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          },
+          "type": "refinement"
+        },
+        {
+          "refinement_iteration": 2,
+          "overall_similarity": 0.36464432035058,
+          "passes_threshold": false,
+          "similarity_metrics": {
+            "crystalbleu_similarity": 0.030218516599666095,
+            "string_similarity": 0.1619887730553328,
+            "token_similarity": 0.2463768115942029,
+            "ast_similarity": 0.24489795918367346,
+            "embedding_similarity": 0.7280212640762329,
+            "clone_detection": {
+              "exact_match": false,
+              "clone_percentage": 0.061855670103092786,
+              "similar_blocks": 3,
+              "total_blocks": 97
+            },
+            "weights": {
+              "crystalbleu_similarity": 0.2,
+              "string_similarity": 0.08,
+              "token_similarity": 0.15,
+              "ast_similarity": 0.22,
+              "embedding_similarity": 0.35
+            },
+            "overall_similarity": 0.36464432035058,
+            "passes_threshold": false
+          },
+          "original_method": "    /**\n     * Generates a crypt(3) compatible hash using the DES algorithm.\n     * <p>\n     * Using unspecified characters as salt results incompatible hash values.\n     * </p>\n     *\n     * @param original\n     *            plaintext password\n     * @param salt\n     *            a two character string drawn from [a-zA-Z0-9./]. The salt may be null, in which case a salt is\n     *            generated for you using {@link SecureRandom}.\n     * @return a 13 character string starting with the salt string\n     * @throws IllegalArgumentException\n     *             if the salt does not match the allowed pattern\n     */\n    public static String crypt(final byte[] original, String salt) {\n        if (salt == null) {\n            final SecureRandom randomGenerator = new SecureRandom();\n            final int numSaltChars = SALT_CHARS.length;\n            salt = \"\" + SALT_CHARS[randomGenerator.nextInt(numSaltChars)] +\n                    SALT_CHARS[randomGenerator.nextInt(numSaltChars)];\n        } else if (!CRYPT_SALT_PATTERN.matcher(salt).matches()) {\n            throw new IllegalArgumentException(\"Invalid salt value: \" + salt);\n        }\n\n        final StringBuilder buffer = new StringBuilder(\"             \");\n        final char charZero = salt.charAt(0);\n        final char charOne = salt.charAt(1);\n        buffer.setCharAt(0, charZero);\n        buffer.setCharAt(1, charOne);\n        final int eSwap0 = CON_SALT[charZero];\n        final int eSwap1 = CON_SALT[charOne] << 4;\n        final byte[] key = new byte[8];\n        Arrays.fill(key, (byte) 0);\n\n        final int originalLength = original.length;\n        for (int i = 0; i < key.length && i < originalLength; i++) {\n            final int iChar = original[i];\n            key[i] = (byte) (iChar << 1);\n        }\n\n        final int[] schedule = desSetKey(key);\n        final int[] out = body(schedule, eSwap0, eSwap1);\n        final byte[] b = new byte[9];\n        intToFourBytes(out[0], b, 0);\n        intToFourBytes(out[1], b, 4);\n        b[8] = 0;\n        int i = 2;\n        int y = 0;\n        int u = 128;\n        for (; i < 13; i++) {\n            int j = 0;\n            int c = 0;\n            for (; j < 6; j++) {\n                c <<= 1;\n                if ((b[y] & u) != 0) {\n                    c |= 0x1;\n                }\n                u >>>= 1;\n                if (u == 0) {\n                    y++;\n                    u = 128;\n                }\n                buffer.setCharAt(i, (char) COV2CHAR[c]);\n            }\n        }\n        return buffer.toString();\n    }",
+          "regenerated_method": "public static String crypt(final byte[] original, String salt) {\n    if (salt == null) {\n        SecureRandom random = new SecureRandom();\n        byte[] saltBytes = new byte[8];\n        random.nextBytes(saltBytes);\n        salt = bytesToHex(saltBytes);\n    }\n\n    if (salt.length() < 2) {\n        throw new IllegalArgumentException(\"Salt must be at least two characters long\");\n    }\n\n    if (!Pattern.matches(\"[a-zA-Z0-9./+]\", salt)) {\n        throw new IllegalArgumentException(\"Salt contains invalid characters\");\n    }\n\n    return crypt(original, salt, true);\n}",
+          "test_results_originale": {
+            "tests_passed": 1,
+            "tests_total": 14,
+            "tests_failed": 13,
+            "line_coverage": 100.0,
+            "branch_coverage": 100.0,
+            "valid_tests": [
+              "testCrypt_nullSalt"
+            ],
+            "invalid_tests": [
+              "testCrypt_validSalt",
+              "testCrypt_invalidSalt",
+              "testCrypt_emptyPassword",
+              "testCrypt_longPassword",
+              "testCrypt_saltWithSpecialCharacters",
+              "testCrypt_saltWithNumbers",
+              "testCrypt_saltWithMixedCharacters",
+              "testCrypt_saltWithLengthGreaterThanOne",
+              "testCrypt_saltWithSpecialCharactersAndNumbers",
+              "testCrypt_saltWithLengthTwoAndSpecialCharacters",
+              "testCrypt_saltWithLengthTwoAndNumbers",
+              "testCrypt_saltWithLengthTwoAndMixedCharacters",
+              "testCrypt_emptySalt"
+            ],
+            "failed_assert_tests": [
+              "testCrypt_validSalt",
+              "testCrypt_invalidSalt",
+              "testCrypt_emptyPassword",
+              "testCrypt_longPassword",
+              "testCrypt_saltWithSpecialCharacters",
+              "testCrypt_saltWithNumbers",
+              "testCrypt_saltWithMixedCharacters",
+              "testCrypt_saltWithLengthGreaterThanOne",
+              "testCrypt_saltWithSpecialCharactersAndNumbers",
+              "testCrypt_saltWithLengthTwoAndSpecialCharacters",
+              "testCrypt_saltWithLengthTwoAndNumbers",
+              "testCrypt_saltWithLengthTwoAndMixedCharacters"
+            ],
+            "runtime_error_tests": [
+              "testCrypt_emptySalt"
+            ]
+          },
+          "test_results_rigenerato": {
+            "tests_passed": 0,
+            "tests_total": 0,
+            "tests_failed": 0,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "valid_tests": [],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          },
+          "type": "refinement"
+        }
+      ],
+      "original_method_display": "    /**\n     * Generates a crypt(3) compatible hash using the DES algorithm.\n     * <p>\n     * Using unspecified characters as salt results incompatible hash values.\n     * </p>\n     *\n     * @param original\n     *            plaintext password\n     * @param salt\n     *            a two character string drawn from [a-zA-Z0-9./]. The salt may be null, in which case a salt is\n     *            generated for you using {@link SecureRandom}.\n     * @return a 13 character string starting with the salt string\n     * @throws IllegalArgumentException\n     *             if the salt does not match the allowed pattern\n     */\n    public static String crypt(final byte[] original, String salt) {\n        if (salt == null) {\n            final SecureRandom randomGenerator = new SecureRandom();\n            final int numSaltChars = SALT_CHARS.length;\n            salt = \"\" + SALT_CHARS[randomGenerator.nextInt(numSaltChars)] +\n                    SALT_CHARS[randomGenerator.nextInt(numSaltChars)];\n        } else if (!CRYPT_SALT_PATTERN.matcher(salt).matches()) {\n            throw new IllegalArgumentException(\"Invalid salt value: \" + salt);\n        }\n\n        final StringBuilder buffer = new StringBuilder(\"             \");\n        final char charZero = salt.charAt(0);\n        final char charOne = salt.charAt(1);\n        buffer.setCharAt(0, charZero);\n        buffer.setCharAt(1, charOne);\n        final int eSwap0 = CON_SALT[charZero];\n        final int eSwap1 = CON_SALT[charOne] << 4;\n        final byte[] key = new byte[8];\n        Arrays.fill(key, (byte) 0);\n\n        final int originalLength = original.length;\n        for (int i = 0; i < key.length && i < originalLength; i++) {\n            final int iChar = original[i];\n            key[i] = (byte) (iChar << 1);\n        }\n\n        final int[] schedule = desSetKey(key);\n        final int[] out = body(schedule, eSwap0, eSwap1);\n        final byte[] b = new byte[9];\n        intToFourBytes(out[0], b, 0);\n        intToFourBytes(out[1], b, 4);\n        b[8] = 0;\n        int i = 2;\n        int y = 0;\n        int u = 128;\n        for (; i < 13; i++) {\n            int j = 0;\n            int c = 0;\n            for (; j < 6; j++) {\n                c <<= 1;\n                if ((b[y] & u) != 0) {\n                    c |= 0x1;\n                }\n                u >>>= 1;\n                if (u == 0) {\n                    y++;\n                    u = 128;\n                }\n                buffer.setCharAt(i, (char) COV2CHAR[c]);\n            }\n        }\n        return buffer.toString();\n    }",
+      "regenerated_method_display": "public static String crypt(final byte[] original, String salt) {\n    if (salt == null) {\n        SecureRandom random = new SecureRandom();\n        byte[] saltBytes = new byte[8];\n        random.nextBytes(saltBytes);\n        salt = bytesToHex(saltBytes);\n    }\n\n    if (salt.length() < 2) {\n        throw new IllegalArgumentException(\"Salt must be at least two characters long\");\n    }\n\n    if (!Pattern.matches(\"[a-zA-Z0-9./+]\", salt)) {\n        throw new IllegalArgumentException(\"Salt contains invalid characters\");\n    }\n\n    return crypt(original, salt, true);\n}",
+      "token_usage": {
+        "test_generation": {
+          "input_tokens": 1300,
+          "output_tokens": 773
+        },
+        "method_generation": {
+          "calls": 3,
+          "details": [
+            {
+              "input_tokens": 1487,
+              "output_tokens": 635,
+              "refinement_iteration": "initial"
+            },
+            {
+              "input_tokens": 1882,
+              "output_tokens": 195,
+              "refinement_iteration": 0
+            },
+            {
+              "input_tokens": 2280,
+              "output_tokens": 187,
+              "refinement_iteration": 1
+            }
+          ],
+          "total_input_tokens": 5649,
+          "total_output_tokens": 1017
+        },
+        "test_refinement": {
+          "calls": 2,
+          "details": [
+            {
+              "input_tokens": 2633,
+              "output_tokens": 966,
+              "iteration": 1
+            },
+            {
+              "input_tokens": 2912,
+              "output_tokens": 1335,
+              "iteration": 2
+            }
+          ],
+          "total_input_tokens": 5545,
+          "total_output_tokens": 2301
+        },
+        "totals": {
+          "total_input_tokens": 12494,
+          "total_output_tokens": 4091,
+          "total_tokens": 16585
+        }
+      },
+      "test_naturalness": {
+        "num_test_methods": 14,
+        "assertion_complexity": 0.3905,
+        "pct_null_assertions": 0.5,
+        "pct_duplicate_assertions": 0.0,
+        "pct_exception_assertions": 0.0385,
+        "pct_no_assertion": 0.0,
+        "naturalness_method_name": 0.6698,
+        "pct_focal_method_covered": 1.0,
+        "diversity_literal_values": 0.4321,
+        "overall_naturalness_score": 0.738
+      }
+    }
+  },
+  "general_info": {
+    "tested_class": "UnixCrypt",
+    "tested_method": "crypt",
+    "last_update": "2026-01-12T16:22:41.830798",
+    "description": "Test crypt(final byte[] original, String salt) - High - unsloth/gemma-3-12b-it",
+    "provider": "chutes",
+    "model": "unsloth/gemma-3-12b-it",
+    "similarity_threshold": 0.7
+  }
+}

@@ -1,0 +1,360 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.application.internal;
+Class name (MUST be exactly): DefaultHandlingEventService_registerHandlingEventTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testRegisterHandlingEventWithNullVoyageNumber --
+ERROR: org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException> but was: <java.lang.NullPointerException>
+Caused by: java.lang.NullPointerException: Cannot invoke "java.util.logging.Logger.info(String)" because "this.logger" is null
+... 8 more
+--------------------------------------------------
+TEST: testRegisterHandlingEventWithNullType --
+ERROR: org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException> but was: <java.lang.NullPointerException>
+Caused by: java.lang.NullPointerException: Cannot invoke "java.util.logging.Logger.info(String)" because "this.logger" is null
+... 8 more
+--------------------------------------------------
+TEST: testRegisterHandlingEventWithNullTrackingId --
+ERROR: org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException> but was: <java.lang.NullPointerException>
+Caused by: java.lang.NullPointerException: Cannot invoke "java.util.logging.Logger.info(String)" because "this.logger" is null
+... 8 more
+--------------------------------------------------
+TEST: testRegisterHandlingEventWithNullUnLocode --
+ERROR: org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException> but was: <java.lang.NullPointerException>
+Caused by: java.lang.NullPointerException: Cannot invoke "java.util.logging.Logger.info(String)" because "this.logger" is null
+... 8 more
+--------------------------------------------------
+TEST: testRegisterHandlingEventSuccess --
+ERROR: java.lang.NullPointerException: Cannot invoke "java.util.logging.Logger.info(String)" because "this.logger" is null
+--------------------------------------------------
+TEST: testRegisterHandlingEventWithNullCompletionTime --
+ERROR: org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException> but was: <java.lang.NullPointerException>
+Caused by: java.lang.NullPointerException: Cannot invoke "java.util.logging.Logger.info(String)" because "this.logger" is null
+... 8 more
+
+TEST CODE TO FIX:
+package org.eclipse.cargotracker.application.internal;
+
+import java.time.LocalDateTime;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.application.HandlingEventService;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent.Type;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEvent;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory;
+import org.eclipse.cargotracker.domain.model.handling.HandlingEventRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+public class DefaultHandlingEventService_registerHandlingEventTestGenerated {
+    @Mock
+    private ApplicationEvents applicationEvents;
+    @Mock
+    private HandlingEventRepository handlingEventRepository;
+    @Mock
+    private HandlingEventFactory handlingEventFactory;
+    @InjectMocks
+    private DefaultHandlingEventService defaultHandlingEventService;
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+
+    @Test
+        public void testRegisterHandlingEventWithNullCompletionTime() {
+            TrackingId trackingId = new TrackingId("XYZ");
+            VoyageNumber voyageNumber = new VoyageNumber("V123");
+            UnLocode unLocode = new UnLocode("USNYC");
+            Type type = Type.LOAD;
+            assertThrows(CannotCreateHandlingEventException.class, () -> 
+                defaultHandlingEventService.registerHandlingEvent(null, trackingId, voyageNumber, unLocode, type)
+            );
+            verify(handlingEventRepository, never()).store(any());
+            verify(applicationEvents, never()).cargoWasHandled(any());
+        }
+
+    @Test
+        public void testRegisterHandlingEventWithNullTrackingId() {
+            LocalDateTime completionTime = LocalDateTime.now();
+            VoyageNumber voyageNumber = new VoyageNumber("V123");
+            UnLocode unLocode = new UnLocode("USNYC");
+            Type type = Type.LOAD;
+            assertThrows(CannotCreateHandlingEventException.class, () -> 
+                defaultHandlingEventService.registerHandlingEvent(completionTime, null, voyageNumber, unLocode, type)
+            );
+            verify(handlingEventRepository, never()).store(any());
+            verify(applicationEvents, never()).cargoWasHandled(any());
+        }
+
+    @Test
+        public void testRegisterHandlingEventWithNullVoyageNumber() {
+            LocalDateTime completionTime = LocalDateTime.now();
+            TrackingId trackingId = new TrackingId("XYZ");
+            UnLocode unLocode = new UnLocode("USNYC");
+            Type type = Type.LOAD;
+            assertThrows(CannotCreateHandlingEventException.class, () -> 
+                defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, null, unLocode, type)
+            );
+            verify(handlingEventRepository, never()).store(any());
+            verify(applicationEvents, never()).cargoWasHandled(any());
+        }
+
+    @Test
+        public void testRegisterHandlingEventWithNullUnLocode() {
+            LocalDateTime completionTime = LocalDateTime.now();
+            TrackingId trackingId = new TrackingId("XYZ");
+            VoyageNumber voyageNumber = new VoyageNumber("V123");
+            Type type = Type.LOAD;
+            assertThrows(CannotCreateHandlingEventException.class, () -> 
+                defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, voyageNumber, null, type)
+            );
+            verify(handlingEventRepository, never()).store(any());
+            verify(applicationEvents, never()).cargoWasHandled(any());
+        }
+
+    @Test
+        public void testRegisterHandlingEventWithNullType() {
+            LocalDateTime completionTime = LocalDateTime.now();
+            TrackingId trackingId = new TrackingId("XYZ");
+            VoyageNumber voyageNumber = new VoyageNumber("V123");
+            UnLocode unLocode = new UnLocode("USNYC");
+            assertThrows(CannotCreateHandlingEventException.class, () -> 
+                defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, null)
+            );
+            verify(handlingEventRepository, never()).store(any());
+            verify(applicationEvents, never()).cargoWasHandled(any());
+        }
+
+    @Test
+        public void testRegisterHandlingEventSuccess() throws CannotCreateHandlingEventException {
+            LocalDateTime completionTime = LocalDateTime.now();
+            TrackingId trackingId = new TrackingId("XYZ");
+            VoyageNumber voyageNumber = new VoyageNumber("V123");
+            UnLocode unLocode = new UnLocode("USNYC");
+            Type type = Type.LOAD;
+            HandlingEvent event = mock(HandlingEvent.class);
+            when(handlingEventFactory.createHandlingEvent(any(), eq(completionTime), eq(trackingId), eq(voyageNumber), eq(unLocode), eq(type)))
+                    .thenReturn(event);
+            defaultHandlingEventService.registerHandlingEvent(completionTime, trackingId, voyageNumber, unLocode, type);
+            verify(handlingEventRepository).store(event);
+            verify(applicationEvents).cargoWasHandled(event);
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    public void testRegisterHandlingEventWithLogger() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Stateless -> jakarta.ejb.Stateless
+//   Inject -> jakarta.inject.Inject
+//   LocalDateTime -> java.time.LocalDateTime
+//   Logger -> java.util.logging.Logger
+//   ApplicationEvents -> org.eclipse.cargotracker.application.ApplicationEvents
+//   HandlingEventService -> org.eclipse.cargotracker.application.HandlingEventService
+//   TrackingId -> org.eclipse.cargotracker.domain.model.cargo.TrackingId
+//   CannotCreateHandlingEventException -> org.eclipse.cargotracker.domain.model.handling.CannotCreateHandlingEventException
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+//   HandlingEventFactory -> org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory
+//   HandlingEventRepository -> org.eclipse.cargotracker.domain.model.handling.HandlingEventRepository
+//   UnLocode -> org.eclipse.cargotracker.domain.model.location.UnLocode
+//   VoyageNumber -> org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+//   DefaultHandlingEventService -> org.eclipse.cargotracker.application.internal.DefaultHandlingEventService
+
+// === Class: DefaultHandlingEventService ===
+// Fields (with actual visibility):
+    private ApplicationEvents applicationEvents;
+    private HandlingEventRepository handlingEventRepository;
+    private HandlingEventFactory handlingEventFactory;
+    private Logger logger;
+
+// === External Class: HandlingEventFactory ===
+// Full import path: org.eclipse.cargotracker.domain.model.handling.HandlingEventFactory
+// Import paths:
+//   ApplicationScoped -> jakarta.enterprise.context.ApplicationScoped
+//   Inject -> jakarta.inject.Inject
+//   Serializable -> java.io.Serializable
+//   LocalDateTime -> java.time.LocalDateTime
+//   Cargo -> org.eclipse.cargotracker.domain.model.cargo.Cargo
+// Fields (with actual visibility):
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private CargoRepository cargoRepository;
+    private VoyageRepository voyageRepository;
+    private LocationRepository locationRepository;
+
+// Method Signatures (used by target method):
+public HandlingEvent createHandlingEvent(LocalDateTime registrationTime, LocalDateTime completionTime, TrackingId trackingId, VoyageNumber voyageNumber, UnLocode unlocode, HandlingEvent type);
+
+// === External Class: HandlingEventRepository ===
+// Full import path: org.eclipse.cargotracker.domain.model.handling.HandlingEventRepository
+// Type: INTERFACE (cannot instantiate - use Mockito.mock(HandlingEventRepository.class) instead)
+// Import paths:
+//   TrackingId -> org.eclipse.cargotracker.domain.model.cargo.TrackingId
+// Method Signatures (used by target method):
+void store(HandlingEvent event);
+
+// === External Class: ApplicationEvents ===
+// Full import path: org.eclipse.cargotracker.application.ApplicationEvents
+// Type: INTERFACE (cannot instantiate - use Mockito.mock(ApplicationEvents.class) instead)
+// Import paths:
+//   Cargo -> org.eclipse.cargotracker.domain.model.cargo.Cargo
+//   HandlingEvent -> org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+//   HandlingEventRegistrationAttempt -> org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt
+// Method Signatures (used by target method):
+void cargoWasHandled(HandlingEvent event);
+
+// === External Class: HandlingEvent ===
+// Full import path: org.eclipse.cargotracker.domain.model.handling.HandlingEvent
+// Import paths:
+//   Column -> jakarta.persistence.Column
+//   Entity -> jakarta.persistence.Entity
+//   EnumType -> jakarta.persistence.EnumType
+//   Enumerated -> jakarta.persistence.Enumerated
+//   GeneratedValue -> jakarta.persistence.GeneratedValue
+// Fields (with actual visibility):
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private Long id;
+    private Type type;
+    private Voyage voyage;
+    private Location location;
+    private LocalDateTime completionTime;
+    private LocalDateTime registrationTime;
+    private Cargo cargo;
+    private String summary;
+    private final boolean voyageRequired;
+
+// Enum Values (use ONLY these constants):
+//   Type: LOAD, UNLOAD, RECEIVE, CLAIM, CUSTOMS
+
+// Constructors:
+public HandlingEvent();
+public HandlingEvent(Cargo cargo, LocalDateTime completionTime, LocalDateTime registrationTime, Type type, Location location, Voyage voyage);
+public HandlingEvent(Cargo cargo, LocalDateTime completionTime, LocalDateTime registrationTime, Type type, Location location);
+private Type(boolean voyageRequired);
+
+
+// Public Getter Methods (for test assertions):
+public Type getType();
+public Voyage getVoyage();
+public LocalDateTime getCompletionTime();
+public LocalDateTime getRegistrationTime();
+public Location getLocation();
+public Cargo getCargo();
+public String getSummary();
+public String toString();
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+The following is the complete original method that needs to be tested. NOTE: The current test suite achieves 100% line coverage on this method:
+
+
+  @Override
+  public void registerHandlingEvent(
+      LocalDateTime completionTime,
+      TrackingId trackingId,
+      VoyageNumber voyageNumber,
+      UnLocode unLocode,
+      HandlingEvent.Type type)
+          throws CannotCreateHandlingEventException {
+    LocalDateTime registrationTime = LocalDateTime.now();
+
+    /*
+     * Using a factory to create a HandlingEvent (aggregate). This is where it is
+     * determined wether the incoming data, the attempt, actually is capable of
+     * representing a real handling event.
+     */
+    HandlingEvent event =
+            handlingEventFactory.createHandlingEvent(
+                    registrationTime, completionTime, trackingId, voyageNumber, unLocode, type);
+
+    /*
+     * Store the new handling event, which updates the persistent state of the
+     * handling event aggregate (but not the cargo aggregate - that happens
+     * asynchronously!)
+     */
+    handlingEventRepository.store(event);
+
+    /* Publish an event stating that a cargo has been handled. */
+    applicationEvents.cargoWasHandled(event);
+
+    logger.info("Registered handling event");
+  }
+
+
+COVERAGE: 100% line coverage achieved.
+Focus on fixing failed tests, not adding new coverage tests.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

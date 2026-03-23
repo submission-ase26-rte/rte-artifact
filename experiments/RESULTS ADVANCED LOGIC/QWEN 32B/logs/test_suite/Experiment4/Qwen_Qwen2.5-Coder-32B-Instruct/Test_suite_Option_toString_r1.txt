@@ -1,0 +1,67 @@
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Option_toStringTestGenerated {
+    private Option option;
+
+    @BeforeEach
+    public void setUp() {
+        option = new Option("o", "option", false, "description");
+    }
+
+    @Test
+    public void testToStringWithShortAndLongOption() {
+        option.setLongOpt("long-option");
+        assertEquals("[ Option o long-option :: description :: class java.lang.String ]", option.toString());
+    }
+
+    @Test
+    public void testToStringWithShortOptionOnly() {
+        assertEquals("[ Option o :: description :: class java.lang.String ]", option.toString());
+    }
+
+    @Test
+    public void testToStringWithDeprecatedOption() {
+        DeprecatedAttributes deprecated = Mockito.mock(DeprecatedAttributes.class);
+        ReflectionTestUtils.setField(option, "deprecated", deprecated);
+        Mockito.when(deprecated.toString()).thenReturn("deprecated");
+        assertEquals("[ Option o deprecated :: description :: class java.lang.String ]", option.toString());
+    }
+
+    @Test
+    public void testToStringWithSingleArgument() {
+        option.setArgs(1);
+        assertEquals("[ Option o [ARG] :: description :: class java.lang.String ]", option.toString());
+    }
+
+    @Test
+    public void testToStringWithMultipleArguments() {
+        option.setArgs(Option.UNLIMITED_VALUES);
+        assertEquals("[ Option o [ARG...] :: description :: class java.lang.String ]", option.toString());
+    }
+
+    @Test
+    public void testToStringWithCustomType() {
+        option.setType(Integer.class);
+        assertEquals("[ Option o :: description :: class java.lang.Integer ]", option.toString());
+    }
+
+    @Test
+    public void testToStringWithAllAttributes() {
+        option.setLongOpt("long-option");
+        DeprecatedAttributes deprecated = Mockito.mock(DeprecatedAttributes.class);
+        ReflectionTestUtils.setField(option, "deprecated", deprecated);
+        Mockito.when(deprecated.toString()).thenReturn("deprecated");
+        option.setArgs(Option.UNLIMITED_VALUES);
+        option.setType(Integer.class);
+        assertEquals("[ Option o long-option deprecated [ARG...] :: description :: class java.lang.Integer ]", option.toString());
+    }
+
+}

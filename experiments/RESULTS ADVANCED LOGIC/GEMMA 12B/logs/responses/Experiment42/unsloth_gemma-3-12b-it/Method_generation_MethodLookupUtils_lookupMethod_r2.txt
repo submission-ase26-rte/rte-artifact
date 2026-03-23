@@ -1,0 +1,28 @@
+```java
+public static Method lookupMethod( Class targetClass, final String name, final Object[] parameters) {
+        if (targetClass == null || name == null) {
+            return null;
+        }
+
+        Method[] methods = targetClass.getDeclaredMethods();
+        Method bestMatch = null;
+        int bestMatchType = NO_MATCH;
+
+        for (Method method : methods) {
+            if (name.equals(method.getName())) {
+                Class<?>[] parameterTypes = method.getParameterTypes();
+                int matchType = matchParameterTypes(parameterTypes, parameters);
+
+                if (matchType > bestMatchType) {
+                    bestMatch = method;
+                    bestMatchType = matchType;
+                }
+            }
+        }
+
+        if (bestMatchType == APPROXIMATE_MATCH) {
+            return bestMatch;
+        }
+        return null;
+    }
+```

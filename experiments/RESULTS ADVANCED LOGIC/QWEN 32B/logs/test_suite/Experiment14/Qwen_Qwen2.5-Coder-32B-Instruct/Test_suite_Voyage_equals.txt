@@ -1,0 +1,78 @@
+package org.eclipse.cargotracker.domain.model.voyage;
+
+import jakarta.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.lang3.Validate;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Voyage_equalsTestGenerated {
+
+    @Mock
+    private VoyageNumber voyageNumber1;
+
+    @Mock
+    private VoyageNumber voyageNumber2;
+
+    @Mock
+    private Schedule schedule1;
+
+    @Mock
+    private Schedule schedule2;
+
+    @Mock
+    private Location departureLocation1;
+
+    @Mock
+    private Location departureLocation2;
+
+    private Voyage voyage1;
+    private Voyage voyage2;
+    private Voyage voyage3;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        voyage1 = new Voyage(voyageNumber1, schedule1);
+        voyage2 = new Voyage(voyageNumber1, schedule2);
+        voyage3 = new Voyage(voyageNumber2, schedule1);
+    }
+
+    @Test
+    void testEquals_SameInstance_ReturnsTrue() {
+        assertTrue(voyage1.equals(voyage1));
+    }
+
+    @Test
+    void testEquals_NullObject_ReturnsFalse() {
+        assertFalse(voyage1.equals(null));
+    }
+
+    @Test
+    void testEquals_DifferentClass_ReturnsFalse() {
+        assertFalse(voyage1.equals("someString"));
+    }
+
+    @Test
+    void testEquals_SameVoyageNumber_ReturnsTrue() {
+        when(voyageNumber1.sameValueAs(voyageNumber1)).thenReturn(true);
+        assertTrue(voyage1.equals(voyage2));
+    }
+
+    @Test
+    void testEquals_DifferentVoyageNumber_ReturnsFalse() {
+        when(voyageNumber1.sameValueAs(voyageNumber2)).thenReturn(false);
+        assertFalse(voyage1.equals(voyage3));
+    }
+}

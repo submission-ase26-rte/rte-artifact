@@ -1,0 +1,39 @@
+```java
+public static String detect(final InputStream in) throws ArchiveException {
+    if (in == null) {
+        throw new IllegalArgumentException("InputStream may not be null");
+    }
+    if (!in.markSupported()) {
+        throw new IllegalArgumentException("Mark is not supported");
+    }
+    byte[] signature = new byte[SIGNATURE_SIZE];
+    try {
+        in.mark(SIGNATURE_SIZE);
+        int read = IOUtils.readFully(in, signature);
+        in.reset();
+        if (read != SIGNATURE_SIZE) {
+            throw new ArchiveException("Could not read signature");
+        }
+    } catch (IOException e) {
+        throw new ArchiveException("Could not read signature", e);
+    }
+
+    if (ZipArchiveInputStream.matches(signature, read)) {
+        return ZIP;
+    } else if (JarArchiveInputStream.matches(signature, read)) {
+        return JAR;
+    } else if (ArArchiveInputStream.matches(signature, read)) {
+        return AR;
+    } else if (CpioArchiveInputStream.matches(signature, read)) {
+        return CPIO;
+    } else if (ArjArchiveInputStream.matches(signature, read)) {
+        return ARJ;
+    } else if (DumpArchiveInputStream.matches(signature, read)) {
+        return DUMP;
+    } else if (TarArchiveInputStream.matches(signature, read)) {
+        return TAR;
+    } else {
+        throw new ArchiveException("No archive found");
+    }
+}
+```

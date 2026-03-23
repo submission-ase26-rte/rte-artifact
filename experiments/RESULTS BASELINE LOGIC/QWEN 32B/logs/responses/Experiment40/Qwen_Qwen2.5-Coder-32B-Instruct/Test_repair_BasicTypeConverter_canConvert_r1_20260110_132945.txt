@@ -1,0 +1,171 @@
+```java
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.ri.model.beans.BeanPointer;
+import org.apache.commons.jxpath.ri.model.beans.NullPointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class BasicTypeConverter_canConvertTestGenerated {
+    private BasicTypeConverter converter;
+
+    @BeforeEach
+    public void setUp() {
+        converter = new BasicTypeConverter();
+    }
+
+    @Test
+    public void testCanConvertWithNoConverter() {
+        assertFalse(converter.canConvert("123", BigInteger.class));
+    }
+
+    @Test
+    public void testCanConvertBooleanToNumber() {
+        assertTrue(converter.canConvert(Boolean.TRUE, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertBooleanToAtomicBoolean() {
+        assertTrue(converter.canConvert(Boolean.TRUE, java.util.concurrent.atomic.AtomicBoolean.class));
+    }
+
+    @Test
+    public void testCanConvertNumberToBoolean() {
+        assertTrue(converter.canConvert(Integer.valueOf(1), Boolean.class));
+    }
+
+    @Test
+    public void testCanConvertNumberToNumber() {
+        assertTrue(converter.canConvert(Integer.valueOf(1), Double.class));
+    }
+
+    @Test
+    public void testCanConvertStringToBoolean() {
+        assertTrue(converter.canConvert("true", Boolean.class));
+    }
+
+    @Test
+    public void testCanConvertStringToCharacter() {
+        assertTrue(converter.canConvert("a", Character.class));
+    }
+
+    @Test
+    public void testCanConvertStringToByte() {
+        assertTrue(converter.canConvert("1", Byte.class));
+    }
+
+    @Test
+    public void testCanConvertStringToShort() {
+        assertTrue(converter.canConvert("1", Short.class));
+    }
+
+    @Test
+    public void testCanConvertStringToInteger() {
+        assertTrue(converter.canConvert("1", Integer.class));
+    }
+
+    @Test
+    public void testCanConvertStringToLong() {
+        assertTrue(converter.canConvert("1", Long.class));
+    }
+
+    @Test
+    public void testCanConvertStringToFloat() {
+        assertTrue(converter.canConvert("1.0", Float.class));
+    }
+
+    @Test
+    public void testCanConvertStringToDouble() {
+        assertTrue(converter.canConvert("1.0", Double.class));
+    }
+
+    @Test
+    public void testCanConvertArrayToArray() {
+        Integer[] array = {1, 2, 3};
+        assertTrue(converter.canConvert(array, Integer[].class));
+    }
+
+    @Test
+    public void testCanConvertArrayToCollection() {
+        Integer[] array = {1, 2, 3};
+        assertTrue(converter.canConvert(array, List.class));
+    }
+
+    @Test
+    public void testCanConvertArrayToSingleElement() {
+        Integer[] array = {1};
+        assertTrue(converter.canConvert(array, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertEmptyArrayToSingleElement() {
+        Integer[] array = {};
+        assertTrue(converter.canConvert(array, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToArray() {
+        List<Integer> list = new ArrayList<>(List.of(1, 2, 3));
+        assertTrue(converter.canConvert(list, Integer[].class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToCollection() {
+        List<Integer> list = new ArrayList<>(List.of(1, 2, 3));
+        assertTrue(converter.canConvert(list, Set.class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToSingleElement() {
+        List<Integer> list = new ArrayList<>(List.of(1));
+        assertTrue(converter.canConvert(list, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertEmptyCollectionToSingleElement() {
+        List<Integer> list = new ArrayList<>(List.of());
+        assertTrue(converter.canConvert(list, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertNodeSet() {
+        NodeSet nodeSet = new NodeSet(new ArrayList<>(List.of("value")));
+        assertTrue(converter.canConvert(nodeSet, String.class));
+    }
+
+    @Test
+    public void testCanConvertPointer() {
+        Pointer pointer = new BeanPointer(null, null, "value", null);
+        assertTrue(converter.canConvert(pointer, String.class));
+    }
+
+    @Test
+    public void testCanConvertWithRegisteredConverter() {
+        ConvertUtils.register(new Converter() {
+            @Override
+            public <T> T convert(Class<T> type, Object value) {
+                return null;
+            }
+        }, BigInteger.class);
+        assertTrue(converter.canConvert("123", BigInteger.class));
+    }
+}
+```

@@ -1,0 +1,149 @@
+```java
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.jxpath.JXPathInvalidAccessException;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.util.TypeUtils;
+
+public Object convert(final Object object, final Class toType) {
+    if (object == null) {
+        if (toType == Boolean.class) {
+            return null;
+        }
+        if (toType == Long.class) {
+            return 0L;
+        }
+        if (toType == Double.class) {
+            return 0.0;
+        }
+        if (toType == Float.class) {
+            return 0.0f;
+        }
+        if (toType == Integer.class) {
+            return 0;
+        }
+        if (toType == Short.class) {
+            return (short) 0;
+        }
+        if (toType == Byte.class) {
+            return (byte) 0;
+        }
+        if (toType == Character.class) {
+            return '\0';
+        }
+        if (toType == String.class) {
+            return "";
+        }
+        return null;
+    }
+
+    if (toType == String.class) {
+        return object.toString();
+    }
+
+    if (toType == Boolean.class) {
+        if (object instanceof Number) {
+            return ((Number) object).doubleValue() != 0.0;
+        }
+        if (object instanceof String) {
+            try {
+                return Boolean.parseBoolean((String) object);
+            } catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    if (object instanceof Collection) {
+        if (toType == Collection.class || toType == List.class) {
+            return new ArrayList<>(object);
+        }
+        if (toType == Set.class) {
+            return new HashSet<>(object);
+        }
+        return object;
+    }
+
+    if (object instanceof Object[]) {
+        if (toType == Collection.class || toType == List.class) {
+            List list = new ArrayList<>();
+            for (Object o : (Object[]) object) {
+                list.add(o);
+            }
+            return list;
+        }
+        if (toType == Set.class) {
+            Set set = new HashSet();
+            for (Object o : (Object[]) object) {
+                set.add(o);
+            }
+            return set;
+        }
+        return object;
+    }
+
+    if (object instanceof int[]) {
+        if (toType == Collection.class || toType == List.class) {
+            List list = new ArrayList<>();
+            for (int i : (int[]) object) {
+                list.add(Integer.valueOf(i));
+            }
+            return list;
+        }
+        if (toType == int[].class) {
+            return object;
+        }
+        return null;
+    }
+
+    if (object instanceof Pointer) {
+        Pointer pointer = (Pointer) object;
+        Object value = pointer.getValue();
+        if (value == null) {
+            return null;
+        }
+        return convert(value, toType);
+    }
+
+    if (object instanceof NodeSet) {
+        NodeSet nodeSet = (NodeSet) object;
+        List values = nodeSet.getValues();
+        if (values == null || values.isEmpty()) {
+            return "";
+        }
+        if (toType == String.class) {
+            StringBuilder sb = new StringBuilder();
+            for (Object value : values) {
+                sb.append(value == null ? "" : value.toString());
+            }
+            return sb.toString();
+        }
+        return values;
+    }
+
+    if (toType.isPrimitive()) {
+        return convertStringToPrimitive(object, toType);
+    }
+
+    try {
+        return ConvertUtils.convert(object, toType);
+    } catch (JXPathTypeConversionException e) {
+        throw e;
+    } catch (Exception e) {
+        throw new JXPathTypeConversionException(toType, e);
+    }
+}
+```

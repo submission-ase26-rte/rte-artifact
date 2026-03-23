@@ -1,0 +1,200 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.io.*;
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.mockito.stubbing.Answer;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeDirectDBUtils_buildDBTestGenerated {
+    @Mock
+    private DataSource datasource;
+    @Mock
+    private TradeServices ts;
+    @Spy
+    @InjectMocks
+    private TradeDirectDBUtils tradeDirectDBUtils;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    public void tearDown() {
+    }
+
+    @Test
+    public void testBuildDBWithNullDDLFile() throws Exception {
+        PrintWriter out = mock(PrintWriter.class);
+        InputStream ddlFile = null;
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+        verify(out).println("<HEAD><BR><EM> TradeBuildDB: Building DayTrader Database...</EM><BR> This operation will take several minutes. Please wait...</HEAD>");
+        verify(out).println("<BODY>");
+        verify(out).println("<BR>TradeBuildDB: **** Creating " + TradeConfig.getMAX_QUOTES() + " Quotes ****</BR>");
+        verify(out).println("<BR>");
+        verify(out).println("<BR>**** Registering " + TradeConfig.getMAX_USERS() + " Users **** ");
+        verify(out).println("</BODY>");
+    }
+
+    @Test
+    public void testBuildDBWithCreateQuoteException() throws Exception {
+        PrintWriter out = mock(PrintWriter.class);
+        InputStream ddlFile = null;
+        int maxQuotes = 10;
+        when(TradeConfig.getMAX_QUOTES()).thenReturn(maxQuotes);
+        doThrow(new SQLException("Create Quote Failed")).when(ts).createQuote(anyString(), anyString(), any(BigDecimal.class));
+        assertThrows(SQLException.class, () -> tradeDirectDBUtils.buildDB(out, ddlFile));
+        verify(out).println("<HEAD><BR><EM> TradeBuildDB: Building DayTrader Database...</EM><BR> This operation will take several minutes. Please wait...</HEAD>");
+        verify(out).println("<BODY>");
+        verify(out).println("<BR>TradeBuildDB: **** Creating " + maxQuotes + " Quotes ****</BR>");
+        verify(out).println("<BR>");
+    }
+
+    @Test
+    public void testBuildDBWithRegisterException() throws Exception {
+        PrintWriter out = mock(PrintWriter.class);
+        InputStream ddlFile = null;
+        int maxUsers = 10;
+        when(TradeConfig.getMAX_USERS()).thenReturn(maxUsers);
+        doThrow(new SQLException("Register Failed")).when(ts).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class));
+        assertThrows(SQLException.class, () -> tradeDirectDBUtils.buildDB(out, ddlFile));
+        verify(out).println("<HEAD><BR><EM> TradeBuildDB: Building DayTrader Database...</EM><BR> This operation will take several minutes. Please wait...</HEAD>");
+        verify(out).println("<BODY>");
+        verify(out).println("<BR>TradeBuildDB: **** Creating " + TradeConfig.getMAX_QUOTES() + " Quotes ****</BR>");
+        verify(out).println("<BR>");
+        verify(out).println("<BR>**** Registering " + maxUsers + " Users **** ");
+    }
+
+    @Test
+    public void testBuildDBWithCreateQuoteErrorCount() throws Exception {
+        PrintWriter out = mock(PrintWriter.class);
+        InputStream ddlFile = null;
+        int maxQuotes = 10;
+        when(TradeConfig.getMAX_QUOTES()).thenReturn(maxQuotes);
+        doThrow(new SQLException("Create Quote Failed")).when(ts).createQuote(anyString(), anyString(), any(BigDecimal.class));
+        assertThrows(SQLException.class, () -> tradeDirectDBUtils.buildDB(out, ddlFile));
+        verify(out, times(11)).println(anyString());
+    }
+
+    @Test
+    public void testBuildDBWithRegisterErrorCount() throws Exception {
+        PrintWriter out = mock(PrintWriter.class);
+        InputStream ddlFile = null;
+        int maxUsers = 10;
+        when(TradeConfig.getMAX_USERS()).thenReturn(maxUsers);
+        doThrow(new SQLException("Register Failed")).when(ts).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class));
+        assertThrows(SQLException.class, () -> tradeDirectDBUtils.buildDB(out, ddlFile));
+        verify(out, times(11)).println(anyString());
+    }
+
+    @Test
+    public void testBuildDBWithSuccessfulUserRegistration() throws Exception {
+        PrintWriter out = mock(PrintWriter.class);
+        InputStream ddlFile = null;
+        int maxUsers = 10;
+        when(TradeConfig.getMAX_USERS()).thenReturn(maxUsers);
+        when(ts.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class))).thenReturn(new AccountDataBean());
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+        verify(out, times(3)).println(anyString());
+        verify(out, times(2)).print(anyString());
+        verify(out).flush();
+    }
+
+    @Test
+    public void testBuildDBWithExistingUserRegistration() throws Exception {
+        PrintWriter out = mock(PrintWriter.class);
+        InputStream ddlFile = null;
+        int maxUsers = 10;
+        when(TradeConfig.getMAX_USERS()).thenReturn(maxUsers);
+        when(ts.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class))).thenReturn(null);
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+        verify(out, times(2)).println(anyString());
+        verify(out, times(1)).print(anyString());
+        verify(out).flush();
+    }
+
+    @Test
+    public void testBuildDBWithCreateQuoteErrorHandling() throws Exception {
+        PrintWriter out = mock(PrintWriter.class);
+        InputStream ddlFile = null;
+        int maxQuotes = 10;
+        when(TradeConfig.getMAX_QUOTES()).thenReturn(maxQuotes);
+        doAnswer(invocation -> {
+            if (invocation.getArgument(0).toString().startsWith("s:9")) {
+                throw new SQLException("Create Quote Failed");
+            }
+            return null;
+        }).when(ts).createQuote(anyString(), anyString(), any(BigDecimal.class));
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+        verify(out, times(10)).println(anyString());
+        verify(out).println("<BR>");
+        verify(out).println("<BR>**** Registering " + TradeConfig.getMAX_USERS() + " Users **** ");
+    }
+
+    @Test
+    public void testBuildDBWithRegisterErrorHandling() throws Exception {
+        PrintWriter out = mock(PrintWriter.class);
+        InputStream ddlFile = null;
+        int maxUsers = 10;
+        when(TradeConfig.getMAX_USERS()).thenReturn(maxUsers);
+        doAnswer(invocation -> {
+            if (invocation.getArgument(0).toString().startsWith("uid:9")) {
+                throw new SQLException("Register Failed");
+            }
+            return new AccountDataBean();
+        }).when(ts).register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class));
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+        verify(out, times(3)).println(anyString());
+        verify(out, times(2)).print(anyString());
+        verify(out).flush();
+    }
+
+    @Test
+    public void testBuildDBWithUserAlreadyRegistered() throws Exception {
+        PrintWriter out = mock(PrintWriter.class);
+        InputStream ddlFile = null;
+        int maxUsers = 10;
+        when(TradeConfig.getMAX_USERS()).thenReturn(maxUsers);
+        when(ts.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class))).thenReturn(null);
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+        verify(out, times(2)).println(anyString());
+        verify(out, times(1)).print(anyString());
+        verify(out).flush();
+    }
+
+    @Test
+    public void testBuildDBWithUserRegistrationAndBuyErrorHandling() throws Exception {
+        PrintWriter out = mock(PrintWriter.class);
+        InputStream ddlFile = null;
+        int maxUsers = 10;
+        when(TradeConfig.getMAX_USERS()).thenReturn(maxUsers);
+        when(ts.register(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(BigDecimal.class))).thenReturn(new AccountDataBean());
+        doThrow(new SQLException("Buy Failed")).when(ts).buy(anyString(), anyString(), anyDouble(), anyInt());
+        tradeDirectDBUtils.buildDB(out, ddlFile);
+        verify(out, times(3)).println(anyString());
+        verify(out, times(2)).print(anyString());
+        verify(out).flush();
+    }
+}
+```

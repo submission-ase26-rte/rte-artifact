@@ -1,0 +1,226 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package org.apache.commons.jxpath.util;
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Array -> java.lang.reflect.Array
+//   Modifier -> java.lang.reflect.Modifier
+//   BigDecimal -> java.math.BigDecimal
+//   BigInteger -> java.math.BigInteger
+//   ArrayList -> java.util.ArrayList
+//   Collection -> java.util.Collection
+//   Collections -> java.util.Collections
+//   HashSet -> java.util.HashSet
+//   Iterator -> java.util.Iterator
+//   List -> java.util.List
+//   Set -> java.util.Set
+//   SortedSet -> java.util.SortedSet
+//   ConvertUtils -> org.apache.commons.beanutils.ConvertUtils
+//   Converter -> org.apache.commons.beanutils.Converter
+//   JXPathInvalidAccessException -> org.apache.commons.jxpath.JXPathInvalidAccessException
+//   JXPathTypeConversionException -> org.apache.commons.jxpath.JXPathTypeConversionException
+//   NodeSet -> org.apache.commons.jxpath.NodeSet
+//   Pointer -> org.apache.commons.jxpath.Pointer
+
+// === Class: BasicTypeConverter ===
+// Fields (with actual visibility):
+    private final List values;
+    private List pointers;
+    private static final long serialVersionUID;
+    private final Object bean;
+
+// Constructors:
+public ValueNodeSet(List values);
+public ValuePointer(Object object);
+
+// Getter/Setter Methods (for test assertions):
+public List getValues();
+public List getNodes();
+public List getPointers();
+public Object getValue();
+public Object getNode();
+public Object getRootNode();
+public void setValue(final Object value);
+
+// Internal Method Signatures (used by target method):
+protected Object convertStringToPrimitive(final Object object, Class toType);
+protected Object convertNullToPrimitive(final Class toType);
+protected Number allocateNumber(Class type, final double value);
+protected Collection unmodifiableCollection(final Collection collection);
+protected Collection allocateCollection(final Class type);
+
+// === External Class: TypeUtils ===
+// Import paths:
+//   HashMap -> java.util.HashMap
+// Fields (with actual visibility):
+    private static TypeConverter typeConverter;
+    private static final HashMap PRIMITIVE_TYPE_MAP;
+    private static final long serialVersionUID;
+
+// Method Signatures (used by target method):
+static public Class wrapPrimitive(final Class p);
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+    /**
+     * Converts the supplied object to the specified
+     * type. Throws a runtime exception if the conversion is
+     * not possible.
+     * @param object to convert
+     * @param toType destination class
+     * @return converted object
+     */
+    @Override
+    public Object convert(final Object object, final Class toType) {
+        if (object == null) {
+            return toType.isPrimitive() ? convertNullToPrimitive(toType) : null;
+        }
+
+        if (toType == Object.class) {
+            if (object instanceof NodeSet) {
+                return convert(((NodeSet) object).getValues(), toType);
+            }
+            if (object instanceof Pointer) {
+                return convert(((Pointer) object).getValue(), toType);
+            }
+            return object;
+        }
+        final Class useType = TypeUtils.wrapPrimitive(toType);
+        final Class fromType = object.getClass();
+
+        if (useType.isAssignableFrom(fromType)) {
+            return object;
+        }
+
+        if (fromType.isArray()) {
+            final int length = Array.getLength(object);
+            if (useType.isArray()) {
+                final Class cType = useType.getComponentType();
+
+                final Object array = Array.newInstance(cType, length);
+                for (int i = 0; i < length; i++) {
+                    final Object value = Array.get(object, i);
+                    Array.set(array, i, convert(value, cType));
+                }
+                return array;
+            }
+            if (Collection.class.isAssignableFrom(useType)) {
+                final Collection collection = allocateCollection(useType);
+                for (int i = 0; i < length; i++) {
+                    collection.add(Array.get(object, i));
+                }
+                return unmodifiableCollection(collection);
+            }
+            if (length > 0) {
+                final Object value = Array.get(object, 0);
+                return convert(value, useType);
+            }
+            return convert("", useType);
+        }
+        if (object instanceof Collection) {
+            final int length = ((Collection) object).size();
+            if (useType.isArray()) {
+                final Class cType = useType.getComponentType();
+                final Object array = Array.newInstance(cType, length);
+                final Iterator it = ((Collection) object).iterator();
+                for (int i = 0; i < length; i++) {
+                    final Object value = it.next();
+                    Array.set(array, i, convert(value, cType));
+                }
+                return array;
+            }
+            if (Collection.class.isAssignableFrom(useType)) {
+                final Collection collection = allocateCollection(useType);
+                collection.addAll((Collection) object);
+                return unmodifiableCollection(collection);
+            }
+            if (length > 0) {
+                Object value;
+                if (object instanceof List) {
+                    value = ((List) object).get(0);
+                }
+                else {
+                    final Iterator it = ((Collection) object).iterator();
+                    value = it.next();
+                }
+                return convert(value, useType);
+            }
+            return convert("", useType);
+        }
+        if (object instanceof NodeSet) {
+            return convert(((NodeSet) object).getValues(), useType);
+        }
+        if (object instanceof Pointer) {
+            return convert(((Pointer) object).getValue(), useType);
+        }
+        if (useType == String.class) {
+            return object.toString();
+        }
+        if (object instanceof Boolean) {
+            if (Number.class.isAssignableFrom(useType)) {
+                return allocateNumber(useType, ((Boolean) object).booleanValue() ? 1 : 0);
+            }
+            if ("java.util.concurrent.atomic.AtomicBoolean".equals(useType.getName())) {
+                try {
+                    return useType.getConstructor(new Class[] { boolean.class })
+                            .newInstance(object);
+                }
+                catch (final Exception e) {
+                    throw new JXPathTypeConversionException(useType.getName(), e);
+                }
+            }
+        }
+        if (object instanceof Number) {
+            final double value = ((Number) object).doubleValue();
+            if (useType == Boolean.class) {
+                return value == 0.0 ? Boolean.FALSE : Boolean.TRUE;
+            }
+            if (Number.class.isAssignableFrom(useType)) {
+                return allocateNumber(useType, value);
+            }
+        }
+        if (object instanceof String) {
+            final Object value = convertStringToPrimitive(object, useType);
+            if (value != null) {
+                return value;
+            }
+        }
+
+        final Converter converter = ConvertUtils.lookup(useType);
+        if (converter != null) {
+            return converter.convert(useType, object);
+        }
+
+        throw new JXPathTypeConversionException("Cannot convert "
+                + object.getClass() + " to " + useType);
+    }
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "convert" of class "BasicTypeConverter".
+
+REQUIREMENTS:
+- Test class name: BasicTypeConverter_convertTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths, edge cases, and boundary conditions
+- Test both valid inputs and error scenarios (null values, empty collections, invalid arguments)
+- Cover expected exceptions declared in the method signature
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- DO NOT use getter/setter methods that are not present in the provided class context
+- DO NOT mock the target class
+- For creating test instances of the target class, PREFER MOCKING constructor parameters (using @Mock) rather than instantiating domain objects directly, to avoid validation errors in value objects
+- Generate ONLY the test class without explanations or comments outside the code
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

@@ -1,0 +1,235 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   InputStream -> java.io.InputStream
+//   Properties -> java.util.Properties
+//   FacesConfig -> javax.faces.annotation.FacesConfig
+//   ServletContextEvent -> javax.servlet.ServletContextEvent
+//   ServletContextListener -> javax.servlet.ServletContextListener
+//   WebListener -> javax.servlet.annotation.WebListener
+
+// === Class: TradeWebContextListener ===
+// === External Class: Log ===
+// Import paths:
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   Level -> java.util.logging.Level
+//   Logger -> java.util.logging.Logger
+// Fields (with actual visibility):
+    private static final Logger log;
+
+// Method Signatures (used by target method):
+public static void trace(String message);
+
+// === External Class: TradeConfig ===
+// Import paths:
+//   BigDecimal -> java.math.BigDecimal
+//   ArrayList -> java.util.ArrayList
+//   Random -> java.util.Random
+// Fields (with actual visibility):
+    private static String[] runTimeModeNames;
+    public static final int EJB3;
+    public static final int DIRECT;
+    public static final int SESSION_TO_DIRECT;
+    private static int runTimeMode;
+    private static String[] orderProcessingModeNames;
+    public static final int SYNCH;
+    public static final int ASYNCH;
+    public static final int ASYNCH_2PHASE;
+    private static int orderProcessingMode;
+    private static String[] accessModeNames;
+    public static final int STANDARD;
+    private static int accessMode;
+    private static String[] webInterfaceNames;
+    public static final int JSP;
+    public static final int JSP_Images;
+    public static final int JSP_Images_HTTP2;
+    private static int webInterface;
+    private static int MAX_USERS;
+    private static int MAX_QUOTES;
+    public static boolean JDBCDriverNeedsGlobalTransation;
+    public static String DATASOURCE;
+    public static int KEYBLOCKSIZE;
+    public static int QUOTES_PER_PAGE;
+    public static boolean RND_USER;
+    private static int MAX_HOLDINGS;
+    private static int count;
+    private static Object userID_count_semaphore;
+    private static int userID_count;
+    private static String hostName;
+    private static Random r0;
+    private static Random randomNumberGenerator;
+    public static final String newUserPrefix;
+    public static final int verifyPercent;
+    private static boolean updateQuotePrices;
+    private static int primIterations;
+    private static boolean longRun;
+    private static boolean publishQuotePriceChange;
+    private static int listQuotePriceChangeFrequency;
+    private static boolean displayOrderAlerts;
+    private static int marketSummaryInterval;
+    public static BigDecimal PENNY_STOCK_PRICE;
+    public static BigDecimal PENNY_STOCK_RECOVERY_MIRACLE_MULTIPLIER;
+    public static BigDecimal MAXIMUM_STOCK_PRICE;
+    public static BigDecimal MAXIMUM_STOCK_SPLIT_MULTIPLIER;
+    public static final int HOME_OP;
+    public static final int QUOTE_OP;
+    public static final int LOGIN_OP;
+    public static final int LOGOUT_OP;
+    public static final int REGISTER_OP;
+    public static final int ACCOUNT_OP;
+    public static final int PORTFOLIO_OP;
+    public static final int BUY_OP;
+    public static final int SELL_OP;
+    public static final int UPDATEACCOUNT_OP;
+    private static int[][] scenarioMixes;
+    private static char[] actions;
+    private static int sellDeficit;
+    public static final int WELCOME_PAGE;
+    public static final int REGISTER_PAGE;
+    public static final int PORTFOLIO_PAGE;
+    public static final int QUOTE_PAGE;
+    public static final int HOME_PAGE;
+    public static final int ACCOUNT_PAGE;
+    public static final int ORDER_PAGE;
+    public static final int CONFIG_PAGE;
+    public static final int STATS_PAGE;
+    public static final int MARKET_SUMMARY_PAGE;
+    public static String[][] webUI;
+    private static int scenarioCount;
+    private static final BigDecimal orderFee;
+    private static final BigDecimal cashFee;
+    private static final BigDecimal ONE;
+    private static ArrayList deck;
+    private static int card;
+
+// Method Signatures (used by target method):
+public static void setRunTimeMode(int value);
+public static int getRunTimeMode();
+public static int getMAX_QUOTES();
+public static void setListQuotePriceChangeFrequency(int value);
+public static void setPublishQuotePriceChange(boolean publishQuotePriceChange);
+public static int getMAX_USERS();
+public static void setMarketSummaryInterval(int seconds);
+public static String getOrderProcessingModeNames();
+public static void setLongRun(boolean longRun);
+public static void setWebInterface(int value);
+public static void setOrderProcessingMode(int value);
+public static void setDisplayOrderAlerts(boolean value);
+public static void setMAX_USERS(int mAX_USERS);
+public static void setMAX_QUOTES(int mAX_QUOTES);
+public static int getOrderProcessingMode();
+public static java getRunTimeModeNames();
+public static void setPrimIterations(int iter);
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+  // receieve trade web app startup/shutown events to start(initialized)/stop
+  // TradeDirect
+  @Override
+  public void contextInitialized(ServletContextEvent event) {
+    Log.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect");
+
+    // Load settings from properties file (if it exists)
+    Properties prop = new Properties();
+    InputStream stream = event.getServletContext().getResourceAsStream("/properties/daytrader.properties");
+
+    try {
+      prop.load(stream);
+      System.out.println("Settings from daytrader.properties: " + prop);
+
+      if (System.getenv("RUNTIME_MODE") != null) {
+        TradeConfig.setRunTimeMode(Integer.parseInt(System.getenv("RUNTIME_MODE")));
+      } else {
+        TradeConfig.setRunTimeMode(Integer.parseInt(prop.getProperty("runtimeMode")));
+      }
+      System.out.print("Running in " + TradeConfig.getRunTimeModeNames()[TradeConfig.getRunTimeMode()] + " Mode");
+
+      if (System.getenv("ORDER_PROCESSING_MODE") != null) {
+        TradeConfig.setOrderProcessingMode(Integer.parseInt(System.getenv("ORDER_PROCESSING_MODE")));
+      } else {
+        TradeConfig.setOrderProcessingMode(Integer.parseInt(prop.getProperty("orderProcessingMode")));
+      }
+      System.out.print("Running in " + TradeConfig.getOrderProcessingModeNames()[TradeConfig.getOrderProcessingMode()] + " Order Processing Mode");
+
+      if (System.getenv("MAX_USERS") != null) {
+        TradeConfig.setMAX_USERS(Integer.parseInt(System.getenv("MAX_USERS")));
+      } else {
+        TradeConfig.setMAX_USERS(Integer.parseInt(prop.getProperty("maxUsers")));
+      }
+      System.out.print("MAX_USERS = " + TradeConfig.getMAX_USERS() + " users");
+
+      if (System.getenv("MAX_QUOTES") != null) {
+        TradeConfig.setMAX_QUOTES(Integer.parseInt(System.getenv("MAX_QUOTES")));
+      } else {
+        TradeConfig.setMAX_QUOTES(Integer.parseInt(prop.getProperty("maxQuotes")));
+      }
+      System.out.print("MAX_QUOTES = " + TradeConfig.getMAX_QUOTES() + " quotes");
+
+      if (System.getenv("PUBLISH_QUOTES") != null) {
+        TradeConfig.setPublishQuotePriceChange(Boolean.parseBoolean(System.getenv("PUBLISH_QUOTES")));
+      } else {
+        TradeConfig.setPublishQuotePriceChange(Boolean.parseBoolean(prop.getProperty("publishQuotePriceChange")));
+      }
+
+      if (System.getenv("DISPLAY_ORDER_ALERTS") != null) {
+        TradeConfig.setDisplayOrderAlerts(Boolean.parseBoolean(System.getenv("DISPLAY_ORDER_ALERTS")));
+      } else {
+        TradeConfig.setDisplayOrderAlerts(Boolean.parseBoolean(prop.getProperty("displayOrderAlerts")));
+      }
+      if (System.getenv("WEB_INTERFACE") != null) {
+        TradeConfig.setWebInterface(Integer.parseInt(System.getenv("WEB_INTERFACE")));
+      } else {
+        TradeConfig.setWebInterface(Integer.parseInt(prop.getProperty("webInterface")));
+      }
+      if (System.getenv("LIST_QUOTE_PRICE_CHANGE_FREQUENCY") != null) {
+        TradeConfig.setListQuotePriceChangeFrequency(Integer.parseInt(System.getenv("LIST_QUOTE_PRICE_CHANGE_FREQUENCY")));
+      } else {
+        TradeConfig.setListQuotePriceChangeFrequency(Integer.parseInt(prop.getProperty("listQuotePriceChangeFrequency")));
+      }
+
+      TradeConfig.setPrimIterations(Integer.parseInt(prop.getProperty("primIterations")));
+      TradeConfig.setMarketSummaryInterval(Integer.parseInt(prop.getProperty("marketSummaryInterval")));
+      TradeConfig.setLongRun(Boolean.parseBoolean(prop.getProperty("longRun")));
+
+    } catch (Exception e) {
+      System.out.println("daytrader.properties not found");
+    }
+
+  }
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "contextInitialized" of class "TradeWebContextListener".
+
+REQUIREMENTS:
+- Test class name: TradeWebContextListener_contextInitializedTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths, edge cases, and boundary conditions
+- Test both valid inputs and error scenarios (null values, empty collections, invalid arguments)
+- Cover expected exceptions declared in the method signature
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- DO NOT use getter/setter methods that are not present in the provided class context
+- DO NOT mock the target class
+- For creating test instances of the target class, PREFER MOCKING constructor parameters (using @Mock) rather than instantiating domain objects directly, to avoid validation errors in value objects
+- Generate ONLY the test class without explanations or comments outside the code
+- DO NOT mock javax.servlet classes directly (ServletOutputStream, etc.) - use MockHttpServletRequest/Response from spring-test instead
+- For static method calls (e.g., Log.error(), TradeConfig.getUserID()), use Mockito.mockStatic() to mock static methods. Example: try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) { ... }
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

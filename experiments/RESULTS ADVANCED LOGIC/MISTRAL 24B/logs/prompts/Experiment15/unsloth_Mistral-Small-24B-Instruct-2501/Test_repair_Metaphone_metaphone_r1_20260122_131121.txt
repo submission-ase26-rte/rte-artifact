@@ -1,0 +1,354 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language;
+Class name (MUST be exactly): Metaphone_metaphoneTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.codec.language;
+
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.StringEncoder;
+import org.apache.commons.codec.language.Metaphone;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Metaphone_metaphoneTestGenerated {
+    private Metaphone metaphone;
+
+    @BeforeEach
+    void setUp() {
+        metaphone = new Metaphone();
+    }
+
+    @Test
+    void testMetaphoneInitialKN() {
+        String result = metaphone.metaphone("KNIGHT");
+        assertEquals("N", result);
+    }
+
+    @Test
+    void testMetaphoneInitialAE() {
+        String result = metaphone.metaphone("AEON");
+        assertEquals("E", result);
+    }
+
+    @Test
+    void testMetaphoneInitialWR() {
+        String result = metaphone.metaphone("WRONG");
+        assertEquals("R", result);
+    }
+
+    @Test
+    void testMetaphoneInitialWH() {
+        String result = metaphone.metaphone("WHAT");
+        assertEquals("W", result);
+    }
+
+    @Test
+    void testMetaphoneInitialX1() {
+        String result = metaphone.metaphone("XENON");
+        assertEquals("S", result);
+    }
+
+    @Test
+    void testMetaphoneVowels() {
+        String result = metaphone.metaphone("AEIOU");
+        assertEquals("A", result);
+    }
+
+    @Test
+    void testMetaphoneB() {
+        String result = metaphone.metaphone("ABRACADABRA");
+        assertEquals("ABRKT", result);
+    }
+
+    @Test
+    void testMetaphoneH() {
+        String result = metaphone.metaphone("HAPPY");
+        assertEquals("P", result);
+    }
+
+    @Test
+    void testMetaphoneK() {
+        String result = metaphone.metaphone("KITCHEN");
+        assertEquals("KC", result);
+    }
+
+    @Test
+    void testMetaphoneQ() {
+        String result = metaphone.metaphone("QUIET");
+        assertEquals("K", result);
+    }
+
+    @Test
+    void testMetaphoneT() {
+        String result = metaphone.metaphone("THOR");
+        assertEquals("TR", result);
+    }
+
+    @Test
+    void testMetaphoneWY() {
+        String result = metaphone.metaphone("WYOMING");
+        assertEquals("YM", result);
+    }
+
+    @Test
+    void testMetaphoneX2() {
+        String result = metaphone.metaphone("XENON");
+        assertEquals("KS", result);
+    }
+
+    @Test
+    void testMetaphoneSilentG() {
+        String result = metaphone.metaphone("HANG");
+        assertEquals("HN", result);
+    }
+
+    @Test
+    void testMetaphoneSCH() {
+        String result = metaphone.metaphone("SCHWARTZ");
+        assertEquals("SKWR", result);
+    }
+
+    @Test
+    void testMetaphoneCIA() {
+        String result = metaphone.metaphone("FOCACCIA");
+        assertEquals("FKKX", result);
+    }
+
+    @Test
+    void testMetaphoneDGE() {
+        String result = metaphone.metaphone("EDGE");
+        assertEquals("EJ", result);
+    }
+
+    @Test
+    void testMetaphoneDGI() {
+        String result = metaphone.metaphone("DIGIT");
+        assertEquals("TJT", result);
+    }
+
+    @Test
+    void testMetaphoneGNG() {
+        String result = metaphone.metaphone("AGNOSTIC");
+        assertEquals("ANST", result);
+    }
+
+    @Test
+    void testMetaphoneGNHED() {
+        String result = metaphone.metaphone("LIGNIFIED");
+        assertEquals("LNFT", result);
+    }
+
+    @Test
+    void testMetaphonePH() {
+        String result = metaphone.metaphone("PHOTO");
+        assertEquals("FT", result);
+    }
+
+    @Test
+    void testMetaphoneSIO() {
+        String result = metaphone.metaphone("SIOUX");
+        assertEquals("XKS", result);
+    }
+
+    @Test
+    void testMetaphoneSIA() {
+        String result = metaphone.metaphone("SIAMESE");
+        assertEquals("XMS", result);
+    }
+
+    @Test
+    void testMetaphoneTIA() {
+        String result = metaphone.metaphone("NATIONAL");
+        assertEquals("NXNL", result);
+    }
+
+    @Test
+    void testMetaphoneTIO() {
+        String result = metaphone.metaphone("TIO");
+        assertEquals("X", result);
+    }
+
+    @Test
+    void testMetaphoneTCH() {
+        String result = metaphone.metaphone("ATCH");
+        assertEquals("AX", result);
+    }
+
+    @Test
+    void testMetaphoneTH() {
+        String result = metaphone.metaphone("THIS");
+        assertEquals("0S", result);
+    }
+
+    @Test
+    void testMetaphoneW() {
+        String result = metaphone.metaphone("WORLD");
+        assertEquals("WRLT", result);
+    }
+
+    @Test
+    void testMetaphoneY() {
+        String result = metaphone.metaphone("YELLOW");
+        assertEquals("YL", result);
+    }
+
+    @Test
+    void testMetaphoneX3() {
+        String result = metaphone.metaphone("AXIOM");
+        assertEquals("AKSM", result);
+    }
+
+    @Test
+    void testMetaphoneZ2() {
+        String result = metaphone.metaphone("ZEBRA");
+        assertEquals("SBR", result);
+    }
+
+    @Test
+    void testMetaphoneDuplicateC() {
+        String result = metaphone.metaphone("ACCENT");
+        assertEquals("AKNT", result);
+    }
+
+    @Test
+    void testMetaphoneSCI() {
+        String result = metaphone.metaphone("SCIENTIFIC");
+        assertEquals("STNFC", result);
+    }
+
+    @Test
+    void testMetaphoneSCE() {
+        String result = metaphone.metaphone("SCENE");
+        assertEquals("SN", result);
+    }
+
+    @Test
+    void testMetaphoneSCY() {
+        String result = metaphone.metaphone("SCYTHE");
+        assertEquals("ST", result);
+    }
+
+    @Test
+    void testMetaphoneMaxCodeLen() {
+        metaphone.setMaxCodeLen(3);
+        String result = metaphone.metaphone("EXAMPLE");
+        assertEquals("AKM", result);
+    }
+
+    @Test
+    void testMetaphoneBEnding() {
+        String result = metaphone.metaphone("LAMB");
+        assertEquals("LAM", result);
+    }
+
+    @Test
+    void testMetaphoneGEnding() {
+        String result = metaphone.metaphone("AGH");
+        assertEquals("", result);
+    }
+
+    @Test
+    void testMetaphoneHardG() {
+        String result = metaphone.metaphone("GARAGE");
+        assertEquals("KRG", result);
+    }
+
+    @Test
+    void testMetaphoneQEnding() {
+        String result = metaphone.metaphone("ARIQ");
+        assertEquals("ARK", result);
+    }
+
+    @Test
+    void testMetaphoneHNotVowel() {
+        String result = metaphone.metaphone("HONOR");
+        assertEquals("NR", result);
+    }
+
+    @Test
+    void testMetaphoneKNotInitial() {
+        String result = metaphone.metaphone("ASK");
+        assertEquals("ASK", result);
+    }
+
+    @Test
+    void testMetaphonePNotPH() {
+        String result = metaphone.metaphone("PAT");
+        assertEquals("PT", result);
+    }
+
+    @Test
+    void testMetaphoneSCH() {
+        String result = metaphone.metaphone("SCHWARTZ");
+        assertEquals("SKWR", result);
+    }
+
+    @Test
+    void testMetaphoneTCH() {
+        String result = metaphone.metaphone("TCHAIKOWSKY");
+        assertEquals("TXKSK", result);
+    }
+
+    @Test
+    void testMetaphoneTH() {
+        String result = metaphone.metaphone("THOMAS");
+        assertEquals("TMS", result);
+    }
+
+    @Test
+    void testMetaphoneV() {
+        String result = metaphone.metaphone("VAN");
+        assertEquals("FN", result);
+    }
+
+    @Test
+    void testMetaphoneW() {
+        String result = metaphone.metaphone("WING");
+        assertEquals("WNG", result);
+    }
+
+    @Test
+    void testMetaphoneY() {
+        String result = metaphone.metaphone("YARD");
+        assertEquals("YRT", result);
+    }
+
+    @Test
+    void testMetaphoneX() {
+        String result = metaphone.metaphone("XEROX");
+        assertEquals("KSKS", result);
+    }
+
+    @Test
+    void testMetaphoneZ() {
+        String result = metaphone.metaphone("ZEBRAS");
+        assertEquals("SBR", result);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Metaphone_metaphoneTestGenerated.java:[281] method testMetaphoneSCH() is already defined in class org.apache.commons.codec.language.Metaphone_metaphoneTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Metaphone_metaphoneTestGenerated.java:[287] method testMetaphoneTCH() is already defined in class org.apache.commons.codec.language.Metaphone_metaphoneTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Metaphone_metaphoneTestGenerated.java:[293] method testMetaphoneTH() is already defined in class org.apache.commons.codec.language.Metaphone_metaphoneTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Metaphone_metaphoneTestGenerated.java:[305] method testMetaphoneW() is already defined in class org.apache.commons.codec.language.Metaphone_metaphoneTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Metaphone_metaphoneTestGenerated.java:[311] method testMetaphoneY() is already defined in class org.apache.commons.codec.language.Metaphone_metaphoneTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: Metaphone_metaphoneTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

@@ -1,0 +1,23 @@
+```java
+public String toString() {
+    StringBuilder buf = new StringBuilder("[ Option ");
+    buf.append(getOpt());
+    if (getLongOpt() != null) {
+        buf.append(" ").append(getLongOpt());
+    }
+    if (isDeprecated()) {
+        buf.append(" ").append(getDeprecated());
+    }
+    if (getArgs() > 0) {
+        buf.append(" [ARG");
+        if (getArgs() > 1) {
+            buf.append("...");
+        }
+        buf.append("]");
+    }
+    buf.append(" :: ").append(getDescription());
+    buf.append(" :: ").append(getType());
+    buf.append(" ]");
+    return buf.toString();
+}
+```

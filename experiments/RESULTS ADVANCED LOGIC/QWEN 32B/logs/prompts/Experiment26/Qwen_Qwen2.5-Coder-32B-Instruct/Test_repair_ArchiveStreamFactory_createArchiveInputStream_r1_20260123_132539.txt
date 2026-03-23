@@ -1,0 +1,171 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.compress.archivers;
+Class name (MUST be exactly): ArchiveStreamFactory_createArchiveInputStreamTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.commons.compress.archivers.arj.ArjArchiveInputStream;
+import org.apache.commons.compress.archivers.dump.DumpArchiveInputStream;
+import org.apache.commons.compress.archivers.jar.JarArchiveInputStream;
+import org.apache.commons.compress.archivers.sevenz.SevenZFile;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.utils.ArchiveUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@ExtendWith(MockitoExtension.class)
+class ArchiveStreamFactory_createArchiveInputStreamTestGenerated {
+    private ArchiveStreamFactory factory;
+    private InputStream mockInputStream;
+
+    @BeforeEach
+    void setUp() {
+        factory = new ArchiveStreamFactory();
+        mockInputStream = new ByteArrayInputStream(new byte[0]);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithSevenZThrowsException() {
+        assertThrows(StreamingNotSupportedException.class, () -> factory.createArchiveInputStream(ArchiveStreamFactory.SEVEN_Z, mockInputStream, null));
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithUnknownArchiver() {
+        assertThrows(ArchiveException.class, () -> factory.createArchiveInputStream("UNKNOWN", mockInputStream, null));
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithArj() throws ArchiveException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.ARJ, mockInputStream, null);
+        assertNotNull(result);
+        assertTrue(result instanceof ArjArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithArjAndEncoding() throws ArchiveException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.ARJ, mockInputStream, "UTF-8");
+        assertNotNull(result);
+        assertTrue(result instanceof ArjArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithDump() throws ArchiveException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.DUMP, mockInputStream, null);
+        assertNotNull(result);
+        assertTrue(result instanceof DumpArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithDumpAndEncoding() throws ArchiveException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.DUMP, mockInputStream, "UTF-8");
+        assertNotNull(result);
+        assertTrue(result instanceof DumpArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithArjAndNullEncoding() throws ArchiveException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.ARJ, mockInputStream, null);
+        assertNotNull(result);
+        assertTrue(result instanceof ArjArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithDumpAndNullEncoding() throws ArchiveException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.DUMP, mockInputStream, null);
+        assertNotNull(result);
+        assertTrue(result instanceof DumpArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithJarAndEncoding() throws ArchiveException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.JAR, mockInputStream, "UTF-8");
+        assertNotNull(result);
+        assertTrue(result instanceof JarArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithJarAndNullEncoding() throws ArchiveException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.JAR, mockInputStream, null);
+        assertNotNull(result);
+        assertTrue(result instanceof JarArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithApkAndEncoding() throws ArchiveException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.APK, mockInputStream, "UTF-8");
+        assertNotNull(result);
+        assertTrue(result instanceof JarArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithApkAndNullEncoding() throws ArchiveException {
+        ArchiveInputStream result = factory.createArchiveInputStream(ArchiveStreamFactory.APK, mockInputStream, null);
+        assertNotNull(result);
+        assertTrue(result instanceof JarArchiveInputStream);
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithSevenZAndEncoding() {
+        assertThrows(StreamingNotSupportedException.class, () -> factory.createArchiveInputStream(ArchiveStreamFactory.SEVEN_Z, mockInputStream, "UTF-8"));
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithNullArchiverName() {
+        assertThrows(IllegalArgumentException.class, () -> factory.createArchiveInputStream(null, mockInputStream, null));
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithNullInputStream() {
+        assertThrows(IllegalArgumentException.class, () -> factory.createArchiveInputStream(ArchiveStreamFactory.ARJ, null, null));
+    }
+
+    @Test
+    void testCreateArchiveInputStreamWithUnknownProvider() {
+        ArchiveStreamProvider mockProvider = mock(ArchiveStreamProvider.class);
+        when(mockProvider.createArchiveInputStream(anyString(), any(InputStream.class), anyString())).thenThrow(new ArchiveException("Mock exception"));
+        SortedMap<String, ArchiveStreamProvider> providers = new TreeMap<>();
+        providers.put(ArchiveStreamFactory.toKey("UNKNOWN"), mockProvider);
+        factory.getArchiveInputStreamProviders().putAll(providers);
+        assertThrows(ArchiveException.class, () -> factory.createArchiveInputStream("UNKNOWN", mockInputStream, null));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveInputStreamTestGenerated.java:[133] cannot find symbol
+  symbol:   class SortedMap
+  location: class org.apache.commons.compress.archivers.ArchiveStreamFactory_createArchiveInputStreamTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveInputStreamTestGenerated.java:[133] cannot find symbol
+  symbol:   class TreeMap
+  location: class org.apache.commons.compress.archivers.ArchiveStreamFactory_createArchiveInputStreamTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveInputStreamTestGenerated.java:[134] toKey(java.lang.String) has private access in org.apache.commons.compress.archivers.ArchiveStreamFactory
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: ArchiveStreamFactory_createArchiveInputStreamTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

@@ -1,0 +1,115 @@
+```java
+package org.apache.commons.codec.digest;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class Md5Crypt_md5CryptTestGenerated {
+
+    private Random random;
+
+    @BeforeEach
+    void setUp() {
+        random = new SecureRandom();
+    }
+
+    @AfterEach
+    void tearDown() {
+        random = null;
+    }
+
+    @Test
+    void testMd5CryptWithNullKeyBytes() {
+        assertThrows(NullPointerException.class, () -> {
+            Md5Crypt.md5Crypt(null, "salt", "$apr1$", random);
+        });
+    }
+
+    @Test
+    void testMd5CryptWithNullSalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String result = Md5Crypt.md5Crypt(keyBytes, null, "$apr1$", random);
+        assertNotNull(result);
+        assertTrue(result.startsWith("$apr1$"));
+    }
+
+    @Test
+    void testMd5CryptWithEmptySalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, "", "$apr1$", random);
+        });
+    }
+
+    @Test
+    void testMd5CryptWithInvalidSalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Md5Crypt.md5Crypt(keyBytes, "invalidsalt", "$apr1$", random);
+        });
+    }
+
+    @Test
+    void testMd5CryptWithValidSalt() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "abcdef";
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, "$apr1$", random);
+        assertNotNull(result);
+        assertTrue(result.startsWith("$apr1$" + salt));
+    }
+
+    @Test
+    void testMd5CryptWithDefaultPrefix() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "abcdef";
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, "$apr1$", random);
+        assertNotNull(result);
+        assertTrue(result.startsWith("$apr1$" + salt));
+    }
+
+    @Test
+    void testMd5CryptWithEmptyKeyBytes() {
+        byte[] keyBytes = new byte[0];
+        String salt = "abcdef";
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, "$apr1$", random);
+        assertNotNull(result);
+        assertTrue(result.startsWith("$apr1$" + salt));
+    }
+
+    @Test
+    void testMd5CryptWithLargeKeyBytes() {
+        byte[] keyBytes = new byte[1024];
+        random.nextBytes(keyBytes);
+        String salt = "abcdef";
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, "$apr1$", random);
+        assertNotNull(result);
+        assertTrue(result.startsWith("$apr1$" + salt));
+    }
+
+    @Test
+    void testMd5CryptWithSecureRandom() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "abcdef";
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, "$apr1$", new SecureRandom());
+        assertNotNull(result);
+        assertTrue(result.startsWith("$apr1$" + salt));
+    }
+
+    @Test
+    void testMd5CryptWithCustomRandom() {
+        byte[] keyBytes = "password".getBytes(StandardCharsets.UTF_8);
+        String salt = "abcdef";
+        String result = Md5Crypt.md5Crypt(keyBytes, salt, "$apr1$", new Random(12345));
+        assertNotNull(result);
+        assertTrue(result.startsWith("$apr1$" + salt));
+    }
+}
+```

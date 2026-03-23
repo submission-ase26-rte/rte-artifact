@@ -1,0 +1,147 @@
+package org.apache.commons.codec.language;
+
+import org.apache.commons.codec.language.Caverphone2;
+import org.apache.commons.codec.language.SoundexUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Caverphone2_encodeTestGenerated {
+    private Caverphone2 caverphone2;
+
+    @BeforeEach
+    public void setUp() {
+        caverphone2 = new Caverphone2();
+    }
+
+    @Test
+    public void testEmptyString() {
+        String result = caverphone2.encode("");
+        assertEquals("1111111111", result);
+    }
+
+    @Test
+    public void testNullString() {
+        String result = caverphone2.encode(null);
+        assertEquals("1111111111", result);
+    }
+
+    @Test
+    public void testSingleCharacter() {
+        String result = caverphone2.encode("a");
+        assertEquals("A111111111", result);
+    }
+
+    @Test
+    public void testMultipleCharacters() {
+        String result = caverphone2.encode("example");
+        assertEquals("AKMPA11111", result);
+    }
+
+    @Test
+    public void testUpperCaseString() {
+        String result = caverphone2.encode("EXAMPLE");
+        assertEquals("AKMPA11111", result);
+    }
+
+    @Test
+    public void testSpecialCharacters() {
+        String result = caverphone2.encode("ex@mpl3!");
+        assertEquals("AKMPA11111", result);
+    }
+
+    @Test
+    public void testFinalE() {
+        String result = caverphone2.encode("cave");
+        assertEquals("KF11111111", result);
+    }
+
+    @Test
+    public void testStartOptions() {
+        assertEquals("KF11111111", caverphone2.encode("Cough"));
+        assertEquals("ROU2F", caverphone2.encode("Rough"));
+        assertEquals("TOU2F", caverphone2.encode("Tough"));
+        assertEquals("ENOU2F", caverphone2.encode("Enough"));
+        assertEquals("TROU2F", caverphone2.encode("Trough"));
+        assertEquals("2N", caverphone2.encode("Gn"));
+    }
+
+    @Test
+    public void testEndOptions() {
+        assertEquals("KM11111111", caverphone2.encode("Cmb"));
+    }
+
+    @Test
+    public void testReplacements() {
+        assertEquals("K111111111", caverphone2.encode("Cq"));
+        assertEquals("SI", caverphone2.encode("Ci"));
+        assertEquals("SE", caverphone2.encode("Ce"));
+        assertEquals("SY", caverphone2.encode("Cy"));
+        assertEquals("2CH", caverphone2.encode("Tch"));
+        assertEquals("K", caverphone2.encode("C"));
+        assertEquals("K", caverphone2.encode("Q"));
+        assertEquals("K", caverphone2.encode("X"));
+        assertEquals("F", caverphone2.encode("V"));
+        assertEquals("2G", caverphone2.encode("Dg"));
+        assertEquals("SIO", caverphone2.encode("Tio"));
+        assertEquals("SIA", caverphone2.encode("Tia"));
+        assertEquals("T", caverphone2.encode("D"));
+        assertEquals("FH", caverphone2.encode("Ph"));
+        assertEquals("P", caverphone2.encode("B"));
+        assertEquals("S2", caverphone2.encode("Sh"));
+        assertEquals("S", caverphone2.encode("Z"));
+        assertEquals("A", caverphone2.encode("A"));
+        assertEquals("A", caverphone2.encode("E"));
+        assertEquals("A", caverphone2.encode("I"));
+        assertEquals("A", caverphone2.encode("O"));
+        assertEquals("A", caverphone2.encode("U"));
+        assertEquals("3", caverphone2.encode("Aeio"));
+        assertEquals("Y", caverphone2.encode("J"));
+        assertEquals("Y3", caverphone2.encode("Y3"));
+        assertEquals("A", caverphone2.encode("Y"));
+        assertEquals("A", caverphone2.encode("Yy"));
+        assertEquals("3KH3", caverphone2.encode("3gh3"));
+        assertEquals("22", caverphone2.encode("Gh"));
+        assertEquals("K", caverphone2.encode("G"));
+        assertEquals("S", caverphone2.encode("S"));
+        assertEquals("T", caverphone2.encode("T"));
+        assertEquals("P", caverphone2.encode("P"));
+        assertEquals("K", caverphone2.encode("K"));
+        assertEquals("F", caverphone2.encode("F"));
+        assertEquals("M", caverphone2.encode("M"));
+        assertEquals("N", caverphone2.encode("N"));
+        assertEquals("W3", caverphone2.encode("W3"));
+        assertEquals("WH3", caverphone2.encode("Wh3"));
+        assertEquals("3", caverphone2.encode("W"));
+        assertEquals("2", caverphone2.encode("W"));
+        assertEquals("A", caverphone2.encode("H"));
+        assertEquals("2", caverphone2.encode("Hh"));
+        assertEquals("R3", caverphone2.encode("R3"));
+        assertEquals("3", caverphone2.encode("Rr"));
+        assertEquals("2", caverphone2.encode("R"));
+        assertEquals("L3", caverphone2.encode("L3"));
+        assertEquals("3", caverphone2.encode("Ll"));
+        assertEquals("2", caverphone2.encode("L"));
+    }
+
+    @Test
+    public void testRemovals() {
+        assertEquals("K111111111", caverphone2.encode("K2"));
+        assertEquals("A111111111", caverphone2.encode("3"));
+        assertEquals("K111111111", caverphone2.encode("K3"));
+    }
+
+    @Test
+    public void testFinalResult() {
+        assertEquals("KF11111111", caverphone2.encode("Cave"));
+        assertEquals("A111111111", caverphone2.encode("A"));
+        assertEquals("A111111111", caverphone2.encode("E"));
+        assertEquals("A111111111", caverphone2.encode("I"));
+        assertEquals("A111111111", caverphone2.encode("O"));
+        assertEquals("A111111111", caverphone2.encode("U"));
+        assertEquals("A111111111", caverphone2.encode("Y"));
+    }
+
+}

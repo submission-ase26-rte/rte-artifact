@@ -1,0 +1,146 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language.bm;
+Class name (MUST be exactly): PhoneticEngine_encodeTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.codec.language.bm;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+import org.apache.commons.codec.language.bm.Languages;
+import org.apache.commons.codec.language.bm.Phoneme;
+import org.apache.commons.codec.language.bm.Rule;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class PhoneticEngine_encodeTestGenerated {
+
+    @Mock
+    private Languages.LanguageSet languageSet;
+    @Mock
+    private Rule rule;
+    @Mock
+    private Phoneme phoneme;
+    @Mock
+    private PhonemeBuilder phonemeBuilder;
+    @Mock
+    private Map<String, List<Rule>> rules;
+    @Mock
+    private Map<String, List<Rule>> finalRules1;
+    @Mock
+    private Map<String, List<Rule>> finalRules2;
+
+    private PhoneticEngine phoneticEngine;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
+        when(languageSet.getLanguages()).thenReturn(new HashSet<>());
+        phoneticEngine = Mockito.mock(PhoneticEngine.class);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.reset(phoneticEngine, languageSet, rule, phoneme, phonemeBuilder, rules, finalRules1, finalRules2);
+    }
+
+    @Test
+    void testEncode_simpleName() {
+        when(phoneticEngine.encode("John", languageSet)).thenReturn("jhon");
+        assertEquals("jhon", phoneticEngine.encode("John", languageSet));
+    }
+
+    @Test
+    void testEncode_withDPrime() {
+        when(phoneticEngine.encode("d'Angelo", languageSet)).thenReturn("(d'angelo)");
+        assertEquals("(d'angelo)", phoneticEngine.encode("d'Angelo", languageSet));
+    }
+
+    @Test
+    void testEncode_withGenericPrefix() {
+        when(phoneticEngine.encode("MacDonald", languageSet)).thenReturn("(macdonald)");
+        assertEquals("(macdonald)", phoneticEngine.encode("MacDonald", languageSet));
+    }
+
+    @Test
+    void testEncode_sephardicName() {
+        phoneticEngine = new PhoneticEngine(NameType.SEPHARDIC, RuleType.RULES, false);
+        when(phoneticEngine.encode("Ben'Eliahu", languageSet)).thenReturn("eliahu");
+        assertEquals("eliahu", phoneticEngine.encode("Ben'Eliahu", languageSet));
+    }
+
+    @Test
+    void testEncode_ashkenaziName() {
+        phoneticEngine = new PhoneticEngine(NameType.ASHKENAZI, RuleType.RULES, false);
+        when(phoneticEngine.encode("Goldberg", languageSet)).thenReturn("goldberg");
+        assertEquals("goldberg", phoneticEngine.encode("Goldberg", languageSet));
+    }
+
+    @Test
+    void testEncode_multiWordName() {
+        when(phoneticEngine.encode("John Smith", languageSet)).thenReturn("john-smith");
+        assertEquals("john-smith", phoneticEngine.encode("John Smith", languageSet));
+    }
+
+    @Test
+    void testEncode_concatMode() {
+        phoneticEngine = new PhoneticEngine(NameType.GENERIC, RuleType.RULES, true);
+        when(phoneticEngine.encode("John Smith", languageSet)).thenReturn("john smith");
+        assertEquals("john smith", phoneticEngine.encode("John Smith", languageSet));
+    }
+
+    @Test
+    void testEncode_emptyInput() {
+        assertEquals("", phoneticEngine.encode("", languageSet));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[22] cannot find symbol
+  symbol:   class Phoneme
+  location: package org.apache.commons.codec.language.bm
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[39] cannot find symbol
+  symbol:   class Phoneme
+  location: class org.apache.commons.codec.language.bm.PhoneticEngine_encodeTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[41] cannot find symbol
+  symbol:   class PhonemeBuilder
+  location: class org.apache.commons.codec.language.bm.PhoneticEngine_encodeTestGenerated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngine_encodeTestGenerated.java:[54] cannot find symbol
+  symbol:   method getLanguages()
+  location: variable languageSet of type org.apache.commons.codec.language.bm.Languages.LanguageSet
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: PhoneticEngine_encodeTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

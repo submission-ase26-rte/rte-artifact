@@ -1,0 +1,151 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.web.jsf;
+Class name (MUST be exactly): TradeConfigJSF_updateConfigTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.web.jsf;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.MockedStatic;
+
+import javax.faces.context.ExternalContext;
+import javax.servlet.http.HttpSession;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeConfigJSF_updateConfigTestGenerated {
+
+    @Mock
+    private ExternalContext context;
+
+    @Mock
+    private TradeDirectDBUtils dbUtils;
+
+    @InjectMocks
+    private TradeConfigJSF tradeConfigJSF;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        tradeConfigJSF.setRuntimeModeList(new String[]{"RuntimeMode1", "RuntimeMode2"});
+        tradeConfigJSF.setOrderProcessingModeList(new String[]{"OrderProcessingMode1", "OrderProcessingMode2"});
+        tradeConfigJSF.setWebInterfaceList(new String[]{"WebInterface1", "WebInterface2"});
+    }
+
+    @AfterEach
+    public void tearDown() {
+        tradeConfigJSF = null;
+    }
+
+    @Test
+    public void testUpdateConfigWithValidInputs() {
+        tradeConfigJSF.setRuntimeMode("RuntimeMode1");
+        tradeConfigJSF.setOrderProcessingMode("OrderProcessingMode1");
+        tradeConfigJSF.setWebInterface("WebInterface1");
+        tradeConfigJSF.setMaxUsers(100);
+        tradeConfigJSF.setMaxQuotes(1000);
+        tradeConfigJSF.setMarketSummaryInterval(60);
+        tradeConfigJSF.setPrimIterations(10);
+        tradeConfigJSF.setPublishQuotePriceChange(true);
+        tradeConfigJSF.setListQuotePriceChangeFrequency(50);
+        tradeConfigJSF.setLongRun(true);
+        tradeConfigJSF.setDisplayOrderAlerts(true);
+
+        tradeConfigJSF.updateConfig();
+
+        assertEquals("RuntimeMode1", TradeConfig.getRunTimeModeNames()[TradeConfig.getRunTimeMode()]);
+        assertEquals("OrderProcessingMode1", TradeConfig.getOrderProcessingModeNames()[TradeConfig.getOrderProcessingMode()]);
+        assertEquals("WebInterface1", TradeConfig.getWebInterfaceNames()[TradeConfig.getWebInterface()]);
+        assertEquals(100, TradeConfig.getMAX_USERS());
+        assertEquals(1000, TradeConfig.getMAX_QUOTES());
+        assertEquals(60, TradeConfig.getMarketSummaryInterval());
+        assertEquals(10, TradeConfig.getPrimIterations());
+        assertTrue(TradeConfig.getPublishQuotePriceChange());
+        assertEquals(50, TradeConfig.getListQuotePriceChangeFrequency());
+        assertTrue(TradeConfig.getLongRun());
+        assertTrue(TradeConfig.getDisplayOrderAlerts());
+        assertEquals("DayTrader Configuration Updated", tradeConfigJSF.getResult());
+    }
+
+    @Test
+    public void testUpdateConfigWithInvalidOrderProcessingMode() {
+        tradeConfigJSF.setOrderProcessingMode("InvalidMode");
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            tradeConfigJSF.updateConfig();
+
+            mockedLog.verify(() -> Log.error(any(Exception.class), eq("TradeConfigJSF.updateConfig(..): minor exception caught"), eq("trying to set orderProcessing to InvalidMode"), eq("reverting to current value")));
+        }
+
+        assertEquals("OrderProcessingMode1", TradeConfig.getOrderProcessingModeNames()[TradeConfig.getOrderProcessingMode()]);
+    }
+
+    @Test
+    public void testUpdateConfigWithInvalidWebInterface() {
+        tradeConfigJSF.setWebInterface("InvalidInterface");
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            tradeConfigJSF.updateConfig();
+
+            mockedLog.verify(() -> Log.error(any(Exception.class), eq("TradeConfigJSF.updateConfig(..): minor exception caught"), eq("trying to set WebInterface to InvalidInterface"), eq("reverting to current value")));
+        }
+
+        assertEquals("WebInterface1", TradeConfig.getWebInterfaceNames()[TradeConfig.getWebInterface()]);
+    }
+
+    @Test
+    public void testUpdateConfigWithNullOrderProcessingMode() {
+        tradeConfigJSF.setOrderProcessingMode(null);
+
+        tradeConfigJSF.updateConfig();
+
+        assertEquals("OrderProcessingMode1", TradeConfig.getOrderProcessingModeNames()[TradeConfig.getOrderProcessingMode()]);
+    }
+
+    @Test
+    public void testUpdateConfigWithNullWebInterface() {
+        tradeConfigJSF.setWebInterface(null);
+
+        tradeConfigJSF.updateConfig();
+
+        assertEquals("WebInterface1", TradeConfig.getWebInterfaceNames()[TradeConfig.getWebInterface()]);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/web/jsf/TradeConfigJSF_updateConfigTestGenerated.java:[53] cannot find symbol
+  symbol:   method setMaxQuotes(int)
+  location: variable tradeConfigJSF of type com.ibm.websphere.samples.daytrader.web.jsf.TradeConfigJSF
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- DO NOT mock javax.servlet classes directly (ServletOutputStream, etc.) - use MockHttpServletRequest/Response from spring-test instead
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- For static method calls, ensure mockStatic is properly closed (use try-with-resources)
+- Keep the SAME class name: TradeConfigJSF_updateConfigTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

@@ -1,0 +1,144 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.compress.archivers;
+Class name (MUST be exactly): ArchiveStreamFactory_createArchiveOutputStreamTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.compress.archivers;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.StreamingNotSupportedException;
+import org.apache.commons.compress.archivers.ar.ArArchiveOutputStream;
+import org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream;
+import org.apache.commons.compress.archivers.jar.JarArchiveOutputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.utils.CharsetNames;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.io.TempDir;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArchiveStreamFactory_createArchiveOutputStreamTestGenerated {
+    private ArchiveStreamFactory factory;
+    private ByteArrayOutputStream outputStream;
+
+    @BeforeEach
+    public void setUp() {
+        factory = new ArchiveStreamFactory();
+        outputStream = new ByteArrayOutputStream();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+            fail("Failed to close output stream", e);
+        }
+    }
+
+    @Test
+    public void testCreateArchiveOutputStreamWithUnknownArchiver() {
+        assertThrows(ArchiveException.class, () -> {
+            factory.createArchiveOutputStream("UNKNOWN", outputStream, "UTF-8");
+        });
+    }
+
+    @Test
+    public void testCreateArchiveOutputStreamWithSevenZ() {
+        assertThrows(StreamingNotSupportedException.class, () -> {
+            factory.createArchiveOutputStream(ArchiveStreamFactory.SEVEN_Z, outputStream, "UTF-8");
+        });
+    }
+
+    @Test
+    public void testCreateArchiveOutputStreamWithNullArchiverName() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            factory.createArchiveOutputStream(null, outputStream, "UTF-8");
+        });
+    }
+
+    @Test
+    public void testCreateArchiveOutputStreamWithNullOutputStream() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            factory.createArchiveOutputStream(ArchiveStreamFactory.ZIP, null, "UTF-8");
+        });
+    }
+
+    @Test
+    public void testCreateArchiveOutputStreamWithAr() {
+        assertNotNull(factory.createArchiveOutputStream(ArchiveStreamFactory.AR, outputStream, null));
+    }
+
+    @Test
+    public void testCreateArchiveOutputStreamWithZipAndEncoding() {
+        assertNotNull(factory.createArchiveOutputStream(ArchiveStreamFactory.ZIP, outputStream, "UTF-8"));
+    }
+
+    @Test
+    public void testCreateArchiveOutputStreamWithZipAndDefaultEncoding() {
+        assertNotNull(factory.createArchiveOutputStream(ArchiveStreamFactory.ZIP, outputStream, null));
+    }
+
+    @Test
+    public void testCreateArchiveOutputStreamWithJarAndEncoding() {
+        assertNotNull(factory.createArchiveOutputStream(ArchiveStreamFactory.JAR, outputStream, "UTF-8"));
+    }
+
+    @Test
+    public void testCreateArchiveOutputStreamWithJarAndDefaultEncoding() {
+        assertNotNull(factory.createArchiveOutputStream(ArchiveStreamFactory.JAR, outputStream, null));
+    }
+
+    @Test
+    public void testCreateArchiveOutputStreamWithTarAndEncoding() {
+        assertNotNull(factory.createArchiveOutputStream(ArchiveStreamFactory.TAR, outputStream, "UTF-8"));
+    }
+
+    @Test
+    public void testCreateArchiveOutputStreamWithTarAndDefaultEncoding() {
+        assertNotNull(factory.createArchiveOutputStream(ArchiveStreamFactory.TAR, outputStream, null));
+    }
+
+    @Test
+    public void testCreateArchiveOutputStreamWithCpioAndEncoding() {
+        assertNotNull(factory.createArchiveOutputStream(ArchiveStreamFactory.CPIO, outputStream, "UTF-8"));
+    }
+
+    @Test
+    public void testCreateArchiveOutputStreamWithCpioAndDefaultEncoding() {
+        assertNotNull(factory.createArchiveOutputStream(ArchiveStreamFactory.CPIO, outputStream, null));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveOutputStreamTestGenerated.java:[71] unreported exception org.apache.commons.compress.archivers.ArchiveException; must be caught or declared to be thrown
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveOutputStreamTestGenerated.java:[76] unreported exception org.apache.commons.compress.archivers.ArchiveException; must be caught or declared to be thrown
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveOutputStreamTestGenerated.java:[81] unreported exception org.apache.commons.compress.archivers.ArchiveException; must be caught or declared to be thrown
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveOutputStreamTestGenerated.java:[86] unreported exception org.apache.commons.compress.archivers.ArchiveException; must be caught or declared to be thrown
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveOutputStreamTestGenerated.java:[91] unreported exception org.apache.commons.compress.archivers.ArchiveException; must be caught or declared to be thrown
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveOutputStreamTestGenerated.java:[96] unreported exception org.apache.commons.compress.archivers.ArchiveException; must be caught or declared to be thrown
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveOutputStreamTestGenerated.java:[101] unreported exception org.apache.commons.compress.archivers.ArchiveException; must be caught or declared to be thrown
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveOutputStreamTestGenerated.java:[106] unreported exception org.apache.commons.compress.archivers.ArchiveException; must be caught or declared to be thrown
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Compress/Run-1/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactory_createArchiveOutputStreamTestGenerated.java:[111] unreported exception org.apache.commons.compress.archivers.ArchiveException; must be caught or declared to be thrown
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: ArchiveStreamFactory_createArchiveOutputStreamTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

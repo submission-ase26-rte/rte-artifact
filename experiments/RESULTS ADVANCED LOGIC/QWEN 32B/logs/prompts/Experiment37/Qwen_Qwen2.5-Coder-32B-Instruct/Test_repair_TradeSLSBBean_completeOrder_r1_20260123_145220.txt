@@ -1,0 +1,145 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.ejb3;
+Class name (MUST be exactly): TradeSLSBBean_completeOrderTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package com.ibm.websphere.samples.daytrader.impl.ejb3;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.RuntimeMode;
+import com.ibm.websphere.samples.daytrader.interfaces.Trace;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeEJB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.FinancialUtils;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import javax.ejb.EJBException;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeSLSBBean_completeOrderTestGenerated {
+    @Mock
+    private EntityManager entityManager;
+    @InjectMocks
+    private TradeSLSBBean tradeSLSBBean;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testCompleteOrder_OrderNotFound() {
+        when(entityManager.find(OrderDataBean.class, 1)).thenReturn(null);
+        assertThrows(EJBException.class, () -> tradeSLSBBean.completeOrder(1, false));
+    }
+
+    @Test
+    public void testCompleteOrder_OrderAlreadyCompleted() {
+        OrderDataBean order = new OrderDataBean();
+        order.setOrderStatus("completed");
+        when(entityManager.find(OrderDataBean.class, 1)).thenReturn(order);
+        tradeSLSBBean.completeOrder(1, false);
+        verify(entityManager, never()).merge(any(OrderDataBean.class));
+    }
+
+    @Test
+    public void testCompleteOrder_OrderCancelled() {
+        OrderDataBean order = new OrderDataBean();
+        order.setOrderStatus("cancelled");
+        when(entityManager.find(OrderDataBean.class, 1)).thenReturn(order);
+        tradeSLSBBean.completeOrder(1, false);
+        verify(entityManager, never()).merge(any(OrderDataBean.class));
+    }
+
+    @Test
+    public void testCompleteOrder_OrderOpen() {
+        OrderDataBean order = new OrderDataBean();
+        order.setOrderStatus("open");
+        order.setOrderType("buy");
+        order.setQuantity(10);
+        order.setPrice(new BigDecimal("100.00"));
+        order.setOrderFee(TradeConfig.getOrderFee("buy"));
+        order.setCompletionDate(new Timestamp(System.currentTimeMillis()));
+        AccountDataBean account = new AccountDataBean();
+        account.setBalance(new BigDecimal("1000.00"));
+        order.setAccount(account);
+        QuoteDataBean quote = new QuoteDataBean("SUNW", "Sun Microsystems", 100000, new BigDecimal("100.00"), new BigDecimal("100.00"), new BigDecimal("100.00"), new BigDecimal("100.00"), 0.0);
+        when(entityManager.find(OrderDataBean.class, 1)).thenReturn(order);
+        when(entityManager.find(QuoteDataBean.class, "SUNW")).thenReturn(quote);
+        when(entityManager.find(AccountDataBean.class, account.getAccountID())).thenReturn(account);
+        tradeSLSBBean.completeOrder(1, false);
+        verify(entityManager).merge(order);
+        verify(entityManager).merge(account);
+    }
+
+    @Test
+    public void testCompleteOrder_OrderOpenSell() {
+        OrderDataBean order = new OrderDataBean();
+        order.setOrderStatus("open");
+        order.setOrderType("sell");
+        order.setQuantity(10);
+        order.setPrice(new BigDecimal("100.00"));
+        order.setOrderFee(TradeConfig.getOrderFee("sell"));
+        order.setCompletionDate(new Timestamp(System.currentTimeMillis()));
+        AccountDataBean account = new AccountDataBean();
+        account.setBalance(new BigDecimal("1000.00"));
+        order.setAccount(account);
+        QuoteDataBean quote = new QuoteDataBean("SUNW", "Sun Microsystems", 100000, new BigDecimal("100.00"), new BigDecimal("100.00"), new BigDecimal("100.00"), new BigDecimal("100.00"), 0.0);
+        HoldingDataBean holding = new HoldingDataBean();
+        holding.setQuantity(10);
+        holding.setPurchasePrice(new BigDecimal("100.00"));
+        holding.setQuote(quote);
+        when(entityManager.find(OrderDataBean.class, 1)).thenReturn(order);
+        when(entityManager.find(QuoteDataBean.class, "SUNW")).thenReturn(quote);
+        when(entityManager.find(AccountDataBean.class, account.getAccountID())).thenReturn(account);
+        when(entityManager.find(HoldingDataBean.class, holding.getHoldingID())).thenReturn(holding);
+        tradeSLSBBean.completeOrder(1, false);
+        verify(entityManager).merge(order);
+        verify(entityManager).merge(account);
+        verify(entityManager).merge(holding);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[55] unreported exception java.lang.Exception; must be caught or declared to be thrown
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[64] unreported exception java.lang.Exception; must be caught or declared to be thrown
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[84] unreported exception java.lang.Exception; must be caught or declared to be thrown
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Daytrader/Run-1/src/test/java/com/ibm/websphere/samples/daytrader/impl/ejb3/TradeSLSBBean_completeOrderTestGenerated.java:[110] unreported exception java.lang.Exception; must be caught or declared to be thrown
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: TradeSLSBBean_completeOrderTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

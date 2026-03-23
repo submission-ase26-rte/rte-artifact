@@ -1,0 +1,78 @@
+```java
+@Override
+public void performTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    String action = req.getParameter("action");
+    String contentType = "text/html";
+    resp.setContentType(contentType);
+
+    String userID = TradeConfig.getUserID();
+    if (userID == null) {
+        resp.getWriter().write("login");
+        return;
+    }
+
+    HttpSession session = req.getSession(false);
+    if (session == null) {
+        resp.getWriter().write("login");
+        return;
+    }
+
+    char scenarioAction = TradeConfig.getScenarioAction(false);
+    if (action == null || action.isEmpty()) {
+        action = String.valueOf(scenarioAction);
+    }
+
+    PrintWriter out = resp.getWriter();
+    try {
+        switch (action) {
+            case "a":
+                out.write("account");
+                break;
+            case "h":
+                out.write("home");
+                break;
+            case "l":
+                TradeConfig.incrementScenarioCount();
+                out.write("login");
+                break;
+            case "o":
+                out.write("logout");
+                break;
+            case "p":
+                out.write("portfolio");
+                break;
+            case "s":
+                Collection<HoldingDataBean> holdings = (Collection<HoldingDataBean>) req.getAttribute("holdingDataBeans");
+                if (holdings != null && !holdings.isEmpty()) {
+                    out.write("portfolioNoEdge");
+                } else {
+                    out.write("portfolio");
+                }
+                break;
+            case "b":
+                out.write("symbol");
+                break;
+            case "n":
+                out.write("Hello");
+                break;
+            case "q":
+                out.write("symbol");
+                break;
+            case "u":
+                out.write("account");
+                break;
+            case "r":
+                out.write("register");
+                break;
+            case "z":
+                out.write("symbol");
+                break;
+            default:
+                throw new ServletException("Invalid action: " + action);
+        }
+    } catch (Exception e) {
+        Log.error("Error processing request: " + e.getMessage());
+        throw new ServletException("Error processing request", e);
+    }
+}
+```

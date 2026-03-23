@@ -1,0 +1,297 @@
+{
+  "experiments": {
+    "version_": {
+      "tested_method": "addVisit",
+      "similarity_threshold": 0.7,
+      "passes_evaluation": true,
+      "timestamp": "2026-01-23T15:45:53.078219",
+      "executed_phases": {
+        "first_phase": true,
+        "second_phase": true
+      },
+      "metrics": {
+        "crystalbleu_similarity": 0.8597216076754878,
+        "string_similarity": 0.7919463087248322,
+        "token_similarity": 0.8181818181818182,
+        "ast_similarity": 0.7142857142857143,
+        "embedding_similarity": 0.9762473106384277,
+        "clone_detection": {
+          "exact_match": false,
+          "clone_percentage": 0.7,
+          "similar_blocks": 7,
+          "total_blocks": 20
+        },
+        "weights": {
+          "crystalbleu_similarity": 0.2,
+          "string_similarity": 0.08,
+          "token_similarity": 0.15,
+          "ast_similarity": 0.22,
+          "embedding_similarity": 0.35
+        },
+        "overall_similarity": 0.8568567148266637,
+        "passes_threshold": true
+      },
+      "test_results": {
+        "original": {
+          "success": true,
+          "tests_passed": 4,
+          "tests_total": 4,
+          "tests_failed": 0,
+          "line_coverage": 100.0,
+          "branch_coverage": 0.0,
+          "has_compilation_errors": false,
+          "test_info": {
+            "valid_tests": [
+              "testAddVisitWithValidPetIdAndVisit",
+              "testAddVisitWithNullPetId",
+              "testAddVisitWithNullVisit",
+              "testAddVisitWithInvalidPetId"
+            ],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          }
+        },
+        "regenerated": {
+          "success": true,
+          "tests_passed": 4,
+          "tests_total": 4,
+          "tests_failed": 0,
+          "line_coverage": 100.0,
+          "branch_coverage": 100.0,
+          "has_compilation_errors": false,
+          "test_info": {
+            "valid_tests": [
+              "testAddVisitWithValidPetIdAndVisit",
+              "testAddVisitWithNullPetId",
+              "testAddVisitWithNullVisit",
+              "testAddVisitWithInvalidPetId"
+            ],
+            "invalid_tests": [],
+            "failed_assert_tests": [],
+            "runtime_error_tests": []
+          }
+        }
+      },
+      "test_filtering": {},
+      "context": {
+        "dependency_selection": {
+          "active": true,
+          "method": "structural",
+          "top_k": null,
+          "weights": null,
+          "selected_classes": [
+            {
+              "class": "Pet",
+              "score": null,
+              "norm_score": null,
+              "rank": null
+            }
+          ],
+          "rankings": {},
+          "project_type_flags": {
+            "has_servlet": false,
+            "has_spring": true,
+            "has_jpa": true,
+            "has_ejb": false,
+            "has_cdi": false,
+            "has_jndi": false,
+            "has_static_utils": false
+          }
+        }
+      },
+      "paths": {
+        "original_file": "./../JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+        "regenerated_file": "results/outputs\\Final_Owner_addVisit.java"
+      },
+      "original_metrics": {
+        "loc": 16,
+        "sloc": 7,
+        "complexity": 1
+      },
+      "retry_history": [
+        {
+          "repair_iteration": 1,
+          "has_compilation_errors": true,
+          "compilation_errors": "/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/Owner_addVisitTestGenerated.java:[44] cannot find symbol\n  symbol:   method setPets(java.util.List<org.springframework.samples.petclinic.owner.Pet>)\n  location: variable owner of type org.springframework.samples.petclinic.owner.Owner",
+          "test_results": {
+            "tests_passed": 0,
+            "tests_total": 0,
+            "tests_failed": 0,
+            "line_coverage": 0.0,
+            "branch_coverage": 0.0,
+            "valid_tests": [],
+            "invalid_tests": []
+          },
+          "type": "repair"
+        },
+        {
+          "type": "initial_test_execution",
+          "test_results_originale": {
+            "tests_passed": 4,
+            "tests_total": 4,
+            "tests_failed": 0,
+            "line_coverage": 100.0,
+            "branch_coverage": 0.0,
+            "test_info": {
+              "valid_tests": [
+                "testAddVisitWithValidPetIdAndVisit",
+                "testAddVisitWithNullPetId",
+                "testAddVisitWithNullVisit",
+                "testAddVisitWithInvalidPetId"
+              ],
+              "invalid_tests": [],
+              "failed_assert_tests": [],
+              "runtime_error_tests": []
+            }
+          }
+        },
+        {
+          "type": "initial_regenerated_test_execution",
+          "test_results_rigenerato": {
+            "tests_passed": 4,
+            "tests_total": 4,
+            "tests_failed": 0,
+            "line_coverage": 100.0,
+            "branch_coverage": 100.0,
+            "test_info": {
+              "valid_tests": [
+                "testAddVisitWithValidPetIdAndVisit",
+                "testAddVisitWithNullPetId",
+                "testAddVisitWithNullVisit",
+                "testAddVisitWithInvalidPetId"
+              ],
+              "invalid_tests": [],
+              "failed_assert_tests": [],
+              "runtime_error_tests": []
+            }
+          }
+        },
+        {
+          "type": "initial_method_generation",
+          "refinement_iteration": 0,
+          "original_method": "\t/**\n\t * Adds the given {@link Visit} to the {@link Pet} with the given identifier.\n\t * @param petId the identifier of the {@link Pet}, must not be {@literal null}.\n\t * @param visit the visit to add, must not be {@literal null}.\n\t */\n\tpublic void addVisit(Integer petId, Visit visit) {\n\n\t\tAssert.notNull(petId, \"Pet identifier must not be null!\");\n\t\tAssert.notNull(visit, \"Visit must not be null!\");\n\n\t\tPet pet = getPet(petId);\n\n\t\tAssert.notNull(pet, \"Invalid Pet identifier!\");\n\n\t\tpet.addVisit(visit);\n\t}",
+          "regenerated_method": "public void addVisit(Integer petId, Visit visit) {\n    Assert.notNull(petId, \"Pet identifier must not be null!\");\n    Assert.notNull(visit, \"Visit must not be null!\");\n    Pet pet = getPet(petId);\n    if (pet == null) {\n        throw new IllegalArgumentException(\"Invalid Pet identifier!\");\n    }\n    pet.addVisit(visit);\n}",
+          "overall_similarity": 0.8568567148266637,
+          "passes_threshold": true,
+          "similarity_metrics": {
+            "crystalbleu_similarity": 0.8597216076754878,
+            "string_similarity": 0.7919463087248322,
+            "token_similarity": 0.8181818181818182,
+            "ast_similarity": 0.7142857142857143,
+            "embedding_similarity": 0.9762473106384277,
+            "clone_detection": {
+              "exact_match": false,
+              "clone_percentage": 0.7,
+              "similar_blocks": 7,
+              "total_blocks": 20
+            },
+            "weights": {
+              "crystalbleu_similarity": 0.2,
+              "string_similarity": 0.08,
+              "token_similarity": 0.15,
+              "ast_similarity": 0.22,
+              "embedding_similarity": 0.35
+            },
+            "overall_similarity": 0.8568567148266637,
+            "passes_threshold": true
+          },
+          "test_results_originale": {
+            "tests_passed": 4,
+            "tests_total": 4,
+            "tests_failed": 0,
+            "line_coverage": 100.0,
+            "branch_coverage": 0.0,
+            "test_info": {
+              "valid_tests": [
+                "testAddVisitWithValidPetIdAndVisit",
+                "testAddVisitWithNullPetId",
+                "testAddVisitWithNullVisit",
+                "testAddVisitWithInvalidPetId"
+              ],
+              "invalid_tests": [],
+              "failed_assert_tests": [],
+              "runtime_error_tests": []
+            }
+          },
+          "test_results_rigenerato": {
+            "tests_passed": 4,
+            "tests_total": 4,
+            "tests_failed": 0,
+            "line_coverage": 100.0,
+            "branch_coverage": 100.0,
+            "test_info": {
+              "valid_tests": [
+                "testAddVisitWithValidPetIdAndVisit",
+                "testAddVisitWithNullPetId",
+                "testAddVisitWithNullVisit",
+                "testAddVisitWithInvalidPetId"
+              ],
+              "invalid_tests": [],
+              "failed_assert_tests": [],
+              "runtime_error_tests": []
+            }
+          }
+        }
+      ],
+      "original_method_display": "\t/**\n\t * Adds the given {@link Visit} to the {@link Pet} with the given identifier.\n\t * @param petId the identifier of the {@link Pet}, must not be {@literal null}.\n\t * @param visit the visit to add, must not be {@literal null}.\n\t */\n\tpublic void addVisit(Integer petId, Visit visit) {\n\n\t\tAssert.notNull(petId, \"Pet identifier must not be null!\");\n\t\tAssert.notNull(visit, \"Visit must not be null!\");\n\n\t\tPet pet = getPet(petId);\n\n\t\tAssert.notNull(pet, \"Invalid Pet identifier!\");\n\n\t\tpet.addVisit(visit);\n\t}",
+      "regenerated_method_display": "public void addVisit(Integer petId, Visit visit) {\n    Assert.notNull(petId, \"Pet identifier must not be null!\");\n    Assert.notNull(visit, \"Visit must not be null!\");\n    Pet pet = getPet(petId);\n    if (pet == null) {\n        throw new IllegalArgumentException(\"Invalid Pet identifier!\");\n    }\n    pet.addVisit(visit);\n}",
+      "token_usage": {
+        "test_generation": {
+          "input_tokens": 1311,
+          "output_tokens": 466
+        },
+        "method_generation": {
+          "calls": 1,
+          "details": [
+            {
+              "input_tokens": 1439,
+              "output_tokens": 82,
+              "refinement_iteration": "initial"
+            }
+          ],
+          "total_input_tokens": 1439,
+          "total_output_tokens": 82
+        },
+        "test_repair_initial": {
+          "calls": 1,
+          "details": [
+            {
+              "input_tokens": 902,
+              "output_tokens": 501,
+              "iteration": 1
+            }
+          ],
+          "total_input_tokens": 902,
+          "total_output_tokens": 501
+        },
+        "totals": {
+          "total_input_tokens": 3652,
+          "total_output_tokens": 1049,
+          "total_tokens": 4701
+        }
+      },
+      "test_naturalness": {
+        "num_test_methods": 4,
+        "assertion_complexity": 0.5,
+        "pct_null_assertions": 0.0,
+        "pct_duplicate_assertions": 0.0,
+        "pct_exception_assertions": 0.4286,
+        "pct_no_assertion": 0.0,
+        "naturalness_method_name": 0.6771,
+        "pct_focal_method_covered": 1.0,
+        "diversity_literal_values": 0.6875,
+        "overall_naturalness_score": 0.8411
+      }
+    }
+  },
+  "general_info": {
+    "tested_class": "Owner",
+    "tested_method": "addVisit",
+    "last_update": "2026-01-23T15:45:53.273870",
+    "description": "Test addVisit(Integer petId, Visit visit) - Low - Qwen/Qwen2.5-Coder-32B-Instruct",
+    "provider": "chutes",
+    "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
+    "similarity_threshold": 0.7
+  }
+}

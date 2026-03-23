@@ -1,0 +1,210 @@
+Here's the corrected test class with compilation errors fixed:
+
+```java
+package org.apache.commons.compress.archivers;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.archivers.jar.JarArchiveInputStream;
+import org.apache.commons.compress.archivers.ar.ArArchiveInputStream;
+import org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;
+import org.apache.commons.compress.archivers.arj.ArjArchiveInputStream;
+import org.apache.commons.compress.archivers.sevenz.SevenZFile;
+import org.apache.commons.compress.archivers.dump.DumpArchiveInputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class ArchiveStreamFactory_detectTestGenerated {
+
+    private ArchiveStreamFactory archiveStreamFactory;
+    private ByteArrayInputStream validZipStream;
+    private ByteArrayInputStream validJarStream;
+    private ByteArrayInputStream validArStream;
+    private ByteArrayInputStream validCpioStream;
+    private ByteArrayInputStream validArjStream;
+    private ByteArrayInputStream validSevenZStream;
+    private ByteArrayInputStream validDumpStream;
+    private ByteArrayInputStream validTarStream;
+    private ByteArrayInputStream emptyStream;
+    private InputStream nonMarkSupportedStream;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        archiveStreamFactory = new ArchiveStreamFactory();
+
+        // Create valid archive streams
+        byte[] zipSignature = new byte[] {'P', 'K', 0x03, 0x04};
+        validZipStream = new ByteArrayInputStream(zipSignature);
+
+        byte[] jarSignature = new byte[] {'P', 'K', 0x03, 0x04};
+        validJarStream = new ByteArrayInputStream(jarSignature);
+
+        byte[] arSignature = new byte[] {'!', '<', 'a', 'r', 'c', 'h', '>', '\n'};
+        validArStream = new ByteArrayInputStream(arSignature);
+
+        byte[] cpioSignature = new byte[] {0x71, 'C', 'a', 'r', 'c', 'h', 'i', 'v', 'e', ' ', 'b', 'y', ' ', 'c', 'p', 'i', 'o', '\n', 0};
+        validCpioStream = new ByteArrayInputStream(cpioSignature);
+
+        byte[] arjSignature = new byte[] {'0', 'M', ' ', '!', ' ', '<', 'a', 'r', 'j', '>', '\0'};
+        validArjStream = new ByteArrayInputStream(arjSignature);
+
+        byte[] sevenZSignature = new byte[] {0x37, 0x7A, 0xBC, 0xAF, 0x27, 0x1C};
+        validSevenZStream = new ByteArrayInputStream(sevenZSignature);
+
+        byte[] dumpSignature = new byte[] {'T', 'S', 'M', 'A', 'P', 'P', 'E', 'D'};
+        validDumpStream = new ByteArrayInputStream(dumpSignature);
+
+        byte[] tarHeader = new byte[512];
+        System.arraycopy("ustar\0".getBytes(), 0, tarHeader, 257, 6);
+        validTarStream = new ByteArrayInputStream(tarHeader);
+
+        emptyStream = new ByteArrayInputStream(new byte[0]);
+
+        nonMarkSupportedStream = new InputStream() {
+            @Override
+            public int read() throws IOException {
+                return -1;
+            }
+        };
+    }
+
+    @AfterEach
+    void tearDown() throws IOException {
+        validZipStream.close();
+        validJarStream.close();
+        validArStream.close();
+        validCpioStream.close();
+        validArjStream.close();
+        validSevenZStream.close();
+        validDumpStream.close();
+        validTarStream.close();
+        emptyStream.close();
+    }
+
+    @Test
+    void testDetectZip() throws Exception {
+        String result = ArchiveStreamFactory.detect(validZipStream);
+        assertEquals(ArchiveStreamFactory.ZIP, result);
+    }
+
+    @Test
+    void testDetectJar() throws Exception {
+        String result = ArchiveStreamFactory.detect(validJarStream);
+        assertEquals(ArchiveStreamFactory.JAR, result);
+    }
+
+    @Test
+    void testDetectAr() throws Exception {
+        String result = ArchiveStreamFactory.detect(validArStream);
+        assertEquals(ArchiveStreamFactory.AR, result);
+    }
+
+    @Test
+    void testDetectCpio() throws Exception {
+        String result = ArchiveStreamFactory.detect(validCpioStream);
+        assertEquals(ArchiveStreamFactory.CPIO, result);
+    }
+
+    @Test
+    void testDetectArj() throws Exception {
+        String result = ArchiveStreamFactory.detect(validArjStream);
+        assertEquals(ArchiveStreamFactory.ARJ, result);
+    }
+
+    @Test
+    void testDetectSevenZ() throws Exception {
+        String result = ArchiveStreamFactory.detect(validSevenZStream);
+        assertEquals(ArchiveStreamFactory.SEVEN_Z, result);
+    }
+
+    @Test
+    void testDetectDump() throws Exception {
+        String result = ArchiveStreamFactory.detect(validDumpStream);
+        assertEquals(ArchiveStreamFactory.DUMP, result);
+    }
+
+    @Test
+    void testDetectTar() throws Exception {
+        String result = ArchiveStreamFactory.detect(validTarStream);
+        assertEquals(ArchiveStreamFactory.TAR, result);
+    }
+
+    @Test
+    void testDetectInvalidArchive() {
+        assertThrows(ArchiveException.class, () -> {
+            ArchiveStreamFactory.detect(emptyStream);
+        });
+    }
+
+    @Test
+    void testDetectNullStream() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            ArchiveStreamFactory.detect(null);
+        });
+    }
+
+    @Test
+    void testDetectNonMarkSupportedStream() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            ArchiveStreamFactory.detect(nonMarkSupportedStream);
+        });
+    }
+
+    @Test
+    void testDetectIOException() throws IOException {
+        InputStream ioExceptionStream = new InputStream() {
+            @Override
+            public int read() throws IOException {
+                throw new IOException("Test IO Exception");
+            }
+
+            @Override
+            public boolean markSupported() {
+                return true;
+            }
+
+            @Override
+            public void mark(int readlimit) {
+                // Do nothing
+            }
+
+            @Override
+            public void reset() throws IOException {
+                // Do nothing
+            }
+        };
+
+        assertThrows(ArchiveException.class, () -> {
+            ArchiveStreamFactory.detect(ioExceptionStream);
+        });
+    }
+
+    @Test
+    void testDetectTarWithValidEntry() throws Exception {
+        byte[] tarHeader = new byte[512];
+        System.arraycopy("ustar\0".getBytes(), 0, tarHeader, 257, 6);
+        ByteArrayInputStream tarStream = new ByteArrayInputStream(tarHeader);
+        String result = ArchiveStreamFactory.detect(tarStream);
+        assertEquals(ArchiveStreamFactory.TAR, result);
+    }
+
+    @Test
+    void testDetectTarWithInvalidEntry() {
+        byte[] invalidTarHeader = new byte[512];
+        ByteArrayInputStream tarStream = new ByteArrayInputStream(invalidTarHeader);
+        assertThrows(ArchiveException.class, () -> {
+            ArchiveStreamFactory.detect(tarStream);
+        });
+    }
+}
+```

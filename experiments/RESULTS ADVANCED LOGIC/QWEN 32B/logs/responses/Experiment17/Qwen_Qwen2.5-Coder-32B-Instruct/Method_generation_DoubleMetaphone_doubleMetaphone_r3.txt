@@ -1,0 +1,111 @@
+```java
+public String doubleMetaphone(String value, final boolean alternate) {
+    if (value == null) {
+        return null;
+    }
+    value = cleanInput(value);
+    if (value.isEmpty()) {
+        return "";
+    }
+
+    final DoubleMetaphoneResult result = new DoubleMetaphoneResult(maxLength);
+    boolean slavoGermanic = isSlavoGermanic(value);
+    int index = 0;
+    int last = value.length() - 1;
+
+    if (isSilentStart(value)) {
+        index += 1;
+    }
+
+    while (!result.isComplete() && index <= last) {
+        char ch = charAt(value, index);
+        switch (ch) {
+            case 'A':
+            case 'E':
+            case 'I':
+            case 'O':
+            case 'U':
+            case 'Y':
+                index = handleAEIOUY(result, index);
+                break;
+            case 'B':
+                result.append('P');
+                index = contains(value, index + 1, 1, "B") ? index + 2 : index + 1;
+                break;
+            case 'C':
+                index = handleC(value, result, index);
+                break;
+            case 'D':
+                index = handleD(value, result, index);
+                break;
+            case 'F':
+                result.append('F');
+                index = contains(value, index + 1, 1, "F") ? index + 2 : index + 1;
+                break;
+            case 'G':
+                index = handleG(value, result, index, slavoGermanic);
+                break;
+            case 'H':
+                if (index == 0 || isVowel(charAt(value, index - 1))) {
+                    if (isVowel(charAt(value, index + 1))) {
+                        result.append('H');
+                    }
+                }
+                index++;
+                break;
+            case 'J':
+                index = handleJ(value, result, index, slavoGermanic);
+                break;
+            case 'K':
+                result.append('K');
+                index = contains(value, index + 1, 1, "K") ? index + 2 : index + 1;
+                break;
+            case 'L':
+                index = handleL(value, result, index);
+                break;
+            case 'M':
+                result.append('M');
+                index = contains(value, index + 1, 1, "M") ? index + 2 : index + 1;
+                break;
+            case 'N':
+                result.append('N');
+                index = contains(value, index + 1, 1, "N") ? index + 2 : index + 1;
+                break;
+            case 'P':
+                index = handleP(value, result, index);
+                break;
+            case 'Q':
+                result.append('K');
+                index = contains(value, index + 1, 1, "Q") ? index + 2 : index + 1;
+                break;
+            case 'R':
+                index = handleR(value, result, index, slavoGermanic);
+                break;
+            case 'S':
+                index = handleS(value, result, index, slavoGermanic);
+                break;
+            case 'T':
+                index = handleT(value, result, index);
+                break;
+            case 'V':
+                result.append('F');
+                index = contains(value, index + 1, 1, "V") ? index + 2 : index + 1;
+                break;
+            case 'W':
+                index = handleW(value, result, index);
+                break;
+            case 'X':
+                index = handleX(value, result, index);
+                break;
+            case 'Z':
+                index = handleZ(value, result, index, slavoGermanic);
+                break;
+            default:
+                index++;
+                break;
+        }
+    }
+
+    return alternate ? result.getAlternate() : result.getPrimary();
+}
+```

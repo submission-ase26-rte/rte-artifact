@@ -1,0 +1,45 @@
+```java
+public void updateConfig() {
+    String[] orderProcessingModeNames = TradeConfig.getOrderProcessingModeNames();
+    String[] webInterfaceNames = TradeConfig.getWebInterfaceNames();
+
+    int orderProcessingModeIndex = -1;
+    for (int i = 0; i < orderProcessingModeNames.length; i++) {
+        if (orderProcessingModeNames[i].equals(orderProcessingMode)) {
+            orderProcessingModeIndex = i;
+            break;
+        }
+    }
+
+    int webInterfaceIndex = -1;
+    for (int i = 0; i < webInterfaceNames.length; i++) {
+        if (webInterfaceNames[i].equals(webInterface)) {
+            webInterfaceIndex = i;
+            break;
+        }
+    }
+
+    if (orderProcessingModeIndex == -1) {
+        Log.error("Invalid order processing mode: " + orderProcessingMode);
+        orderProcessingModeIndex = 0; // Default to first mode
+    }
+
+    if (webInterfaceIndex == -1) {
+        Log.error("Invalid web interface: " + webInterface);
+        webInterfaceIndex = 0; // Default to first interface
+    }
+
+    TradeConfig.setOrderProcessingMode(orderProcessingModeIndex);
+    TradeConfig.setWebInterface(webInterfaceIndex);
+    TradeConfig.setMAX_USERS(maxUsers);
+    TradeConfig.setMAX_QUOTES(maxQuotes);
+    TradeConfig.setMarketSummaryInterval(marketSummaryInterval);
+    TradeConfig.setPrimIterations(primIterations);
+    TradeConfig.setPublishQuotePriceChange(publishQuotePriceChange);
+    TradeConfig.setListQuotePriceChangeFrequency(listQuotePriceChangeFrequency);
+    TradeConfig.setLongRun(longRun);
+    TradeConfig.setDisplayOrderAlerts(displayOrderAlerts);
+
+    setResult("DayTrader Configuration Updated");
+}
+```

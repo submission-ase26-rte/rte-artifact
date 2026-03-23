@@ -1,0 +1,230 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.mockito.*;
+
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.util.concurrent.Future;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class TradeDirect_buyTestGenerated {
+
+    private TradeDirect tradeDirect;
+    private DataSource dataSource;
+    private UserTransaction userTransaction;
+
+    @BeforeEach
+    void setUp() {
+        dataSource = mock(DataSource.class);
+        userTransaction = mock(UserTransaction.class);
+        tradeDirect = new TradeDirect();
+        ReflectionTestUtils.setField(tradeDirect, "datasource", dataSource);
+        ReflectionTestUtils.setField(tradeDirect, "txn", userTransaction);
+    }
+
+    @AfterEach
+    void tearDown() {
+        tradeDirect = null;
+        dataSource = null;
+        userTransaction = null;
+    }
+
+    @Test
+    void testBuy_SuccessfulSynchronousProcessing() throws Exception {
+        String userID = "testUser";
+        String symbol = "TEST";
+        double quantity = 10;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        AccountDataBean accountData = mock(AccountDataBean.class);
+        QuoteDataBean quoteData = mock(QuoteDataBean.class);
+        HoldingDataBean holdingData = mock(HoldingDataBean.class);
+        OrderDataBean orderData = mock(OrderDataBean.class);
+
+        when(dataSource.getConnection()).thenReturn(mock(Connection.class));
+        when(tradeDirect.getAccountData(any(Connection.class), eq(userID))).thenReturn(accountData);
+        when(tradeDirect.getQuoteData(any(Connection.class), eq(symbol))).thenReturn(quoteData);
+        when(tradeDirect.createOrder(any(AccountDataBean.class), any(QuoteDataBean.class), any(HoldingDataBean.class), eq("buy"), eq(quantity))).thenReturn(orderData);
+        when(orderData.getOrderID()).thenReturn(1);
+        when(tradeDirect.getOrderData(any(Connection.class), eq(1))).thenReturn(orderData);
+
+        OrderDataBean result = tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+
+        assertNotNull(result);
+        verify(tradeDirect, times(1)).getAccountData(any(Connection.class), eq(userID));
+        verify(tradeDirect, times(1)).getQuoteData(any(Connection.class), eq(symbol));
+        verify(tradeDirect, times(1)).createOrder(any(AccountDataBean.class), any(QuoteDataBean.class), any(HoldingDataBean.class), eq("buy"), eq(quantity));
+        verify(tradeDirect, times(1)).completeOrder(any(Connection.class), eq(1));
+    }
+
+    @Test
+    void testBuy_SuccessfulAsynchronousProcessing() throws Exception {
+        String userID = "testUser";
+        String symbol = "TEST";
+        double quantity = 10;
+        int orderProcessingMode = TradeConfig.ASYNCH;
+
+        AccountDataBean accountData = mock(AccountDataBean.class);
+        QuoteDataBean quoteData = mock(QuoteDataBean.class);
+        HoldingDataBean holdingData = mock(HoldingDataBean.class);
+        OrderDataBean orderData = mock(OrderDataBean.class);
+
+        when(dataSource.getConnection()).thenReturn(mock(Connection.class));
+        when(tradeDirect.getAccountData(any(Connection.class), eq(userID))).thenReturn(accountData);
+        when(tradeDirect.getQuoteData(any(Connection.class), eq(symbol))).thenReturn(quoteData);
+        when(tradeDirect.createOrder(any(AccountDataBean.class), any(QuoteDataBean.class), any(HoldingDataBean.class), eq("buy"), eq(quantity))).thenReturn(orderData);
+        when(orderData.getOrderID()).thenReturn(1);
+        when(tradeDirect.getOrderData(any(Connection.class), eq(1))).thenReturn(orderData);
+
+        Future<OrderDataBean> future = mock(Future.class);
+        when(tradeDirect.completeOrderAsync(eq(1), eq(true))).thenReturn(future);
+
+        OrderDataBean result = tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+
+        assertNotNull(result);
+        verify(tradeDirect, times(1)).getAccountData(any(Connection.class), eq(userID));
+        verify(tradeDirect, times(1)).getQuoteData(any(Connection.class), eq(symbol));
+        verify(tradeDirect, times(1)).createOrder(any(AccountDataBean.class), any(QuoteDataBean.class), any(HoldingDataBean.class), eq("buy"), eq(quantity));
+        verify(tradeDirect, times(1)).completeOrderAsync(eq(1), eq(true));
+    }
+
+    @Test
+    void testBuy_SuccessfulTwoPhaseAsynchronousProcessing() throws Exception {
+        String userID = "testUser";
+        String symbol = "TEST";
+        double quantity = 10;
+        int orderProcessingMode = TradeConfig.ASYNCH_2PHASE;
+
+        AccountDataBean accountData = mock(AccountDataBean.class);
+        QuoteDataBean quoteData = mock(QuoteDataBean.class);
+        HoldingDataBean holdingData = mock(HoldingDataBean.class);
+        OrderDataBean orderData = mock(OrderDataBean.class);
+
+        when(dataSource.getConnection()).thenReturn(mock(Connection.class));
+        when(tradeDirect.getAccountData(any(Connection.class), eq(userID))).thenReturn(accountData);
+        when(tradeDirect.getQuoteData(any(Connection.class), eq(symbol))).thenReturn(quoteData);
+        when(tradeDirect.createOrder(any(AccountDataBean.class), any(QuoteDataBean.class), any(HoldingDataBean.class), eq("buy"), eq(quantity))).thenReturn(orderData);
+        when(orderData.getOrderID()).thenReturn(1);
+        when(tradeDirect.getOrderData(any(Connection.class), eq(1))).thenReturn(orderData);
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            mockedLog.when(() -> Log.trace(anyString())).thenReturn(null);
+            mockedLog.when(() -> Log.error(anyString(), any(Exception.class))).thenReturn(null);
+
+            OrderDataBean result = tradeDirect.buy(userID, symbol, quantity, orderProcessingMode);
+
+            assertNotNull(result);
+            verify(tradeDirect, times(1)).getAccountData(any(Connection.class), eq(userID));
+            verify(tradeDirect, times(1)).getQuoteData(any(Connection.class), eq(symbol));
+            verify(tradeDirect, times(1)).createOrder(any(AccountDataBean.class), any(QuoteDataBean.class), any(HoldingDataBean.class), eq("buy"), eq(quantity));
+            verify(tradeDirect, times(1)).queueOrder(eq(1), eq(true));
+        }
+    }
+
+    @Test
+    void testBuy_ExceptionDuringOrderCreation() throws Exception {
+        String userID = "testUser";
+        String symbol = "TEST";
+        double quantity = 10;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        AccountDataBean accountData = mock(AccountDataBean.class);
+        QuoteDataBean quoteData = mock(QuoteDataBean.class);
+
+        when(dataSource.getConnection()).thenReturn(mock(Connection.class));
+        when(tradeDirect.getAccountData(any(Connection.class), eq(userID))).thenReturn(accountData);
+        when(tradeDirect.getQuoteData(any(Connection.class), eq(symbol))).thenReturn(quoteData);
+        when(tradeDirect.createOrder(any(AccountDataBean.class), any(QuoteDataBean.class), any(HoldingDataBean.class), eq("buy"), eq(quantity))).thenThrow(new Exception("Order creation failed"));
+
+        assertThrows(Exception.class, () -> tradeDirect.buy(userID, symbol, quantity, orderProcessingMode));
+        verify(tradeDirect, times(1)).getAccountData(any(Connection.class), eq(userID));
+        verify(tradeDirect, times(1)).getQuoteData(any(Connection.class), eq(symbol));
+    }
+
+    @Test
+    void testBuy_ExceptionDuringOrderCompletion() throws Exception {
+        String userID = "testUser";
+        String symbol = "TEST";
+        double quantity = 10;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        AccountDataBean accountData = mock(AccountDataBean.class);
+        QuoteDataBean quoteData = mock(QuoteDataBean.class);
+        HoldingDataBean holdingData = mock(HoldingDataBean.class);
+        OrderDataBean orderData = mock(OrderDataBean.class);
+
+        when(dataSource.getConnection()).thenReturn(mock(Connection.class));
+        when(tradeDirect.getAccountData(any(Connection.class), eq(userID))).thenReturn(accountData);
+        when(tradeDirect.getQuoteData(any(Connection.class), eq(symbol))).thenReturn(quoteData);
+        when(tradeDirect.createOrder(any(AccountDataBean.class), any(QuoteDataBean.class), any(HoldingDataBean.class), eq("buy"), eq(quantity))).thenReturn(orderData);
+        when(orderData.getOrderID()).thenReturn(1);
+        when(tradeDirect.getOrderData(any(Connection.class), eq(1))).thenReturn(orderData);
+        doThrow(new Exception("Order completion failed")).when(tradeDirect).completeOrder(any(Connection.class), eq(1));
+
+        assertThrows(Exception.class, () -> tradeDirect.buy(userID, symbol, quantity, orderProcessingMode));
+        verify(tradeDirect, times(1)).getAccountData(any(Connection.class), eq(userID));
+        verify(tradeDirect, times(1)).getQuoteData(any(Connection.class), eq(symbol));
+        verify(tradeDirect, times(1)).createOrder(any(AccountDataBean.class), any(QuoteDataBean.class), any(HoldingDataBean.class), eq("buy"), eq(quantity));
+        verify(tradeDirect, times(1)).completeOrder(any(Connection.class), eq(1));
+    }
+
+    @Test
+    void testBuy_NullUserID() throws Exception {
+        String userID = null;
+        String symbol = "TEST";
+        double quantity = 10;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        assertThrows(Exception.class, () -> tradeDirect.buy(userID, symbol, quantity, orderProcessingMode));
+    }
+
+    @Test
+    void testBuy_NullSymbol() throws Exception {
+        String userID = "testUser";
+        String symbol = null;
+        double quantity = 10;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        assertThrows(Exception.class, () -> tradeDirect.buy(userID, symbol, quantity, orderProcessingMode));
+    }
+
+    @Test
+    void testBuy_NegativeQuantity() throws Exception {
+        String userID = "testUser";
+        String symbol = "TEST";
+        double quantity = -10;
+        int orderProcessingMode = TradeConfig.SYNCH;
+
+        assertThrows(Exception.class, () -> tradeDirect.buy(userID, symbol, quantity, orderProcessingMode));
+    }
+
+    @Test
+    void testBuy_InvalidOrderProcessingMode() throws Exception {
+        String userID = "testUser";
+        String symbol = "TEST";
+        double quantity = 10;
+        int orderProcessingMode = 999; // Invalid mode
+
+        assertThrows(Exception.class, () -> tradeDirect.buy(userID, symbol, quantity, orderProcessingMode));
+    }
+}
+```

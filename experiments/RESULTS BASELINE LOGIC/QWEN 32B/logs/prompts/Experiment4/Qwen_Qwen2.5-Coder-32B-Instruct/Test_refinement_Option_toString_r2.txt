@@ -1,0 +1,263 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): Option_toStringTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testToStringWithDeprecatedAttribute --
+ERROR: org.opentest4j.AssertionFailedError: expected: <[ Option o DEPRECATED :: description :: class java.lang.String ]> but was: <[ Option o option[ARG...] :: description :: class java.lang.String ]>
+--------------------------------------------------
+TEST: testToStringNoLongOptionWithOptionalArgNoDeprecated --
+ERROR: org.opentest4j.AssertionFailedError: expected: <[ Option o [ARG] :: description :: class java.lang.String ]> but was: <[ Option o option :: description :: class java.lang.String ]>
+--------------------------------------------------
+TEST: testToStringNoLongOptionWithArgsNoDeprecated --
+ERROR: org.opentest4j.AssertionFailedError: expected: <[ Option o [ARG...] :: description :: class java.lang.String ]> but was: <[ Option o option [ARG] :: description :: class java.lang.String ]>
+--------------------------------------------------
+TEST: testToStringWithCustomType --
+ERROR: org.opentest4j.AssertionFailedError: expected: <[ Option o :: description :: class java.lang.Integer ]> but was: <[ Option o option :: description :: class java.lang.Integer ]>
+--------------------------------------------------
+TEST: testToStringWithLongOptionAndDeprecatedAttribute --
+ERROR: org.opentest4j.AssertionFailedError: expected: <[ Option o longOption DEPRECATED :: description :: class java.lang.String ]> but was: <[ Option o longOption[ARG...] :: description :: class java.lang.String ]>
+--------------------------------------------------
+TEST: testToStringNoLongOptionNoArgsNoDeprecated --
+ERROR: org.opentest4j.AssertionFailedError: expected: <[ Option o :: description :: class java.lang.String ]> but was: <[ Option o option :: description :: class java.lang.String ]>
+--------------------------------------------------
+TEST: testToStringWithLongOptionAndArgsNoDeprecated --
+ERROR: org.opentest4j.AssertionFailedError: expected: <[ Option o longOption [ARG...] :: description :: class java.lang.String ]> but was: <[ Option o longOption [ARG] :: description :: class java.lang.String ]>
+
+TEST CODE TO FIX:
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Option_toStringTestGenerated {
+    private Option option;
+    @BeforeEach
+    public void setUp() {
+        option = new Option("o", "option", false, "description");
+    }
+
+
+    @Test
+        public void testToStringNoLongOptionNoArgsNoDeprecated() {
+            assertEquals("[ Option o :: description :: class java.lang.String ]", option.toString());
+        }
+
+    @Test
+        public void testToStringNoLongOptionWithArgsNoDeprecated() {
+            option.setArgs(1);
+            assertEquals("[ Option o [ARG...] :: description :: class java.lang.String ]", option.toString());
+        }
+
+    @Test
+        public void testToStringNoLongOptionWithOptionalArgNoDeprecated() {
+            option.setOptionalArg(true);
+            assertEquals("[ Option o [ARG] :: description :: class java.lang.String ]", option.toString());
+        }
+
+    @Test
+        public void testToStringWithCustomType() {
+            option.setType(Integer.class);
+            assertEquals("[ Option o :: description :: class java.lang.Integer ]", option.toString());
+        }
+
+    @Test
+        public void testToStringWithDeprecatedAttribute() {
+            option.setRequired(false);
+            option.setArgs(Option.UNLIMITED_VALUES);
+            option.setArgName("DEPRECATED");
+            assertEquals("[ Option o DEPRECATED :: description :: class java.lang.String ]", option.toString());
+        }
+
+    @Test
+        public void testToStringWithLongOptionAndDeprecatedAttribute() {
+            option.setLongOpt("longOption");
+            option.setRequired(false);
+            option.setArgs(Option.UNLIMITED_VALUES);
+            option.setArgName("DEPRECATED");
+            assertEquals("[ Option o longOption DEPRECATED :: description :: class java.lang.String ]", option.toString());
+        }
+
+    @Test
+        public void testToStringWithLongOptionAndArgsNoDeprecated() {
+            option.setLongOpt("longOption");
+            option.setArgs(1);
+            assertEquals("[ Option o longOption [ARG...] :: description :: class java.lang.String ]", option.toString());
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    public void testToStringWithLongOptionNoArgsNoDeprecated() {}
+
+
+
+PROJECT CONTEXT:
+// === Imports of Option ===
+import static org.apache.commons.cli.Util.EMPTY_STRING_ARRAY;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+// === Class: Option ===
+// Fields:
+    private Class DEFAULT_TYPE;
+    private int argCount;
+    private String argName;
+    private Converter converter;
+    private DeprecatedAttributes deprecated;
+    private String description;
+    private String longOption;
+    private String option;
+    private boolean optionalArg;
+    private boolean required;
+    private Class type;
+    private char valueSeparator;
+    private Option EMPTY_ARRAY;
+    private long serialVersionUID;
+    private int UNINITIALIZED;
+    private int UNLIMITED_VALUES;
+    private List values;
+    private char valuesep;
+
+// Constructors:
+private Builder(String option);
+private Option(Builder builder);
+public Option(String option, boolean hasArg, String description);
+public Option(String option, String description);
+public Option(String option, String longOption, boolean hasArg, String description);
+
+// Getter/Setter Methods (for test assertions):
+public String getArgName();
+public int getArgs();
+public DeprecatedAttributes getDeprecated();
+public String getDescription();
+public int getId();
+public String getKey();
+public String getLongOpt();
+public String getOpt();
+public Object getType();
+public String getValue();
+public String getValue(final int index) throws IndexOutOfBoundsException;
+public String getValue(final String defaultValue);
+public String[] getValues();
+public char getValueSeparator();
+public List<String> getValuesList();
+public boolean isDeprecated();
+public boolean isRequired();
+public void setArgName(final String argName);
+public void setArgs(final int num);
+public void setConverter(final Converter<?, ?> converter);
+public void setDescription(final String description);
+public void setLongOpt(final String longOpt);
+public void setOptionalArg(final boolean optionalArg);
+public void setRequired(final boolean required);
+public void setType(final Class<?> type);
+public void setType(final Object type);
+public void setValueSeparator(final char sep);
+
+// Internal Method Signatures (used by target method):
+public boolean isDeprecated();
+public Builder hasArgs();
+public Builder hasArg();
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    public void setUp() {
+        option = new Option("o", "option", false, "description");
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+    /**
+     * Creates a String suitable for debugging.
+     *
+     * @return a String suitable for debugging.
+     */
+    @Override
+    public String toString() {
+        final StringBuilder buf = new StringBuilder().append("[ ");
+        buf.append("Option ");
+        buf.append(option);
+        if (longOption != null) { // NOT COVERED BY TESTS
+            buf.append(Char.SP).append(longOption);
+        }
+        if (isDeprecated()) { // NOT COVERED BY TESTS
+            buf.append(Char.SP); // NOT COVERED BY TESTS
+            buf.append(deprecated.toString()); // NOT COVERED BY TESTS
+        }
+        if (hasArgs()) {
+            buf.append("[ARG...]");
+        } else if (hasArg()) {
+            buf.append(" [ARG]");
+        }
+        // @formatter:off
+        return buf.append(" :: ")
+            .append(description)
+            .append(" :: ")
+            .append(type)
+            .append(" ]")
+            .toString();
+        // @formatter:on
+    }
+
+
+COVERAGE ISSUES:
+Current line coverage: 88.89%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers only if ensuring unique names.
+- DO NOT mock the target class
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

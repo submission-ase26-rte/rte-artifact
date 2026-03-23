@@ -1,0 +1,106 @@
+```java
+package org.apache.commons.cli;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.apache.commons.cli.DeprecatedAttributes;
+import org.apache.commons.cli.Options;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Option_toStringTestGenerated {
+
+    private Option option;
+
+    @BeforeEach
+    public void setUp() {
+        option = new Option("o", true, "description");
+    }
+
+    @Test
+    public void testToStringWithNoLongOptOrDeprecated() {
+        option.setLongOpt(null);
+
+        String result = option.toString();
+        assertEquals("[ Option o  [ARG]  :: description :: null ]", result);
+    }
+
+    @Test
+    public void testToStringWithLongOpt() {
+        option.setLongOpt("long-opt");
+
+        String result = option.toString();
+        assertEquals("[ Option o long-opt  [ARG]  :: description :: null ]", result);
+    }
+
+    @Test
+    public void testToStringWithDeprecated() {
+        DeprecatedAttributes deprecated = new DeprecatedAttributes("deprecated message", null, false);
+        option.setDeprecated(deprecated);
+
+        String result = option.toString();
+        assertEquals("[ Option o  [ARG]  :: deprecated message :: null ]", result);
+    }
+
+    @Test
+    public void testToStringWithLongOptAndDeprecated() {
+        option.setLongOpt("long-opt");
+        DeprecatedAttributes deprecated = new DeprecatedAttributes("deprecated message", null, false);
+        option.setDeprecated(deprecated);
+
+        String result = option.toString();
+        assertEquals("[ Option o long-opt  [ARG]  :: deprecated message :: null ]", result);
+    }
+
+    @Test
+    public void testToStringWithArgCountUnlimited() {
+        option.setArgs(Option.UNLIMITED_VALUES);
+
+        String result = option.toString();
+        assertEquals("[ Option o  [ARG...]  :: description :: null ]", result);
+    }
+
+    @Test
+    public void testToStringWithNoArgCount() {
+        option.setArgs(0);
+
+        String result = option.toString();
+        assertEquals("[ Option o  :: description :: null ]", result);
+    }
+
+    @Test
+    public void testToStringWithDescriptionNull() {
+        option.setDescription(null);
+
+        String result = option.toString();
+        assertEquals("[ Option o  [ARG]  :: null :: null ]", result);
+    }
+
+    @Test
+    public void testToStringWithTypeSet() {
+        option.setType(String.class);
+
+        String result = option.toString();
+        assertEquals("[ Option o  [ARG]  :: description :: class java.lang.String ]", result);
+    }
+
+    @Test
+    public void testToStringWithNoArgs() {
+        option.setArgs(0);
+
+        String result = option.toString();
+        assertEquals("[ Option o  :: description :: null ]", result);
+    }
+
+    @Test
+    public void testToStringWithOptionalArg() {
+        option.setOptionalArg(true);
+
+        String result = option.toString();
+        assertEquals("[ Option o  [ARG]  :: description :: null ]", result);
+    }
+}
+```

@@ -1,0 +1,25 @@
+```java
+public void init() {
+    List<Cargo> cargos = cargoRepository.findAll();
+    List<Location> locations = locationRepository.findAll();
+    List<Voyage> voyages = voyageRepository.findAll();
+
+    this.trackingIds = new ArrayList<>();
+    this.locations = new ArrayList<>();
+    this.voyages = new ArrayList<>();
+
+    for (Cargo cargo : cargos) {
+        if (!cargo.getItinerary().getLegs().isEmpty()) {
+            trackingIds.add(new SelectItem(cargo.getTrackingId().getIdString(), cargo.getTrackingId().getIdString()));
+        }
+    }
+
+    for (Location location : locations) {
+        locations.add(new SelectItem(location.getUnLocode().getCodeString(), location.getName()));
+    }
+
+    for (Voyage voyage : voyages) {
+        voyages.add(new SelectItem(voyage.getVoyageNumber().getIdString(), voyage.getVoyageNumber().getIdString()));
+    }
+}
+```

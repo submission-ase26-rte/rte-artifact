@@ -1,0 +1,247 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+/**
+ * Extracted tests for method: addVisit(Integer petId, Visit visit)
+ * Original class: Owner
+ * Source: ASTER GPT-4
+ */
+package org.springframework.samples.petclinic.owner;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+import static org.mockito.Mockito.*;
+
+public class Metodo46_addVisit_Owner_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAddVisitWithInvalidPetId_PWEs2() {
+    Owner owner = new Owner();
+    Integer petId = 999; // Assuming 999 is an invalid ID
+    Visit visit = new Visit();
+    when(owner.getPet(petId)).thenReturn(null);
+    try {
+    owner.addVisit(petId, visit);
+    }
+    catch (IllegalArgumentException e) {
+    assertEquals("Invalid Pet identifier!", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAddVisitWithValidPetIdAndVisit_BAPS3() {
+    Owner owner = new Owner();
+    Integer petId = 1;
+    Visit visit = new Visit();
+    Pet mockPet = mock(Pet.class);
+    when(owner.getPet(petId)).thenReturn(mockPet);
+    owner.addVisit(petId, visit);
+    verify(mockPet).addVisit(visit);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAddVisitWithPetIdAndVisitNotNull_eKHL4_1() {
+    Owner owner = new Owner();
+    Integer petId = 1;
+    Visit visit = new Visit();
+    Pet mockPet = mock(Pet.class);
+    when(owner.getPet(petId)).thenReturn(mockPet);
+    owner.addVisit(petId, visit);
+    assertNotNull(petId);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAddVisitWithPetIdAndVisitNotNull_eKHL4_2() {
+    Owner owner = new Owner();
+    Integer petId = 1;
+    Visit visit = new Visit();
+    Pet mockPet = mock(Pet.class);
+    when(owner.getPet(petId)).thenReturn(mockPet);
+    owner.addVisit(petId, visit);
+    assertNotNull(visit);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAddVisitCompletesSuccessfully_UicO5() {
+    Owner owner = new Owner();
+    Integer petId = 1;
+    Visit visit = new Visit();
+    Pet mockPet = mock(Pet.class);
+    when(owner.getPet(petId)).thenReturn(mockPet);
+    owner.addVisit(petId, visit);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAddVisitWithNullPetId_ZVRz0() {
+    Owner owner = new Owner();
+    Visit visit = new Visit();
+    try {
+    owner.addVisit(null, visit);
+    }
+    catch (IllegalArgumentException e) {
+    assertEquals("Pet identifier must not be null!", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAddVisitWithNullVisit_XKmJ1() {
+    Owner owner = new Owner();
+    Integer petId = 1;
+    try {
+    owner.addVisit(petId, null);
+    }
+    catch (IllegalArgumentException e) {
+    assertEquals("Visit must not be null!", e.getMessage());
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAddVisitWithNullPetId_KWRc0_1() {
+    Owner owner = new Owner();
+    Visit visit = new Visit();
+    Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+    owner.addVisit(null, visit);
+    });
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testAddVisitWithNullPetId_KWRc0() {
+    Owner owner = new Owner();
+    Visit visit = new Visit();
+    Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+    owner.addVisit(null, visit);
+    });
+    assertEquals("Pet identifier must not be null!", exception.getMessage());
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Tests: 4/9 passed
+
+TEST STATUS:
+- PASSED (4): testAddVisitWithNullPetId_ZVRz0, testAddVisitWithNullVisit_XKmJ1, testAddVisitWithNullPetId_KWRc0_1, testAddVisitWithNullPetId_KWRc0
+- FAILED (0): none
+- ERRORS (5): testAddVisitWithInvalidPetId_PWEs2, testAddVisitWithValidPetIdAndVisit_BAPS3, testAddVisitWithPetIdAndVisitNotNull_eKHL4_1, testAddVisitWithPetIdAndVisitNotNull_eKHL4_2, testAddVisitCompletesSuccessfully_UicO5
+
+The regenerated method must pass all PASSED tests.
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   ToStringCreator -> org.springframework.core.style.ToStringCreator
+//   Person -> org.springframework.samples.petclinic.model.Person
+//   Assert -> org.springframework.util.Assert
+//   CascadeType -> jakarta.persistence.CascadeType
+//   Column -> jakarta.persistence.Column
+//   Entity -> jakarta.persistence.Entity
+//   FetchType -> jakarta.persistence.FetchType
+//   JoinColumn -> jakarta.persistence.JoinColumn
+//   OneToMany -> jakarta.persistence.OneToMany
+//   OrderBy -> jakarta.persistence.OrderBy
+//   Table -> jakarta.persistence.Table
+//   Pattern -> jakarta.validation.constraints.Pattern
+//   NotBlank -> jakarta.validation.constraints.NotBlank
+//   Owner -> org.springframework.samples.petclinic.owner.Owner
+
+// === Class: Owner ===
+// Fields (with actual visibility):
+    private String address;
+    private String city;
+    private String telephone;
+    private List pets;
+
+// Getter/Setter Methods (for test assertions):
+public String getAddress();
+public void setAddress(String address);
+public String getCity();
+public void setCity(String city);
+public String getTelephone();
+public void setTelephone(String telephone);
+public List<Pet> getPets();
+public Pet getPet(String name);
+public Pet getPet(Integer id);
+public Pet getPet(String name, boolean ignoreNew);
+
+// Internal Methods (full implementation for context):
+	public Pet getPet(String name) {
+		return getPet(name, false);
+	}
+
+// === Superclass: Person (inherited members) ===
+// Inherited Fields:
+
+// Inherited Method Signatures:
+public String getFirstName();
+public void setFirstName(String firstName);
+public String getLastName();
+public void setLastName(String lastName);
+
+// === External Class: Pet ===
+// Full import path: org.springframework.samples.petclinic.owner.Pet
+// Fields (with actual visibility):
+    private LocalDate birthDate;
+    private PetType type;
+    private Set visits;
+// Method Signatures (used by target method):
+public void addVisit(Visit visit);
+// Public Getter Methods (for test assertions):
+public LocalDate getBirthDate();
+public PetType getType();
+public Collection<Visit> getVisits();
+
+
+TASK:
+Regenerate ONLY the method "addVisit" OF CLASS "Owner" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void addVisit(Integer petId, Visit visit) {
+    // your implementation here
+}
+```
+
+- Package: org.springframework.samples.petclinic.owner
+- Class annotations: none
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "addVisit"
+- Allowed imports: exactly those already present in Owner
+- Forbidden: new imports, wildcard imports, fully-qualified class references
+- If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

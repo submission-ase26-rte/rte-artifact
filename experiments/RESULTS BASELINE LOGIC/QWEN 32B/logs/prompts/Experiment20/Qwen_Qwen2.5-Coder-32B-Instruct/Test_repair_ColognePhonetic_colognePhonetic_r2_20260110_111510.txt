@@ -1,0 +1,148 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language;
+Class name (MUST be exactly): ColognePhonetic_colognePhoneticTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.codec.language;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ColognePhonetic_colognePhoneticTestGenerated {
+
+    private ColognePhonetic colognePhonetic;
+
+    @BeforeEach
+    public void setUp() {
+        colognePhonetic = new ColognePhonetic() {
+            @Override
+            public char[] copyData(int start, int length) {
+                return new char[0];
+            }
+        };
+    }
+
+    @AfterEach
+    public void tearDown() {
+        colognePhonetic = null;
+    }
+
+    @Test
+    public void testColognePhoneticNullInput() {
+        assertNull(colognePhonetic.encode(null));
+    }
+
+    @Test
+    public void testColognePhoneticEmptyString() {
+        assertEquals("", colognePhonetic.encode(""));
+    }
+
+    @Test
+    public void testColognePhoneticSingleVowel() {
+        assertEquals("0", colognePhonetic.encode("A"));
+        assertEquals("0", colognePhonetic.encode("E"));
+        assertEquals("0", colognePhonetic.encode("I"));
+        assertEquals("0", colognePhonetic.encode("J"));
+        assertEquals("0", colognePhonetic.encode("O"));
+        assertEquals("0", colognePhonetic.encode("U"));
+        assertEquals("0", colognePhonetic.encode("Y"));
+    }
+
+    @Test
+    public void testColognePhoneticSingleConsonant() {
+        assertEquals("1", colognePhonetic.encode("B"));
+        assertEquals("1", colognePhonetic.encode("P"));
+        assertEquals("2", colognePhonetic.encode("D"));
+        assertEquals("2", colognePhonetic.encode("T"));
+        assertEquals("3", colognePhonetic.encode("F"));
+        assertEquals("3", colognePhonetic.encode("V"));
+        assertEquals("3", colognePhonetic.encode("W"));
+        assertEquals("4", colognePhonetic.encode("G"));
+        assertEquals("4", colognePhonetic.encode("K"));
+        assertEquals("4", colognePhonetic.encode("Q"));
+        assertEquals("48", colognePhonetic.encode("X"));
+        assertEquals("8", colognePhonetic.encode("S"));
+        assertEquals("8", colognePhonetic.encode("Z"));
+        assertEquals("8", colognePhonetic.encode("C"));
+        assertEquals("7", colognePhonetic.encode("R"));
+        assertEquals("5", colognePhonetic.encode("L"));
+        assertEquals("6", colognePhonetic.encode("M"));
+        assertEquals("6", colognePhonetic.encode("N"));
+        assertEquals("", colognePhonetic.encode("H"));
+    }
+
+    @Test
+    public void testColognePhoneticComplexWord() {
+        assertEquals("648686", colognePhonetic.encode("Müller-Lüdenscheidt"));
+        assertEquals("0646", colognePhonetic.encode("Augsburg"));
+        assertEquals("0648", colognePhonetic.encode("August"));
+        assertEquals("4680", colognePhonetic.encode("Koeln"));
+        assertEquals("4680", colognePhonetic.encode("Köln"));
+        assertEquals("6486", colognePhonetic.encode("Müller"));
+        assertEquals("6486", colognePhonetic.encode("Muller"));
+        assertEquals("0648", colognePhonetic.encode("Auch"));
+        assertEquals("0648", colognePhonetic.encode("Auchh"));
+        assertEquals("0648", colognePhonetic.encode("Auchhh"));
+    }
+
+    @Test
+    public void testColognePhoneticIgnoreNonAlphabetic() {
+        assertEquals("648686", colognePhonetic.encode("Müller-Lüdenscheidt123"));
+        assertEquals("0646", colognePhonetic.encode("Augsburg!"));
+        assertEquals("0648", colognePhonetic.encode("August?"));
+        assertEquals("4680", colognePhonetic.encode("Köln-"));
+        assertEquals("4680", colognePhonetic.encode("Köln_"));
+        assertEquals("6486", colognePhonetic.encode("Müller*"));
+        assertEquals("6486", colognePhonetic.encode("Muller&"));
+        assertEquals("0648", colognePhonetic.encode("Auch "));
+        assertEquals("0648", colognePhonetic.encode("Auchh\t"));
+        assertEquals("0648", colognePhonetic.encode("Auchhh\n"));
+    }
+
+    @Test
+    public void testColognePhoneticBoundaryConditions() {
+        assertEquals("", colognePhonetic.encode("1234567890"));
+        assertEquals("", colognePhonetic.encode("!@#$%^&*()"));
+        assertEquals("", colognePhonetic.encode(" "));
+        assertEquals("", colognePhonetic.encode("\t"));
+        assertEquals("", colognePhonetic.encode("\n"));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/ColognePhonetic_colognePhoneticTestGenerated.java:[18] method does not override or implement a method from a supertype
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- Keep the SAME class name: ColognePhonetic_colognePhoneticTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations
+
+IMPORTANT: The target class "ColognePhonetic" is ABSTRACT and cannot be instantiated directly.
+- DO NOT use Mockito to mock the class itself (unless you need a partial mock).
+- INSTANTIATE using this REAL ANONYMOUS SUBCLASS template (copy exactly):
+```java
+new ColognePhonetic() {
+    @Override
+    public char[] copyData(int start, int length) {
+        return new char[0];
+    }
+
+}
+```
+- DO NOT create custom concrete subclasses files.
+- DO NOT invent classes that do not exist in the codebase.

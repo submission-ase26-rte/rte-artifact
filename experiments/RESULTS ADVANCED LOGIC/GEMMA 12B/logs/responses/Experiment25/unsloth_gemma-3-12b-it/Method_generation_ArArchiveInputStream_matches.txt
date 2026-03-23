@@ -1,0 +1,19 @@
+```java
+public static boolean matches(final byte[] signature, final int length) {
+        if (signature == null) {
+            return false;
+        }
+        if (length == 0) {
+            return false;
+        }
+        if (length > signature.length) {
+            return false;
+        }
+        for (int i = 0; i < length; i++) {
+            if (signature[i] != AR_SIGNATURE[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+```

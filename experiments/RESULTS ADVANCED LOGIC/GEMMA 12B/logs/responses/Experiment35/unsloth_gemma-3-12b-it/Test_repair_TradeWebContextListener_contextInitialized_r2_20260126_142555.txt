@@ -1,0 +1,115 @@
+```java
+package com.ibm.websphere.samples.daytrader.web.servlet;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
+
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.logging.Logger;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import javax.servlet.ServletContextEvent;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeWebContextListener_contextInitializedTestGenerated {
+
+  private TradeWebContextListener listener;
+  @MockedStatic(Log.class)
+  private MockedStatic<Log> mockLog;
+
+  @BeforeEach
+  public void setUp() {
+    listener = new TradeWebContextListener();
+  }
+
+  @Test
+  public void testContextInitialized_propertiesLoadedSuccessfully() throws Exception {
+    ServletContextEvent event = mockServletContextEvent();
+    Properties properties = new Properties();
+    properties.setProperty("runtimeMode", "1");
+    properties.setProperty("orderProcessingMode", "1");
+    properties.setProperty("maxUsers", "10");
+    properties.setProperty("maxQuotes", "100");
+    properties.setProperty("publishQuotePriceChange", "true");
+    properties.setProperty("displayOrderAlerts", "true");
+    properties.setProperty("webInterface", "1");
+    properties.setProperty("listQuotePriceChangeFrequency", "60");
+    properties.setProperty("primIterations", "10");
+    properties.setProperty("marketSummaryInterval", "300");
+    properties.setProperty("longRun", "false");
+
+    InputStream inputStream = mockInputStream(properties);
+
+    try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+      listener.contextInitialized(event);
+
+      verify(mockedTradeConfig).setRunTimeMode(1);
+      verify(mockedTradeConfig).setOrderProcessingMode(1);
+      verify(mockedTradeConfig).setMAX_USERS(10);
+      verify(mockedTradeConfig).setMAX_QUOTES(100);
+      verify(mockedTradeConfig).setPublishQuotePriceChange(true);
+      verify(mockedTradeConfig).setDisplayOrderAlerts(true);
+      verify(mockedTradeConfig).setWebInterface(1);
+      verify(mockedTradeConfig).setListQuotePriceChangeFrequency(60);
+      verify(mockedTradeConfig).setPrimIterations(10);
+      verify(mockedTradeConfig).setMarketSummaryInterval(300);
+      verify(mockedTradeConfig).setLongRun(false);
+      mockLog.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect");
+    }
+  }
+
+  @Test
+  public void testContextInitialized_propertiesNotFound() {
+    ServletContextEvent event = mockServletContextEvent();
+
+    try {
+      listener.contextInitialized(event);
+    } catch (Exception e) {
+      // Expected behavior: properties file not found
+      return;
+    }
+    assertThrows(Exception.class, () -> listener.contextInitialized(event));
+  }
+
+
+  @Test
+  public void testContextInitialized_envVariablesOverrideProperties() throws Exception {
+      ServletContextEvent event = mockServletContextEvent();
+
+      try (MockedStatic<TradeConfig> mockedTradeConfig = mockStatic(TradeConfig.class)) {
+        listener.contextInitialized(event);
+
+        verify(mockedTradeConfig).setRunTimeMode(2);
+        verify(mockedTradeConfig).setOrderProcessingMode(2);
+        verify(mockedTradeConfig).setMAX_USERS(20);
+        verify(mockedTradeConfig).setMAX_QUOTES(200);
+        verify(mockedTradeConfig).setPublishQuotePriceChange(false);
+        verify(mockedTradeConfig).setDisplayOrderAlerts(false);
+        verify(mockedTradeConfig).setWebInterface(2);
+        verify(mockedTradeConfig).setListQuotePriceChangeFrequency(120);
+        verify(mockedTradeConfig).setPrimIterations(20);
+        verify(mockedTradeConfig).setMarketSummaryInterval(600);
+        verify(mockedTradeConfig).setLongRun(true);
+        mockLog.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect");
+      }
+
+  }
+
+  private ServletContextEvent mockServletContextEvent() {
+    return mock(ServletContextEvent.class);
+  }
+
+  private InputStream mockInputStream(Properties properties) {
+    return new java.io.ByteArrayInputStream(properties.toString().getBytes());
+  }
+}
+```

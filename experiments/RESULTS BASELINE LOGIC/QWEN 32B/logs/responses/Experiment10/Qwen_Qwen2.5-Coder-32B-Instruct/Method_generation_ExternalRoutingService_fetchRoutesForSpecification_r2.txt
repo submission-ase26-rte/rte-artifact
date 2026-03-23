@@ -1,0 +1,52 @@
+```java
+public List<Itinerary> fetchRoutesForSpecification(RouteSpecification routeSpecification) {
+    if (routeSpecification == null) {
+        return new ArrayList<>();
+    }
+    Location origin = routeSpecification.getOrigin();
+    if (origin == null) {
+        return new ArrayList<>();
+    }
+    UnLocode originUnLocode = origin.getUnLocode();
+    if (originUnLocode == null) {
+        throw new NullPointerException("Origin UnLocode cannot be null");
+    }
+    Location destination = routeSpecification.getDestination();
+    if (destination == null) {
+        return new ArrayList<>();
+    }
+    UnLocode destinationUnLocode = destination.getUnLocode();
+    if (destinationUnLocode == null) {
+        throw new NullPointerException("Destination UnLocode cannot be null");
+    }
+
+    List<TransitPath> transitPaths = graphTraversalResource.queryParam("origin", originUnLocode.getId())
+            .queryParam("destination", destinationUnLocode.getId())
+            .request(MediaType.APPLICATION_JSON_TYPE)
+            .get(new GenericType<List<TransitPath>>() {});
+
+    if (transitPaths.isEmpty()) {
+        return new ArrayList<>();
+    }
+
+    List<Itinerary> itineraries = transitPaths.stream()
+            .map(transitPath -> {
+                List<Leg> legs = transitPath.getTransitEdges().stream()
+                        .map(edge -> new Leg(voyageRepository.find(new VoyageNumber(edge.getVoyageNumber())),
+                                locationRepository.find(new UnLocode(edge.getFromLocation())),
+                                locationRepository.find(new UnLocode(edge.getToLocation())),
+                                edge.getDepartureTime(),
+                                edge.getArrivalTime()))
+                        .collect(Collectors.toList());
+                return new Itinerary(legs);
+            })
+            .filter(routeSpecification::isSatisfiedBy)
+            .collect(Collectors.toList());
+
+    if (itineraries.isEmpty()) {
+        logger.log(Level.FINE, "Received itinerary that did not satisfy the route specification");
+    }
+
+    return itineraries;
+}
+```

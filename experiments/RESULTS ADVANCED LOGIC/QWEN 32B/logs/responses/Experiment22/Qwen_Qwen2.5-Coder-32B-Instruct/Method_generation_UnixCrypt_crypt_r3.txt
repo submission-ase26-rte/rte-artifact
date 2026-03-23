@@ -1,0 +1,45 @@
+```java
+public static String crypt(final byte[] original, String salt) {
+    if (salt == null) {
+        salt = generateSalt();
+    } else if (!CRYPT_SALT_PATTERN.matcher(salt).matches()) {
+        throw new IllegalArgumentException("Invalid salt value: " + salt);
+    }
+
+    final byte[] saltBytes = salt.getBytes(StandardCharsets.UTF_8);
+    final byte[] keyBytes = new byte[8];
+    System.arraycopy(original, 0, keyBytes, 0, Math.min(original.length, 8));
+
+    final int[] schedule = desSetKey(keyBytes);
+    int eSwap0 = 0;
+    int eSwap1 = 0;
+
+    for (int i = 0; i < 25; i++) {
+        final int[] result = body(schedule, eSwap0, eSwap1);
+        eSwap0 = result[0];
+        eSwap1 = result[1];
+    }
+
+    final byte[] resultBytes = new byte[8];
+    intToFourBytes(eSwap0, resultBytes, 0);
+    intToFourBytes(eSwap1, resultBytes, 4);
+
+    final StringBuilder result = new StringBuilder(salt);
+    for (int i = 0; i < 8; i++) {
+        result.append(COVT2CHAR[(resultBytes[i] & 0x3f)]);
+        result.append(COVT2CHAR[(resultBytes[i] >>> 6) & 0x3f]);
+    }
+
+    return result.toString();
+}
+
+private static String generateSalt() {
+    final byte[] saltBytes = new byte[2];
+    new SecureRandom().nextBytes(saltBytes);
+    final StringBuilder salt = new StringBuilder();
+    for (byte b : saltBytes) {
+        salt.append(SALT_CHARS[(b & 0x3f)]);
+    }
+    return salt.toString();
+}
+```

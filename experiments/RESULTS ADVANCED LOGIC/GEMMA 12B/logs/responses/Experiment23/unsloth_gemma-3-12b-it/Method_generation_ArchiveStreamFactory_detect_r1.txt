@@ -1,0 +1,52 @@
+```java
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.arj.ArjArchiveInputStream;
+import org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.utils.IOUtils;
+
+public static String detect(final InputStream in) throws ArchiveException {
+    if (in == null) {
+        throw new IllegalArgumentException("Input stream cannot be null");
+    }
+
+    byte[] signature = new byte[10];
+    int read = in.read(signature);
+    if (read < 0) {
+        throw new IllegalArgumentException("InputStream cannot be empty");
+    }
+
+    if (ArchiveStreamFactory.matches(signature, 10)) {
+        return ArchiveStreamFactory.ZIP;
+    }
+
+    if (ArchiveStreamFactory.matches(signature, 4)) {
+        return ArchiveStreamFactory.ARJ;
+    }
+
+    if (Arrays.equals(signature, new byte[]{0, 0, 1, 0, 0, 0, 0, 0, 0, 0})) {
+        return ArchiveStreamFactory.CPIO;
+    }
+
+    if (ArchiveStreamFactory.matches(signature, 5)) {
+        return ArchiveStreamFactory.TAR;
+    }
+
+    if (ArchiveStreamFactory.matches(signature, 6)) {
+        return ArchiveStreamFactory.AR;
+    }
+
+    if (Arrays.equals(signature, new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0})) {
+        throw new ArchiveException("Unknown archive format from signature: " + Arrays.toString(signature));
+    }
+
+    throw new ArchiveException("Unknown archive format from signature: " + Arrays.toString(signature));
+}
+```

@@ -1,0 +1,11 @@
+```java
+public void registerHandlingEvent(LocalDateTime completionTime, TrackingId trackingId, VoyageNumber voyageNumber, UnLocode unLocode, HandlingEvent.Type type) throws CannotCreateHandlingEventException {
+    if (completionTime == null || trackingId == null || voyageNumber == null || unLocode == null || type == null) {
+        throw new CannotCreateHandlingEventException("All parameters are required");
+    }
+    HandlingEvent event = handlingEventFactory.createHandlingEvent(LocalDateTime.now(), completionTime, trackingId, voyageNumber, unLocode, type);
+    handlingEventRepository.store(event);
+    applicationEvents.cargoWasHandled(event);
+    logger.info("Registered handling event");
+}
+```

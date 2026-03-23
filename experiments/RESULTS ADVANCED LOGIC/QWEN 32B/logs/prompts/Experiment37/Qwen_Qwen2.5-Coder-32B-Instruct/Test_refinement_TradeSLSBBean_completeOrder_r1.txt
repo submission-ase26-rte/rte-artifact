@@ -1,0 +1,344 @@
+ROLE:
+You are an expert Java developer. Task: improve coverage.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.ejb3;
+Class name (MUST be exactly): TradeSLSBBean_completeOrderTestGenerated
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+Test class structure (reference):
+package com.ibm.websphere.samples.daytrader.impl.ejb3;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.RuntimeMode;
+import com.ibm.websphere.samples.daytrader.interfaces.Trace;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeEJB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.FinancialUtils;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import javax.ejb.EJBException;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+
+public class TradeSLSBBean_completeOrderTestGenerated {
+    @Mock
+    private EntityManager entityManager;
+    @InjectMocks
+    private TradeSLSBBean tradeSLSBBean;
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+
+}
+
+Valid test signatures:
+    @Test
+    public void testCompleteOrder_OrderNotFound() {}
+}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   MarketSummaryDataBean -> com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean
+//   RuntimeMode -> com.ibm.websphere.samples.daytrader.interfaces.RuntimeMode
+//   Trace -> com.ibm.websphere.samples.daytrader.interfaces.Trace
+//   TradeEJB -> com.ibm.websphere.samples.daytrader.interfaces.TradeEJB
+//   TradeServices -> com.ibm.websphere.samples.daytrader.interfaces.TradeServices
+//   FinancialUtils -> com.ibm.websphere.samples.daytrader.util.FinancialUtils
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   RecentQuotePriceChangeList -> com.ibm.websphere.samples.daytrader.util.RecentQuotePriceChangeList
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   BigDecimal -> java.math.BigDecimal
+//   Timestamp -> java.sql.Timestamp
+//   Collection -> java.util.Collection
+//   Comparator -> java.util.Comparator
+//   Iterator -> java.util.Iterator
+//   List -> java.util.List
+//   Future -> java.util.concurrent.Future
+//   Resource -> javax.annotation.Resource
+//   EJB -> javax.ejb.EJB
+//   EJBException -> javax.ejb.EJBException
+//   SessionContext -> javax.ejb.SessionContext
+//   Stateless -> javax.ejb.Stateless
+//   TransactionAttribute -> javax.ejb.TransactionAttribute
+//   TransactionAttributeType -> javax.ejb.TransactionAttributeType
+//   TransactionManagement -> javax.ejb.TransactionManagement
+//   TransactionManagementType -> javax.ejb.TransactionManagementType
+//   Inject -> javax.inject.Inject
+//   JMSContext -> javax.jms.JMSContext
+//   Queue -> javax.jms.Queue
+//   QueueConnectionFactory -> javax.jms.QueueConnectionFactory
+//   TextMessage -> javax.jms.TextMessage
+//   Topic -> javax.jms.Topic
+//   TopicConnectionFactory -> javax.jms.TopicConnectionFactory
+//   EntityManager -> javax.persistence.EntityManager
+//   PersistenceContext -> javax.persistence.PersistenceContext
+//   TypedQuery -> javax.persistence.TypedQuery
+//   CriteriaBuilder -> javax.persistence.criteria.CriteriaBuilder
+//   CriteriaQuery -> javax.persistence.criteria.CriteriaQuery
+//   Root -> javax.persistence.criteria.Root
+//   RollbackException -> javax.transaction.RollbackException
+//   NotNull -> javax.validation.constraints.NotNull
+//   AccountDataBean -> com.ibm.websphere.samples.daytrader.entities.AccountDataBean
+//   AccountProfileDataBean -> com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean
+//   HoldingDataBean -> com.ibm.websphere.samples.daytrader.entities.HoldingDataBean
+//   OrderDataBean -> com.ibm.websphere.samples.daytrader.entities.OrderDataBean
+//   QuoteDataBean -> com.ibm.websphere.samples.daytrader.entities.QuoteDataBean
+//   TradeSLSBBean -> com.ibm.websphere.samples.daytrader.impl.ejb3.TradeSLSBBean
+
+// === Class: TradeSLSBBean ===
+// Getter/Setter Methods (for test assertions):
+public MarketSummaryDataBean getMarketSummary();
+public Collection<OrderDataBean> getOrders(String userID);
+public Collection<OrderDataBean> getClosedOrders(String userID);
+public QuoteDataBean getQuote(String symbol);
+public Collection<QuoteDataBean> getAllQuotes();
+public HoldingDataBean getHolding(Integer holdingID);
+public AccountDataBean getAccountData(String userID);
+public AccountProfileDataBean getAccountProfileData(String userID);
+public int getImpl();
+public void setInSession(boolean inSession);
+
+// === External Class: QuoteDataBean ===
+// Full import path: com.ibm.websphere.samples.daytrader.entities.QuoteDataBean
+// Import paths:
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   Serializable -> java.io.Serializable
+//   BigDecimal -> java.math.BigDecimal
+//   NotBlank -> javax.validation.constraints.NotBlank
+// Fields (with actual visibility):
+    private static final long serialVersionUID;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private String symbol;
+    private String companyName;
+    private double volume;
+    private BigDecimal price;
+    private BigDecimal open1;
+    private BigDecimal low;
+    private BigDecimal high;
+    private double change1;
+
+// Constructors:
+public QuoteDataBean();
+public QuoteDataBean(String symbol, String companyName, double volume, BigDecimal price, BigDecimal open, BigDecimal low, BigDecimal high, double change);
+public QuoteDataBean(String symbol);
+
+// Method Signatures (used by target method):
+public String getSymbol();
+
+// Public Getter Methods (for test assertions):
+public static QuoteDataBean getRandomInstance();
+public String toString();
+public String toHTML();
+public String getCompanyName();
+public BigDecimal getPrice();
+public BigDecimal getOpen();
+public BigDecimal getLow();
+public BigDecimal getHigh();
+public double getChange();
+public double getVolume();
+
+// === External Class: TradeConfig ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.TradeConfig
+// Import paths:
+//   BigDecimal -> java.math.BigDecimal
+//   ArrayList -> java.util.ArrayList
+//   Random -> java.util.Random
+// Fields (with actual visibility):
+    private static String[] runTimeModeNames;
+    public static final int EJB3;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int DIRECT;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int SESSION_TO_DIRECT;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int runTimeMode;
+    private static String[] orderProcessingModeNames;
+    public static final int SYNCH;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ASYNCH;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ASYNCH_2PHASE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int orderProcessingMode;
+    private static String[] accessModeNames;
+    public static final int STANDARD;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int accessMode;
+    private static String[] webInterfaceNames;
+    public static final int JSP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int JSP_Images;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int JSP_Images_HTTP2;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int webInterface;
+    private static int MAX_USERS;
+    private static int MAX_QUOTES;
+    public static boolean JDBCDriverNeedsGlobalTransation;
+    public static String DATASOURCE;
+    public static int KEYBLOCKSIZE;
+    public static int QUOTES_PER_PAGE;
+    public static boolean RND_USER;
+    private static int MAX_HOLDINGS;
+    private static int count;
+    private static Object userID_count_semaphore;
+    private static int userID_count;
+    private static String hostName;
+    private static Random r0;
+    private static Random randomNumberGenerator;
+    public static final String newUserPrefix;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int verifyPercent;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static boolean updateQuotePrices;
+    private static int primIterations;
+    private static boolean longRun;
+    private static boolean publishQuotePriceChange;
+    private static int listQuotePriceChangeFrequency;
+    private static boolean displayOrderAlerts;
+    private static int marketSummaryInterval;
+    public static BigDecimal PENNY_STOCK_PRICE;
+    public static BigDecimal PENNY_STOCK_RECOVERY_MIRACLE_MULTIPLIER;
+    public static BigDecimal MAXIMUM_STOCK_PRICE;
+    public static BigDecimal MAXIMUM_STOCK_SPLIT_MULTIPLIER;
+    public static final int HOME_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int QUOTE_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int LOGIN_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int LOGOUT_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int REGISTER_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ACCOUNT_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int PORTFOLIO_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int BUY_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int SELL_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int UPDATEACCOUNT_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int[][] scenarioMixes;
+    private static char[] actions;
+    private static int sellDeficit;
+    public static final int WELCOME_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int REGISTER_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int PORTFOLIO_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int QUOTE_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int HOME_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ACCOUNT_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ORDER_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int CONFIG_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int STATS_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int MARKET_SUMMARY_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static String[][] webUI;
+    private static int scenarioCount;
+    private static final BigDecimal orderFee;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final BigDecimal cashFee;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final BigDecimal ONE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static ArrayList deck;
+    private static int card;
+
+// Method Signatures (used by target method):
+static public BigDecimal getRandomPriceChangeFactor();
+
+// Public Getter Methods (for test assertions):
+public static String getPage(int pageNumber);
+public static java getRunTimeModeNames();
+public static char getScenarioAction(boolean newUser);
+public static String getUserID();
+public static BigDecimal getOrderFee(String orderType);
+public static String getOrderProcessingModeNames();
+public static String getWebInterfaceNames();
+public static int getScenarioMixes();
+public static int getMAX_USERS();
+public static int getMAX_QUOTES();
+public static int getMAX_HOLDINGS();
+public static int getScenarioCount();
+public static boolean getJDBCDriverNeedsGlobalTransation();
+public static boolean getUpdateQuotePrices();
+public static int getPrimIterations();
+
+// === External Class: Log ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.Log
+// Import paths:
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   Level -> java.util.logging.Level
+//   Logger -> java.util.logging.Logger
+// Fields (with actual visibility):
+    private static final Logger log;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+
+// Method Signatures (used by target method):
+static public void trace(String message);
+static public void debug(String message);
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+        completeOrder(orderID, false);
+
+
+COVERAGE ANALYSIS:
+ STATUS: All tests are currently PASSING and there are NO compilation errors.
+  ISSUE: The test suite does not meet the minimum coverage threshold.
+
+COVERAGE METRICS:
+- Current line coverage: 13.79%
+- Target line coverage: 100%
+
+YOUR TASK:
+You MUST add NEW test cases to improve coverage from 13.79% to 100%.
+
+The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. 
+Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+IMPORTANT: Maintain all existing passing tests - do NOT modify or remove them. Only ADD new test cases.
+
+
+
+INSTRUCTIONS:
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

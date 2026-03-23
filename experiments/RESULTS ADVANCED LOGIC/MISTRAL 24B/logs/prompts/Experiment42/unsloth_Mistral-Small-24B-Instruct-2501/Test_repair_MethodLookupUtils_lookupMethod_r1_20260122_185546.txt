@@ -1,0 +1,118 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.util;
+Class name (MUST be exactly): MethodLookupUtils_lookupMethodTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.jxpath.util;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+
+import org.apache.commons.jxpath.ExpressionContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.util.MethodLookupUtils;
+import org.apache.commons.jxpath.util.TypeUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class MethodLookupUtils_lookupMethodTestGenerated {
+
+    private static Method method;
+    private static Class<?> targetClass;
+
+    @BeforeEach
+    public void setup() {
+        // Dummy class for testing
+        class Dummy {
+            public void dummyMethod(ExpressionContext context, String param) {}
+            public void dummyMethod(ExpressionContext context, Integer param) {}
+        }
+        targetClass = Dummy.class;
+    }
+
+    @Test
+    public void testLookupMethod_exactMatch() throws Exception {
+        method = targetClass.getMethod("dummyMethod", ExpressionContext.class, String.class);
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{new ExpressionContext(){}, "test"});
+        assertEquals(method, result);
+    }
+
+    @Test
+    public void testLookupMethod_noMatch() {
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{new ExpressionContext(){}, 123});
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethod_nullParameters() {
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", null);
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethod_emptyParameters() {
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{});
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethod_nullFirstParameter() {
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{null, "test"});
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethod_ambiguousMethodCall() {
+        class Dummy2 {
+            public void dummyMethod(ExpressionContext context, String param) {}
+            public void dummyMethod(ExpressionContext context, Integer param) {}
+        }
+        Class<?> dummyClass = Dummy2.class;
+        assertThrows(JXPathException.class, () -> {
+            MethodLookupUtils.lookupMethod(dummyClass, "dummyMethod", new Object[]{new ExpressionContext(){}, "test"});
+        });
+    }
+
+    @Test
+    public void testLookupMethod_differentParameterTypes() {
+        Method result = MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{new ExpressionContext(){}, "test", 123});
+        assertNull(result);
+    }
+
+    @Test
+    public void testLookupMethod_withTypeConversion() {
+        class Dummy3 {
+            public void dummyMethod(ExpressionContext context, String param) {}
+        }
+        Class<?> dummyClass = Dummy3.class;
+        Method result = MethodLookupUtils.lookupMethod(dummyClass, "dummyMethod", new Object[]{new ExpressionContext(){}, 123});
+        assertNull(result);
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/MethodLookupUtils_lookupMethodTestGenerated.java:[36] <anonymous org.apache.commons.jxpath.util.MethodLookupUtils_lookupMethodTestGenerated$1> is not abstract and does not override abstract method getPosition() in org.apache.commons.jxpath.ExpressionContext
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/MethodLookupUtils_lookupMethodTestGenerated.java:[42] <anonymous org.apache.commons.jxpath.util.MethodLookupUtils_lookupMethodTestGenerated$2> is not abstract and does not override abstract method getPosition() in org.apache.commons.jxpath.ExpressionContext
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/MethodLookupUtils_lookupMethodTestGenerated.java:[72] <anonymous org.apache.commons.jxpath.util.MethodLookupUtils_lookupMethodTestGenerated$3> is not abstract and does not override abstract method getPosition() in org.apache.commons.jxpath.ExpressionContext
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/MethodLookupUtils_lookupMethodTestGenerated.java:[78] <anonymous org.apache.commons.jxpath.util.MethodLookupUtils_lookupMethodTestGenerated$4> is not abstract and does not override abstract method getPosition() in org.apache.commons.jxpath.ExpressionContext
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/MethodLookupUtils_lookupMethodTestGenerated.java:[88] <anonymous org.apache.commons.jxpath.util.MethodLookupUtils_lookupMethodTestGenerated$5> is not abstract and does not override abstract method getPosition() in org.apache.commons.jxpath.ExpressionContext
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: MethodLookupUtils_lookupMethodTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

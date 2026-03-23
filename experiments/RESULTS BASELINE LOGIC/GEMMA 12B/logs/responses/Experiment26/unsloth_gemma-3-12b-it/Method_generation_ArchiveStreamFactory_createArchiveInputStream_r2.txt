@@ -1,0 +1,17 @@
+```java
+@Override
+public <I extends ArchiveInputStream<? extends ArchiveEntry>> I createArchiveInputStream(final String archiverName, final InputStream in, final String actualEncoding) throws ArchiveException {
+    if (archiverName == null) {
+        throw new IllegalArgumentException("Archiver name cannot be null");
+    }
+    if (in == null) {
+        throw new IllegalArgumentException("Input stream cannot be null");
+    }
+    String name = toKey(archiverName);
+    ArchiveStreamProvider provider = archiveInputStreamProviders.get(name);
+    if (provider == null) {
+        throw new ArchiveException("No ArchiveStreamProvider found for archiver: " + archiverName);
+    }
+    return (I) provider.createArchiveInputStream(name, in, actualEncoding);
+}
+```

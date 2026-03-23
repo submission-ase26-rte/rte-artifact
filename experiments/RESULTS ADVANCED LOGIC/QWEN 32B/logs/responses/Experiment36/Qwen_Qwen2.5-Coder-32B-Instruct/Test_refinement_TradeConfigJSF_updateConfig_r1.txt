@@ -1,0 +1,106 @@
+```java
+package com.ibm.websphere.samples.daytrader.web.jsf;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import javax.faces.context.ExternalContext;
+import javax.servlet.http.HttpSession;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class TradeConfigJSF_updateConfigTestGenerated {
+    @Mock
+    private ExternalContext context;
+    @Mock
+    private TradeDirectDBUtils dbUtils;
+    @InjectMocks
+    private TradeConfigJSF tradeConfigJSF;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        tradeConfigJSF.setRuntimeModeList(new String[]{"RuntimeMode1", "RuntimeMode2"});
+        tradeConfigJSF.setOrderProcessingModeList(new String[]{"OrderProcessingMode1", "OrderProcessingMode2"});
+        tradeConfigJSF.setWebInterfaceList(new String[]{"WebInterface1", "WebInterface2"});
+    }
+
+    @AfterEach
+    public void tearDown() {
+        tradeConfigJSF = null;
+    }
+
+    @Test
+    public void testUpdateConfigWithInvalidOrderProcessingMode() {
+        tradeConfigJSF.setOrderProcessingMode("InvalidMode");
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            tradeConfigJSF.updateConfig();
+
+            mockedLog.verify(() -> Log.error(any(Exception.class), eq("TradeConfigJSF.updateConfig(..): minor exception caught"), eq("trying to set orderProcessing to InvalidMode"), eq("reverting to current value")));
+        }
+
+        assertEquals("Sync", TradeConfig.getOrderProcessingModeNames()[TradeConfig.getOrderProcessingMode()]);
+    }
+
+    @Test
+    public void testUpdateConfigWithInvalidWebInterface() {
+        tradeConfigJSF.setWebInterface("InvalidInterface");
+
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            tradeConfigJSF.updateConfig();
+
+            mockedLog.verify(() -> Log.error(any(Exception.class), eq("TradeConfigJSF.updateConfig(..): minor exception caught"), eq("trying to set WebInterface to InvalidInterface"), eq("reverting to current value")));
+        }
+
+        assertEquals("JSP", TradeConfig.getWebInterfaceNames()[TradeConfig.getWebInterface()]);
+    }
+
+    @Test
+    public void testUpdateConfigWithNullOrderProcessingMode() {
+        tradeConfigJSF.setOrderProcessingMode(null);
+
+        tradeConfigJSF.updateConfig();
+
+        assertEquals("Sync", TradeConfig.getOrderProcessingModeNames()[TradeConfig.getOrderProcessingMode()]);
+    }
+
+    @Test
+    public void testUpdateConfigWithNullWebInterface() {
+        tradeConfigJSF.setWebInterface(null);
+
+        tradeConfigJSF.updateConfig();
+
+        assertEquals("JSP", TradeConfig.getWebInterfaceNames()[TradeConfig.getWebInterface()]);
+    }
+
+    @Test
+    public void testUpdateConfigWithValidOrderProcessingMode() {
+        tradeConfigJSF.setOrderProcessingMode("OrderProcessingMode1");
+
+        tradeConfigJSF.updateConfig();
+
+        assertEquals("OrderProcessingMode1", TradeConfig.getOrderProcessingModeNames()[TradeConfig.getOrderProcessingMode()]);
+    }
+
+    @Test
+    public void testUpdateConfigWithValidWebInterface() {
+        tradeConfigJSF.setWebInterface("WebInterface1");
+
+        tradeConfigJSF.updateConfig();
+
+        assertEquals("WebInterface1", TradeConfig.getWebInterfaceNames()[TradeConfig.getWebInterface()]);
+    }
+}
+```

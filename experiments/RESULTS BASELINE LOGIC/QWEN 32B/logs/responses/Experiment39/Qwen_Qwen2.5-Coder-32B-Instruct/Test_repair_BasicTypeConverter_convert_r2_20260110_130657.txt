@@ -1,0 +1,223 @@
+```java
+package org.apache.commons.jxpath.util;
+
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.jxpath.JXPathTypeConversionException;
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.ri.model.beans.BeanPointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class BasicTypeConverter_convertTestGenerated {
+
+    private BasicTypeConverter converter;
+
+    @BeforeEach
+    void setUp() {
+        converter = new BasicTypeConverter();
+    }
+
+    @Test
+    void testConvertNullToPrimitive() {
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert(null, int.class));
+    }
+
+    @Test
+    void testConvertNullToObject() {
+        assertNull(converter.convert(null, Object.class));
+    }
+
+    @Test
+    void testConvertNodeSetToObject() {
+        NodeSet nodeSet = new NodeSet() {
+            @Override
+            public int getLength() {
+                return 2;
+            }
+
+            @Override
+            public Object get(int index) {
+                return index == 0 ? "value1" : "value2";
+            }
+
+            @Override
+            public Collection<?> getValues() {
+                return Arrays.asList("value1", "value2");
+            }
+        };
+        assertEquals(Arrays.asList("value1", "value2"), converter.convert(nodeSet, Object.class));
+    }
+
+    @Test
+    void testConvertPointerToObject() {
+        Pointer pointer = new BeanPointer(null, null, "value", null, null, null);
+        assertEquals("value", converter.convert(pointer, Object.class));
+    }
+
+    @Test
+    void testConvertObjectToObject() {
+        Object obj = new Object();
+        assertSame(obj, converter.convert(obj, Object.class));
+    }
+
+    @Test
+    void testConvertCompatibleTypes() {
+        Integer intValue = 10;
+        assertSame(intValue, converter.convert(intValue, Integer.class));
+    }
+
+    @Test
+    void testConvertArrayToArray() {
+        Integer[] intArray = {1, 2, 3};
+        Integer[] convertedArray = (Integer[]) converter.convert(intArray, Integer[].class);
+        assertArrayEquals(intArray, convertedArray);
+    }
+
+    @Test
+    void testConvertArrayToCollection() {
+        Integer[] intArray = {1, 2, 3};
+        Collection<?> collection = (Collection<?>) converter.convert(intArray, List.class);
+        assertTrue(collection instanceof List);
+        assertEquals(Arrays.asList(1, 2, 3), collection);
+    }
+
+    @Test
+    void testConvertEmptyArrayToCollection() {
+        Integer[] intArray = {};
+        Collection<?> collection = (Collection<?>) converter.convert(intArray, List.class);
+        assertTrue(collection instanceof List);
+        assertTrue(collection.isEmpty());
+    }
+
+    @Test
+    void testConvertArrayToSingleValue() {
+        Integer[] intArray = {1};
+        assertEquals(Integer.valueOf(1), converter.convert(intArray, Integer.class));
+    }
+
+    @Test
+    void testConvertEmptyArrayToSingleValue() {
+        Integer[] intArray = {};
+        assertEquals("", converter.convert(intArray, String.class));
+    }
+
+    @Test
+    void testConvertCollectionToArray() {
+        List<Integer> intList = Arrays.asList(1, 2, 3);
+        Integer[] array = (Integer[]) converter.convert(intList, Integer[].class);
+        assertArrayEquals(new Integer[]{1, 2, 3}, array);
+    }
+
+    @Test
+    void testConvertCollectionToCollection() {
+        List<Integer> intList = Arrays.asList(1, 2, 3);
+        Collection<?> collection = (Collection<?>) converter.convert(intList, Set.class);
+        assertTrue(collection instanceof Set);
+        assertEquals(new HashSet<>(Arrays.asList(1, 2, 3)), collection);
+    }
+
+    @Test
+    void testConvertEmptyCollectionToCollection() {
+        List<Integer> intList = new ArrayList<>();
+        Collection<?> collection = (Collection<?>) converter.convert(intList, Set.class);
+        assertTrue(collection instanceof Set);
+        assertTrue(collection.isEmpty());
+    }
+
+    @Test
+    void testConvertCollectionToSingleValue() {
+        List<Integer> intList = Arrays.asList(1);
+        assertEquals(Integer.valueOf(1), converter.convert(intList, Integer.class));
+    }
+
+    @Test
+    void testConvertEmptyCollectionToSingleValue() {
+        List<Integer> intList = new ArrayList<>();
+        assertEquals("", converter.convert(intList, String.class));
+    }
+
+    @Test
+    void testConvertNodeSetToType() {
+        NodeSet nodeSet = new NodeSet() {
+            @Override
+            public int getLength() {
+                return 3;
+            }
+
+            @Override
+            public Object get(int index) {
+                return String.valueOf(index + 1);
+            }
+
+            @Override
+            public Collection<?> getValues() {
+                return Arrays.asList("1", "2", "3");
+            }
+        };
+        assertEquals(Arrays.asList(1, 2, 3), converter.convert(nodeSet, List.class));
+    }
+
+    @Test
+    void testConvertPointerToType() {
+        Pointer pointer = new BeanPointer(null, null, "1", null, null, null);
+        assertEquals(Integer.valueOf(1), converter.convert(pointer, Integer.class));
+    }
+
+    @Test
+    void testConvertToString() {
+        Integer intValue = 10;
+        assertEquals("10", converter.convert(intValue, String.class));
+    }
+
+    @Test
+    void testConvertBooleanToNumber() {
+        Boolean boolValue = true;
+        assertEquals(Integer.valueOf(1), converter.convert(boolValue, Integer.class));
+    }
+
+    @Test
+    void testConvertNumberToBoolean() {
+        Integer intValue = 1;
+        assertEquals(Boolean.TRUE, converter.convert(intValue, Boolean.class));
+    }
+
+    @Test
+    void testConvertStringToPrimitive() {
+        String strValue = "10";
+        assertEquals(Integer.valueOf(10), converter.convert(strValue, Integer.class));
+    }
+
+    @Test
+    void testConvertUsingBeanUtils() {
+        ConvertUtils.register(new Converter() {
+            @Override
+            public <T> T convert(Class<T> type, Object value) {
+                return type.cast("converted");
+            }
+        }, String.class);
+        assertEquals("converted", converter.convert("value", String.class));
+    }
+
+    @Test
+    void testConvertUnsupportedType() {
+        assertThrows(JXPathTypeConversionException.class, () -> converter.convert("value", BigInteger.class));
+    }
+}
+```

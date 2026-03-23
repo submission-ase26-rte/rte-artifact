@@ -1,0 +1,98 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package org.eclipse.cargotracker.domain.model.voyage;
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   NotNull -> jakarta.validation.constraints.NotNull
+//   Serializable -> java.io.Serializable
+//   LocalDateTime -> java.time.LocalDateTime
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   Validate -> org.apache.commons.lang3.Validate
+//   Location -> org.eclipse.cargotracker.domain.model.location.Location
+//   Voyage -> org.eclipse.cargotracker.domain.model.voyage.Voyage
+
+// === Class: Voyage ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    public static final Voyage NONE;
+    private Long id;
+    private VoyageNumber voyageNumber;
+    private Schedule schedule;
+    private List carrierMovements;
+    private Location departureLocation;
+
+// Constructors:
+public Voyage();
+public Voyage(VoyageNumber voyageNumber, Schedule schedule);
+public Builder(VoyageNumber voyageNumber, Location departureLocation);
+
+// Getter/Setter Methods (for test assertions):
+public VoyageNumber getVoyageNumber();
+public Schedule getSchedule();
+
+// Internal Methods (full implementation for context):
+  public boolean sameIdentityAs(Voyage other) {
+    return other != null && this.getVoyageNumber().sameValueAs(other.getVoyageNumber());
+  }
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null) {
+      return false;
+    }
+
+    if (!(o instanceof Voyage)) {
+      return false;
+    }
+
+    Voyage that = (Voyage) o;
+
+    return sameIdentityAs(that);
+  }
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "equals" of class "Voyage".
+
+REQUIREMENTS:
+- Test class name: Voyage_equalsTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths that are:
+  - deterministically reachable from the method’s public API
+  - independent from hidden, external, or runtime-loaded data
+- Test error scenarios by asserting the actual runtime behavior
+  when invalid or null inputs are provided.
+- Do not assume defensive checks unless they are explicitly present.
+- Cover expected exceptions declared in the method signature if present
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes or custom implementations.
+- Helper methods inside the test class are allowed if they do not reimplement production logic.
+- DO NOT use getter/setter methods that are not present in the provided class context
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing its actual behavior
+- You MAY mock DEPENDENCIES (constructor parameters, injected services) using @Mock, but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Generate ONLY the test class without explanations or comments outside the code
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

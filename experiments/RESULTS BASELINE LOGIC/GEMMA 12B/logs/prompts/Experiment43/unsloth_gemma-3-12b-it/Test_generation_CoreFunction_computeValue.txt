@@ -1,0 +1,172 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package org.apache.commons.jxpath.ri.compiler;
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   DecimalFormat -> java.text.DecimalFormat
+//   DecimalFormatSymbols -> java.text.DecimalFormatSymbols
+//   NumberFormat -> java.text.NumberFormat
+//   Collection -> java.util.Collection
+//   Locale -> java.util.Locale
+//   BasicNodeSet -> org.apache.commons.jxpath.BasicNodeSet
+//   JXPathContext -> org.apache.commons.jxpath.JXPathContext
+//   JXPathException -> org.apache.commons.jxpath.JXPathException
+//   JXPathInvalidSyntaxException -> org.apache.commons.jxpath.JXPathInvalidSyntaxException
+//   NodeSet -> org.apache.commons.jxpath.NodeSet
+//   Compiler -> org.apache.commons.jxpath.ri.Compiler
+//   EvalContext -> org.apache.commons.jxpath.ri.EvalContext
+//   InfoSetUtil -> org.apache.commons.jxpath.ri.InfoSetUtil
+//   NodeSetContext -> org.apache.commons.jxpath.ri.axes.NodeSetContext
+//   NodePointer -> org.apache.commons.jxpath.ri.model.NodePointer
+
+// === Class: CoreFunction ===
+// Fields (with actual visibility):
+    private static final Double ZERO;
+    private final int functionCode;
+
+// Constructors:
+public CoreFunction(int functionCode, Expression args);
+
+// Getter/Setter Methods (for test assertions):
+public int getFunctionCode();
+protected String getFunctionName();
+public Expression getArg1();
+public Expression getArg2();
+public Expression getArg3();
+public int getArgumentCount();
+
+// Internal Method Signatures (used by target method):
+protected Object functionContains(final EvalContext context);
+protected Object functionNormalizeSpace(final EvalContext context);
+protected Object functionString(final EvalContext context);
+protected Object functionKey(final EvalContext context);
+protected Object functionSum(final EvalContext context);
+protected Object functionLast(final EvalContext context);
+protected Object functionStartsWith(final EvalContext context);
+protected Object functionNot(final EvalContext context);
+protected Object functionLocalName(final EvalContext context);
+protected Object functionNumber(final EvalContext context);
+protected Object functionTranslate(final EvalContext context);
+protected Object functionName(final EvalContext context);
+protected Object functionFalse(final EvalContext context);
+protected Object functionFloor(final EvalContext context);
+protected Object functionID(final EvalContext context);
+protected Object functionSubstringBefore(final EvalContext context);
+protected Object functionPosition(final EvalContext context);
+protected Object functionNamespaceURI(final EvalContext context);
+protected Object functionCount(final EvalContext context);
+private Object functionFormatNumber(final EvalContext context);
+protected Object functionSubstringAfter(final EvalContext context);
+protected Object functionStringLength(final EvalContext context);
+protected Object functionSubstring(final EvalContext context);
+protected Object functionNull(final EvalContext context);
+protected Object functionBoolean(final EvalContext context);
+protected Object functionRound(final EvalContext context);
+protected Object functionLang(final EvalContext context);
+protected Object functionEndsWith(final EvalContext context);
+protected Object functionCeiling(final EvalContext context);
+protected Object functionConcat(final EvalContext context);
+protected Object functionTrue(final EvalContext context);
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+    @Override
+    public Object computeValue(final EvalContext context) {
+        switch (functionCode) {
+            case Compiler.FUNCTION_LAST :
+                return functionLast(context);
+            case Compiler.FUNCTION_POSITION :
+                return functionPosition(context);
+            case Compiler.FUNCTION_COUNT :
+                return functionCount(context);
+            case Compiler.FUNCTION_LANG :
+                return functionLang(context);
+            case Compiler.FUNCTION_ID :
+                return functionID(context);
+            case Compiler.FUNCTION_LOCAL_NAME :
+                return functionLocalName(context);
+            case Compiler.FUNCTION_NAMESPACE_URI :
+                return functionNamespaceURI(context);
+            case Compiler.FUNCTION_NAME :
+                return functionName(context);
+            case Compiler.FUNCTION_STRING :
+                return functionString(context);
+            case Compiler.FUNCTION_CONCAT :
+                return functionConcat(context);
+            case Compiler.FUNCTION_STARTS_WITH :
+                return functionStartsWith(context);
+            case Compiler.FUNCTION_ENDS_WITH :
+                return functionEndsWith(context);
+            case Compiler.FUNCTION_CONTAINS :
+                return functionContains(context);
+            case Compiler.FUNCTION_SUBSTRING_BEFORE :
+                return functionSubstringBefore(context);
+            case Compiler.FUNCTION_SUBSTRING_AFTER :
+                return functionSubstringAfter(context);
+            case Compiler.FUNCTION_SUBSTRING :
+                return functionSubstring(context);
+            case Compiler.FUNCTION_STRING_LENGTH :
+                return functionStringLength(context);
+            case Compiler.FUNCTION_NORMALIZE_SPACE :
+                return functionNormalizeSpace(context);
+            case Compiler.FUNCTION_TRANSLATE :
+                return functionTranslate(context);
+            case Compiler.FUNCTION_BOOLEAN :
+                return functionBoolean(context);
+            case Compiler.FUNCTION_NOT :
+                return functionNot(context);
+            case Compiler.FUNCTION_TRUE :
+                return functionTrue(context);
+            case Compiler.FUNCTION_FALSE :
+                return functionFalse(context);
+            case Compiler.FUNCTION_NULL :
+                return functionNull(context);
+            case Compiler.FUNCTION_NUMBER :
+                return functionNumber(context);
+            case Compiler.FUNCTION_SUM :
+                return functionSum(context);
+            case Compiler.FUNCTION_FLOOR :
+                return functionFloor(context);
+            case Compiler.FUNCTION_CEILING :
+                return functionCeiling(context);
+            case Compiler.FUNCTION_ROUND :
+                return functionRound(context);
+            case Compiler.FUNCTION_KEY :
+                return functionKey(context);
+            case Compiler.FUNCTION_FORMAT_NUMBER :
+                return functionFormatNumber(context);
+            default:
+                return null;
+        }
+    }
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "computeValue" of class "CoreFunction".
+
+REQUIREMENTS:
+- Test class name: CoreFunction_computeValueTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths, edge cases, and boundary conditions
+- Test both valid inputs and error scenarios (null values, empty collections, invalid arguments)
+- Cover expected exceptions declared in the method signature
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- DO NOT use getter/setter methods that are not present in the provided class context
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing its actual behavior
+- You MAY mock DEPENDENCIES (constructor parameters, injected services) using @Mock, but NEVER the class under test
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- Generate ONLY the test class without explanations or comments outside the code
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

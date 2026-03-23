@@ -1,0 +1,156 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package org.apache.commons.cli;
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   Serializable -> java.io.Serializable
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   Objects -> java.util.Objects
+//   Option -> org.apache.commons.cli.Option
+
+// === Class: Option ===
+// Fields (with actual visibility):
+    private static final Class DEFAULT_TYPE;
+    private int argCount;
+    private String argName;
+    private Converter converter;
+    private final DeprecatedAttributes deprecated;
+    private String description;
+    private String longOption;
+    private final String option;
+    private boolean optionalArg;
+    private boolean required;
+    private Class type;
+    private char valueSeparator;
+    package-private static final Option[] EMPTY_ARRAY;
+    private static final long serialVersionUID;
+    public static final int UNINITIALIZED;
+    public static final int UNLIMITED_VALUES;
+    private List values;
+    private char valuesep;
+
+// Constructors:
+private Builder(String option);
+private Option(Builder builder);
+public Option(String option, boolean hasArg, String description);
+public Option(String option, String description);
+public Option(String option, String longOption, boolean hasArg, String description);
+
+// Getter/Setter Methods (for test assertions):
+public String getArgName();
+public int getArgs();
+public DeprecatedAttributes getDeprecated();
+public String getDescription();
+public int getId();
+public String getKey();
+public String getLongOpt();
+public String getOpt();
+public Object getType();
+public String getValue();
+public String getValue(final int index) throws IndexOutOfBoundsException;
+public String getValue(final String defaultValue);
+public String[] getValues();
+public char getValueSeparator();
+public List<String> getValuesList();
+public boolean isDeprecated();
+public boolean isRequired();
+public void setArgName(final String argName);
+public void setArgs(final int num);
+public void setConverter(final Converter<?, ?> converter);
+public void setDescription(final String description);
+public void setLongOpt(final String longOpt);
+public void setOptionalArg(final boolean optionalArg);
+public void setRequired(final boolean required);
+public void setType(final Class<?> type);
+public void setType(final Object type);
+public void setValueSeparator(final char sep);
+
+// Internal Methods (full implementation for context):
+    public boolean isDeprecated() {
+        return deprecated != null;
+    }
+        public Builder hasArg() {
+            return hasArg(true);
+        }
+        public Builder hasArgs() {
+            argCount = Option.UNLIMITED_VALUES;
+            return this;
+        }
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+    /**
+     * Creates a String suitable for debugging.
+     *
+     * @return a String suitable for debugging.
+     */
+    @Override
+    public String toString() {
+        final StringBuilder buf = new StringBuilder().append("[ ");
+        buf.append("Option ");
+        buf.append(option);
+        if (longOption != null) {
+            buf.append(Char.SP).append(longOption);
+        }
+        if (isDeprecated()) {
+            buf.append(Char.SP);
+            buf.append(deprecated.toString());
+        }
+        if (hasArgs()) {
+            buf.append("[ARG...]");
+        } else if (hasArg()) {
+            buf.append(" [ARG]");
+        }
+        // @formatter:off
+        return buf.append(" :: ")
+            .append(description)
+            .append(" :: ")
+            .append(type)
+            .append(" ]")
+            .toString();
+        // @formatter:on
+    }
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "toString" of class "Option".
+
+REQUIREMENTS:
+- Test class name: Option_toStringTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths that are:
+  - deterministically reachable from the method’s public API
+  - independent from hidden, external, or runtime-loaded data
+- Test error scenarios by asserting the actual runtime behavior
+  when invalid or null inputs are provided.
+- Do not assume defensive checks unless they are explicitly present.
+- Cover expected exceptions declared in the method signature if present
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes or custom implementations.
+- Helper methods inside the test class are allowed if they do not reimplement production logic.
+- DO NOT use getter/setter methods that are not present in the provided class context
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing its actual behavior
+- You MAY mock DEPENDENCIES (constructor parameters, injected services) using @Mock, but NEVER the class under test
+- CRITICAL: DO NOT instantiate INTERFACES or ABSTRACT classes directly - use Mockito.mock(Interface.class) instead
+- DO NOT try to modify static final fields via ReflectionTestUtils - they are IMMUTABLE
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Use ONLY the import paths explicitly provided in the 'CORRECT IMPORT PATHS' section - do not guess or invent import paths.
+- Generate ONLY the test class without explanations or comments outside the code
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

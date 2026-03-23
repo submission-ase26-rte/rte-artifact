@@ -1,0 +1,38 @@
+```java
+public boolean nextNode() {
+    if (!setStarted) {
+        currentRootLocation = parentContext.getCurrentNodePointer();
+        NodePointer parent = currentRootLocation.getParent();
+        if (parent == null) {
+            return false;
+        }
+        NodeIterator iterator = parent.childIterator(null, reverse, currentRootLocation);
+        stack = new Stack();
+        stack.push(iterator);
+        setStarted = true;
+    }
+
+    NodeIterator iterator = (NodeIterator) stack.peek();
+    while (true) {
+        if (iterator.setPosition(iterator.getPosition() + 1)) {
+            currentNodePointer = iterator.getNodePointer();
+            if (!currentNodePointer.testNode(nodeTest)) {
+                if (!currentNodePointer.isLeaf()) {
+                    NodeIterator childIterator = currentNodePointer.childIterator(null, reverse, null);
+                    if (childIterator.setPosition(0)) {
+                        stack.push(childIterator);
+                        continue;
+                    }
+                }
+            } else {
+                return true;
+            }
+        } else {
+            stack.pop();
+            if (stack.isEmpty()) {
+                return false;
+            }
+        }
+    }
+}
+```

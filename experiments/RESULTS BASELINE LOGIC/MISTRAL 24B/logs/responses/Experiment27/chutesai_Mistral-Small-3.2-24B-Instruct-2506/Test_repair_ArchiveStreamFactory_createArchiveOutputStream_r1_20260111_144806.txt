@@ -1,0 +1,141 @@
+```java
+package org.apache.commons.compress.archivers;
+
+import org.apache.commons.compress.archivers.ar.ArArchiveOutputStream;
+import org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream;
+import org.apache.commons.compress.archivers.jar.JarArchiveOutputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.utils.IOUtils;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class ArchiveStreamFactory_createArchiveOutputStreamTestGenerated {
+
+    private ArchiveStreamFactory factory;
+    private OutputStream outputStream;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        factory = new ArchiveStreamFactory();
+        outputStream = new ByteArrayOutputStream();
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        IOUtils.closeQuietly(outputStream);
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_AR() {
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.AR, outputStream, null);
+        assertTrue(result instanceof ArArchiveOutputStream);
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_ZIP() {
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.ZIP, outputStream, null);
+        assertTrue(result instanceof ZipArchiveOutputStream);
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_ZIP_withEncoding() {
+        String encoding = "UTF-8";
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.ZIP, outputStream, encoding);
+        assertTrue(result instanceof ZipArchiveOutputStream);
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_TAR() {
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.TAR, outputStream, null);
+        assertTrue(result instanceof TarArchiveOutputStream);
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_TAR_withEncoding() {
+        String encoding = "UTF-8";
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.TAR, outputStream, encoding);
+        assertTrue(result instanceof TarArchiveOutputStream);
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_JAR() {
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.JAR, outputStream, null);
+        assertTrue(result instanceof JarArchiveOutputStream);
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_JAR_withEncoding() {
+        String encoding = "UTF-8";
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.JAR, outputStream, encoding);
+        assertTrue(result instanceof JarArchiveOutputStream);
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_CPIO() {
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.CPIO, outputStream, null);
+        assertTrue(result instanceof CpioArchiveOutputStream);
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_CPIO_withEncoding() {
+        String encoding = "UTF-8";
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(ArchiveStreamFactory.CPIO, outputStream, encoding);
+        assertTrue(result instanceof CpioArchiveOutputStream);
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_SEVEN_Z() {
+        assertThrows(StreamingNotSupportedException.class, () ->
+            factory.createArchiveOutputStream(ArchiveStreamFactory.SEVEN_Z, outputStream, null));
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_UnknownArchive() {
+        assertThrows(ArchiveException.class, () ->
+            factory.createArchiveOutputStream("UNKNOWN", outputStream, null));
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_NullArchiverName() {
+        assertThrows(IllegalArgumentException.class, () ->
+            factory.createArchiveOutputStream(null, outputStream, null));
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_NullOutputStream() {
+        assertThrows(IllegalArgumentException.class, () ->
+            factory.createArchiveOutputStream(ArchiveStreamFactory.ZIP, null, null));
+    }
+
+    @Test
+    public void testCreateArchiveOutputStream_CustomProvider() throws Exception {
+        String customName = "CUSTOM";
+        ArchiveStreamProvider mockProvider = mock(ArchiveStreamProvider.class);
+        when(mockProvider.createArchiveOutputStream(eq(customName), any(OutputStream.class), anyString()))
+            .thenReturn(mock(ArchiveOutputStream.class));
+
+        SortedMap<String, ArchiveStreamProvider> providers = new TreeMap<>();
+        providers.put(customName, mockProvider);
+        factory = new ArchiveStreamFactory();
+        ReflectionTestUtils.setField(factory, "archiveOutputStreamProviders", providers);
+
+        ArchiveOutputStream<?> result = factory.createArchiveOutputStream(customName, outputStream, null);
+        assertNotNull(result);
+        verify(mockProvider).createArchiveOutputStream(customName, outputStream, null);
+    }
+}
+```

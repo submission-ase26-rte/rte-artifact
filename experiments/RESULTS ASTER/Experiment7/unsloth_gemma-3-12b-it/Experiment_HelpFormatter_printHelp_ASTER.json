@@ -1,0 +1,73 @@
+{
+  "method_id": 7,
+  "tested_method": "printHelp",
+  "tested_class": "HelpFormatter",
+  "project": "CLI",
+  "timestamp": "2026-01-27T18:27:54.812788",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\Llama3-8B\\CLI\\Run-1\\src\\test\\java\\org\\apache\\commons\\cli\\Metodo7_unit_printHelp_HelpFormatter_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 1,
+    "tests_total": 2,
+    "tests_failed": 1,
+    "line_coverage": 90.9090909090909,
+    "branch_coverage": 57.14285714285714,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testPrintHelpCmdLineSyntaxEmpty_oycC2_GZrA0 --\nERROR: java.lang.IllegalArgumentException: cmdLineSyntax not provided",
+    "test_info": {
+      "valid_tests": [
+        "testPrintHelp_DOIE0"
+      ],
+      "invalid_tests": [
+        "testPrintHelpCmdLineSyntaxEmpty_oycC2_GZrA0"
+      ],
+      "failed_assert_tests": [],
+      "runtime_error_tests": [
+        "testPrintHelpCmdLineSyntaxEmpty_oycC2_GZrA0"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 2,
+    "assertion_complexity": 0.0,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.0,
+    "pct_no_assertion": 1.0,
+    "naturalness_method_name": 0.6772,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.5556,
+    "overall_naturalness_score": 0.6832
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.45768690248756927,
+    "string_similarity": 0.44035346097201766,
+    "token_similarity": 0.71875,
+    "ast_similarity": 0.5833333333333334,
+    "embedding_similarity": 0.9839985370635986,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.3137254901960784,
+      "similar_blocks": 8,
+      "total_blocks": 51
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.7073109786808681,
+    "passes_threshold": true
+  },
+  "original_method": "    public void printHelp(final PrintWriter pw, final int width, final String cmdLineSyntax, final String header, final Options options, final int leftPad,\n        final int descPad, final String footer, final boolean autoUsage) {\n        if (cmdLineSyntax == null || cmdLineSyntax.isEmpty()) {\n            throw new IllegalArgumentException(\"cmdLineSyntax not provided\");\n        }\n        if (autoUsage) {\n            printUsage(pw, width, cmdLineSyntax, options);\n        } else {\n            printUsage(pw, width, cmdLineSyntax);\n        }\n        if (header != null && !header.isEmpty()) {\n            printWrapped(pw, width, header);\n        }\n        printOptions(pw, width, options, leftPad, descPad);\n        if (footer != null && !footer.isEmpty()) {\n            printWrapped(pw, width, footer);\n        }\n    }",
+  "regenerated_method": "public void printHelp(final PrintWriter pw, final int width, final String cmdLineSyntax, final String header, final Options options, final int leftPad, final int descPad, final String footer, final boolean autoUsage) {\n        pw.println(header);\n        if (autoUsage) {\n            printUsage(pw, width, cmdLineSyntax);\n        } else {\n            printSyntax(pw, width, cmdLineSyntax);\n        }\n        printOptions(pw, width, options, leftPad, descPad);\n        if (footer != null) {\n            pw.println(footer);\n        }\n    }",
+  "passes_evaluation": true,
+  "similarity_threshold": 0.6872363747448347,
+  "original_metrics": {
+    "loc": 18,
+    "sloc": 18,
+    "complexity": 9
+  }
+}

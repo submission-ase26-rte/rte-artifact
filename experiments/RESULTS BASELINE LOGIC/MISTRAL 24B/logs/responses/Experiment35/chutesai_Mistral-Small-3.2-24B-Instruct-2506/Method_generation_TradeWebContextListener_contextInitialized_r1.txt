@@ -1,0 +1,63 @@
+```java
+public void contextInitialized(ServletContextEvent event) {
+    ServletContext servletContext = event.getServletContext();
+    InputStream inputStream = servletContext.getResourceAsStream("/properties/daytrader.properties");
+    Properties properties = new Properties();
+
+    try {
+        if (inputStream != null) {
+            properties.load(inputStream);
+        }
+
+        int runtimeMode = getIntProperty(properties, "runtimeMode", System.getenv("RUNTIME_MODE"), 1);
+        int orderProcessingMode = getIntProperty(properties, "orderProcessingMode", System.getenv("ORDER_PROCESSING_MODE"), 1);
+        int maxUsers = getIntProperty(properties, "maxUsers", System.getenv("MAX_USERS"), 100);
+        int maxQuotes = getIntProperty(properties, "maxQuotes", System.getenv("MAX_QUOTES"), 1000);
+        boolean publishQuotePriceChange = getBooleanProperty(properties, "publishQuotePriceChange", System.getenv("PUBLISH_QUOTES"), true);
+        boolean displayOrderAlerts = getBooleanProperty(properties, "displayOrderAlerts", System.getenv("DISPLAY_ORDER_ALERTS"), true);
+        int webInterface = getIntProperty(properties, "webInterface", System.getenv("WEB_INTERFACE"), 1);
+        int listQuotePriceChangeFrequency = getIntProperty(properties, "listQuotePriceChangeFrequency", System.getenv("LIST_QUOTE_PRICE_CHANGE_FREQUENCY"), 60);
+        int primIterations = getIntProperty(properties, "primIterations", null, 1000);
+        int marketSummaryInterval = getIntProperty(properties, "marketSummaryInterval", null, 300);
+        boolean longRun = getBooleanProperty(properties, "longRun", null, false);
+
+        TradeConfig.setRunTimeMode(runtimeMode);
+        TradeConfig.setOrderProcessingMode(orderProcessingMode);
+        TradeConfig.setMAX_USERS(maxUsers);
+        TradeConfig.setMAX_QUOTES(maxQuotes);
+        TradeConfig.setPublishQuotePriceChange(publishQuotePriceChange);
+        TradeConfig.setDisplayOrderAlerts(displayOrderAlerts);
+        TradeConfig.setWebInterface(webInterface);
+        TradeConfig.setListQuotePriceChangeFrequency(listQuotePriceChangeFrequency);
+        TradeConfig.setPrimIterations(primIterations);
+        TradeConfig.setMarketSummaryInterval(marketSummaryInterval);
+        TradeConfig.setLongRun(longRun);
+    } catch (Exception e) {
+        // Log the error and continue
+    }
+
+    Log.trace("TradeWebContextListener contextInitialized -- initializing TradeDirect");
+}
+
+private int getIntProperty(Properties properties, String key, String envVar, int defaultValue) {
+    String value = properties.getProperty(key);
+    if (value != null) {
+        return Integer.parseInt(value);
+    }
+    if (envVar != null) {
+        return Integer.parseInt(envVar);
+    }
+    return defaultValue;
+}
+
+private boolean getBooleanProperty(Properties properties, String key, String envVar, boolean defaultValue) {
+    String value = properties.getProperty(key);
+    if (value != null) {
+        return Boolean.parseBoolean(value);
+    }
+    if (envVar != null) {
+        return Boolean.parseBoolean(envVar);
+    }
+    return defaultValue;
+}
+```

@@ -1,0 +1,189 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.ri.axes;
+Class name (MUST be exactly): PrecedingOrFollowingContext_nextNodeTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.jxpath.ri.axes;
+
+import org.apache.commons.jxpath.ri.EvalContext;
+import org.apache.commons.jxpath.ri.compiler.NodeTest;
+import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import java.util.Stack;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class PrecedingOrFollowingContext_nextNodeTestGenerated {
+
+    private EvalContext mockEvalContext;
+    private NodeTest mockNodeTest;
+    private PrecedingOrFollowingContext target;
+
+    @BeforeEach
+    void setUp() {
+        mockEvalContext = mock(EvalContext.class);
+        mockNodeTest = mock(NodeTest.class);
+        target = new PrecedingOrFollowingContext(mockEvalContext, mockNodeTest, false);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mockEvalContext = null;
+        mockNodeTest = null;
+        target = null;
+    }
+
+    @Test
+    void testNextNode_noStack_rootHasParent_pushIterator() {
+        NodePointer root = Mockito.mock(NodePointer.class);
+        when(root.isLeaf()).thenReturn(false);
+        root.setParent(Mockito.mock(NodePointer.class));
+        when(mockEvalContext.getCurrentNodePointer()).thenReturn(root);
+
+        NodeIterator iterator = Mockito.mock(NodeIterator.class);
+        when(root.childIterator(null, false, root)).thenReturn(iterator);
+
+        target.nextNode();
+        verify(root).childIterator(null, false, root);
+    }
+
+    @Test
+    void testNextNode_noStack_rootIsRoot_returnsFalse() {
+        NodePointer root = Mockito.mock(NodePointer.class);
+        when(root.isLeaf()).thenReturn(false);
+        root.setParent(null);
+        root.setActual(true);
+        when(mockEvalContext.getCurrentNodePointer()).thenReturn(root);
+
+        assertFalse(target.nextNode());
+    }
+
+    @Test
+    void testNextNode_stackNotEmpty_reverseFalse_iteratorHasNext_testNodeTrue_returnsTrue() {
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        when(parent.isLeaf()).thenReturn(false);
+        NodePointer currentNode = Mockito.mock(NodePointer.class);
+        when(currentNode.isLeaf()).thenReturn(false);
+
+        Stack stack = new Stack();
+        NodeIterator iterator = Mockito.mock(NodeIterator.class);
+        when(iterator.setPosition(anyInt())).thenReturn(true);
+        when(iterator.getNodePointer()).thenReturn(currentNode);
+        when(currentNode.testNode(mockNodeTest)).thenReturn(true);
+
+        stack.push(iterator);
+        target.stack = stack;
+
+        assertTrue(target.nextNode());
+        verify(currentNode).testNode(mockNodeTest);
+
+    }
+
+    @Test
+    void testNextNode_stackNotEmpty_reverseFalse_iteratorHasNext_testNodeFalse_popIterator() {
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        when(parent.isLeaf()).thenReturn(false);
+        NodePointer currentNode = Mockito.mock(NodePointer.class);
+        when(currentNode.isLeaf()).thenReturn(false);
+
+        Stack stack = new Stack();
+        NodeIterator iterator = Mockito.mock(NodeIterator.class);
+        when(iterator.setPosition(anyInt())).thenReturn(true);
+        when(iterator.getNodePointer()).thenReturn(currentNode);
+        when(currentNode.testNode(mockNodeTest)).thenReturn(false);
+
+        stack.push(iterator);
+        target.stack = stack;
+
+        assertFalse(target.nextNode());
+        verify(iterator).setPosition(anyInt());
+        verify(stack).pop();
+
+    }
+
+    @Test
+    void testNextNode_stackNotEmpty_reverseTrue_iteratorHasNext_testNodeTrue_returnsTrue() {
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        when(parent.isLeaf()).thenReturn(false);
+        NodePointer currentNode = Mockito.mock(NodePointer.class);
+        when(currentNode.isLeaf()).thenReturn(false);
+
+        Stack stack = new Stack();
+        NodeIterator iterator = Mockito.mock(NodeIterator.class);
+        when(iterator.setPosition(anyInt())).thenReturn(true);
+        when(iterator.getNodePointer()).thenReturn(currentNode);
+        when(currentNode.testNode(mockNodeTest)).thenReturn(true);
+
+        stack.push(iterator);
+        target.stack = stack;
+        target.reverse = true;
+
+        assertTrue(target.nextNode());
+        verify(currentNode).testNode(mockNodeTest);
+    }
+
+    @Test
+    void testNextNode_stackNotEmpty_reverseTrue_iteratorHasNext_testNodeFalse_popIteratorAndCheckNext() {
+        NodePointer parent = Mockito.mock(NodePointer.class);
+        when(parent.isLeaf()).thenReturn(false);
+        NodePointer currentNode = Mockito.mock(NodePointer.class);
+        when(currentNode.isLeaf()).thenReturn(false);
+
+        Stack stack = new Stack();
+        NodeIterator iterator = Mockito.mock(NodeIterator.class);
+        when(iterator.setPosition(anyInt())).thenReturn(true);
+        when(iterator.getNodePointer()).thenReturn(currentNode);
+        when(currentNode.testNode(mockNodeTest)).thenReturn(false);
+
+        stack.push(iterator);
+        target.stack = stack;
+        target.reverse = true;
+
+        assertFalse(target.nextNode());
+        verify(iterator).setPosition(anyInt());
+        verify(stack).pop();
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext_nextNodeTestGenerated.java:[42] cannot find symbol
+  symbol:   method setParent(org.apache.commons.jxpath.ri.model.NodePointer)
+  location: variable root of type org.apache.commons.jxpath.ri.model.NodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext_nextNodeTestGenerated.java:[56] cannot find symbol
+  symbol:   method setParent(<nulltype>)
+  location: variable root of type org.apache.commons.jxpath.ri.model.NodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext_nextNodeTestGenerated.java:[57] cannot find symbol
+  symbol:   method setActual(boolean)
+  location: variable root of type org.apache.commons.jxpath.ri.model.NodePointer
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext_nextNodeTestGenerated.java:[77] stack has private access in org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext_nextNodeTestGenerated.java:[98] stack has private access in org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext_nextNodeTestGenerated.java:[120] stack has private access in org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext_nextNodeTestGenerated.java:[121] reverse has private access in org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext_nextNodeTestGenerated.java:[141] stack has private access in org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext_nextNodeTestGenerated.java:[142] reverse has private access in org.apache.commons.jxpath.ri.axes.PrecedingOrFollowingContext
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: PrecedingOrFollowingContext_nextNodeTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

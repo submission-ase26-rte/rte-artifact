@@ -1,0 +1,172 @@
+```java
+public String metaphone(final String txt) {
+    if (txt == null || txt.isEmpty()) {
+        return "";
+    }
+
+    StringBuilder inwd = new StringBuilder(txt.toLowerCase());
+    StringBuilder metaph = new StringBuilder();
+
+    int wdsz = inwd.length();
+    int n = 0;
+
+    if (inwd.charAt(0) == 'k' && wdsz > 1 && inwd.charAt(1) == 'n') {
+        inwd.deleteCharAt(0);
+        wdsz--;
+    } else if (inwd.charAt(0) == 'x' && (wdsz > 1 && (inwd.charAt(1) == 'h' || inwd.charAt(1) == 'y'))) {
+        inwd.setCharAt(0, 's');
+    } else if (inwd.charAt(0) == 'w' && wdsz > 1 && inwd.charAt(1) == 'h') {
+        inwd.setCharAt(0, 'h');
+    } else if (inwd.charAt(0) == 'h' && wdsz > 1 && isVowel(inwd, 1)) {
+        inwd.setCharAt(0, 'a');
+    }
+
+    while (metaph.length() < getMaxCodeLen() && n < wdsz) {
+        char next;
+        switch (inwd.charAt(n)) {
+            case 'a':
+            case 'e':
+            case 'i':
+            case 'o':
+            case 'u':
+                if (n == 0) {
+                    metaph.append(inwd.charAt(n));
+                }
+                break;
+            case 'b':
+                if (!(n > 0 && inwd.charAt(n - 1) == 'm')) {
+                    metaph.append('b');
+                }
+                break;
+            case 'c':
+                if (n > 0 && isVowel(inwd, n - 1) && !isLastChar(wdsz, n) && (inwd.charAt(n + 1) == 'h' || inwd.charAt(n + 1) == 'i')) {
+                    metaph.append('x');
+                } else if (regionMatch(inwd, n, "cia")) {
+                    metaph.append('x');
+                    n += 2;
+                } else if (!isLastChar(wdsz, n) && (inwd.charAt(n + 1) == 'h')) {
+                    metaph.append('x');
+                    n++;
+                } else if (!isLastChar(wdsz, n) && (inwd.charAt(n + 1) == 'k')) {
+                    metaph.append('k');
+                    n++;
+                } else if (!isLastChar(wdsz, n) && (inwd.charAt(n + 1) == 'z')) {
+                    metaph.append('s');
+                    n++;
+                } else {
+                    metaph.append('k');
+                }
+                break;
+            case 'd':
+                if (!isLastChar(wdsz, n) && (inwd.charAt(n + 1) == 'g' || inwd.charAt(n + 1) == 'h') && (!isLastChar(wdsz, n + 1) && isVowel(inwd, n + 2))) {
+                    metaph.append('j');
+                    n += 2;
+                } else if (!isLastChar(wdsz, n) && (inwd.charAt(n + 1) == 'g')) {
+                    metaph.append('g');
+                    n++;
+                } else {
+                    metaph.append('t');
+                }
+                break;
+            case 'g':
+                if (!isLastChar(wdsz, n) && (inwd.charAt(n + 1) == 'h') && (!isLastChar(wdsz, n + 1) && !isVowel(inwd, n + 2))) {
+                    n++;
+                } else if (!isLastChar(wdsz, n) && (inwd.charAt(n + 1) == 'n') && (!isLastChar(wdsz, n + 1) && (inwd.charAt(n + 2) == 'e' || inwd.charAt(n + 2) == 'y'))) {
+                    metaph.append('n');
+                    n += 2;
+                } else if (!isLastChar(wdsz, n) && (inwd.charAt(n + 1) == 'n')) {
+                    metaph.append('n');
+                    n++;
+                } else if (!isLastChar(wdsz, n) && (inwd.charAt(n + 1) == 'h')) {
+                    metaph.append('h');
+                    n++;
+                } else {
+                    metaph.append('k');
+                }
+                break;
+            case 'h':
+                if ((n == 0 || isVowel(inwd, n - 1)) && isVowel(inwd, n + 1)) {
+                    metaph.append('h');
+                }
+                break;
+            case 'j':
+                metaph.append('j');
+                break;
+            case 'k':
+                if (n > 0 && inwd.charAt(n - 1) != 'c') {
+                    metaph.append('k');
+                }
+                break;
+            case 'l':
+                metaph.append('l');
+                break;
+            case 'm':
+                metaph.append('m');
+                break;
+            case 'n':
+                metaph.append('n');
+                break;
+            case 'p':
+                if (!isLastChar(wdsz, n) && inwd.charAt(n + 1) == 'h') {
+                    metaph.append('f');
+                    n++;
+                } else {
+                    metaph.append('p');
+                }
+                break;
+            case 'q':
+                metaph.append('k');
+                break;
+            case 'r':
+                metaph.append('r');
+                break;
+            case 's':
+                if (regionMatch(inwd, n, "sh")) {
+                    metaph.append('x');
+                    n++;
+                } else {
+                    metaph.append('s');
+                }
+                break;
+            case 't':
+                if (regionMatch(inwd, n, "th")) {
+                    metaph.append('0');
+                    n++;
+                } else if (regionMatch(inwd, n, "tch")) {
+                    metaph.append('x');
+                    n += 2;
+                } else {
+                    metaph.append('t');
+                }
+                break;
+            case 'v':
+                metaph.append('f');
+                break;
+            case 'w':
+                if (n == 0 && isVowel(inwd, n + 1)) {
+                    metaph.append('w');
+                } else if (!isLastChar(wdsz, n) && inwd.charAt(n + 1) == 'h') {
+                    metaph.append('w');
+                    n++;
+                }
+                break;
+            case 'x':
+                metaph.append('ks');
+                break;
+            case 'y':
+                if (isVowel(inwd, n + 1)) {
+                    metaph.append('y');
+                }
+                break;
+            case 'z':
+                metaph.append('s');
+                break;
+            default:
+                break;
+        }
+        n++;
+    }
+
+    return metaph.toString().toUpperCase();
+}
+```

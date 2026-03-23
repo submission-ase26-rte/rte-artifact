@@ -1,0 +1,152 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.cli;
+Class name (MUST be exactly): OptionBuilder_createTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.cli;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.springframework.test.util.ReflectionTestUtils;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class OptionBuilder_createTestGenerated {
+
+    private OptionBuilder optionBuilder;
+
+    @BeforeEach
+    public void setUp() {
+        optionBuilder = new OptionBuilder();
+    }
+
+    @Test
+    public void testCreateValidOption() {
+        ReflectionTestUtils.setField(optionBuilder, "longOption", "longOpt");
+        ReflectionTestUtils.setField(optionBuilder, "description", "description");
+        ReflectionTestUtils.setField(optionBuilder, "argName", "argName");
+        ReflectionTestUtils.setField(optionBuilder, "required", true);
+        ReflectionTestUtils.setField(optionBuilder, "argCount", 1);
+        ReflectionTestUtils.setField(optionBuilder, "type", String.class);
+        ReflectionTestUtils.setField(optionBuilder, "optionalArg", true);
+        ReflectionTestUtils.setField(optionBuilder, "valueSeparator", '=');
+
+        Option option = optionBuilder.create("opt");
+
+        assertEquals("description", option.getDescription());
+        assertEquals("longOpt", option.getLongOpt());
+        assertTrue(option.isRequired());
+        assertEquals(1, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals("argName", option.getArgName());
+        assertTrue(option.hasOptionalArg());
+        assertEquals('=', option.getValueSeparator());
+    }
+
+    @Test
+    public void testCreateWithNullDescription() {
+        ReflectionTestUtils.setField(optionBuilder, "longOption", "longOpt");
+        ReflectionTestUtils.setField(optionBuilder, "description", null);
+        ReflectionTestUtils.setField(optionBuilder, "argName", "argName");
+        ReflectionTestUtils.setField(optionBuilder, "required", true);
+        ReflectionTestUtils.setField(optionBuilder, "argCount", 1);
+        ReflectionTestUtils.setField(optionBuilder, "type", String.class);
+        ReflectionTestUtils.setField(optionBuilder, "optionalArg", true);
+        ReflectionTestUtils.setField(optionBuilder, "valueSeparator", '=');
+
+        Option option = optionBuilder.create("opt");
+
+        assertEquals(null, option.getDescription());
+        assertEquals("longOpt", option.getLongOpt());
+        assertTrue(option.isRequired());
+        assertEquals(1, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals("argName", option.getArgName());
+        assertTrue(option.hasOptionalArg());
+        assertEquals('=', option.getValueSeparator());
+    }
+
+    @Test
+    public void testCreateWithInvalidOptionChar() {
+        ReflectionTestUtils.setField(optionBuilder, "longOption", "longOpt");
+        ReflectionTestUtils.setField(optionBuilder, "description", "description");
+        ReflectionTestUtils.setField(optionBuilder, "argName", "argName");
+        ReflectionTestUtils.setField(optionBuilder, "required", true);
+        ReflectionTestUtils.setField(optionBuilder, "argCount", 1);
+        ReflectionTestUtils.setField(optionBuilder, "type", String.class);
+        ReflectionTestUtils.setField(optionBuilder, "optionalArg", true);
+        ReflectionTestUtils.setField(optionBuilder, "valueSeparator", '=');
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            optionBuilder.create("");
+        });
+    }
+
+    @Test
+    public void testCreateWithNullLongOpt() {
+        ReflectionTestUtils.setField(optionBuilder, "longOption", null);
+        ReflectionTestUtils.setField(optionBuilder, "description", "description");
+        ReflectionTestUtils.setField(optionBuilder, "argName", "argName");
+        ReflectionTestUtils.setField(optionBuilder, "required", true);
+        ReflectionTestUtils.setField(optionBuilder, "argCount", 1);
+        ReflectionTestUtils.setField(optionBuilder, "type", String.class);
+        ReflectionTestUtils.setField(optionBuilder, "optionalArg", true);
+        ReflectionTestUtils.setField(optionBuilder, "valueSeparator", '=');
+
+        Option option = optionBuilder.create("opt");
+
+        assertEquals(null, option.getLongOpt());
+        assertEquals("description", option.getDescription());
+        assertTrue(option.isRequired());
+        assertEquals(1, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals("argName", option.getArgName());
+        assertTrue(option.hasOptionalArg());
+        assertEquals('=', option.getValueSeparator());
+    }
+
+    @Test
+    public void testCreateWithDefaultType() {
+        ReflectionTestUtils.setField(optionBuilder, "longOption", "longOpt");
+        ReflectionTestUtils.setField(optionBuilder, "description", "description");
+        ReflectionTestUtils.setField(optionBuilder, "argName", "argName");
+        ReflectionTestUtils.setField(optionBuilder, "required", true);
+        ReflectionTestUtils.setField(optionBuilder, "argCount", 1);
+        ReflectionTestUtils.setField(optionBuilder, "type", null);
+        ReflectionTestUtils.setField(optionBuilder, "optionalArg", true);
+        ReflectionTestUtils.setField(optionBuilder, "valueSeparator", '=');
+
+        Option option = optionBuilder.create("opt");
+
+        assertEquals("description", option.getDescription());
+        assertEquals("longOpt", option.getLongOpt());
+        assertTrue(option.isRequired());
+        assertEquals(1, option.getArgs());
+        assertEquals(String.class, option.getType());
+        assertEquals("argName", option.getArgName());
+        assertTrue(option.hasOptionalArg());
+        assertEquals('=', option.getValueSeparator());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/CLI/Run-1/src/test/java/org/apache/commons/cli/OptionBuilder_createTestGenerated.java:[16] OptionBuilder() has private access in org.apache.commons.cli.OptionBuilder
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: OptionBuilder_createTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

@@ -1,0 +1,169 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.util;
+Class name (MUST be exactly): BasicTypeConverter_canConvertTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.jxpath.util;
+
+import org.apache.commons.jxpath.NodeSet;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.ri.Compiler;
+import org.apache.commons.jxpath.ri.model.BeanPointer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class BasicTypeConverter_canConvertTestGenerated {
+    private BasicTypeConverter basicTypeConverter;
+
+    @BeforeEach
+    public void setUp() {
+        List<Object> values = new ArrayList<>();
+        basicTypeConverter = new BasicTypeConverter();
+    }
+
+    @Test
+    public void testCanConvertWithNonConvertibleTypes() {
+        assertTrue(basicTypeConverter.canConvert(new Object(), Integer.class));
+    }
+
+    @Test
+    public void testCanConvertToString() {
+        assertTrue(basicTypeConverter.canConvert("test", String.class));
+    }
+
+    @Test
+    public void testCanConvertBooleanToNumber() {
+        assertTrue(basicTypeConverter.canConvert(true, Number.class));
+    }
+
+    @Test
+    public void testCanConvertNumberToBoolean() {
+        assertTrue(basicTypeConverter.canConvert(1, Boolean.class));
+    }
+
+    @Test
+    public void testCanConvertStringToBoolean() {
+        assertTrue(basicTypeConverter.canConvert("true", Boolean.class));
+    }
+
+    @Test
+    public void testCanConvertStringToCharacter() {
+        assertTrue(basicTypeConverter.canConvert("a", Character.class));
+    }
+
+    @Test
+    public void testCanConvertStringToByte() {
+        assertTrue(basicTypeConverter.canConvert("123", Byte.class));
+    }
+
+    @Test
+    public void testCanConvertStringToShort() {
+        assertTrue(basicTypeConverter.canConvert("123", Short.class));
+    }
+
+    @Test
+    public void testCanConvertStringToInteger() {
+        assertTrue(basicTypeConverter.canConvert("123", Integer.class));
+    }
+
+    @Test
+    public void testCanConvertStringToLong() {
+        assertTrue(basicTypeConverter.canConvert("123", Long.class));
+    }
+
+    @Test
+    public void testCanConvertStringToFloat() {
+        assertTrue(basicTypeConverter.canConvert("123.45", Float.class));
+    }
+
+    @Test
+    public void testCanConvertStringToDouble() {
+        assertTrue(basicTypeConverter.canConvert("123.45", Double.class));
+    }
+
+    @Test
+    public void testCanConvertArrayToArray() {
+        Integer[] intArray = {1, 2, 3};
+        assertTrue(basicTypeConverter.canConvert(intArray, Integer[].class));
+    }
+
+    @Test
+    public void testCanConvertArrayToCollection() {
+        Integer[] intArray = {1, 2, 3};
+        assertTrue(basicTypeConverter.canConvert(intArray, List.class));
+    }
+
+    @Test
+    public void testCanConvertArrayToPrimitive() {
+        Integer[] intArray = {1, 2, 3};
+        assertTrue(basicTypeConverter.canConvert(intArray, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToArray() {
+        List<Integer> intList = Arrays.asList(1, 2, 3);
+        assertTrue(basicTypeConverter.canConvert(intList, Integer[].class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToCollection() {
+        List<Integer> intList = Arrays.asList(1, 2, 3);
+        assertTrue(basicTypeConverter.canConvert(intList, List.class));
+    }
+
+    @Test
+    public void testCanConvertCollectionToPrimitive() {
+        List<Integer> intList = Arrays.asList(1, 2, 3);
+        assertTrue(basicTypeConverter.canConvert(intList, Integer.class));
+    }
+
+    @Test
+    public void testCanConvertNodeSetToArray() {
+        NodeSet nodeSet = new NodeSet(Arrays.asList(1, 2, 3));
+        assertTrue(basicTypeConverter.canConvert(nodeSet, Integer[].class));
+    }
+
+    @Test
+    public void testCanConvertPointerToArray() {
+        Pointer pointer = new BeanPointer(new Object());
+        assertTrue(basicTypeConverter.canConvert(pointer, Integer[].class));
+    }
+
+    @Test
+    public void testCanConvertWithConvertUtils() {
+        assertTrue(basicTypeConverter.canConvert("123", Integer.class));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_canConvertTestGenerated.java:[6] cannot find symbol
+  symbol:   class BeanPointer
+  location: package org.apache.commons.jxpath.ri.model
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_canConvertTestGenerated.java:[126] org.apache.commons.jxpath.NodeSet is abstract; cannot be instantiated
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/BasicTypeConverter_canConvertTestGenerated.java:[132] cannot find symbol
+  symbol:   class BeanPointer
+  location: class org.apache.commons.jxpath.util.BasicTypeConverter_canConvertTestGenerated
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: BasicTypeConverter_canConvertTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

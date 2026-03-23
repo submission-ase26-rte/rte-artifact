@@ -1,0 +1,137 @@
+```java
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+class OptionBuilder_createTestGenerated {
+
+    @Test
+    void createWithValidParameters() {
+        OptionBuilder.reset();
+        OptionBuilder.isRequired(false);
+        OptionBuilder.longOption("longOpt");
+        OptionBuilder.description("description");
+        OptionBuilder.argName("argName");
+        OptionBuilder.argCount(1);
+        OptionBuilder.type(String.class);
+        OptionBuilder.optionalArg(false);
+        OptionBuilder.valueSeparator('=');
+
+        Option result = OptionBuilder.create("o");
+
+        assertNotNull(result);
+        assertEquals("o", result.getOpt());
+        assertEquals("longOpt", result.getLongOpt());
+        assertFalse(result.isRequired());
+        assertFalse(result.hasOptionalArg());
+        assertEquals(1, result.getArgs());
+        assertEquals(String.class, result.getType());
+        assertEquals('=', result.getValueSeparator());
+        assertEquals("argName", result.getArgName());
+        assertEquals("description", result.getDescription());
+    }
+
+    @Test
+    void createWithRequiredOption() {
+        OptionBuilder.reset();
+        OptionBuilder.isRequired(true);
+        OptionBuilder.longOption("longOpt");
+        OptionBuilder.description("description");
+
+        Option result = OptionBuilder.create("r");
+
+        assertNotNull(result);
+        assertTrue(result.isRequired());
+    }
+
+    @Test
+    void createWithOptionalArg() {
+        OptionBuilder.reset();
+        OptionBuilder.isRequired(false);
+        OptionBuilder.optionalArg(true);
+        OptionBuilder.longOption("longOpt");
+        OptionBuilder.description("description");
+
+        Option result = OptionBuilder.create("o");
+
+        assertNotNull(result);
+        assertTrue(result.hasOptionalArg());
+    }
+
+    @Test
+    void createWithUnlimitedArgs() {
+        OptionBuilder.reset();
+        OptionBuilder.argCount(Option.UNLIMITED_VALUES);
+        OptionBuilder.longOption("longOpt");
+        OptionBuilder.description("description");
+
+        Option result = OptionBuilder.create("a");
+
+        assertNotNull(result);
+        assertEquals(Option.UNLIMITED_VALUES, result.getArgs());
+    }
+
+    @Test
+    void createWithNoArgCount() {
+        OptionBuilder.reset();
+        OptionBuilder.longOption("longOpt");
+        OptionBuilder.description("description");
+
+        Option result = OptionBuilder.create("n");
+
+        assertNotNull(result);
+        assertEquals(0, result.getArgs());
+    }
+
+    @Test
+    void createWithNullOpt() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            OptionBuilder.reset();
+            OptionBuilder.create(null);
+        });
+    }
+
+    @Test
+    void createWithEmptyOpt() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            OptionBuilder.reset();
+            OptionBuilder.create("");
+        });
+    }
+
+    @Test
+    void createWithMultiCharOpt() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            OptionBuilder.reset();
+            OptionBuilder.create("ab");
+        });
+    }
+
+    @Test
+    void createWithSpecialCharOpt() {
+        OptionBuilder.reset();
+        OptionBuilder.longOption("longOpt");
+        OptionBuilder.description("description");
+
+        Option result = OptionBuilder.create("?");
+
+        assertNotNull(result);
+        assertEquals("?", result.getOpt());
+    }
+
+    @Test
+    void createWithResetBetweenCalls() {
+        OptionBuilder.reset();
+        OptionBuilder.longOption("first");
+        OptionBuilder.create("a");
+
+        OptionBuilder.reset();
+        OptionBuilder.longOption("second");
+        Option result = OptionBuilder.create("b");
+
+        assertEquals("second", result.getLongOpt());
+    }
+}
+```

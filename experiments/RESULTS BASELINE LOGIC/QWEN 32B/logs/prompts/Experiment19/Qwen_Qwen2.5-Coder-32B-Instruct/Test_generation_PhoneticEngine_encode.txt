@@ -1,0 +1,210 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package org.apache.commons.codec.language.bm;
+
+PROJECT CONTEXT:
+// === Imports of PhoneticEngine ===
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+import org.apache.commons.codec.language.bm.Languages.LanguageSet;
+import org.apache.commons.codec.language.bm.Rule.Phoneme;
+
+// === Class: PhoneticEngine ===
+// Fields:
+    private Set phonemes;
+    private Map finalRules;
+    private CharSequence input;
+    private PhonemeBuilder phonemeBuilder;
+    private int i;
+    private int maxPhonemes;
+    private boolean found;
+    private int DEFAULT_MAX_PHONEMES;
+    private Map NAME_PREFIXES;
+    private Lang lang;
+    private NameType nameType;
+    private RuleType ruleType;
+    private boolean concat;
+
+// Constructors:
+private PhonemeBuilder(Rule phoneme);
+private PhonemeBuilder(Set phonemes);
+public RulesApplication(Map finalRules, CharSequence input, PhonemeBuilder phonemeBuilder, int i, int maxPhonemes);
+public PhoneticEngine(NameType nameType, RuleType ruleType, boolean concatenate);
+public PhoneticEngine(NameType nameType, RuleType ruleType, boolean concatenate, int maxPhonemes);
+
+// Getter/Setter Methods (for test assertions):
+public int getI();
+public PhonemeBuilder getPhonemeBuilder();
+public boolean isFound();
+public Lang getLang();
+public int getMaxPhonemes();
+public NameType getNameType();
+public RuleType getRuleType();
+public boolean isConcat();
+
+// Internal Method Signatures (used by target method):
+static private String join(final List strings, final String sep);
+private PhonemeBuilder applyFinalRules(final PhonemeBuilder phonemeBuilder, final Map finalRules);
+
+// === External Class: Rule ===
+// Fields:
+    private Comparator COMPARATOR;
+    private StringBuilder phonemeText;
+    private Languages languages;
+    private List phonemeList;
+    private RPattern ALL_STRINGS_RMATCHER;
+    private String ALL;
+    private String DOUBLE_QUOTE;
+    private String HASH_INCLUDE;
+    private int HASH_INCLUDE_LENGTH;
+    private Map RULES;
+    private int myLine;
+    private String loc;
+    private String pattern;
+    private RPattern lContext;
+    private PhonemeExpr phoneme;
+    private RPattern rContext;
+
+// Constructors:
+public Phoneme(CharSequence phonemeText, Languages languages);
+public Phoneme(Phoneme phonemeLeft, Phoneme phonemeRight);
+public Phoneme(Phoneme phonemeLeft, Phoneme phonemeRight, Languages languages);
+public PhonemeList(List phonemes);
+public Rule(String pattern, String lContext, String rContext, PhonemeExpr phoneme);
+
+// Method Signatures (used by target method):
+public static Map getInstanceMap(final NameType nameType, final RuleType rt, final Languages langs);
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+    /**
+     * Encodes an input string into an output phonetic representation, given a set of possible origin languages.
+     *
+     * @param input
+     *            String to phoneticise; a String with dashes or spaces separating each word
+     * @param languageSet
+     *            set of possible origin languages
+     * @return a phonetic representation of the input; a String containing '-'-separated phonetic representations of the
+     *         input
+     */
+    public String encode(String input, final Languages.LanguageSet languageSet) {
+        final Map<String, List<Rule>> rules = Rule.getInstanceMap(this.nameType, RuleType.RULES, languageSet);
+        // rules common across many (all) languages
+        final Map<String, List<Rule>> finalRules1 = Rule.getInstanceMap(this.nameType, this.ruleType, "common");
+        // rules that apply to a specific language that may be ambiguous or wrong if applied to other languages
+        final Map<String, List<Rule>> finalRules2 = Rule.getInstanceMap(this.nameType, this.ruleType, languageSet);
+
+        // tidy the input
+        // lower case is a locale-dependent operation
+        input = input.toLowerCase(Locale.ENGLISH).replace('-', ' ').trim();
+
+        if (this.nameType == NameType.GENERIC) {
+            if (input.startsWith("d'")) { // check for d'
+                final String remainder = input.substring(2);
+                final String combined = "d" + remainder;
+                return "(" + encode(remainder) + ")-(" + encode(combined) + ")";
+            }
+            for (final String l : NAME_PREFIXES.get(this.nameType)) {
+                // handle generic prefixes
+                if (input.startsWith(l + " ")) {
+                    // check for any prefix in the words list
+                    final String remainder = input.substring(l.length() + 1); // input without the prefix
+                    final String combined = l + remainder; // input with prefix without space
+                    return "(" + encode(remainder) + ")-(" + encode(combined) + ")";
+                }
+            }
+        }
+
+        final List<String> words = Arrays.asList(input.split("\\s+"));
+        final List<String> words2 = new ArrayList<>();
+
+        // special-case handling of word prefixes based upon the name type
+        switch (this.nameType) {
+        case SEPHARDIC:
+            words.forEach(aWord -> {
+                final String[] parts = aWord.split("'", -1);
+                words2.add(parts[parts.length - 1]);
+            });
+            words2.removeAll(NAME_PREFIXES.get(this.nameType));
+            break;
+        case ASHKENAZI:
+            words2.addAll(words);
+            words2.removeAll(NAME_PREFIXES.get(this.nameType));
+            break;
+        case GENERIC:
+            words2.addAll(words);
+            break;
+        default:
+            throw new IllegalStateException("Unreachable case: " + this.nameType);
+        }
+
+        if (this.concat) {
+            // concat mode enabled
+            input = join(words2, " ");
+        } else if (words2.size() == 1) {
+            // not a multi-word name
+            input = words.iterator().next();
+        } else if (!words2.isEmpty()) {
+            // encode each word in a multi-word name separately (normally used for approx matches)
+            final StringBuilder result = new StringBuilder();
+            words2.forEach(word -> result.append("-").append(encode(word)));
+            // return the result without the leading "-"
+            return result.substring(1);
+        }
+
+        PhonemeBuilder phonemeBuilder = PhonemeBuilder.empty(languageSet);
+
+        // loop over each char in the input - we will handle the increment manually
+        for (int i = 0; i < input.length();) {
+            final RulesApplication rulesApplication =
+                    new RulesApplication(rules, input, phonemeBuilder, i, maxPhonemes).invoke();
+            i = rulesApplication.getI();
+            phonemeBuilder = rulesApplication.getPhonemeBuilder();
+        }
+
+        // Apply the general rules
+        phonemeBuilder = applyFinalRules(phonemeBuilder, finalRules1);
+        // Apply the language-specific rules
+        phonemeBuilder = applyFinalRules(phonemeBuilder, finalRules2);
+
+        return phonemeBuilder.makeString();
+    }
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "encode" of class "PhoneticEngine".
+
+REQUIREMENTS:
+- Test class name: PhoneticEngine_encodeTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths, edge cases, and boundary conditions
+- Test both valid inputs and error scenarios (null values, empty collections, invalid arguments)
+- Cover expected exceptions declared in the method signature
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- DO NOT use getter/setter methods that are not present in the provided class context
+- DO NOT mock the target class
+- Generate ONLY the test class without explanations or comments outside the code
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

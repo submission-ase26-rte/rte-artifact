@@ -1,0 +1,498 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.ri.model.dom;
+Class name (MUST be exactly): DOMNodePointer_asPathTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testAsPathElementNode --
+ERROR: java.lang.NullPointerException: Cannot invoke "String.lastIndexOf(int)" because "name" is null
+--------------------------------------------------
+TEST: testAsPathElementNodeWithNamespace --
+ERROR: java.lang.NullPointerException: Cannot invoke "String.lastIndexOf(int)" because "name" is null
+--------------------------------------------------
+TEST: testAsPathWithDocumentNode --
+ERROR: java.lang.ClassCastException: class org.mockito.codegen.Node$MockitoMock$qQmqHeI0 cannot be cast to class org.w3c.dom.Element (org.mockito.codegen.Node$MockitoMock$qQmqHeI0 is in unnamed module of loader 'app'; org.w3c.dom.Element is in module java.xml of loader 'bootstrap')
+--------------------------------------------------
+TEST: testAsPathElementNodeNoNamespace --
+ERROR: java.lang.NullPointerException: Cannot invoke "String.lastIndexOf(int)" because "name" is null
+--------------------------------------------------
+TEST: testAsPathWithParentAndNamespace --
+ERROR: java.lang.NullPointerException: Cannot invoke "String.lastIndexOf(int)" because "name" is null
+--------------------------------------------------
+TEST: testAsPathWithParent --
+ERROR: java.lang.NullPointerException: Cannot invoke "String.lastIndexOf(int)" because "name" is null
+
+TEST CODE TO FIX:
+package org.apache.commons.jxpath.ri.model.dom;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.Pointer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.Mockito;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.ProcessingInstruction;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class DOMNodePointer_asPathTestGenerated {
+    private JXPathContext mockContext;
+    @BeforeEach
+    void setUp() {
+        mockContext = Mockito.mock(JXPathContext.class);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.reset(mockContext);
+    }
+
+
+    @Test
+            void testAsPathElementNode() {
+                Node node = Mockito.mock(Element.class);
+                when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+                when(node.getLocalName()).thenReturn("testElement");
+                DOMNodePointer pointer = new DOMNodePointer(node, Locale.getDefault());
+                when(pointer.getNamespaceURI()).thenReturn(null);
+                assertEquals("/testElement[1]", pointer.asPath());
+            }
+
+    @Test
+            void testAsPathElementNodeWithNamespace() {
+                Node node = Mockito.mock(Element.class);
+                when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+                when(node.getLocalName()).thenReturn("testElement");
+                DOMNodePointer pointer = new DOMNodePointer(node, Locale.getDefault());
+                when(pointer.getNamespaceURI()).thenReturn("http://example.com");
+                when(pointer.getNamespaceResolver().getPrefix("http://example.com")).thenReturn("prefix");
+                assertEquals("prefix:testElement[1]", pointer.asPath());
+            }
+
+    @Test
+            void testAsPathWithParent() {
+                Node parentNode = Mockito.mock(Element.class);
+                when(parentNode.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+                when(parentNode.getLocalName()).thenReturn("parent");
+                DOMNodePointer parentPointer = new DOMNodePointer(parentNode, Locale.getDefault());
+                when(parentPointer.getNamespaceURI()).thenReturn(null);
+                Node childNode = Mockito.mock(Element.class);
+                when(childNode.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+                when(childNode.getLocalName()).thenReturn("child");
+                DOMNodePointer childPointer = new DOMNodePointer(parentPointer, childNode);
+                when(childPointer.getNamespaceURI()).thenReturn(null);
+                assertEquals("/parent/child[1]", childPointer.asPath());
+            }
+
+    @Test
+            void testAsPathWithParentAndNamespace() {
+                Node parentNode = Mockito.mock(Element.class);
+                when(parentNode.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+                when(parentNode.getLocalName()).thenReturn("parent");
+                DOMNodePointer parentPointer = new DOMNodePointer(parentNode, Locale.getDefault());
+                when(parentPointer.getNamespaceURI()).thenReturn("http://example.com");
+                when(parentPointer.getNamespaceResolver().getPrefix("http://example.com")).thenReturn("prefix");
+                Node childNode = Mockito.mock(Element.class);
+                when(childNode.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+                when(childNode.getLocalName()).thenReturn("child");
+                DOMNodePointer childPointer = new DOMNodePointer(parentPointer, childNode);
+                when(childPointer.getNamespaceURI()).thenReturn(null);
+                assertEquals("/parent/prefix:child[1]", childPointer.asPath());
+            }
+
+    @Test
+        void testAsPathWithDocumentNode() {
+            Node node = Mockito.mock(Node.class);
+            when(node.getNodeType()).thenReturn(Node.DOCUMENT_NODE);
+            DOMNodePointer pointer = new DOMNodePointer(node, Locale.getDefault());
+            when(pointer.getNamespaceURI()).thenReturn(null);
+            assertEquals("", pointer.asPath());
+        }
+
+    @Test
+        void testAsPathElementNodeNoNamespace() {
+            Node node = Mockito.mock(Element.class);
+            when(node.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+            when(node.getLocalName()).thenReturn("testElement");
+            DOMNodePointer pointer = new DOMNodePointer(node, Locale.getDefault());
+            when(pointer.getNamespaceURI()).thenReturn(null);
+            Node parentNode = Mockito.mock(Element.class);
+            when(parentNode.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+            when(parentNode.getLocalName()).thenReturn("parent");
+            DOMNodePointer parentPointer = new DOMNodePointer(parentNode, Locale.getDefault());
+            when(parentPointer.getNamespaceURI()).thenReturn(null);
+            DOMNodePointer childPointer = new DOMNodePointer(parentPointer, node);
+            when(childPointer.getNamespaceURI()).thenReturn(null);
+            assertEquals("/parent/testElement[1]", childPointer.asPath());
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    void testAsPathWithId() {}
+    @Test
+    void testAsPathTextNode() {}
+    @Test
+    void testAsPathCDATASectionNode() {}
+    @Test
+    void testAsPathProcessingInstructionNode() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   HashMap -> java.util.HashMap
+//   Locale -> java.util.Locale
+//   Map -> java.util.Map
+//   JXPathAbstractFactoryException -> org.apache.commons.jxpath.JXPathAbstractFactoryException
+//   JXPathContext -> org.apache.commons.jxpath.JXPathContext
+//   JXPathException -> org.apache.commons.jxpath.JXPathException
+//   Pointer -> org.apache.commons.jxpath.Pointer
+//   Compiler -> org.apache.commons.jxpath.ri.Compiler
+//   NamespaceResolver -> org.apache.commons.jxpath.ri.NamespaceResolver
+//   QName -> org.apache.commons.jxpath.ri.QName
+//   NodeNameTest -> org.apache.commons.jxpath.ri.compiler.NodeNameTest
+//   NodeTest -> org.apache.commons.jxpath.ri.compiler.NodeTest
+//   NodeTypeTest -> org.apache.commons.jxpath.ri.compiler.NodeTypeTest
+//   ProcessingInstructionTest -> org.apache.commons.jxpath.ri.compiler.ProcessingInstructionTest
+//   NodeIterator -> org.apache.commons.jxpath.ri.model.NodeIterator
+//   NodePointer -> org.apache.commons.jxpath.ri.model.NodePointer
+//   NullPointer -> org.apache.commons.jxpath.ri.model.beans.NullPointer
+//   TypeUtils -> org.apache.commons.jxpath.util.TypeUtils
+//   Attr -> org.w3c.dom.Attr
+//   Comment -> org.w3c.dom.Comment
+//   Document -> org.w3c.dom.Document
+//   Element -> org.w3c.dom.Element
+//   NamedNodeMap -> org.w3c.dom.NamedNodeMap
+//   Node -> org.w3c.dom.Node
+//   NodeList -> org.w3c.dom.NodeList
+//   ProcessingInstruction -> org.w3c.dom.ProcessingInstruction
+//   DOMNodePointer -> org.apache.commons.jxpath.ri.model.dom.DOMNodePointer
+
+// === Class: DOMNodePointer ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private final Node node;
+    private Map namespaces;
+    private String defaultNamespace;
+    private String id;
+    private NamespaceResolver localNamespaceResolver;
+    public static final String XML_NAMESPACE_URI;
+    public static final String XMLNS_NAMESPACE_URI;
+
+// Constructors:
+public DOMNodePointer(Node node, Locale locale);
+public DOMNodePointer(Node node, Locale locale, String id);
+public DOMNodePointer(NodePointer parent, Node node);
+
+// Getter/Setter Methods (for test assertions):
+public QName getName();
+public String getNamespaceURI();
+public synchronized NamespaceResolver getNamespaceResolver();
+public String getNamespaceURI(final String prefix);
+public String getDefaultNamespaceURI();
+public Object getBaseValue();
+public Object getImmediateNode();
+public boolean isActual();
+public boolean isCollection();
+public int getLength();
+public boolean isLeaf();
+public boolean isLanguage(final String lang);
+protected String getLanguage();
+public void setValue(final Object value);
+private int getRelativePositionByQName();
+private int getRelativePositionOfElement();
+private int getRelativePositionOfTextNode();
+private int getRelativePositionOfPI();
+public static String getPrefix(final Node node);
+public static String getLocalName(final Node node);
+public static String getNamespaceURI(Node node);
+public Object getValue();
+public Pointer getPointerByID(final JXPathContext context, final String id);
+
+// Internal Methods (full implementation for context):
+    public synchronized NamespaceResolver getNamespaceResolver() {
+        if (localNamespaceResolver == null) {
+            localNamespaceResolver = new NamespaceResolver(super.getNamespaceResolver());
+            localNamespaceResolver.setNamespaceContextPointer(this);
+        }
+        return localNamespaceResolver;
+    }
+    public static String getLocalName(final Node node) {
+        final String localName = node.getLocalName();
+        if (localName != null) {
+            return localName;
+        }
+
+        final String name = node.getNodeName();
+        final int index = name.lastIndexOf(':');
+        return index < 0 ? name : name.substring(index + 1);
+    }
+    private int getRelativePositionOfElement() {
+        int count = 1;
+        Node n = node.getPreviousSibling();
+        while (n != null) {
+            if (n.getNodeType() == Node.ELEMENT_NODE) {
+                count++;
+            }
+            n = n.getPreviousSibling();
+        }
+        return count;
+    }
+    public String getNamespaceURI() {
+        return getNamespaceURI(node);
+    }
+    private int getRelativePositionOfTextNode() {
+        int count = 1;
+        Node n = node.getPreviousSibling();
+        while (n != null) {
+            if (n.getNodeType() == Node.TEXT_NODE
+                || n.getNodeType() == Node.CDATA_SECTION_NODE) {
+                count++;
+            }
+            n = n.getPreviousSibling();
+        }
+        return count;
+    }
+    private int getRelativePositionOfPI() {
+        int count = 1;
+        final String target = ((ProcessingInstruction) node).getTarget();
+        Node n = node.getPreviousSibling();
+        while (n != null) {
+            if (n.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE
+                && ((ProcessingInstruction) n).getTarget().equals(target)) {
+                count++;
+            }
+            n = n.getPreviousSibling();
+        }
+        return count;
+    }
+    private int getRelativePositionByQName() {
+        int count = 1;
+        Node n = node.getPreviousSibling();
+        while (n != null) {
+            if (n.getNodeType() == Node.ELEMENT_NODE && matchesQName(n)) {
+                count++;
+            }
+            n = n.getPreviousSibling();
+        }
+        return count;
+    }
+
+// === Superclass: NodePointer (inherited members) ===
+// Inherited Fields:
+    public static final int WHOLE_COLLECTION;
+    public static final String UNKNOWN_NAMESPACE;
+    protected int index;
+    protected NodePointer parent;
+    protected Locale locale;
+
+// Inherited Method Signatures:
+public static NodePointer newNodePointer(final QName name, final Object bean, final Locale locale);
+public static NodePointer newChildNodePointer(final NodePointer parent, final QName name, final Object bean);
+public NamespaceResolver getNamespaceResolver();
+public void setNamespaceResolver(final NamespaceResolver namespaceResolver);
+public NodePointer getParent();
+public NodePointer getImmediateParentPointer();
+public void setAttribute(final boolean attribute);
+public boolean isAttribute();
+public boolean isRoot();
+public abstract boolean isLeaf();
+public boolean isNode();
+public boolean isContainer();
+public int getIndex();
+public void setIndex(final int index);
+public abstract boolean isCollection();
+public abstract int getLength();
+public Object getValue();
+public NodePointer getValuePointer();
+public NodePointer getImmediateValuePointer();
+public boolean isActual();
+public abstract QName getName();
+public abstract Object getBaseValue();
+public Object getNodeValue();
+public Object getNode();
+public synchronized Object getRootNode();
+public abstract Object getImmediateNode();
+public abstract void setValue(Object value);
+public abstract int compareChildNodePointers(NodePointer pointer1, NodePointer pointer2);
+public boolean testNode(final NodeTest test);
+public NodePointer createPath(final JXPathContext context, final Object value);
+public void remove();
+public NodePointer createPath(final JXPathContext context, final Object value);
+public NodePointer createChild(final JXPathContext context, final QName name, final int index, final Object value);
+public NodePointer createChild(final JXPathContext context, final QName name, final int index, final Object value);
+public NodePointer createAttribute(final JXPathContext context, final QName name);
+public Locale getLocale();
+public boolean isLanguage(final String lang);
+public NodeIterator childIterator(final NodeTest test, final boolean reverse, final NodePointer startWith);
+public NodeIterator attributeIterator(final QName qname);
+public NodeIterator namespaceIterator();
+public NodePointer namespacePointer(final String namespace);
+public String getNamespaceURI(final String prefix);
+public String getNamespaceURI(final String prefix);
+protected boolean isDefaultNamespace(final String prefix);
+protected String getDefaultNamespaceURI();
+public Pointer getPointerByID(final JXPathContext context, final String id);
+public Pointer getPointerByKey(final JXPathContext context, final String key, final String value);
+public NodeSet getNodeSetByKey(final JXPathContext context, final String key, final Object value);
+public String asPath();
+public int compareTo(final Object object);
+public void printPointerChain();
+public void setExceptionHandler(final ExceptionHandler exceptionHandler);
+public void handle(final Throwable t, final NodePointer originator);
+public void handle(final Throwable t, final NodePointer originator);
+protected String escape(final String string);
+protected AbstractFactory getAbstractFactory(final JXPathContext context);
+public static NodePointer verify(final NodePointer nodePointer);
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() {
+        mockContext = Mockito.mock(JXPathContext.class);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.reset(mockContext);
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+    @Override
+    public String asPath() {
+        if (id != null) {
+            return "id('" + escape(id) + "')";
+        }
+
+        final StringBuilder buffer = new StringBuilder();
+        if (parent != null) { // NOT COVERED BY TESTS
+            buffer.append(parent.asPath()); // NOT COVERED BY TESTS
+        }
+        switch (node.getNodeType()) { // NOT COVERED BY TESTS
+            case Node.ELEMENT_NODE :
+                // If the parent pointer is not a DOMNodePointer, it is
+                // the parent's responsibility to produce the node test part
+                // of the path
+                if (parent instanceof DOMNodePointer) { // NOT COVERED BY TESTS
+                    if (buffer.length() == 0 // NOT COVERED BY TESTS
+                            || buffer.charAt(buffer.length() - 1) != '/') { // NOT COVERED BY TESTS
+                        buffer.append('/'); // NOT COVERED BY TESTS
+                    }
+                    final String ln = DOMNodePointer.getLocalName(node); // NOT COVERED BY TESTS
+                    final String nsURI = getNamespaceURI(); // NOT COVERED BY TESTS
+                    if (nsURI == null) { // NOT COVERED BY TESTS
+                        buffer.append(ln); // NOT COVERED BY TESTS
+                        buffer.append('['); // NOT COVERED BY TESTS
+                        buffer.append(getRelativePositionByQName()).append(']'); // NOT COVERED BY TESTS
+                    }
+                    else {
+                        final String prefix = getNamespaceResolver().getPrefix(nsURI); // NOT COVERED BY TESTS
+                        if (prefix != null) { // NOT COVERED BY TESTS
+                            buffer.append(prefix); // NOT COVERED BY TESTS
+                            buffer.append(':'); // NOT COVERED BY TESTS
+                            buffer.append(ln); // NOT COVERED BY TESTS
+                            buffer.append('['); // NOT COVERED BY TESTS
+                            buffer.append(getRelativePositionByQName()); // NOT COVERED BY TESTS
+                            buffer.append(']'); // NOT COVERED BY TESTS
+                        }
+                        else {
+                            buffer.append("node()"); // NOT COVERED BY TESTS
+                            buffer.append('['); // NOT COVERED BY TESTS
+                            buffer.append(getRelativePositionOfElement()); // NOT COVERED BY TESTS
+                            buffer.append(']'); // NOT COVERED BY TESTS
+                        }
+                    }
+                }
+            break;
+            case Node.TEXT_NODE :
+            case Node.CDATA_SECTION_NODE :
+                buffer.append("/text()");
+                buffer.append('[');
+                buffer.append(getRelativePositionOfTextNode()).append(']');
+                break;
+            case Node.PROCESSING_INSTRUCTION_NODE :
+                buffer.append("/processing-instruction(\'");
+                buffer.append(((ProcessingInstruction) node).getTarget()).append("')");
+                buffer.append('[');
+                buffer.append(getRelativePositionOfPI()).append(']');
+                break;
+            case Node.DOCUMENT_NODE :
+                // That'll be empty
+                break; // NOT COVERED BY TESTS
+            default:
+                break;
+        }
+        return buffer.toString();
+    }
+
+
+COVERAGE ISSUES:
+Current line coverage: 37.50%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

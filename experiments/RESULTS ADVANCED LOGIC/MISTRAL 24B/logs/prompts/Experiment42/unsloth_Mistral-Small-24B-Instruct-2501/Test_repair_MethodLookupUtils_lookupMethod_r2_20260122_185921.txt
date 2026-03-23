@@ -1,0 +1,103 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.jxpath.util;
+Class name (MUST be exactly): MethodLookupUtils_lookupMethodTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.jxpath.util;
+
+import java.lang.reflect.Method;
+import org.apache.commons.jxpath.ExpressionContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.util.MethodLookupUtils;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class MethodLookupUtils_lookupMethodTestGenerated {
+
+    private static final Class<?> targetClass = DummyClass.class;
+
+    @Test
+    public void testLookupMethod_nullParameters() {
+        assertNull(MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", null));
+    }
+
+    @Test
+    public void testLookupMethod_emptyParameters() {
+        assertNull(MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[0]));
+    }
+
+    @Test
+    public void testLookupMethod_nullFirstParameter() {
+        assertNull(MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{null}));
+    }
+
+    @Test
+    public void testLookupMethod_nonMatchingFirstParameter() {
+        assertNull(MethodLookupUtils.lookupMethod(String.class, "dummyMethod", new Object[]{new MockExpressionContext()}));
+    }
+
+    @Test
+    public void testLookupMethod_exactMatch() {
+        Method method = MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{new MockExpressionContext(), "param"});
+        assertNotNull(method);
+        assertEquals("dummyMethod", method.getName());
+        assertEquals(2, method.getParameterCount());
+    }
+
+    @Test
+    public void testLookupMethod_ambiguousMethodCall() {
+        assertThrows(JXPathException.class, () -> {
+            MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{new MockExpressionContext(), 123});
+        });
+    }
+
+    @Test
+    public void testLookupMethod_withTypeConversion() {
+        Method method = MethodLookupUtils.lookupMethod(targetClass, "dummyMethod", new Object[]{new MockExpressionContext(), 123});
+        assertNotNull(method);
+        assertEquals("dummyMethod", method.getName());
+        assertEquals(2, method.getParameterCount());
+    }
+
+    @Test
+    public void testLookupMethod_noSuchMethod() {
+        assertNull(MethodLookupUtils.lookupMethod(targetClass, "nonExistentMethod", new Object[]{new MockExpressionContext(), "param"}));
+    }
+
+    @Test
+    public void testLookupMethod_staticMethod() {
+        Method method = MethodLookupUtils.lookupMethod(targetClass, "staticMethod", new Object[]{new MockExpressionContext(), "param"});
+        assertNull(method);
+    }
+
+    private static class DummyClass {
+        public void dummyMethod(ExpressionContext context, String param) {}
+        public void dummyMethod(ExpressionContext context, int param) {}
+        public static void staticMethod(ExpressionContext context, String param) {}
+    }
+
+    private static class MockExpressionContext extends ExpressionContext {
+        // Mock implementation of ExpressionContext
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/JxPath/Run-1/src/test/java/org/apache/commons/jxpath/util/MethodLookupUtils_lookupMethodTestGenerated.java:[77] no interface expected here
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: MethodLookupUtils_lookupMethodTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

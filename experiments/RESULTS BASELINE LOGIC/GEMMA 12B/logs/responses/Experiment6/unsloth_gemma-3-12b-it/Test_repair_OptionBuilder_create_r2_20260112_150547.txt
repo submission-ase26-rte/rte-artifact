@@ -1,0 +1,207 @@
+```java
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.junit.jupiter.api.Timeout;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class OptionBuilder_createTestGenerated {
+
+    private OptionBuilder optionBuilder;
+    private TypeHandler typeHandler;
+
+    @BeforeEach
+    void setUp() {
+        optionBuilder = Mockito.mock(OptionBuilder.class);
+        typeHandler = Mockito.mock(TypeHandler.class);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.reset(optionBuilder, typeHandler);
+    }
+
+    @Test
+    void testCreateValidOption() throws IllegalArgumentException {
+        OptionBuilder.longOption = "longOpt";
+        OptionBuilder.description = "description";
+        OptionBuilder.argName = "argName";
+        OptionBuilder.required = true;
+        OptionBuilder.argCount = 1;
+        OptionBuilder.type = String.class;
+        OptionBuilder.optionalArg = false;
+        OptionBuilder.valueSeparator = ' ';
+
+        Map<Class<?>, Converter<?, ?>> converterMap = Map.of(String.class, (Converter) null);
+        when(TypeHandler.getDefault()).thenReturn(typeHandler);
+        when(typeHandler.getConverter(Mockito.any())).thenReturn((Converter) null);
+
+        Option option = OptionBuilder.create("opt");
+
+        assertNotNull(option);
+        assertEquals("opt", option.getOption());
+        assertEquals("longOpt", option.getLongOpt());
+        assertTrue(option.isRequired());
+        assertFalse(option.isOptionalArg());
+        assertEquals(1, option.getArgCount());
+        assertEquals(String.class, option.getType());
+        assertEquals(' ', option.getValueSeparator());
+        assertEquals("argName", option.getArgName());
+        verify(optionBuilder).reset();
+    }
+
+    @Test
+    void testCreateOptionWithLongOption() throws IllegalArgumentException {
+        OptionBuilder.longOption = "longOption";
+        OptionBuilder.description = "description";
+        OptionBuilder.argName = "argName";
+        OptionBuilder.required = false;
+        OptionBuilder.argCount = 0;
+        OptionBuilder.type = Integer.class;
+        OptionBuilder.optionalArg = true;
+        OptionBuilder.valueSeparator = ',';
+
+        Map<Class<?>, Converter<?, ?>> converterMap = Map.of(Integer.class, (Converter) null);
+        when(TypeHandler.getDefault()).thenReturn(typeHandler);
+        when(typeHandler.getConverter(Mockito.any())).thenReturn((Converter) null);
+
+        Option option = OptionBuilder.create("o");
+
+        assertNotNull(option);
+        assertEquals("o", option.getOption());
+        assertEquals("longOption", option.getLongOpt());
+        assertFalse(option.isRequired());
+        assertTrue(option.isOptionalArg());
+        assertEquals(0, option.getArgCount());
+        assertEquals(Integer.class, option.getType());
+        assertEquals(',', option.getValueSeparator());
+        assertEquals("argName", option.getArgName());
+        verify(optionBuilder).reset();
+    }
+
+    @Test
+    void testCreateOptionWithConverter() throws IllegalArgumentException {
+        OptionBuilder.longOption = "longOption";
+        OptionBuilder.description = "description";
+        OptionBuilder.argName = "argName";
+        OptionBuilder.required = false;
+        OptionBuilder.argCount = 1;
+        OptionBuilder.type = Double.class;
+        OptionBuilder.optionalArg = false;
+        OptionBuilder.valueSeparator = ';';
+
+        Map<Class<?>, Converter<?, ?>> converterMap = Map.of(Double.class, (Converter) null);
+        when(TypeHandler.getDefault()).thenReturn(typeHandler);
+        when(typeHandler.getConverter(Mockito.any())).thenReturn((Converter) null);
+
+        Option option = OptionBuilder.create("opt");
+
+        assertNotNull(option);
+        assertEquals("opt", option.getOption());
+        assertEquals("longOption", option.getLongOpt());
+        assertFalse(option.isRequired());
+        assertFalse(option.isOptionalArg());
+        assertEquals(1, option.getArgCount());
+        assertEquals(Double.class, option.getType());
+        assertEquals(';', option.getValueSeparator());
+        assertEquals("argName", option.getArgName());
+        verify(optionBuilder).reset();
+    }
+
+    @Test
+    void testCreateOptionWithEmptyLongOption() throws IllegalArgumentException {
+        OptionBuilder.longOption = "";
+        OptionBuilder.description = "description";
+        OptionBuilder.argName = "argName";
+        OptionBuilder.required = false;
+        OptionBuilder.argCount = 0;
+        OptionBuilder.type = Boolean.class;
+        OptionBuilder.optionalArg = true;
+        OptionBuilder.valueSeparator = ' ';
+
+        Map<Class<?>, Converter<?, ?>> converterMap = Map.of(Boolean.class, (Converter) null);
+        when(TypeHandler.getDefault()).thenReturn(typeHandler);
+        when(typeHandler.getConverter(Mockito.any())).thenReturn((Converter) null);
+
+        Option option = OptionBuilder.create("o");
+
+        assertNotNull(option);
+        assertEquals("o", option.getOption());
+        assertEquals("", option.getLongOpt());
+        assertFalse(option.isRequired());
+        assertTrue(option.isOptionalArg());
+        assertEquals(0, option.getArgCount());
+        assertEquals(Boolean.class, option.getType());
+        assertEquals(' ', option.getValueSeparator());
+        assertEquals("argName", option.getArgName());
+        verify(optionBuilder).reset();
+    }
+
+    @Test
+    void testCreateOptionWithNullLongOption() throws IllegalArgumentException {
+        OptionBuilder.longOption = null;
+        OptionBuilder.description = "description";
+        OptionBuilder.argName = "argName";
+        OptionBuilder.required = false;
+        OptionBuilder.argCount = 0;
+        OptionBuilder.type = Boolean.class;
+        OptionBuilder.optionalArg = true;
+        OptionBuilder.valueSeparator = ' ';
+
+        Map<Class<?>, Converter<?, ?>> converterMap = Map.of(Boolean.class, (Converter) null);
+        when(TypeHandler.getDefault()).thenReturn(typeHandler);
+        when(typeHandler.getConverter(Mockito.any())).thenReturn((Converter) null);
+
+        Option option = OptionBuilder.create("o");
+
+        assertNotNull(option);
+        assertEquals("o", option.getOption());
+        assertEquals(null, option.getLongOpt());
+        assertFalse(option.isRequired());
+        assertTrue(option.isOptionalArg());
+        assertEquals(0, option.getArgCount());
+        assertEquals(Boolean.class, option.getType());
+        assertEquals(' ', option.getValueSeparator());
+        assertEquals("argName", option.getArgName());
+        verify(optionBuilder).reset();
+    }
+
+    @Test
+    void testCreateOptionWithIllegalArgumentException() throws IllegalArgumentException {
+        OptionBuilder.longOption = "longOption";
+        OptionBuilder.description = "description";
+        OptionBuilder.argName = "argName";
+        OptionBuilder.required = false;
+        OptionBuilder.argCount = 0;
+        OptionBuilder.type = Boolean.class;
+        OptionBuilder.optionalArg = true;
+        OptionBuilder.valueSeparator = ' ';
+
+        Map<Class<?>, Converter<?, ?>> converterMap = Map.of(Boolean.class, (Converter) null);
+        when(TypeHandler.getDefault()).thenReturn(typeHandler);
+        when(typeHandler.getConverter(Mockito.any())).thenReturn((Converter) null);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            OptionBuilder.create("");
+        });
+        verify(optionBuilder).reset();
+    }
+}
+```

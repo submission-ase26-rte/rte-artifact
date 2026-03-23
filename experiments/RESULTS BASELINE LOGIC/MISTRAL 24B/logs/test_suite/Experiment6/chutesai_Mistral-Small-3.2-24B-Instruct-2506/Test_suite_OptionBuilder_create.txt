@@ -1,0 +1,43 @@
+package org.apache.commons.cli;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class OptionBuilder_createTestGenerated {
+
+    @Test
+    void createWithNullOpt() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Option.builder((String)null);
+        });
+    }
+
+    @Test
+    void createWithEmptyOpt() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Option.builder("");
+        });
+    }
+
+    @Test
+    void createWithMultiCharOpt() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Option.builder("ab");
+        });
+    }
+
+    @Test
+    void createWithResetBetweenCalls() {
+        Option.Builder firstBuilder = Option.builder("a");
+        firstBuilder.longOpt("first");
+        Option first = firstBuilder.build();
+
+        Option.Builder secondBuilder = Option.builder("b");
+        secondBuilder.longOpt("second");
+        Option second = secondBuilder.build();
+
+        assertEquals("second", second.getLongOpt());
+    }
+}

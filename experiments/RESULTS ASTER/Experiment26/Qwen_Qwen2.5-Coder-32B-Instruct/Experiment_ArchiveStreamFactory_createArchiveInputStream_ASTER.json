@@ -1,0 +1,95 @@
+{
+  "method_id": 26,
+  "tested_method": "createArchiveInputStream",
+  "tested_class": "ArchiveStreamFactory",
+  "project": "Compress",
+  "timestamp": "2026-02-03T13:20:35.993814",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\GPT-4 - ASTER\\Compress\\Run-1\\src\\test\\java\\org\\apache\\commons\\compress\\archivers\\Metodo26_createArchiveInputStream_ArchiveStreamFactory_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 14,
+    "tests_total": 19,
+    "tests_failed": 5,
+    "line_coverage": 83.33333333333334,
+    "branch_coverage": 88.88888888888889,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testCreateArchiveInputStreamForARJWithEncoding_yzSz3 --\nERROR: org.apache.commons.compress.archivers.ArchiveException\nCaused by: java.io.EOFException\n... 7 more\n--------------------------------------------------\nTEST: testCreateArchiveInputStreamForDUMPWithEncoding_MHvw13 --\nERROR: org.apache.commons.compress.archivers.ArchiveException: unexpected EOF\nCaused by: org.apache.commons.compress.archivers.dump.ShortFileException: unexpected EOF\n... 7 more\n--------------------------------------------------\nTEST: testCreateArchiveInputStreamForDUMPWithoutEncoding_fIlW14 --\nERROR: org.apache.commons.compress.archivers.ArchiveException: unexpected EOF\nCaused by: org.apache.commons.compress.archivers.dump.ShortFileException: unexpected EOF\n... 8 more\n--------------------------------------------------\nTEST: testCreateArchiveInputStreamForUnsupportedFormat_QJHF15 --\nERROR: org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <org.apache.commons.compress.archivers.StreamingNotSupportedException> but was: <org.apache.commons.compress.archivers.ArchiveException>\nCaused by: org.apache.commons.compress.archivers.ArchiveException: Archiver: SEVEN_Z not found.\n... 8 more\n--------------------------------------------------\nTEST: testCreateArchiveInputStreamForARJWithoutEncoding_tVbl4 --\nERROR: org.apache.commons.compress.archivers.ArchiveException\nCaused by: java.io.EOFException\n... 8 more",
+    "test_info": {
+      "valid_tests": [
+        "testCreateArchiveInputStreamWithNullArchiverName_vEcs0",
+        "testCreateArchiveInputStreamWithNullInputStream_bgCb1",
+        "testCreateArchiveInputStreamForAR_mSxt2",
+        "testCreateArchiveInputStreamForZIPWithEncoding_QzhD5",
+        "testCreateArchiveInputStreamForZIPWithoutEncoding_CQlI6",
+        "testCreateArchiveInputStreamForTARWithEncoding_UaTA7",
+        "testCreateArchiveInputStreamForTARWithoutEncoding_IuVd8",
+        "testCreateArchiveInputStreamForJARWithEncoding_JQmp9",
+        "testCreateArchiveInputStreamForJARWithoutEncoding_EQkB10",
+        "testCreateArchiveInputStreamForCPIOWithEncoding_RJae11",
+        "testCreateArchiveInputStreamForCPIOWithoutEncoding_VEPe12",
+        "testCreateArchiveInputStreamForUnknownFormat_bOAO16",
+        "testCreateArchiveInputStreamForAPKWithEncoding_boWU17",
+        "testCreateArchiveInputStreamForAPKWithoutEncoding_uCRv18"
+      ],
+      "invalid_tests": [
+        "testCreateArchiveInputStreamForUnsupportedFormat_QJHF15",
+        "testCreateArchiveInputStreamForARJWithEncoding_yzSz3",
+        "testCreateArchiveInputStreamForARJWithoutEncoding_tVbl4",
+        "testCreateArchiveInputStreamForDUMPWithEncoding_MHvw13",
+        "testCreateArchiveInputStreamForDUMPWithoutEncoding_fIlW14"
+      ],
+      "failed_assert_tests": [
+        "testCreateArchiveInputStreamForUnsupportedFormat_QJHF15"
+      ],
+      "runtime_error_tests": [
+        "testCreateArchiveInputStreamForARJWithEncoding_yzSz3",
+        "testCreateArchiveInputStreamForARJWithoutEncoding_tVbl4",
+        "testCreateArchiveInputStreamForDUMPWithEncoding_MHvw13",
+        "testCreateArchiveInputStreamForDUMPWithoutEncoding_fIlW14"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 19,
+    "assertion_complexity": 0.2851,
+    "pct_null_assertions": 0.7895,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.2105,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.6224,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.5128,
+    "overall_naturalness_score": 0.7246
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.24434687913493328,
+    "string_similarity": 0.24483550114766642,
+    "token_similarity": 0.48484848484848486,
+    "ast_similarity": 0.3617021276595745,
+    "embedding_similarity": 0.9041491150856018,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.2727272727272727,
+      "similar_blocks": 21,
+      "total_blocks": 154
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.5372101470111397,
+    "passes_threshold": false
+  },
+  "original_method": "    public <I extends ArchiveInputStream<? extends ArchiveEntry>> I createArchiveInputStream(final String archiverName, final InputStream in,\n            final String actualEncoding) throws ArchiveException {\n\n        if (archiverName == null) {\n            throw new IllegalArgumentException(\"Archiver name must not be null.\");\n        }\n\n        if (in == null) {\n            throw new IllegalArgumentException(\"InputStream must not be null.\");\n        }\n\n        if (AR.equalsIgnoreCase(archiverName)) {\n            return (I) new ArArchiveInputStream(in);\n        }\n        if (ARJ.equalsIgnoreCase(archiverName)) {\n            if (actualEncoding != null) {\n                return (I) new ArjArchiveInputStream(in, actualEncoding);\n            }\n            return (I) new ArjArchiveInputStream(in);\n        }\n        if (ZIP.equalsIgnoreCase(archiverName)) {\n            if (actualEncoding != null) {\n                return (I) new ZipArchiveInputStream(in, actualEncoding);\n            }\n            return (I) new ZipArchiveInputStream(in);\n        }\n        if (TAR.equalsIgnoreCase(archiverName)) {\n            if (actualEncoding != null) {\n                return (I) new TarArchiveInputStream(in, actualEncoding);\n            }\n            return (I) new TarArchiveInputStream(in);\n        }\n        if (JAR.equalsIgnoreCase(archiverName) || APK.equalsIgnoreCase(archiverName)) {\n            if (actualEncoding != null) {\n                return (I) new JarArchiveInputStream(in, actualEncoding);\n            }\n            return (I) new JarArchiveInputStream(in);\n        }\n        if (CPIO.equalsIgnoreCase(archiverName)) {\n            if (actualEncoding != null) {\n                return (I) new CpioArchiveInputStream(in, actualEncoding);\n            }\n            return (I) new CpioArchiveInputStream(in);\n        }\n        if (DUMP.equalsIgnoreCase(archiverName)) {\n            if (actualEncoding != null) {\n                return (I) new DumpArchiveInputStream(in, actualEncoding);\n            }\n            return (I) new DumpArchiveInputStream(in);\n        }\n        if (SEVEN_Z.equalsIgnoreCase(archiverName)) {\n            throw new StreamingNotSupportedException(SEVEN_Z);\n        }\n\n        final ArchiveStreamProvider archiveStreamProvider = getArchiveInputStreamProviders().get(toKey(archiverName));\n        if (archiveStreamProvider != null) {\n            return archiveStreamProvider.createArchiveInputStream(archiverName, in, actualEncoding);\n        }\n\n        throw new ArchiveException(\"Archiver: \" + archiverName + \" not found.\");\n    }",
+  "regenerated_method": "public <I extends ArchiveInputStream<? extends ArchiveEntry>> I createArchiveInputStream(final String archiverName, final InputStream in, final String actualEncoding) throws ArchiveException {\n    if (archiverName == null) {\n        throw new IllegalArgumentException(\"Archiver name must not be null\");\n    }\n    if (in == null) {\n        throw new IllegalArgumentException(\"Input stream must not be null\");\n    }\n    String key = toKey(archiverName);\n    SortedMap<String, ArchiveStreamProvider> providers = getArchiveInputStreamProviders();\n    if (providers.containsKey(key)) {\n        ArchiveStreamProvider provider = providers.get(key);\n        try {\n            return (I) provider.createArchiveInputStream(key, in, actualEncoding);\n        } catch (Exception e) {\n            throw new ArchiveException(\"Error creating archive input stream\", e);\n        }\n    } else if (key.equals(toKey(APK))) {\n        try {\n            return (I) new JarArchiveInputStream(in, actualEncoding);\n        } catch (Exception e) {\n            throw new ArchiveException(\"Error creating APK archive input stream\", e);\n        }\n    } else if (key.equals(toKey(SEVEN_Z))) {\n        throw new StreamingNotSupportedException(\"Unsupported format: \" + archiverName);\n    } else {\n        throw new ArchiveException(\"Unsupported archive format: \" + archiverName);\n    }\n}",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6625905986496899,
+  "original_metrics": {
+    "loc": 61,
+    "sloc": 56,
+    "complexity": 24
+  }
+}

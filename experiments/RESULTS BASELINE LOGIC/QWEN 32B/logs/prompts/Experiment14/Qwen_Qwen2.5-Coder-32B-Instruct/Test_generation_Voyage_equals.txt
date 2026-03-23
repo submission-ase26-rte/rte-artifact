@@ -1,0 +1,85 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package org.eclipse.cargotracker.domain.model.voyage;
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   NotNull -> jakarta.validation.constraints.NotNull
+//   Serializable -> java.io.Serializable
+//   LocalDateTime -> java.time.LocalDateTime
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   Validate -> org.apache.commons.lang3.Validate
+//   Location -> org.eclipse.cargotracker.domain.model.location.Location
+
+// === Class: Voyage ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    public static final Voyage NONE;
+    private Long id;
+    private VoyageNumber voyageNumber;
+    private Schedule schedule;
+    private List carrierMovements;
+    private Location departureLocation;
+
+// Constructors:
+public Voyage();
+public Voyage(VoyageNumber voyageNumber, Schedule schedule);
+public Builder(VoyageNumber voyageNumber, Location departureLocation);
+
+// Getter/Setter Methods (for test assertions):
+public VoyageNumber getVoyageNumber();
+public Schedule getSchedule();
+
+// Internal Method Signatures (used by target method):
+public boolean sameIdentityAs(Voyage other);
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null) {
+      return false;
+    }
+
+    if (!(o instanceof Voyage)) {
+      return false;
+    }
+
+    Voyage that = (Voyage) o;
+
+    return sameIdentityAs(that);
+  }
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "equals" of class "Voyage".
+
+REQUIREMENTS:
+- Test class name: Voyage_equalsTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths, edge cases, and boundary conditions
+- Test both valid inputs and error scenarios (null values, empty collections, invalid arguments)
+- Cover expected exceptions declared in the method signature
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- DO NOT use getter/setter methods that are not present in the provided class context
+- DO NOT mock the target class
+- For creating test instances of the target class, PREFER MOCKING constructor parameters (using @Mock) rather than instantiating domain objects directly, to avoid validation errors in value objects
+- Generate ONLY the test class without explanations or comments outside the code
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

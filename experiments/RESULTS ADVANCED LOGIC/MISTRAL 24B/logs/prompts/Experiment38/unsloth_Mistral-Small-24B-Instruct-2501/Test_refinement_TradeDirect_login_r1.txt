@@ -1,0 +1,514 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package com.ibm.websphere.samples.daytrader.impl.direct;
+Class name (MUST be exactly): TradeDirect_loginTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testLoginWithSQLException --
+ERROR: org.opentest4j.AssertionFailedError: Expected java.lang.Exception to be thrown, but nothing was thrown.
+--------------------------------------------------
+TEST: testLoginWithIncorrectPassword --
+ERROR: org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+--------------------------------------------------
+TEST: testSuccessfulLogin --
+ERROR: org.opentest4j.AssertionFailedError: expected: not <null>
+
+TEST CODE TO FIX:
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.MarketSummaryUpdate;
+import com.ibm.websphere.samples.daytrader.interfaces.QuotePriceChange;
+import com.ibm.websphere.samples.daytrader.interfaces.RuntimeMode;
+import com.ibm.websphere.samples.daytrader.interfaces.Trace;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeDB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeEJB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeJDBC;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeSession2Direct;
+import com.ibm.websphere.samples.daytrader.util.Diagnostics;
+import com.ibm.websphere.samples.daytrader.util.FinancialUtils;
+import com.ibm.websphere.samples.daytrader.util.KeyBlock;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.MDBStats;
+import com.ibm.websphere.samples.daytrader.util.RecentQuotePriceChangeList;
+import com.ibm.websphere.samples.daytrader.util.TimerStat;
+import com.ibm.websphere.samples.daytrader.util.TraceInterceptor;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import com.ibm.websphere.samples.daytrader.util.TradeRunTimeModeLiteral;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.concurrent.Future;
+import javax.annotation.Resource;
+import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.enterprise.event.Event;
+import javax.enterprise.event.NotificationOptions;
+import javax.inject.Inject;
+import javax.jms.JMSContext;
+import javax.jms.JMSException;
+import javax.jms.Queue;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.TextMessage;
+import javax.jms.Topic;
+import javax.jms.TopicConnectionFactory;
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+import javax.validation.constraints.NotNull;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.ArgumentCaptor;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+@DisplayName("TradeDirect login Test")
+public class TradeDirect_loginTestGenerated {
+    private TradeDirect tradeDirect;
+    private DataSource dataSource;
+    private UserTransaction userTransaction;
+    private ManagedExecutorService managedExecutorService;
+    @BeforeEach
+    void setUp() throws Exception {
+        dataSource = mock(DataSource.class);
+        userTransaction = mock(UserTransaction.class);
+        managedExecutorService = mock(ManagedExecutorService.class);
+        tradeDirect = new TradeDirect();
+        ReflectionTestUtils.setField(tradeDirect, "datasource", dataSource);
+        ReflectionTestUtils.setField(tradeDirect, "txn", userTransaction);
+        ReflectionTestUtils.setField(tradeDirect, "mes", managedExecutorService);
+    }
+
+    @AfterEach
+    void tearDown() {
+        tradeDirect = null;
+    }
+
+
+    @Test
+        @DisplayName("Test successful login")
+        void testSuccessfulLogin() throws Exception {
+            String userID = "testUser";
+            String password = "testPassword";
+            Connection conn = mock(Connection.class);
+            PreparedStatement stmt = mock(PreparedStatement.class);
+            ResultSet rs = mock(ResultSet.class);
+    
+            when(dataSource.getConnection()).thenReturn(conn);
+            when(conn.prepareStatement(anyString())).thenReturn(stmt);
+            when(stmt.executeQuery()).thenReturn(rs);
+            when(rs.next()).thenReturn(true).thenReturn(false);
+            when(rs.getString("passwd")).thenReturn(password);
+            when(rs.getInt("accountID")).thenReturn(1);
+            when(rs.getInt("loginCount")).thenReturn(0);
+            when(rs.getInt("logoutCount")).thenReturn(0);
+            when(rs.getTimestamp("lastLogin")).thenReturn(new Timestamp(System.currentTimeMillis()));
+            when(rs.getTimestamp("creationDate")).thenReturn(new Timestamp(System.currentTimeMillis()));
+            when(rs.getBigDecimal("balance")).thenReturn(BigDecimal.ZERO);
+            when(rs.getBigDecimal("openBalance")).thenReturn(BigDecimal.ZERO);
+            when(rs.getString("profile_userID")).thenReturn(userID);
+    
+            AccountDataBean accountData = tradeDirect.login(userID, password);
+            assertNotNull(accountData);
+            verify(conn, times(1)).commit();
+        }
+
+    @Test
+        @DisplayName("Test login with incorrect password")
+        void testLoginWithIncorrectPassword() {
+            String userID = "testUser";
+            String password = "wrongPassword";
+    
+            try (MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class)) {
+                Exception exception = assertThrows(Exception.class, () -> {
+                    tradeDirect.login(userID, password);
+                });
+                assertTrue(exception.getMessage().contains("Incorrect password"));
+                mockedLog.verify(() -> Log.error(anyString()), times(1));
+            }
+        }
+
+    @Test
+        @DisplayName("Test login with SQL exception")
+        void testLoginWithSQLException() throws SQLException {
+            String userID = "testUser";
+            String password = "testPassword";
+            Connection conn = mock(Connection.class);
+            when(dataSource.getConnection()).thenReturn(conn);
+            when(conn.prepareStatement(anyString())).thenThrow(new SQLException("SQL Error"));
+    
+            try (MockedStatic<Log> mockedLog = Mockito.mockStatic(Log.class)) {
+                Exception exception = assertThrows(Exception.class, () -> {
+                    tradeDirect.login(userID, password);
+                });
+                assertTrue(exception.getMessage().contains("SQL Error"));
+                mockedLog.verify(() -> Log.error(anyString()), times(1));
+            }
+        }
+
+}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   MarketSummaryDataBean -> com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean
+//   Serializable -> java.io.Serializable
+//   BigDecimal -> java.math.BigDecimal
+//   Connection -> java.sql.Connection
+//   PreparedStatement -> java.sql.PreparedStatement
+//   ResultSet -> java.sql.ResultSet
+//   SQLException -> java.sql.SQLException
+//   Statement -> java.sql.Statement
+//   Timestamp -> java.sql.Timestamp
+//   ArrayList -> java.util.ArrayList
+//   Collection -> java.util.Collection
+//   Future -> java.util.concurrent.Future
+//   Resource -> javax.annotation.Resource
+//   ManagedExecutorService -> javax.enterprise.concurrent.ManagedExecutorService
+//   Dependent -> javax.enterprise.context.Dependent
+//   Event -> javax.enterprise.event.Event
+//   NotificationOptions -> javax.enterprise.event.NotificationOptions
+//   Inject -> javax.inject.Inject
+//   JMSContext -> javax.jms.JMSContext
+//   JMSException -> javax.jms.JMSException
+//   Queue -> javax.jms.Queue
+//   QueueConnectionFactory -> javax.jms.QueueConnectionFactory
+//   TextMessage -> javax.jms.TextMessage
+//   Topic -> javax.jms.Topic
+//   TopicConnectionFactory -> javax.jms.TopicConnectionFactory
+//   DataSource -> javax.sql.DataSource
+//   UserTransaction -> javax.transaction.UserTransaction
+//   NotNull -> javax.validation.constraints.NotNull
+//   AccountDataBean -> com.ibm.websphere.samples.daytrader.entities.AccountDataBean
+//   AccountProfileDataBean -> com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean
+//   HoldingDataBean -> com.ibm.websphere.samples.daytrader.entities.HoldingDataBean
+//   OrderDataBean -> com.ibm.websphere.samples.daytrader.entities.OrderDataBean
+//   QuoteDataBean -> com.ibm.websphere.samples.daytrader.entities.QuoteDataBean
+//   MarketSummaryUpdate -> com.ibm.websphere.samples.daytrader.interfaces.MarketSummaryUpdate
+//   QuotePriceChange -> com.ibm.websphere.samples.daytrader.interfaces.QuotePriceChange
+//   RuntimeMode -> com.ibm.websphere.samples.daytrader.interfaces.RuntimeMode
+//   Trace -> com.ibm.websphere.samples.daytrader.interfaces.Trace
+//   TradeDB -> com.ibm.websphere.samples.daytrader.interfaces.TradeDB
+//   TradeEJB -> com.ibm.websphere.samples.daytrader.interfaces.TradeEJB
+//   TradeJDBC -> com.ibm.websphere.samples.daytrader.interfaces.TradeJDBC
+//   TradeServices -> com.ibm.websphere.samples.daytrader.interfaces.TradeServices
+//   TradeSession2Direct -> com.ibm.websphere.samples.daytrader.interfaces.TradeSession2Direct
+//   Diagnostics -> com.ibm.websphere.samples.daytrader.util.Diagnostics
+//   FinancialUtils -> com.ibm.websphere.samples.daytrader.util.FinancialUtils
+//   KeyBlock -> com.ibm.websphere.samples.daytrader.util.KeyBlock
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   MDBStats -> com.ibm.websphere.samples.daytrader.util.MDBStats
+//   RecentQuotePriceChangeList -> com.ibm.websphere.samples.daytrader.util.RecentQuotePriceChangeList
+//   TimerStat -> com.ibm.websphere.samples.daytrader.util.TimerStat
+//   TraceInterceptor -> com.ibm.websphere.samples.daytrader.util.TraceInterceptor
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   TradeRunTimeModeLiteral -> com.ibm.websphere.samples.daytrader.util.TradeRunTimeModeLiteral
+//   TradeDirect -> com.ibm.websphere.samples.daytrader.impl.direct.TradeDirect
+
+// === Class: TradeDirect ===
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private static final Integer marketSummaryLock;
+    private static long nextMarketSummary;
+    private static MarketSummaryDataBean cachedMSDB;
+    private static BigDecimal ZERO;
+    private boolean inGlobalTxn;
+    private boolean inSession;
+    private QueueConnectionFactory queueConnectionFactory;
+    private TopicConnectionFactory topicConnectionFactory;
+    private Topic tradeStreamerTopic;
+    private Queue tradeBrokerQueue;
+    private DataSource datasource;
+    private UserTransaction txn;
+    package-private RecentQuotePriceChangeList recentQuotePriceChangeList;
+    package-private AsyncOrderSubmitter asyncOrderSubmitter;
+    package-private Event mkSummaryUpdateEvent;
+    private ManagedExecutorService mes;
+    private static int connCount;
+    private static Integer lock;
+    private static final String createQuoteSQL;
+    private static final String createAccountSQL;
+    private static final String createAccountProfileSQL;
+    private static final String createHoldingSQL;
+    private static final String createOrderSQL;
+    private static final String removeHoldingSQL;
+    private static final String removeHoldingFromOrderSQL;
+    private static final String updateAccountProfileSQL;
+    private static final String loginSQL;
+    private static final String logoutSQL;
+    private static final String getAccountSQL;
+    private static final String getAccountProfileSQL;
+    private static final String getAccountProfileForAccountSQL;
+    private static final String getAccountForUserSQL;
+    private static final String getHoldingSQL;
+    private static final String getHoldingsForUserSQL;
+    private static final String getOrderSQL;
+    private static final String getOrdersByUserSQL;
+    private static final String getClosedOrdersSQL;
+    private static final String getQuoteSQL;
+    private static final String getAllQuotesSQL;
+    private static final String getQuoteForUpdateSQL;
+    private static final String getTSIAQuotesOrderByChangeSQL;
+    private static final String getTSIASQL;
+    private static final String getOpenTSIASQL;
+    private static final String getTSIATotalVolumeSQL;
+    private static final String creditAccountBalanceSQL;
+    private static final String updateOrderStatusSQL;
+    private static final String updateOrderHoldingSQL;
+    private static final String updateQuotePriceVolumeSQL;
+
+// Getter/Setter Methods (for test assertions):
+public MarketSummaryDataBean getMarketSummary() throws Exception;
+public MarketSummaryDataBean getMarketSummaryInternal() throws Exception;
+public Collection<OrderDataBean> getOrders(String userID) throws Exception;
+public Collection<OrderDataBean> getClosedOrders(String userID) throws Exception;
+public QuoteDataBean getQuote(String symbol) throws Exception;
+private QuoteDataBean getQuote(Connection conn, String symbol) throws Exception;
+private QuoteDataBean getQuoteForUpdate(Connection conn, String symbol) throws Exception;
+public Collection<QuoteDataBean> getAllQuotes() throws Exception;
+public Collection<HoldingDataBean> getHoldings(String userID) throws Exception;
+public HoldingDataBean getHolding(Integer holdingID) throws Exception;
+public AccountDataBean getAccountData(String userID) throws Exception;
+private AccountDataBean getAccountData(Connection conn, String userID) throws Exception;
+public AccountDataBean getAccountData(int accountID) throws Exception;
+private AccountDataBean getAccountData(int accountID, Connection conn) throws Exception;
+private QuoteDataBean getQuoteData(Connection conn, String symbol) throws Exception;
+private HoldingDataBean getHoldingData(int holdingID) throws Exception;
+private HoldingDataBean getHoldingData(Connection conn, int holdingID) throws Exception;
+private OrderDataBean getOrderData(Connection conn, int orderID) throws Exception;
+public AccountProfileDataBean getAccountProfileData(String userID) throws Exception;
+private AccountProfileDataBean getAccountProfileData(Connection conn, String userID) throws Exception;
+private AccountProfileDataBean getAccountProfileData(Connection conn, Integer accountID) throws Exception;
+private AccountDataBean getAccountDataFromResultSet(ResultSet rs) throws Exception;
+private AccountProfileDataBean getAccountProfileDataFromResultSet(ResultSet rs) throws Exception;
+private HoldingDataBean getHoldingDataFromResultSet(ResultSet rs) throws Exception;
+private QuoteDataBean getQuoteDataFromResultSet(ResultSet rs) throws Exception;
+private OrderDataBean getOrderDataFromResultSet(ResultSet rs) throws Exception;
+private Connection getConn() throws Exception;
+public Connection getConnPublic() throws Exception;
+private PreparedStatement getStatement(Connection conn, String sql) throws Exception;
+private PreparedStatement getStatement(Connection conn, String sql, int type, int concurrency) throws Exception;
+private boolean getInGlobalTxn();
+private void setInGlobalTxn(boolean inGlobalTxn);
+public void setInSession(boolean inSession);
+public int getImpl();
+
+// Internal Methods (full implementation for context):
+  private Connection getConn() throws Exception {
+
+    Connection conn = datasource.getConnection();
+
+    if (!this.inGlobalTxn) {
+      conn.setAutoCommit(false);
+    }
+    if (Log.doTrace()) {
+      synchronized (lock) {
+        connCount++;
+      }
+      Log.trace("TradeDirect:getConn -- new connection allocated, IsolationLevel=" + conn.getTransactionIsolation() + " connectionCount = " + connCount);
+    }
+
+    return conn;
+  }
+  private PreparedStatement getStatement(Connection conn, String sql) throws Exception {
+    return conn.prepareStatement(sql);
+  }
+  private void releaseConn(Connection conn) throws Exception {
+    try {
+      if (conn != null) {
+        conn.close();
+        if (Log.doTrace()) {
+          synchronized (lock) {
+            connCount--;
+          }
+          Log.trace("TradeDirect:releaseConn -- connection closed, connCount=" + connCount);
+        }
+      }
+    } catch (Exception e) {
+      Log.error("TradeDirect:releaseConnection -- failed to close connection", e);
+    }
+  }
+  private AccountDataBean getAccountDataFromResultSet(ResultSet rs) throws Exception {
+    AccountDataBean accountData = null;
+
+    if (!rs.next()) {
+      Log.error("TradeDirect:getAccountDataFromResultSet -- cannot find account data");
+    } else {
+      accountData = new AccountDataBean(new Integer(rs.getInt("accountID")), rs.getInt("loginCount"), rs.getInt("logoutCount"),
+          rs.getTimestamp("lastLogin"), rs.getTimestamp("creationDate"), rs.getBigDecimal("balance"), rs.getBigDecimal("openBalance"),
+          rs.getString("profile_userID"));
+    }
+    return accountData;
+  }
+  private void commit(Connection conn) throws Exception {
+    if (!inSession) {
+      if ((getInGlobalTxn() == false) && (conn != null)) {
+        conn.commit();
+      }
+    }
+  }
+  private void rollBack(Connection conn, Exception e) throws Exception {
+    if (!inSession) {
+      Log.log("TradeDirect:rollBack -- rolling back conn due to previously caught exception -- inGlobalTxn=" + getInGlobalTxn());
+      if ((getInGlobalTxn() == false) && (conn != null)) {
+        conn.rollback();
+      } else {
+        throw e; // Throw the exception
+        // so the Global txn manager will rollBack
+      }
+    }
+  }
+
+// === External Class: Log ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.Log
+// Import paths:
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   Level -> java.util.logging.Level
+//   Logger -> java.util.logging.Logger
+// Fields (with actual visibility):
+    private static final Logger log;
+
+// Method Signatures (used by target method):
+static public void trace(String message);
+static public void error(String message);
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() throws Exception {
+        dataSource = mock(DataSource.class);
+        userTransaction = mock(UserTransaction.class);
+        managedExecutorService = mock(ManagedExecutorService.class);
+
+        tradeDirect = new TradeDirect();
+        ReflectionTestUtils.setField(tradeDirect, "datasource", dataSource);
+        ReflectionTestUtils.setField(tradeDirect, "txn", userTransaction);
+        ReflectionTestUtils.setField(tradeDirect, "mes", managedExecutorService);
+    }
+
+    @AfterEach
+    void tearDown() {
+        tradeDirect = null;
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+  /**
+   * @see TradeServices#login(String, String)
+   */
+
+  @Override
+  public AccountDataBean login(String userID, String password) throws Exception {
+
+    AccountDataBean accountData = null;
+    Connection conn = null;
+    try {
+      Log.trace("TradeDirect:login - inSession(" + this.inSession + ")", userID, password);
+
+      conn = getConn();
+      PreparedStatement stmt = getStatement(conn, getAccountProfileSQL);
+      stmt.setString(1, userID);
+
+      ResultSet rs = stmt.executeQuery();
+      if (!rs.next()) { // NOT COVERED BY TESTS
+        Log.error("TradeDirect:login -- failure to find account for" + userID); // NOT COVERED BY TESTS
+        throw new javax.ejb.FinderException("Cannot find account for" + userID); // NOT COVERED BY TESTS
+      }
+
+      String pw = rs.getString("passwd");
+      stmt.close();
+      if ((pw == null) || (pw.equals(password) == false)) { // NOT COVERED BY TESTS
+        String error = "TradeDirect:Login failure for user: " + userID + "\n\tIncorrect password-->" + userID + ":" + password; // NOT COVERED BY TESTS
+        Log.error(error); // NOT COVERED BY TESTS
+        throw new Exception(error); // NOT COVERED BY TESTS
+      }
+
+      stmt = getStatement(conn, loginSQL);
+      stmt.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+      stmt.setString(2, userID);
+
+      stmt.executeUpdate();
+      stmt.close();
+
+      stmt = getStatement(conn, getAccountForUserSQL);
+      stmt.setString(1, userID);
+      rs = stmt.executeQuery();
+
+      accountData = getAccountDataFromResultSet(rs);
+
+      stmt.close();
+
+      commit(conn);
+    } catch (Exception e) {
+      Log.error("TradeDirect:login -- error logging in user", e);
+      rollBack(conn, e);
+    } finally {
+      releaseConn(conn);
+    }
+    return accountData;
+
+    /*
+     * setLastLogin( new Timestamp(System.currentTimeMillis()) );
+     * setLoginCount( getLoginCount() + 1 );
+     */
+  }
+
+
+COVERAGE ISSUES:
+Current line coverage: 84.38%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- CRITICAL FOR FIXING ASSERTIONS: When an error shows 'expected: <X> but was: <Y>', the ACTUAL VALUE is Y (what the method returns). You MUST change your assertion to expect Y, not X. For example: if error is 'expected: <null> but was: <java.lang.String>' you must change assertNull(...) to assertEquals(String.class, ...)
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes or custom implementations.
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers methods only if ensuring unique names.
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing. You MAY mock DEPENDENCIES but NEVER the class under test
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

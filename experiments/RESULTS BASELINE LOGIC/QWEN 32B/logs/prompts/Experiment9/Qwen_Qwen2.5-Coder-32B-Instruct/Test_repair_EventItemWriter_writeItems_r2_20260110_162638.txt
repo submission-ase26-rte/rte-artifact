@@ -1,0 +1,169 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.interfaces.handling.file;
+Class name (MUST be exactly): EventItemWriter_writeItemsTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.interfaces.handling.file;
+
+import jakarta.batch.api.chunk.AbstractItemWriter;
+import jakarta.batch.runtime.context.JobContext;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import org.eclipse.cargotracker.application.ApplicationEvents;
+import org.eclipse.cargotracker.application.util.DateConverter;
+import org.eclipse.cargotracker.domain.model.cargo.TrackingId;
+import org.eclipse.cargotracker.interfaces.handling.HandlingEventRegistrationAttempt;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class EventItemWriter_writeItemsTestGenerated {
+
+    @Mock
+    private JobContext jobContext;
+
+    @Mock
+    private ApplicationEvents applicationEvents;
+
+    @InjectMocks
+    private EventItemWriter eventItemWriter;
+
+    private Path archiveFile;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(eventItemWriter, "ARCHIVE_DIRECTORY", "target/test-archives");
+        Files.createDirectories(Path.of("target/test-archives"));
+        archiveFile = Path.of("target/test-archives/archive_testJob_1.csv");
+        when(jobContext.getProperties().getProperty("target/test-archives")).thenReturn("target/test-archives");
+        when(jobContext.getJobName()).thenReturn("testJob");
+        when(jobContext.getInstanceId()).thenReturn(1L);
+    }
+
+    @AfterEach
+    void tearDown() throws IOException {
+        Files.deleteIfExists(archiveFile);
+        Files.deleteIfExists(Path.of("target/test-archives"));
+    }
+
+    @Test
+    void testWriteItemsWithValidData() throws Exception {
+        HandlingEventRegistrationAttempt attempt1 = new HandlingEventRegistrationAttempt(
+                LocalDateTime.now(ZoneId.of("UTC")), LocalDateTime.now(ZoneId.of("UTC")), new TrackingId("trackingId1"), "voyageNumber1", "unLocode1", "type1");
+        HandlingEventRegistrationAttempt attempt2 = new HandlingEventRegistrationAttempt(
+                LocalDateTime.now(ZoneId.of("UTC")), LocalDateTime.now(ZoneId.of("UTC")), new TrackingId("trackingId2"), "voyageNumber2", "unLocode2", "type2");
+        List<Object> items = Arrays.asList(attempt1, attempt2);
+
+        eventItemWriter.writeItems(items);
+
+        assertTrue(Files.exists(archiveFile));
+        List<String> lines = Files.readAllLines(archiveFile);
+        assertEquals(2, lines.size());
+        verify(applicationEvents, times(2)).receivedHandlingEventRegistrationAttempt(any());
+    }
+
+    @Test
+    void testWriteItemsWithEmptyList() throws Exception {
+        List<Object> items = Collections.emptyList();
+
+        eventItemWriter.writeItems(items);
+
+        assertTrue(Files.exists(archiveFile));
+        List<String> lines = Files.readAllLines(archiveFile);
+        assertEquals(0, lines.size());
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any());
+    }
+
+    @Test
+    void testWriteItemsWithNullList() throws Exception {
+        List<Object> items = null;
+
+        Exception exception = assertThrows(NullPointerException.class, () -> {
+            eventItemWriter.writeItems(items);
+        });
+
+        assertNotNull(exception);
+        assertFalse(Files.exists(archiveFile));
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any());
+    }
+
+    @Test
+    void testWriteItemsWithNullItems() throws Exception {
+        HandlingEventRegistrationAttempt attempt1 = new HandlingEventRegistrationAttempt(
+                LocalDateTime.now(ZoneId.of("UTC")), LocalDateTime.now(ZoneId.of("UTC")), new TrackingId("trackingId1"), "voyageNumber1", "unLocode1", "type1");
+        HandlingEventRegistrationAttempt attempt2 = null;
+        List<Object> items = Arrays.asList(attempt1, attempt2);
+
+        Exception exception = assertThrows(NullPointerException.class, () -> {
+            eventItemWriter.writeItems(items);
+        });
+
+        assertNotNull(exception);
+        assertFalse(Files.exists(archiveFile));
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any());
+    }
+
+    @Test
+    void testWriteItemsWithIOException() throws Exception {
+        HandlingEventRegistrationAttempt attempt = new HandlingEventRegistrationAttempt(
+                LocalDateTime.now(ZoneId.of("UTC")), LocalDateTime.now(ZoneId.of("UTC")), new TrackingId("trackingId"), "voyageNumber", "unLocode", "type");
+        List<Object> items = Collections.singletonList(attempt);
+
+        doThrow(new IOException("Mocked IOException")).when(jobContext).getProperties().getProperty("target/test-archives");
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            eventItemWriter.writeItems(items);
+        });
+
+        assertNotNull(exception);
+        assertFalse(Files.exists(archiveFile));
+        verify(applicationEvents, never()).receivedHandlingEventRegistrationAttempt(any());
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[69] incompatible types: java.lang.String cannot be converted to org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[71] incompatible types: java.lang.String cannot be converted to org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[110] incompatible types: java.lang.String cannot be converted to org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/interfaces/handling/file/EventItemWriter_writeItemsTestGenerated.java:[126] incompatible types: java.lang.String cannot be converted to org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: EventItemWriter_writeItemsTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

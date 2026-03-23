@@ -1,0 +1,98 @@
+package org.apache.commons.compress.archivers.ar;
+
+import java.io.EOFException;
+import java.io.InputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+import org.apache.commons.compress.archivers.ar.ArArchiveInputStream;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.utils.ArchiveUtils;
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.compress.utils.ParsingUtils;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class ArArchiveInputStream_matchesTestGenerated {
+
+    @Test
+    void testMatches_validSignature() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0a};
+        assertTrue(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_validSignature_shorterLength() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e};
+        assertFalse(ArArchiveInputStream.matches(signature, 7));
+    }
+
+    @Test
+    void testMatches_invalidSignature_firstByte() throws IOException {
+        byte[] signature = {0x41, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_invalidSignature_secondByte() throws IOException {
+        byte[] signature = {0x21, 0x41, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_invalidSignature_thirdByte() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x41, 0x72, 0x63, 0x68, 0x3e, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_invalidSignature_fourthByte() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x61, 0x42, 0x63, 0x68, 0x3e, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_invalidSignature_fifthByte() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x61, 0x72, 0x43, 0x68, 0x3e, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_invalidSignature_sixthByte() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x61, 0x72, 0x63, 0x48, 0x3e, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_invalidSignature_seventhByte() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x4e, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_invalidSignature_eighthByte() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0b};
+        assertFalse(ArArchiveInputStream.matches(signature, 8));
+    }
+
+    @Test
+    void testMatches_emptySignature() throws IOException {
+        byte[] signature = {};
+        assertFalse(ArArchiveInputStream.matches(signature, 0));
+    }
+
+    @Test
+    void testMatches_zeroLengthSignature() throws IOException {
+        byte[] signature = {0x21, 0x3c, 0x61, 0x72, 0x63, 0x68, 0x3e, 0x0a};
+        assertFalse(ArArchiveInputStream.matches(signature, 0));
+    }
+
+    @Test
+        void testMatches_nullSignature() throws IOException {
+            assertFalse(ArArchiveInputStream.matches(null, 8));
+        }
+
+}

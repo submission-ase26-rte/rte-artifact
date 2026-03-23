@@ -1,0 +1,209 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.springframework.samples.petclinic.owner;
+
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class PetValidator_validateTestGenerated {
+    @InjectMocks
+    private PetValidator petValidator;
+    @Mock
+    private Pet pet;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        petValidator = new PetValidator();
+    }
+
+    @Test
+    public void testValidate_ValidPet() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        when(pet.getName()).thenReturn("Valid Name");
+        when(pet.isNew()).thenReturn(false);
+        PetType petType = new PetType();
+        when(pet.getType()).thenReturn(petType);
+        when(pet.getBirthDate()).thenReturn(LocalDate.now());
+        // Act
+        petValidator.validate(pet, errors);
+        // Assert
+        assertEquals(0, errors.getErrorCount());
+    }
+
+    @Test
+    public void testValidate_InvalidName() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        when(pet.getName()).thenReturn("");
+        // Act
+        petValidator.validate(pet, errors);
+        // Assert
+        assertEquals(2, errors.getErrorCount());
+        assertEquals("required", errors.getFieldError("name").getCode());
+    }
+
+    @Test
+    public void testValidate_NullBirthDate() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        when(pet.getBirthDate()).thenReturn(null);
+        // Act
+        petValidator.validate(pet, errors);
+        // Assert
+        assertEquals(2, errors.getErrorCount());
+        assertEquals("required", errors.getFieldError("birthDate").getCode());
+    }
+
+    @Test
+    public void testValidate_PetWithNullName() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        when(pet.getName()).thenReturn(null);
+        // Act
+        petValidator.validate(pet, errors);
+        // Assert
+        assertEquals(2, errors.getErrorCount());
+        assertEquals("required", errors.getFieldError("name").getCode());
+    }
+
+    @Test
+    public void testValidate_NewPetWithNullType() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        when(pet.isNew()).thenReturn(true);
+        when(pet.getType()).thenReturn(null);
+        // Act
+        petValidator.validate(pet, errors);
+        // Assert
+        assertEquals(3, errors.getErrorCount());
+        assertEquals("required", errors.getFieldError("type").getCode());
+    }
+
+    @Test
+    public void testValidate_NewPetWithType() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        when(pet.isNew()).thenReturn(true);
+        PetType petType = new PetType();
+        when(pet.getType()).thenReturn(petType);
+        // Act
+        petValidator.validate(pet, errors);
+        // Assert
+        assertEquals(1, errors.getErrorCount());
+    }
+
+    @Test
+    public void testValidate_PetWithBirthDate() {
+        // Arrange
+        Errors errors = new BeanPropertyBindingResult(pet, "pet");
+        when(pet.getBirthDate()).thenReturn(LocalDate.now());
+        // Act
+        petValidator.validate(pet, errors);
+        // Assert
+        assertEquals(1, errors.getErrorCount());
+    }
+
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 100.00% | Branch: 100.00%
+- Tests: 6/7 passed
+
+TEST STATUS:
+- PASSED (6): testValidate_ValidPet, testValidate_InvalidName, testValidate_NullBirthDate, testValidate_PetWithNullName, testValidate_NewPetWithNullType, testValidate_PetWithBirthDate
+- FAILED (1): testValidate_NewPetWithType
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   StringUtils -> org.springframework.util.StringUtils
+//   Errors -> org.springframework.validation.Errors
+//   Validator -> org.springframework.validation.Validator
+//   PetValidator -> org.springframework.samples.petclinic.owner.PetValidator
+//   Pet -> org.springframework.samples.petclinic.owner.Pet
+
+// === Class: PetValidator ===
+// Fields (with actual visibility):
+    private static final String REQUIRED;
+
+// === External Class: Pet ===
+// Full import path: org.springframework.samples.petclinic.owner.Pet
+// Import paths:
+//   LocalDate -> java.time.LocalDate
+//   Collection -> java.util.Collection
+//   LinkedHashSet -> java.util.LinkedHashSet
+//   Set -> java.util.Set
+//   DateTimeFormat -> org.springframework.format.annotation.DateTimeFormat
+// Fields (with actual visibility):
+    private LocalDate birthDate;
+    private PetType type;
+    private Set visits;
+
+// Method Signatures (used by target method):
+public PetType getType();
+public LocalDate getBirthDate();
+
+// Public Getter Methods (for test assertions):
+public Collection<Visit> getVisits();
+
+
+TASK:
+Regenerate ONLY the method "validate" OF CLASS "PetValidator" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public void validate(Object obj, Errors errors) {
+    // your implementation here
+}
+```
+
+
+- Package: org.springframework.samples.petclinic.owner
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+- DO NOT generate helper methods - output ONLY the single method "validate"
+– Allowed imports: exactly those already present in PetValidator
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

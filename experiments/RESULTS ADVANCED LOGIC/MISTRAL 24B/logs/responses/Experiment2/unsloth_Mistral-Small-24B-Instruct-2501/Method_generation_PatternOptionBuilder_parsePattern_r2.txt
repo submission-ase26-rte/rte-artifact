@@ -1,0 +1,60 @@
+```java
+public static Options parsePattern(final String pattern) {
+    if (pattern == null) {
+        throw new NullPointerException("Pattern cannot be null");
+    }
+
+    Options options = new Options();
+    if (pattern.isEmpty()) {
+        return options;
+    }
+
+    StringBuilder currentOption = new StringBuilder();
+    boolean isRequired = false;
+    boolean hasArg = false;
+    int argCount = Option.UNINITIALIZED;
+    int index = 0;
+    while (index < pattern.length()) {
+        char ch = pattern.charAt(index);
+        if (isValueCode(ch)) {
+            if (currentOption.length() > 0) {
+                Option option = new Option(currentOption.toString(), isRequired);
+                if (hasArg) {
+                    option.setArgs(argCount);
+                } else {
+                    option.setArgs(Option.UNINITIALIZED);
+                }
+                options.addOption(option);
+                currentOption.setLength(0);
+                isRequired = false;
+                hasArg = false;
+                argCount = Option.UNINITIALIZED;
+            }
+            if (ch == '!') {
+                isRequired = true;
+            } else {
+                Class<?> valueType = getValueType(ch);
+                if (valueType != null) {
+                    argCount = (valueType == STRING_VALUE) ? 1 : 0;
+                    hasArg = true;
+                }
+            }
+        } else {
+            currentOption.append(ch);
+        }
+        index++;
+    }
+
+    if (currentOption.length() > 0) {
+        Option option = new Option(currentOption.toString(), isRequired);
+        if (hasArg) {
+            option.setArgs(argCount);
+        } else {
+            option.setArgs(Option.UNINITIALIZED);
+        }
+        options.addOption(option);
+    }
+
+    return options;
+}
+```

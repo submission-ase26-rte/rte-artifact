@@ -1,0 +1,71 @@
+{
+  "method_id": 7,
+  "tested_method": "printHelp",
+  "tested_class": "HelpFormatter",
+  "project": "CLI",
+  "timestamp": "2026-02-03T13:06:01.988086",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\GPT-4 - ASTER\\CLI\\Run-1\\src\\test\\java\\org\\apache\\commons\\cli\\Metodo7_printHelp_HelpFormatter_Test.java",
+  "test_results": {
+    "success": true,
+    "tests_passed": 3,
+    "tests_total": 3,
+    "tests_failed": 0,
+    "line_coverage": 90.9090909090909,
+    "branch_coverage": 71.42857142857143,
+    "has_compilation_errors": false,
+    "compilation_errors": null,
+    "test_info": {
+      "valid_tests": [
+        "testPrintHelp_QVjs0",
+        "testPrintHelp_SyDg0",
+        "testPrintHelp_jPIw0"
+      ],
+      "invalid_tests": [],
+      "failed_assert_tests": [],
+      "runtime_error_tests": []
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 3,
+    "assertion_complexity": 0.1448,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.0,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.631,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.5769,
+    "overall_naturalness_score": 0.802
+  },
+  "metrics": {
+    "crystalbleu_similarity": 0.4941973686735465,
+    "string_similarity": 0.4161849710982659,
+    "token_similarity": 0.7419354838709677,
+    "ast_similarity": 0.8333333333333334,
+    "embedding_similarity": 0.9845696687698364,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.3076923076923077,
+      "similar_blocks": 8,
+      "total_blocks": 52
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.7713573114059918,
+    "passes_threshold": true
+  },
+  "original_method": "    public void printHelp(final PrintWriter pw, final int width, final String cmdLineSyntax, final String header, final Options options, final int leftPad,\n        final int descPad, final String footer, final boolean autoUsage) {\n        if (cmdLineSyntax == null || cmdLineSyntax.isEmpty()) {\n            throw new IllegalArgumentException(\"cmdLineSyntax not provided\");\n        }\n        if (autoUsage) {\n            printUsage(pw, width, cmdLineSyntax, options);\n        } else {\n            printUsage(pw, width, cmdLineSyntax);\n        }\n        if (header != null && !header.isEmpty()) {\n            printWrapped(pw, width, header);\n        }\n        printOptions(pw, width, options, leftPad, descPad);\n        if (footer != null && !footer.isEmpty()) {\n            printWrapped(pw, width, footer);\n        }\n    }",
+  "regenerated_method": "public void printHelp(final PrintWriter pw, final int width, final String cmdLineSyntax, final String header, final Options options, final int leftPad, final int descPad, final String footer, final boolean autoUsage) {\n    if (header != null) {\n        printWrapped(pw, width, 0, header);\n        pw.println();\n    }\n    printUsage(pw, width, cmdLineSyntax);\n    if (autoUsage) {\n        pw.println();\n    }\n    printOptions(pw, width, options, leftPad, descPad);\n    if (footer != null) {\n        pw.println();\n        printWrapped(pw, width, 0, footer);\n    }\n}",
+  "passes_evaluation": true,
+  "similarity_threshold": 0.6872363747448347,
+  "original_metrics": {
+    "loc": 18,
+    "sloc": 18,
+    "complexity": 9
+  }
+}

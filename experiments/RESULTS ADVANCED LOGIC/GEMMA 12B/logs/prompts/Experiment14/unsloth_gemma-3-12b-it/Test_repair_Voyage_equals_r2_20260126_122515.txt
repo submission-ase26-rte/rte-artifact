@@ -1,0 +1,107 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.domain.model.voyage;
+Class name (MUST be exactly): Voyage_equalsTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.eclipse.cargotracker.domain.model.voyage;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.Validate;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.voyage.Voyage;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.domain.model.voyage.Schedule;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class Voyage_equalsTestGenerated {
+
+    private Voyage voyage1;
+    private Voyage voyage2;
+
+    @BeforeEach
+    public void setUp() {
+        // Mock dependencies for Voyage constructor
+        Schedule schedule = mock(Schedule.class);
+        Location departureLocation = mock(Location.class);
+
+        // Create Voyage instances with mock dependencies
+        voyage1 = new Voyage(VoyageNumber.create("VOY123"), schedule);
+        voyage2 = new Voyage(VoyageNumber.create("VOY123"), departureLocation);
+    }
+
+    @Test
+    public void testEquals_sameObject() {
+        assertTrue(voyage1.equals(voyage1));
+    }
+
+    @Test
+    public void testEquals_nullObject() {
+        assertFalse(voyage1.equals(null));
+    }
+
+    @Test
+    public void testEquals_differentClass() {
+        assertFalse(voyage1.equals("Not a Voyage"));
+    }
+
+    @Test
+    public void testEquals_sameVoyageNumber() {
+        assertTrue(voyage1.equals(voyage2));
+    }
+
+    @Test
+    public void testEquals_differentVoyageNumber() {
+        Voyage voyage3 = new Voyage(VoyageNumber.create("VOY456"), mock(Schedule.class));
+        assertFalse(voyage1.equals(voyage3));
+    }
+
+    @Test
+    public void testEquals_voyage1EqualsVoyage1() {
+        assertTrue(voyage1.equals(voyage1));
+    }
+
+    @Test
+    public void testEquals_voyage2EqualsVoyage2() {
+        Voyage voyage4 = new Voyage(VoyageNumber.create("VOY123"), mock(Location.class));
+        assertTrue(voyage2.equals(voyage4));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/domain/model/voyage/Voyage_equalsTestGenerated.java:[33] cannot find symbol
+  symbol:   method create(java.lang.String)
+  location: class org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/domain/model/voyage/Voyage_equalsTestGenerated.java:[34] cannot find symbol
+  symbol:   method create(java.lang.String)
+  location: class org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/domain/model/voyage/Voyage_equalsTestGenerated.java:[59] cannot find symbol
+  symbol:   method create(java.lang.String)
+  location: class org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Cargotracker/Run-1/src/test/java/org/eclipse/cargotracker/domain/model/voyage/Voyage_equalsTestGenerated.java:[70] cannot find symbol
+  symbol:   method create(java.lang.String)
+  location: class org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Keep the SAME class name: Voyage_equalsTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

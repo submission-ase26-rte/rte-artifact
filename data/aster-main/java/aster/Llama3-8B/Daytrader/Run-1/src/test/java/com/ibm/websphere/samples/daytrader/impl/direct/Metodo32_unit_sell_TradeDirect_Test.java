@@ -1,0 +1,277 @@
+/**
+ * Filtered unit tests for method: sell(String userID, Integer holdingID, int orderProcessingMode)
+ * Original class: TradeDirect
+ * Tests that actually call the target method
+ */
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.entities.*;
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.util.FinancialUtils;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.MDBStats;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+public class Metodo32_unit_sell_TradeDirect_Test {
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellValidInput_TRqF0() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    OrderDataBean orderData = tradeDirect.sell("userID", 1, TradeConfig.SYNCH);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellNullUserID_ehic1() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    OrderDataBean orderData = tradeDirect.sell(null, 1, TradeConfig.SYNCH);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellNullHoldingID_dTWY2() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    OrderDataBean orderData = tradeDirect.sell("userID", null, TradeConfig.SYNCH);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellInvalidOrderProcessingMode_cxJw3() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    OrderDataBean orderData = tradeDirect.sell("userID", 1, -1);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellValidInput_UXee0() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    OrderDataBean orderData = tradeDirect.sell("userID", 1, TradeConfig.SYNCH);
+    assertNotNull(orderData);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellInvalidOrderProcessingMode_iedK3() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    try {
+    tradeDirect.sell("userID", 1, 5);
+    fail("Expected IndexOutOfBoundsException");
+    } catch (IndexOutOfBoundsException e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellValidInput_BLpl0() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    Connection conn = null;
+    OrderDataBean orderData = tradeDirect.sell("userID", 1, TradeConfig.SYNCH);
+    assertNotNull(orderData);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellValidInput_ujYb0() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    OrderDataBean orderData = tradeDirect.sell("user1", 1, TradeConfig.SYNCH);
+    assertNotNull(orderData);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellAsyncOrderProcessingMode_TcWJ8() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    OrderDataBean orderData = tradeDirect.sell("user1", 1, TradeConfig.ASYNCH);
+    assertNotNull(orderData);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellAsync2PhaseOrderProcessingMode_xnBP9() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    OrderDataBean orderData = tradeDirect.sell("user1", 1, TradeConfig.ASYNCH_2PHASE);
+    assertNotNull(orderData);
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellNullUserID_EHdE1() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    try {
+    tradeDirect.sell(null, 1, TradeConfig.SYNCH);
+    fail("Expected NullPointerException");
+    } catch (NullPointerException e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellNullHoldingID_mmZI2() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    try {
+    tradeDirect.sell("userID", null, TradeConfig.SYNCH);
+    fail("Expected NullPointerException");
+    } catch (NullPointerException e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellNullUserID_xeST1() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    Connection conn = null;
+    try {
+    tradeDirect.sell(null, 1, TradeConfig.SYNCH);
+    fail("Expected NullPointerException");
+    } catch (NullPointerException e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellNullHoldingID_aQmE2() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    Connection conn = null;
+    try {
+    tradeDirect.sell("userID", null, TradeConfig.SYNCH);
+    fail("Expected NullPointerException");
+    } catch (NullPointerException e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellInvalidOrderProcessingMode_BFFU3() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    Connection conn = null;
+    try {
+    tradeDirect.sell("userID", 1, 5);
+    fail("Expected Exception");
+    } catch (Exception e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellAccountDataNull_eGtc4() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    Connection conn = null;
+    try {
+    tradeDirect.sell("userID", 1, TradeConfig.SYNCH);
+    fail("Expected Exception");
+    } catch (Exception e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellHoldingDataNull_VNtF5() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    Connection conn = null;
+    try {
+    tradeDirect.sell("userID", null, TradeConfig.SYNCH);
+    fail("Expected Exception");
+    } catch (Exception e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellNullHoldingID_GPFP2() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    try {
+    tradeDirect.sell("user1", null, TradeConfig.SYNCH);
+    fail("Expected NullPointerException");
+    } catch (NullPointerException e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellInvalidOrderProcessingMode_VqIy3() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    try {
+    tradeDirect.sell("user1", 1, 5);
+    fail("Expected Exception");
+    } catch (Exception e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellAccountDataNull_mSiN4() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    AccountDataBean accountData = null;
+    try {
+    tradeDirect.sell("user1", 1, TradeConfig.SYNCH);
+    fail("Expected NullPointerException");
+    } catch (NullPointerException e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellHoldingDataNull_maaa5() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    HoldingDataBean holdingData = null;
+    try {
+    tradeDirect.sell("user1", 1, TradeConfig.SYNCH);
+    fail("Expected NullPointerException");
+    } catch (NullPointerException e) {
+    }
+    }
+
+    @Test
+    @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD)
+    public void testSellQuoteDataNull_Cexn6() throws Exception {
+    TradeDirect tradeDirect = new TradeDirect();
+    QuoteDataBean quoteData = null;
+    try {
+    tradeDirect.sell("user1", 1, TradeConfig.SYNCH);
+    fail("Expected NullPointerException");
+    } catch (NullPointerException e) {
+    }
+    }
+}

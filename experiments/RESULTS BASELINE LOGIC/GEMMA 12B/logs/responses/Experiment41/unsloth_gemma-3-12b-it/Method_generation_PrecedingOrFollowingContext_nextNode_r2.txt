@@ -1,0 +1,33 @@
+```java
+    public boolean nextNode() {
+        if (currentRootLocation == null || currentRootLocation.isRoot()) {
+            return false;
+        }
+
+        NodeIterator iterator = currentRootLocation.childIterator(nodeTest, reverse, currentRootLocation);
+        if (iterator == null) {
+            return false;
+        }
+
+        if (!setPosition(1)) {
+            return false;
+        }
+
+        NodePointer nextNode = iterator.getNodePointer();
+        if (nextNode != null && nextNode.testNode(nodeTest)) {
+            currentNodePointer = nextNode;
+            return true;
+        }
+
+        int position = 1;
+        while (setPosition(++position)) {
+            nextNode = iterator.getNodePointer();
+            if (nextNode != null && nextNode.testNode(nodeTest)) {
+                currentNodePointer = nextNode;
+                return true;
+            }
+        }
+
+        return false;
+    }
+```

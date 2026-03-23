@@ -1,0 +1,112 @@
+```java
+public Object convert(final Object object, final Class toType) {
+    if (object == null) {
+        if (toType.isPrimitive()) {
+            throw new JXPathTypeConversionException("Cannot convert null to primitive type: " + toType.getName());
+        }
+        return null;
+    }
+
+    if (toType.isInstance(object)) {
+        return object;
+    }
+
+    if (object instanceof NodeSet) {
+        return ((NodeSet) object).getValues();
+    }
+
+    if (object instanceof Pointer) {
+        return ((Pointer) object).getValue();
+    }
+
+    if (object.getClass().isArray()) {
+        int length = Array.getLength(object);
+        if (toType.isArray()) {
+            Object result = Array.newInstance(toType.getComponentType(), length);
+            for (int i = 0; i < length; i++) {
+                Array.set(result, i, convert(Array.get(object, i), toType.getComponentType()));
+            }
+            return result;
+        } else {
+            if (length == 0) {
+                return allocateCollection(toType);
+            } else {
+                Collection result = allocateCollection(toType);
+                for (int i = 0; i < length; i++) {
+                    result.add(convert(Array.get(object, i), toType.getComponentType()));
+                }
+                return result;
+            }
+        }
+    }
+
+    if (object instanceof Collection) {
+        Collection collection = (Collection) object;
+        if (toType.isArray()) {
+            Object result = Array.newInstance(toType.getComponentType(), collection.size());
+            int i = 0;
+            for (Object item : collection) {
+                Array.set(result, i++, convert(item, toType.getComponentType()));
+            }
+            return result;
+        } else if (Collection.class.isAssignableFrom(toType)) {
+            if (collection instanceof SortedSet) {
+                return new java.util.TreeSet<>((java.util.SortedSet) collection);
+            } else {
+                return new java.util.ArrayList<>(collection);
+            }
+        } else {
+            if (collection.isEmpty()) {
+                return convertStringToPrimitive("", toType);
+            } else {
+                return convert(collection.iterator().next(), toType);
+            }
+        }
+    }
+
+    if (toType == String.class) {
+        return object.toString();
+    }
+
+    if (toType.isPrimitive()) {
+        if (object instanceof Number) {
+            return convertNumberToPrimitive((Number) object, toType);
+        } else if (object instanceof Boolean) {
+            return ((Boolean) object) ? 1 : 0;
+        } else {
+            return convertStringToPrimitive(object.toString(), toType);
+        }
+    }
+
+    if (Number.class.isAssignableFrom(toType)) {
+        if (object instanceof Number) {
+            return allocateNumber(toType, ((Number) object).doubleValue());
+        } else if (object instanceof Boolean) {
+            return allocateNumber(toType, ((Boolean) object) ? 1 : 0);
+        } else {
+            return allocateNumber(toType, Double.parseDouble(object.toString()));
+        }
+    }
+
+    if (Boolean.class == toType) {
+        if (object instanceof Number) {
+            return ((Number) object).doubleValue() != 0.0;
+        } else if (object instanceof Boolean) {
+            return object;
+        } else {
+            return Boolean.parseBoolean(object.toString());
+        }
+    }
+
+    if (toType == AtomicBoolean.class) {
+        return new AtomicBoolean(Boolean.parseBoolean(object.toString()));
+    }
+
+    Converter converter = ConvertUtils.lookup(toType);
+    if (converter != null) {
+        return converter.convert(toType, object);
+    }
+
+    throw new JXPathTypeConversionException("No conversion possible from " + object.getClass() + " to " + toType);
+}
+```

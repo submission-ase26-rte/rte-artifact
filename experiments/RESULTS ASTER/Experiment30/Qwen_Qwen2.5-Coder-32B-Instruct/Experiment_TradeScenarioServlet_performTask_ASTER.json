@@ -1,0 +1,71 @@
+{
+  "method_id": 30,
+  "tested_method": "performTask",
+  "tested_class": "TradeScenarioServlet",
+  "project": "Daytrader",
+  "timestamp": "2026-02-03T13:22:11.608928",
+  "test_file": "C:\\Workspace\\Project\\JAVA_PROJECTS\\aster-main\\java\\aster\\GPT-4 - ASTER\\Daytrader\\Run-1\\src\\test\\java\\com\\ibm\\websphere\\samples\\daytrader\\web\\servlet\\Metodo30_performTask_TradeScenarioServlet_Test.java",
+  "test_results": {
+    "success": false,
+    "tests_passed": 0,
+    "tests_total": 1,
+    "tests_failed": 1,
+    "line_coverage": 0.0,
+    "branch_coverage": 0.0,
+    "has_compilation_errors": false,
+    "compilation_errors": "TEST: testPerformTaskWithActionN_lgqU0_GhoD0 --\nERROR: java.util.concurrent.TimeoutException: testPerformTaskWithActionN_lgqU0_GhoD0() timed out after 1 second\nCaused by: org.junit.jupiter.api.AssertTimeoutPreemptively$ExecutionTimeoutException: Execution timed out in thread junit-timeout-thread-1",
+    "test_info": {
+      "valid_tests": [],
+      "invalid_tests": [
+        "testPerformTaskWithActionN_lgqU0_GhoD0"
+      ],
+      "failed_assert_tests": [],
+      "runtime_error_tests": [
+        "testPerformTaskWithActionN_lgqU0_GhoD0"
+      ]
+    }
+  },
+  "test_naturalness": {
+    "num_test_methods": 1,
+    "assertion_complexity": 0.3,
+    "pct_null_assertions": 0.0,
+    "pct_duplicate_assertions": 0.0,
+    "pct_exception_assertions": 0.0,
+    "pct_no_assertion": 0.0,
+    "naturalness_method_name": 0.6742,
+    "pct_focal_method_covered": 1.0,
+    "diversity_literal_values": 0.9091,
+    "overall_naturalness_score": 0.8958
+  },
+  "metrics": {
+    "crystalbleu_similarity": 9.757405276347915e-07,
+    "string_similarity": 0.08607126330402591,
+    "token_similarity": 0.14285714285714285,
+    "ast_similarity": 0.06818181818181818,
+    "embedding_similarity": 0.6527324914932251,
+    "clone_detection": {
+      "exact_match": false,
+      "clone_percentage": 0.054474708171206226,
+      "similar_blocks": 7,
+      "total_blocks": 257
+    },
+    "weights": {
+      "crystalbleu_similarity": 0.2,
+      "string_similarity": 0.08,
+      "token_similarity": 0.15,
+      "ast_similarity": 0.22,
+      "embedding_similarity": 0.35
+    },
+    "overall_similarity": 0.2717708396636278,
+    "passes_threshold": false
+  },
+  "original_method": "  public void performTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {\n\n    // Scenario generator for Trade2\n    char action = ' ';\n    String userID = null;\n\n    // String to create full dispatch path to TradeAppServlet w/ request\n    // Parameters\n    String dispPath = null; // Dispatch Path to TradeAppServlet\n\n    resp.setContentType(\"text/html\");\n\n    String scenarioAction = req.getParameter(\"action\");\n    if ((scenarioAction != null) && (scenarioAction.length() >= 1)) {\n      action = scenarioAction.charAt(0);\n      if (action == 'n') { // null;\n        try {\n          // resp.setContentType(\"text/html\");\n          PrintWriter out = new PrintWriter(resp.getOutputStream());\n          out.println(\"<HTML><HEAD>TradeScenarioServlet</HEAD><BODY>Hello</BODY></HTML>\");\n          out.close();\n          return;\n\n        } catch (Exception e) {\n          Log.error(\"trade_client.TradeScenarioServlet.service(...)\" + \"error creating printwriter from responce.getOutputStream\", e);\n\n          resp.sendError(500,\n              \"trade_client.TradeScenarioServlet.service(...): erorr creating and writing to PrintStream created from response.getOutputStream()\");\n        } // end of catch\n\n      } // end of action=='n'\n    }\n\n    ServletContext ctx = null;\n    HttpSession session = null;\n    try {\n      ctx = getServletConfig().getServletContext();\n      // These operations require the user to be logged in. Verify the\n      // user and if not logged in\n      // change the operation to a login\n      session = req.getSession(true);\n      userID = (String) session.getAttribute(\"uidBean\");\n    } catch (Exception e) {\n      Log.error(\"trade_client.TradeScenarioServlet.service(...): performing \" + scenarioAction\n          + \"error getting ServletContext,HttpSession, or UserID from session\" + \"will make scenarioAction a login and try to recover from there\", e);\n      userID = null;\n      action = 'l';\n    }\n\n    if (userID == null) {\n      action = 'l'; // change to login\n      TradeConfig.incrementScenarioCount();\n    } else if (action == ' ') {\n      // action is not specified perform a random operation according to\n      // current mix\n      // Tell getScenarioAction if we are an original user or a registered\n      // user\n      // -- sellDeficits should only be compensated for with original\n      // users.\n      action = TradeConfig.getScenarioAction(userID.startsWith(TradeConfig.newUserPrefix));\n    }\n    switch(action) {\n\n      case 'q': // quote\n        dispPath = tasPathPrefix + \"quotes&symbols=\" + TradeConfig.rndSymbols();\n        ctx.getRequestDispatcher(dispPath).include(req, resp);\n        break;\n      case 'a': // account\n        dispPath = tasPathPrefix + \"account\";\n        ctx.getRequestDispatcher(dispPath).include(req, resp);\n        break;\n      case 'u': // update account profile\n        dispPath = tasPathPrefix + \"account\";\n        ctx.getRequestDispatcher(dispPath).include(req, resp);\n\n        String fullName = \"rnd\" + System.currentTimeMillis();\n        String address = \"rndAddress\";\n        String password = \"xxx\";\n        String email = \"rndEmail\";\n        String creditcard = \"rndCC\";\n        dispPath = tasPathPrefix + \"update_profile&fullname=\" + fullName + \"&password=\" + password + \"&cpassword=\" + password + \"&address=\" + address\n            + \"&email=\" + email + \"&creditcard=\" + creditcard;\n        ctx.getRequestDispatcher(dispPath).include(req, resp);\n        break;\n      case 'h': // home\n        dispPath = tasPathPrefix + \"home\";\n        ctx.getRequestDispatcher(dispPath).include(req, resp);\n        break;\n      case 'l': // login\n        userID = TradeConfig.getUserID();\n        String password2 = \"xxx\";\n        dispPath = tasPathPrefix + \"login&inScenario=true&uid=\" + userID + \"&passwd=\" + password2;\n        ctx.getRequestDispatcher(dispPath).include(req, resp);\n\n        // login is successful if the userID is written to the HTTP session\n        if (session.getAttribute(\"uidBean\") == null) {\n          System.out.println(\"TradeScenario login failed. Reset DB between runs\");\n        }\n        break;\n      case 'o': // logout\n        dispPath = tasPathPrefix + \"logout\";\n        ctx.getRequestDispatcher(dispPath).include(req, resp);\n        break;\n      case 'p': // portfolio\n        dispPath = tasPathPrefix + \"portfolio\";\n        ctx.getRequestDispatcher(dispPath).include(req, resp);\n        break;\n      case 'r': // register\n        // Logout the current user to become a new user\n        // see note in TradeServletAction\n        req.setAttribute(\"TSS-RecreateSessionInLogout\", Boolean.TRUE);\n        dispPath = tasPathPrefix + \"logout\";\n        ctx.getRequestDispatcher(dispPath).include(req, resp);\n\n        userID = TradeConfig.rndNewUserID();\n        String passwd = \"yyy\";\n        fullName = TradeConfig.rndFullName();\n        creditcard = TradeConfig.rndCreditCard();\n        String money = TradeConfig.rndBalance();\n        email = TradeConfig.rndEmail(userID);\n        String smail = TradeConfig.rndAddress();\n        dispPath = tasPathPrefix + \"register&Full Name=\" + fullName + \"&snail mail=\" + smail + \"&email=\" + email + \"&user id=\" + userID + \"&passwd=\"\n            + passwd + \"&confirm passwd=\" + passwd + \"&money=\" + money + \"&Credit Card Number=\" + creditcard;\n        ctx.getRequestDispatcher(dispPath).include(req, resp);\n        break;\n      case 's': // sell\n        dispPath = tasPathPrefix + \"portfolioNoEdge\";\n        ctx.getRequestDispatcher(dispPath).include(req, resp);\n\n        Collection<?> holdings = (Collection<?>) req.getAttribute(\"holdingDataBeans\");\n        int numHoldings = holdings.size();\n        if (numHoldings > 0) {\n          // sell first available security out of holding\n\n          Iterator<?> it = holdings.iterator();\n          boolean foundHoldingToSell = false;\n          while (it.hasNext()) {\n            HoldingDataBean holdingData = (HoldingDataBean) it.next();\n            if (!(holdingData.getPurchaseDate().equals(new java.util.Date(0)))) {\n              Integer holdingID = holdingData.getHoldingID();\n\n              dispPath = tasPathPrefix + \"sell&holdingID=\" + holdingID;\n              ctx.getRequestDispatcher(dispPath).include(req, resp);\n              foundHoldingToSell = true;\n              break;\n            }\n          }\n          if (foundHoldingToSell) {\n            break;\n          }\n\n          Log.trace(\"TradeScenario: No holding to sell -switch to buy -- userID = \" + userID + \"  Collection count = \" + numHoldings);\n\n\n        }\n        // At this point: A TradeScenario Sell was requested with No Stocks\n        // in Portfolio\n        // This can happen when a new registered user happens to request a\n        // sell before a buy\n        // In this case, fall through and perform a buy instead\n\n        /*\n         * Trade 2.037: Added sell_deficit counter to maintain correct\n         * buy/sell mix. When a users portfolio is reduced to 0 holdings, a\n         * buy is requested instead of a sell. This throws off the buy/sell\n         * mix by 1. This results in unwanted holding table growth To fix\n         * this we increment a sell deficit counter to maintain the correct\n         * ratio in getScenarioAction The 'z' action from getScenario\n         * denotes that this is a sell action that was switched from a buy\n         * to reduce a sellDeficit\n         */\n        if (userID.startsWith(TradeConfig.newUserPrefix) == false) {\n          TradeConfig.incrementSellDeficit();\n        }\n      case 'b': // buy\n        String symbol = TradeConfig.rndSymbol();\n        String amount = TradeConfig.rndQuantity() + \"\";\n\n        dispPath = tasPathPrefix + \"quotes&symbols=\" + symbol;\n        ctx.getRequestDispatcher(dispPath).include(req, resp);\n\n        dispPath = tasPathPrefix + \"buy&quantity=\" + amount + \"&symbol=\" + symbol;\n        ctx.getRequestDispatcher(dispPath).include(req, resp);\n        break;\n    } // end of switch statement\n  }",
+  "regenerated_method": "public void performTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {\n    String action = req.getParameter(\"action\");\n    if (\"n\".equals(action)) {\n        resp.setContentType(\"text/html\");\n        PrintWriter writer = resp.getWriter();\n        writer.println(\"<HTML><HEAD>TradeScenarioServlet</HEAD><BODY>Hello</BODY></HTML>\");\n        writer.close();\n    }\n}",
+  "passes_evaluation": false,
+  "similarity_threshold": 0.6439713034397074,
+  "original_metrics": {
+    "loc": 186,
+    "sloc": 132,
+    "complexity": 34
+  }
+}

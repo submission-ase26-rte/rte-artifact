@@ -1,0 +1,324 @@
+ROLE:
+You are an expert Java developer specialized in writing complete and robust JUnit 5 tests.
+
+TEST CLASS PACKAGE:
+The test class MUST use the following package (same as the target class):
+package com.ibm.websphere.samples.daytrader.web.jsf;
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   RunStatsDataBean -> com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean
+//   TradeDirectDBUtils -> com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils
+//   Log -> com.ibm.websphere.samples.daytrader.util.Log
+//   TradeConfig -> com.ibm.websphere.samples.daytrader.util.TradeConfig
+//   RequestScoped -> javax.enterprise.context.RequestScoped
+//   ExternalContext -> javax.faces.context.ExternalContext
+//   Inject -> javax.inject.Inject
+//   Named -> javax.inject.Named
+//   HttpSession -> javax.servlet.http.HttpSession
+//   TradeConfigJSF -> com.ibm.websphere.samples.daytrader.web.jsf.TradeConfigJSF
+
+// === Class: TradeConfigJSF ===
+// Fields (with actual visibility):
+    private ExternalContext context;
+    package-private TradeDirectDBUtils dbUtils;
+    private String runtimeMode;
+    private String orderProcessingMode;
+    private int maxUsers;
+    private int maxQuotes;
+    private int marketSummaryInterval;
+    private String webInterface;
+    private int primIterations;
+    private int listQuotePriceChangeFrequency;
+    private boolean publishQuotePriceChange;
+    private boolean longRun;
+    private boolean displayOrderAlerts;
+    private String[] runtimeModeList;
+    private String[] orderProcessingModeList;
+    private String[] webInterfaceList;
+    private String result;
+
+// Getter/Setter Methods (for test assertions):
+public String getRuntimeMode();
+public void setRuntimeMode(String runtimeMode);
+public void setOrderProcessingMode(String orderProcessingMode);
+public String getOrderProcessingMode();
+public void setMaxUsers(int maxUsers);
+public int getMaxUsers();
+public int getMaxQuotes();
+public void setMarketSummaryInterval(int marketSummaryInterval);
+public int getMarketSummaryInterval();
+public void setPrimIterations(int primIterations);
+public int getPrimIterations();
+public void setPublishQuotePriceChange(boolean publishQuotePriceChange);
+public boolean isPublishQuotePriceChange();
+public void setListQuotePriceChangeFrequency(int listQuotePriceChangeFrequency);
+public int getListQuotePriceChangeFrequency();
+public void setDisplayOrderAlerts(boolean displayOrderAlerts);
+public boolean isDisplayOrderAlerts();
+public void setLongRun(boolean longRun);
+public boolean isLongRun();
+public String[] getRuntimeModeList();
+public void setRuntimeModeList(String[] runtimeModeList);
+public void setOrderProcessingModeList(String[] orderProcessingModeList);
+public String[] getOrderProcessingModeList();
+public void setWebInterface(String webInterface);
+public String getWebInterface();
+public void setWebInterfaceList(String[] webInterfaceList);
+public String[] getWebInterfaceList();
+public void setResult(String result);
+public String getResult();
+
+// Internal Methods (full implementation for context):
+  public void setResult(String result) {
+    this.result = result;
+  }
+
+// === External Class: TradeConfig ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.TradeConfig
+// Import paths:
+//   BigDecimal -> java.math.BigDecimal
+//   ArrayList -> java.util.ArrayList
+//   Random -> java.util.Random
+// Fields (with actual visibility):
+    private static String[] runTimeModeNames;
+    public static final int EJB3;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int DIRECT;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int SESSION_TO_DIRECT;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int runTimeMode;
+    private static String[] orderProcessingModeNames;
+    public static final int SYNCH;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ASYNCH;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ASYNCH_2PHASE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int orderProcessingMode;
+    private static String[] accessModeNames;
+    public static final int STANDARD;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int accessMode;
+    private static String[] webInterfaceNames;
+    public static final int JSP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int JSP_Images;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int JSP_Images_HTTP2;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int webInterface;
+    private static int MAX_USERS;
+    private static int MAX_QUOTES;
+    public static boolean JDBCDriverNeedsGlobalTransation;
+    public static String DATASOURCE;
+    public static int KEYBLOCKSIZE;
+    public static int QUOTES_PER_PAGE;
+    public static boolean RND_USER;
+    private static int MAX_HOLDINGS;
+    private static int count;
+    private static Object userID_count_semaphore;
+    private static int userID_count;
+    private static String hostName;
+    private static Random r0;
+    private static Random randomNumberGenerator;
+    public static final String newUserPrefix;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int verifyPercent;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static boolean updateQuotePrices;
+    private static int primIterations;
+    private static boolean longRun;
+    private static boolean publishQuotePriceChange;
+    private static int listQuotePriceChangeFrequency;
+    private static boolean displayOrderAlerts;
+    private static int marketSummaryInterval;
+    public static BigDecimal PENNY_STOCK_PRICE;
+    public static BigDecimal PENNY_STOCK_RECOVERY_MIRACLE_MULTIPLIER;
+    public static BigDecimal MAXIMUM_STOCK_PRICE;
+    public static BigDecimal MAXIMUM_STOCK_SPLIT_MULTIPLIER;
+    public static final int HOME_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int QUOTE_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int LOGIN_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int LOGOUT_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int REGISTER_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ACCOUNT_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int PORTFOLIO_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int BUY_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int SELL_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int UPDATEACCOUNT_OP;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static int[][] scenarioMixes;
+    private static char[] actions;
+    private static int sellDeficit;
+    public static final int WELCOME_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int REGISTER_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int PORTFOLIO_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int QUOTE_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int HOME_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ACCOUNT_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int ORDER_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int CONFIG_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int STATS_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static final int MARKET_SUMMARY_PAGE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    public static String[][] webUI;
+    private static int scenarioCount;
+    private static final BigDecimal orderFee;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final BigDecimal cashFee;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static final BigDecimal ONE;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+    private static ArrayList deck;
+    private static int card;
+
+// Method Signatures (used by target method):
+static public String getOrderProcessingModeNames();
+static public boolean getPublishQuotePriceChange();
+static public void setOrderProcessingMode(int value);
+static public int getListQuotePriceChangeFrequency();
+static public void setPrimIterations(int iter);
+static public int getMAX_QUOTES();
+static public int getWebInterface();
+static public void setListQuotePriceChangeFrequency(int value);
+static public java getRunTimeModeNames();
+static public void setMAX_QUOTES(int mAX_QUOTES);
+static public void setWebInterface(int value);
+static public void setPublishQuotePriceChange(boolean publishQuotePriceChange);
+static public String getWebInterfaceNames();
+static public void setMAX_USERS(int mAX_USERS);
+static public int getOrderProcessingMode();
+static public boolean getLongRun();
+static public void setDisplayOrderAlerts(boolean value);
+static public int getMarketSummaryInterval();
+static public boolean getDisplayOrderAlerts();
+static public int getRunTimeMode();
+static public void setMarketSummaryInterval(int seconds);
+static public int getPrimIterations();
+static public int getMAX_USERS();
+static public void setLongRun(boolean longRun);
+
+// Public Getter Methods (for test assertions):
+public static String getPage(int pageNumber);
+public static char getScenarioAction(boolean newUser);
+public static String getUserID();
+public static BigDecimal getOrderFee(String orderType);
+public static BigDecimal getRandomPriceChangeFactor();
+public static int getScenarioMixes();
+public static int getMAX_HOLDINGS();
+public static int getScenarioCount();
+public static boolean getJDBCDriverNeedsGlobalTransation();
+public static boolean getUpdateQuotePrices();
+public static int getAccessMode();
+
+// === External Class: Log ===
+// Full import path: com.ibm.websphere.samples.daytrader.util.Log
+// Import paths:
+//   Collection -> java.util.Collection
+//   Iterator -> java.util.Iterator
+//   Level -> java.util.logging.Level
+//   Logger -> java.util.logging.Logger
+// Fields (with actual visibility):
+    private static final Logger log;  // IMMUTABLE - cannot modify via ReflectionTestUtils
+
+// Method Signatures (used by target method):
+static public void error(String message);
+
+
+TARGET METHOD TO TEST:
+The following is the specific method you need to test (including its JavaDoc comments if present):
+
+  public void updateConfig() {
+    String currentConfigStr = "\n\n########## Trade configuration update. Current config:\n\n";
+
+    currentConfigStr += "\t\tRunTimeMode:\t\t\t" + TradeConfig.getRunTimeModeNames()[TradeConfig.getRunTimeMode()] + "\n";
+
+    String orderProcessingModeStr = this.orderProcessingMode;
+    if (orderProcessingModeStr != null) {
+      try {
+        for (int i = 0; i < orderProcessingModeList.length; i++) {
+          if (orderProcessingModeStr.equals(orderProcessingModeList[i])) {
+            TradeConfig.setOrderProcessingMode(i);
+          }
+        }
+      } catch (Exception e) {
+        Log.error(e, "TradeConfigJSF.updateConfig(..): minor exception caught", "trying to set orderProcessing to " + orderProcessingModeStr,
+            "reverting to current value");
+
+      } // If the value is bad, simply revert to current
+    }
+    currentConfigStr += "\t\tOrderProcessingMode:\t\t" + TradeConfig.getOrderProcessingModeNames()[TradeConfig.getOrderProcessingMode()] + "\n";
+
+    String webInterfaceStr = webInterface;
+    if (webInterfaceStr != null) {
+      try {
+        for (int i = 0; i < webInterfaceList.length; i++) {
+          if (webInterfaceStr.equals(webInterfaceList[i])) {
+            TradeConfig.setWebInterface(i);
+          }
+        }
+      } catch (Exception e) {
+        Log.error(e, "TradeConfigJSF.updateConfig(..): minor exception caught", "trying to set WebInterface to " + webInterfaceStr,
+            "reverting to current value");
+
+      } // If the value is bad, simply revert to current
+    }
+    currentConfigStr += "\t\tWeb Interface:\t\t\t" + TradeConfig.getWebInterfaceNames()[TradeConfig.getWebInterface()] + "\n";
+
+    TradeConfig.setMAX_USERS(maxUsers);
+    TradeConfig.setMAX_QUOTES(maxQuotes);
+
+    currentConfigStr += "\t\tTrade  Users:\t\t\t" + TradeConfig.getMAX_USERS() + "\n";
+    currentConfigStr += "\t\tTrade Quotes:\t\t\t" + TradeConfig.getMAX_QUOTES() + "\n";
+
+    TradeConfig.setMarketSummaryInterval(marketSummaryInterval);
+
+    currentConfigStr += "\t\tMarket Summary Interval:\t" + TradeConfig.getMarketSummaryInterval() + "\n";
+
+    TradeConfig.setPrimIterations(primIterations);
+
+    currentConfigStr += "\t\tPrimitive Iterations:\t\t" + TradeConfig.getPrimIterations() + "\n";
+
+    TradeConfig.setPublishQuotePriceChange(publishQuotePriceChange);
+    currentConfigStr += "\t\tTradeStreamer MDB Enabled:\t" + TradeConfig.getPublishQuotePriceChange() + "\n";
+
+    TradeConfig.setListQuotePriceChangeFrequency(listQuotePriceChangeFrequency);
+    currentConfigStr += "\t\t% of trades on Websocket:\t" + TradeConfig.getListQuotePriceChangeFrequency() + "\n";
+
+    TradeConfig.setLongRun(longRun);
+    currentConfigStr += "\t\tLong Run Enabled:\t\t" + TradeConfig.getLongRun() + "\n";
+
+    TradeConfig.setDisplayOrderAlerts(displayOrderAlerts);
+    currentConfigStr += "\t\tDisplay Order Alerts:\t\t" + TradeConfig.getDisplayOrderAlerts() + "\n";
+
+    System.out.println(currentConfigStr);
+    setResult("DayTrader Configuration Updated");
+  }
+
+
+
+TASK:
+Generate a complete JUnit 5 test class for the method "updateConfig" of class "TradeConfigJSF".
+
+REQUIREMENTS:
+- Test class name: TradeConfigJSF_updateConfigTestGenerated
+- Include all necessary imports and the package declaration
+- Cover all code paths that are:
+  - deterministically reachable from the method’s public API
+  - independent from hidden, external, or runtime-loaded data
+- Test error scenarios by asserting the actual runtime behavior
+  when invalid or null inputs are provided.
+- Do not assume defensive checks unless they are explicitly present.
+- Cover expected exceptions declared in the method signature if present
+
+CONSTRAINTS:
+- DO NOT use @Nested annotation
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes or custom implementations.
+- Helper methods inside the test class are allowed if they do not reimplement production logic.
+- DO NOT use getter/setter methods that are not present in the provided class context
+- CRITICAL: DO NOT mock the target class itself - ALWAYS instantiate it directly using 'new TargetClass(...)'. Mocking the target class defeats the purpose of testing its actual behavior
+- You MAY mock DEPENDENCIES (constructor parameters, injected services) using @Mock, but NEVER the class under test
+- CRITICAL: DO NOT instantiate INTERFACES or ABSTRACT classes directly - use Mockito.mock(Interface.class) instead
+- DO NOT try to modify static final fields via ReflectionTestUtils - they are IMMUTABLE
+- Do not infer undocumented behavior.
+- Do not rely on implementation details not observable from the method signature.
+- Do not assert exact outputs if they depend on non-deterministic factors.
+- For expected exceptions, use JUnit 5 assertThrows() - DO NOT use JUnit 4 syntax @Test(expected=...) which is NOT valid in JUnit 5
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- Use ONLY the import paths explicitly provided in the 'CORRECT IMPORT PATHS' section - do not guess or invent import paths.
+- Generate ONLY the test class without explanations or comments outside the code
+- DO NOT mock javax.servlet classes directly (ServletOutputStream, etc.) - use MockHttpServletRequest/Response from spring-test instead
+- For PRIVATE fields without public setters (e.g., @Inject, @Autowired), use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- For static method calls (e.g., Log.error(), TradeConfig.getUserID()), use Mockito.mockStatic() to mock static methods. Example: try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) { ... }
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None

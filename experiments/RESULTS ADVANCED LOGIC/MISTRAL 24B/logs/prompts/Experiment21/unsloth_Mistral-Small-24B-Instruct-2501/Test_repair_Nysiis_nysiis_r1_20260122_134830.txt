@@ -1,0 +1,148 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.apache.commons.codec.language;
+Class name (MUST be exactly): Nysiis_nysiisTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.apache.commons.codec.language;
+
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.StringEncoder;
+import org.apache.commons.codec.language.SoundexUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.ThrowingConsumer;
+
+import java.util.regex.Pattern;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class Nysiis_nysiisTestGenerated {
+
+    private Nysiis nysiis;
+    private Nysiis strictNysiis;
+
+    @BeforeEach
+    void setUp() {
+        nysiis = new Nysiis();
+        strictNysiis = new Nysiis(true);
+    }
+
+    @Test
+    void testNysiisNullInput() {
+        assertNull(nysiis.nysiis(null));
+    }
+
+    @Test
+    void testNysiisEmptyString() {
+        assertEquals("", nysiis.nysiis(""));
+    }
+
+    @Test
+    void testNysiisBasicCase() {
+        assertEquals("MCC", nysiis.nysiis("MAC"));
+        assertEquals("NN", nysiis.nysiis("KN"));
+        assertEquals("C", nysiis.nysiis("K"));
+        assertEquals("FF", nysiis.nysiis("PH"));
+        assertEquals("SSS", nysiis.nysiis("SCH"));
+        assertEquals("Y", nysiis.nysiis("EE"));
+        assertEquals("Y", nysiis.nysiis("IE"));
+        assertEquals("D", nysiis.nysiis("DT"));
+        assertEquals("D", nysiis.nysiis("RT"));
+        assertEquals("D", nysiis.nysiis("RD"));
+        assertEquals("D", nysiis.nysiis("NT"));
+        assertEquals("D", nysiis.nysiis("ND"));
+    }
+
+    @Test
+    void testNysiisComplexCase() {
+        assertEquals("MCC", nysiis.nysiis("MAC"));
+        assertEquals("MCC", nysiis.nysiis("MACK"));
+        assertEquals("MCC", nysiis.nysiis("MACKE"));
+        assertEquals("F", nysiis.nysiis("F"));
+        assertEquals("FF", nysiis.nysiis("PH"));
+        assertEquals("FF", nysiis.nysiis("PF"));
+        assertEquals("FF", nysiis.nysiis("FFF"));
+        assertEquals("M", nysiis.nysiis("M"));
+        assertEquals("M", nysiis.nysiis("MA"));
+        assertEquals("M", nysiis.nysiis("MAIN"));
+        assertEquals("M", nysiis.nysiis("MAN"));
+        assertEquals("M", nysiis.nysiis("MANN"));
+        assertEquals("M", nysiis.nysiis("MANNY"));
+        assertEquals("M", nysiis.nysiis("MANNY"));
+    }
+
+    @Test
+    void testNysiisStrictMode() {
+        assertEquals("MCC", strictNysiis.nysiis("MAC"));
+        assertEquals("MCC", strictNysiis.nysiis("MACK"));
+        assertEquals("MCC", strictNysiis.nysiis("MACKE"));
+        assertEquals("F", strictNysiis.nysiis("F"));
+        assertEquals("FF", strictNysiis.nysiis("PH"));
+        assertEquals("FF", strictNysiis.nysiis("PF"));
+        assertEquals("FF", strictNysiis.nysiis("FFF"));
+        assertEquals("M", strictNysiis.nysiis("M"));
+        assertEquals("M", strictNysiis.nysiis("MA"));
+        assertEquals("M", strictNysiis.nysiis("MAIN"));
+        assertEquals("M", strictNysiis.nysiis("MAN"));
+        assertEquals("M", strictNysiis.nysiis("MANN"));
+        assertEquals("M", strictNysiis.nysiis("MANNY"));
+        assertEquals("M", strictNysiis.nysiis("MANNY"));
+    }
+
+    @Test
+    void testNysiisTranscodeRemaining() {
+        assertArrayEquals(new char[]{'A'}, Nysiis.transcodeRemaining('E', 'E', 'V', 'A'));
+        assertArrayEquals(new char[]{'A'}, Nysiis.transcodeRemaining('A', 'A', 'V', 'A'));
+        assertArrayEquals(new char[]{'A'}, Nysiis.transcodeRemaining('E', 'I', 'V', 'A'));
+        assertArrayEquals(new char[]{'A'}, Nysiis.transcodeRemaining('A', 'O', 'V', 'A'));
+        assertArrayEquals(new char[]{'A'}, Nysiis.transcodeRemaining('A', 'U', 'V', 'A'));
+        assertArrayEquals(new char[]{'G'}, Nysiis.transcodeRemaining('A', 'Q', 'V', 'A'));
+        assertArrayEquals(new char[]{'S'}, Nysiis.transcodeRemaining('A', 'Z', 'V', 'A'));
+        assertArrayEquals(new char[]{'N'}, Nysiis.transcodeRemaining('A', 'M', 'V', 'A'));
+        assertArrayEquals(new char[]{'C'}, Nysiis.transcodeRemaining('A', 'K', 'V', 'A'));
+        assertArrayEquals(new char[]{'C'}, Nysiis.transcodeRemaining('A', 'K', 'N', 'A'));
+        assertArrayEquals(new char[]{'N'}, Nysiis.transcodeRemaining('A', 'K', 'N', 'V'));
+        assertArrayEquals(new char[]{'N'}, Nysiis.transcodeRemaining('A', 'K', 'N', 'A'));
+        assertArrayEquals(new char[]{'N'}, Nysiis.transcodeRemaining('A', 'K', 'N', 'A'));
+        assertArrayEquals(new char[]{'S'}, Nysiis.transcodeRemaining('S', 'S', 'C', 'H'));
+        assertArrayEquals(new char[]{'F'}, Nysiis.transcodeRemaining('P', 'P', 'H', 'A'));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[91] transcodeRemaining(char,char,char,char) has private access in org.apache.commons.codec.language.Nysiis
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[92] transcodeRemaining(char,char,char,char) has private access in org.apache.commons.codec.language.Nysiis
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[93] transcodeRemaining(char,char,char,char) has private access in org.apache.commons.codec.language.Nysiis
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[94] transcodeRemaining(char,char,char,char) has private access in org.apache.commons.codec.language.Nysiis
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[95] transcodeRemaining(char,char,char,char) has private access in org.apache.commons.codec.language.Nysiis
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[96] transcodeRemaining(char,char,char,char) has private access in org.apache.commons.codec.language.Nysiis
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[97] transcodeRemaining(char,char,char,char) has private access in org.apache.commons.codec.language.Nysiis
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[98] transcodeRemaining(char,char,char,char) has private access in org.apache.commons.codec.language.Nysiis
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[99] transcodeRemaining(char,char,char,char) has private access in org.apache.commons.codec.language.Nysiis
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[100] transcodeRemaining(char,char,char,char) has private access in org.apache.commons.codec.language.Nysiis
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[101] transcodeRemaining(char,char,char,char) has private access in org.apache.commons.codec.language.Nysiis
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[102] transcodeRemaining(char,char,char,char) has private access in org.apache.commons.codec.language.Nysiis
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[103] transcodeRemaining(char,char,char,char) has private access in org.apache.commons.codec.language.Nysiis
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[104] transcodeRemaining(char,char,char,char) has private access in org.apache.commons.codec.language.Nysiis
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Codec/Run-1/src/test/java/org/apache/commons/codec/language/Nysiis_nysiisTestGenerated.java:[105] transcodeRemaining(char,char,char,char) has private access in org.apache.commons.codec.language.Nysiis
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT mock the target class
+- When using enum types from dependencies, use ONLY values explicitly shown in the context. If enum values are not listed, use a mock instead of guessing enum constants.
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: Nysiis_nysiisTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

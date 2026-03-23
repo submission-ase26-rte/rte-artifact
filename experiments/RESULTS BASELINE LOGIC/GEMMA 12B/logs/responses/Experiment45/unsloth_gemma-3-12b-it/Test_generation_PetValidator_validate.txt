@@ -1,0 +1,228 @@
+```java
+package org.springframework.samples.petclinic.owner;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.util.StringUtils.*;
+
+import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+import org.springframework.util.StringUtils;
+
+public class PetValidator_validateTestGenerated {
+
+    private PetValidator petValidator;
+
+    @BeforeEach
+    public void setUp() {
+        petValidator = new PetValidator();
+    }
+
+    @Test
+    public void validate_validPet() {
+        Pet pet = new Pet();
+        pet.setName("Fido");
+        pet.setType(PetType.DOG);
+        pet.setBirthDate(LocalDate.now());
+
+        Errors errors = new Errors() {
+            @Override
+            public boolean hasErrors() {
+                return false;
+            }
+
+            @Override
+            public boolean hasFieldErrors() {
+                return false;
+            }
+
+            @Override
+            public void rejectValue(String field, String code, String argument0, String argument1) {
+                // No-op for testing
+            }
+
+            @Override
+            public void reject(String code, String argument0, String argument1) {
+                // No-op for testing
+            }
+        };
+
+        petValidator.validate(pet, errors);
+
+        assertFalse(errors.hasErrors());
+    }
+
+    @Test
+    public void validate_nullName() {
+        Pet pet = new Pet();
+        pet.setType(PetType.DOG);
+        pet.setBirthDate(LocalDate.now());
+
+        Errors errors = new Errors() {
+            @Override
+            public boolean hasErrors() {
+                return false;
+            }
+
+            @Override
+            public boolean hasFieldErrors() {
+                return false;
+            }
+
+            @Override
+            public void rejectValue(String field, String code, String argument0, String argument1) {
+                // No-op for testing
+            }
+
+            @Override
+            public void reject(String code, String argument0, String argument1) {
+                // No-op for testing
+            }
+        };
+
+        petValidator.validate(pet, errors);
+
+        assertTrue(errors.hasFieldErrors("name"));
+    }
+
+    @Test
+    public void validate_emptyName() {
+        Pet pet = new Pet();
+        pet.setName("");
+        pet.setType(PetType.DOG);
+        pet.setBirthDate(LocalDate.now());
+
+        Errors errors = new Errors() {
+            @Override
+            public boolean hasErrors() {
+                return false;
+            }
+
+            @Override
+            public boolean hasFieldErrors() {
+                return false;
+            }
+
+            @Override
+            public void rejectValue(String field, String code, String argument0, String argument1) {
+                // No-op for testing
+            }
+
+            @Override
+            public void reject(String code, String argument0, String argument1) {
+                // No-op for testing
+            }
+        };
+
+        petValidator.validate(pet, errors);
+
+        assertTrue(errors.hasFieldErrors("name"));
+    }
+
+    @Test
+    public void validate_newPetNullType() {
+        Pet pet = new Pet();
+        pet.setName("Fido");
+        pet.setBirthDate(LocalDate.now());
+        pet.setNew(true);
+
+        Errors errors = new Errors() {
+            @Override
+            public boolean hasErrors() {
+                return false;
+            }
+
+            @Override
+            public boolean hasFieldErrors() {
+                return false;
+            }
+
+            @Override
+            public void rejectValue(String field, String code, String argument0, String argument1) {
+                // No-op for testing
+            }
+
+            @Override
+            public void reject(String code, String argument0, String argument1) {
+                // No-op for testing
+            }
+        };
+
+        petValidator.validate(pet, errors);
+
+        assertTrue(errors.hasFieldErrors("type"));
+    }
+
+    @Test
+    public void validate_nullBirthDate() {
+        Pet pet = new Pet();
+        pet.setName("Fido");
+        pet.setType(PetType.DOG);
+
+        Errors errors = new Errors() {
+            @Override
+            public boolean hasErrors() {
+                return false;
+            }
+
+            @Override
+            public boolean hasFieldErrors() {
+                return false;
+            }
+
+            @Override
+            public void rejectValue(String field, String code, String argument0, String argument1) {
+                // No-op for testing
+            }
+
+            @Override
+            public void reject(String code, String argument0, String argument1) {
+                // No-op for testing
+            }
+        };
+
+        petValidator.validate(pet, errors);
+
+        assertTrue(errors.hasFieldErrors("birthDate"));
+    }
+
+    @Test
+    public void validate_allNull() {
+        Pet pet = new Pet();
+        pet.setNew(true);
+
+        Errors errors = new Errors() {
+            @Override
+            public boolean hasErrors() {
+                return false;
+            }
+
+            @Override
+            public boolean hasFieldErrors() {
+                return false;
+            }
+
+            @Override
+            public void rejectValue(String field, String code, String argument0, String argument1) {
+                // No-op for testing
+            }
+
+            @Override
+            public void reject(String code, String argument0, String argument1) {
+                // No-op for testing
+            }
+        };
+
+        petValidator.validate(pet, errors);
+
+        assertTrue(errors.hasFieldErrors("name"));
+        assertTrue(errors.hasFieldErrors("type"));
+        assertTrue(errors.hasFieldErrors("birthDate"));
+    }
+}
+```

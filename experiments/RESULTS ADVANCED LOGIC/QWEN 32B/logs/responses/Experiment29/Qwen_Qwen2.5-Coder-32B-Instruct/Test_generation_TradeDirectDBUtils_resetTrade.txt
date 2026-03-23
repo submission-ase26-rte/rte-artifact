@@ -1,0 +1,136 @@
+```java
+package com.ibm.websphere.samples.daytrader.impl.direct;
+
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeDB;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeJDBC;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.MDBStats;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.OngoingStubbing;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
+public class TradeDirectDBUtils_resetTradeTestGenerated {
+
+    @Mock
+    private DataSource datasource;
+
+    @Mock
+    private Connection connection;
+
+    @Mock
+    private PreparedStatement preparedStatement;
+
+    @Mock
+    private ResultSet resultSet;
+
+    @Mock
+    private TradeServices tradeServices;
+
+    @InjectMocks
+    private TradeDirectDBUtils tradeDirectDBUtils;
+
+    @BeforeEach
+    public void setUp() throws SQLException {
+        MockitoAnnotations.openMocks(this);
+        when(datasource.getConnection()).thenReturn(connection);
+        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+    }
+
+    @AfterEach
+    public void tearDown() throws SQLException {
+        connection.close();
+    }
+
+    @Test
+    public void testResetTradeDeleteAll() throws Exception {
+        try (MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class)) {
+            mockedMDBStats.when(MDBStats::getInstance).thenReturn(mock(MDBStats.class));
+
+            RunStatsDataBean result = tradeDirectDBUtils.resetTrade(true);
+
+            verify(connection, times(1)).setAutoCommit(false);
+            verify(preparedStatement, times(5)).executeUpdate();
+            verify(connection, times(1)).commit();
+            verify(connection, times(1)).close();
+            assertEquals(0, result.getNewUserCount());
+        }
+    }
+
+    @Test
+    public void testResetTradeWithoutDeleteAll() throws Exception {
+        try (MockedStatic<MDBStats> mockedMDBStats = mockStatic(MDBStats.class)) {
+            mockedMDBStats.when(MDBStats::getInstance).thenReturn(mock(MDBStats.class));
+
+            OngoingStubbing<ResultSet> resultSetStubbing = when(resultSet.next());
+            resultSetStubbing.thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(true);
+
+            when(resultSet.getInt(anyString())).thenReturn(1);
+
+            RunStatsDataBean result = tradeDirectDBUtils.resetTrade(false);
+
+            verify(connection, times(1)).setAutoCommit(false);
+            verify(preparedStatement, times(11)).executeUpdate();
+            verify(preparedStatement, times(5)).executeQuery();
+            verify(connection, times(1)).commit();
+            verify(connection, times(1)).close();
+            assertEquals(1, result.getNewUserCount());
+            assertEquals(1, result.getTradeUserCount());
+            assertEquals(1, result.getTradeStockCount());
+            assertEquals(1, result.getSumLoginCount());
+            assertEquals(1, result.getSumLogoutCount());
+            assertEquals(1, result.getHoldingCount());
+            assertEquals(1, result.getOrderCount());
+            assertEquals(1, result.getBuyOrderCount());
+            assertEquals(1, result.getSellOrderCount());
+            assertEquals(1, result.getCancelledOrderCount());
+            assertEquals(1, result.getOpenOrderCount());
+            assertEquals(1, result.getDeletedOrderCount());
+        }
+    }
+
+    @Test
+    public void testResetTradeSQLException() throws Exception {
+        when(connection.prepareStatement(anyString())).thenThrow(new SQLException("Test SQL Exception"));
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            tradeDirectDBUtils.resetTrade(false);
+        });
+
+        assertTrue(exception.getMessage().contains("Failed to reset Trade"));
+        verify(connection, times(1)).rollback();
+        verify(connection, times(1)).close();
+    }
+
+    @Test
+    public void testResetTradeException() throws Exception {
+        when(connection.prepareStatement(anyString())).thenThrow(new RuntimeException("Test Exception"));
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            tradeDirectDBUtils.resetTrade(false);
+        });
+
+        assertTrue(exception.getMessage().contains("Failed to reset Trade"));
+        verify(connection, times(1)).rollback();
+        verify(connection, times(1)).close();
+    }
+}
+```

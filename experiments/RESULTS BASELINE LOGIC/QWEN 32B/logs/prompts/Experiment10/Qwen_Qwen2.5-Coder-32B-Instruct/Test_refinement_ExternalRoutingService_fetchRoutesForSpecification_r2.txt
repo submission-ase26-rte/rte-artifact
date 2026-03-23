@@ -1,0 +1,391 @@
+ROLE:
+You are an expert Java developer. Task: fix failed tests and improve coverage.
+
+TEST CLASS INFO:
+Package: package org.eclipse.cargotracker.infrastructure.routing;
+Class name (MUST be exactly): ExternalRoutingService_fetchRoutesForSpecificationTestGenerated
+
+
+FAILED TESTS (MUST BE FIXED):
+The following tests have FAILED or encountered RUNTIME ERRORS. You MUST fix these tests by correcting their implementation:
+
+FAILURE REASONS:
+The following are the error messages from the test execution. Use these to understand WHY the tests failed:
+
+TEST: testFetchRoutesForSpecificationWithNoValidItineraries --
+ERROR: java.lang.NullPointerException: Cannot invoke "jakarta.ws.rs.client.WebTarget.queryParam(String, Object[])" because the return value of "jakarta.ws.rs.client.WebTarget.queryParam(String, Object[])" is null
+--------------------------------------------------
+TEST: testFetchRoutesForSpecificationWithNullRouteSpecification --
+ERROR: java.lang.NullPointerException: Cannot invoke "org.eclipse.cargotracker.domain.model.cargo.RouteSpecification.getOrigin()" because "routeSpecification" is null
+--------------------------------------------------
+TEST: testFetchRoutesForSpecificationWithNullOrigin --
+ERROR: java.lang.NullPointerException: Cannot invoke "org.eclipse.cargotracker.domain.model.location.Location.getUnLocode()" because the return value of "org.eclipse.cargotracker.domain.model.cargo.RouteSpecification.getOrigin()" is null
+--------------------------------------------------
+TEST: testFetchRoutesForSpecificationWithNullOriginUnLocode --
+ERROR: java.lang.NullPointerException: Cannot invoke "org.eclipse.cargotracker.domain.model.location.UnLocode.getIdString()" because the return value of "org.eclipse.cargotracker.domain.model.location.Location.getUnLocode()" is null
+--------------------------------------------------
+TEST: testFetchRoutesForSpecificationWithEmptyTransitPaths --
+ERROR: java.lang.NullPointerException: Cannot invoke "jakarta.ws.rs.client.WebTarget.queryParam(String, Object[])" because the return value of "jakarta.ws.rs.client.WebTarget.queryParam(String, Object[])" is null
+--------------------------------------------------
+TEST: testFetchRoutesForSpecificationWithNullDestination --
+ERROR: java.lang.NullPointerException: Cannot invoke "org.eclipse.cargotracker.domain.model.location.Location.getUnLocode()" because the return value of "org.eclipse.cargotracker.domain.model.cargo.RouteSpecification.getDestination()" is null
+--------------------------------------------------
+TEST: testFetchRoutesForSpecificationWithValidInput --
+ERROR: java.lang.NullPointerException: Cannot invoke "jakarta.ws.rs.client.WebTarget.queryParam(String, Object[])" because the return value of "jakarta.ws.rs.client.WebTarget.queryParam(String, Object[])" is null
+--------------------------------------------------
+TEST: testFetchRoutesForSpecificationWithNullDestinationUnLocode --
+ERROR: java.lang.NullPointerException: Cannot invoke "org.eclipse.cargotracker.domain.model.location.UnLocode.getIdString()" because the return value of "org.eclipse.cargotracker.domain.model.location.Location.getUnLocode()" is null
+
+TEST CODE TO FIX:
+package org.eclipse.cargotracker.infrastructure.routing;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import org.eclipse.cargotracker.domain.model.cargo.Itinerary;
+import org.eclipse.cargotracker.domain.model.cargo.Leg;
+import org.eclipse.cargotracker.domain.model.cargo.RouteSpecification;
+import org.eclipse.cargotracker.domain.model.location.Location;
+import org.eclipse.cargotracker.domain.model.location.LocationRepository;
+import org.eclipse.cargotracker.domain.model.location.UnLocode;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageNumber;
+import org.eclipse.cargotracker.domain.model.voyage.VoyageRepository;
+import org.eclipse.cargotracker.domain.service.RoutingService;
+import org.eclipse.pathfinder.api.TransitEdge;
+import org.eclipse.pathfinder.api.TransitPath;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class ExternalRoutingService_fetchRoutesForSpecificationTestGenerated {
+    @Mock
+    private LocationRepository locationRepository;
+    @Mock
+    private VoyageRepository voyageRepository;
+    @Mock
+    private WebTarget graphTraversalResource;
+    @Mock
+    private Logger logger;
+    @InjectMocks
+    private ExternalRoutingService externalRoutingService;
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(externalRoutingService, "logger", logger);
+        ReflectionTestUtils.setField(externalRoutingService, "graphTraversalUrl", "http://example.com");
+        ReflectionTestUtils.setField(externalRoutingService, "graphTraversalResource", graphTraversalResource);
+    }
+
+
+    @Test
+        void testFetchRoutesForSpecificationWithValidInput() {
+            RouteSpecification routeSpecification = mock(RouteSpecification.class);
+            Location origin = mock(Location.class);
+            Location destination = mock(Location.class);
+            UnLocode originUnLocode = new UnLocode("USNYC");
+            UnLocode destinationUnLocode = new UnLocode("SESTO");
+            when(routeSpecification.getOrigin()).thenReturn(origin);
+            when(routeSpecification.getDestination()).thenReturn(destination);
+            when(routeSpecification.isSatisfiedBy(any(Itinerary.class))).thenReturn(true);
+            when(origin.getUnLocode()).thenReturn(originUnLocode);
+            when(destination.getUnLocode()).thenReturn(destinationUnLocode);
+            TransitPath transitPath = new TransitPath();
+            List<TransitEdge> transitEdges = new ArrayList<>();
+            transitEdges.add(new TransitEdge("USNYC", "SESTO", "V100", LocalDateTime.now(), LocalDateTime.now().plusDays(5)));
+            transitPath.setTransitEdges(transitEdges);
+            List<TransitPath> transitPaths = new ArrayList<>();
+            transitPaths.add(transitPath);
+            when(graphTraversalResource.queryParam("origin", "USNYC")
+                    .queryParam("destination", "SESTO")
+                    .request(MediaType.APPLICATION_JSON_TYPE)
+                    .get(new GenericType<List<TransitPath>>() {}))
+                    .thenReturn(transitPaths);
+            List<Itinerary> itineraries = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+            assertEquals(1, itineraries.size());
+            verify(routeSpecification).isSatisfiedBy(any(Itinerary.class));
+        }
+
+    @Test
+        void testFetchRoutesForSpecificationWithNoValidItineraries() {
+            RouteSpecification routeSpecification = mock(RouteSpecification.class);
+            Location origin = mock(Location.class);
+            Location destination = mock(Location.class);
+            UnLocode originUnLocode = new UnLocode("USNYC");
+            UnLocode destinationUnLocode = new UnLocode("SESTO");
+            when(routeSpecification.getOrigin()).thenReturn(origin);
+            when(routeSpecification.getDestination()).thenReturn(destination);
+            when(routeSpecification.isSatisfiedBy(any(Itinerary.class))).thenReturn(false);
+            when(origin.getUnLocode()).thenReturn(originUnLocode);
+            when(destination.getUnLocode()).thenReturn(destinationUnLocode);
+            TransitPath transitPath = new TransitPath();
+            List<TransitEdge> transitEdges = new ArrayList<>();
+            transitEdges.add(new TransitEdge("USNYC", "SESTO", "V100", LocalDateTime.now(), LocalDateTime.now().plusDays(5)));
+            transitPath.setTransitEdges(transitEdges);
+            List<TransitPath> transitPaths = new ArrayList<>();
+            transitPaths.add(transitPath);
+            when(graphTraversalResource.queryParam("origin", "USNYC")
+                    .queryParam("destination", "SESTO")
+                    .request(MediaType.APPLICATION_JSON_TYPE)
+                    .get(new GenericType<List<TransitPath>>() {}))
+                    .thenReturn(transitPaths);
+            List<Itinerary> itineraries = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+            assertTrue(itineraries.isEmpty());
+            verify(logger).log(Level.FINE, "Received itinerary that did not satisfy the route specification");
+        }
+
+    @Test
+        void testFetchRoutesForSpecificationWithEmptyTransitPaths() {
+            RouteSpecification routeSpecification = mock(RouteSpecification.class);
+            Location origin = mock(Location.class);
+            Location destination = mock(Location.class);
+            UnLocode originUnLocode = new UnLocode("USNYC");
+            UnLocode destinationUnLocode = new UnLocode("SESTO");
+            when(routeSpecification.getOrigin()).thenReturn(origin);
+            when(routeSpecification.getDestination()).thenReturn(destination);
+            when(origin.getUnLocode()).thenReturn(originUnLocode);
+            when(destination.getUnLocode()).thenReturn(destinationUnLocode);
+            List<TransitPath> transitPaths = new ArrayList<>();
+            when(graphTraversalResource.queryParam("origin", "USNYC")
+                    .queryParam("destination", "SESTO")
+                    .request(MediaType.APPLICATION_JSON_TYPE)
+                    .get(new GenericType<List<TransitPath>>() {}))
+                    .thenReturn(transitPaths);
+            List<Itinerary> itineraries = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+            assertTrue(itineraries.isEmpty());
+        }
+
+    @Test
+        void testFetchRoutesForSpecificationWithNullOriginUnLocode() {
+            RouteSpecification routeSpecification = mock(RouteSpecification.class);
+            Location origin = mock(Location.class);
+            Location destination = mock(Location.class);
+            UnLocode destinationUnLocode = new UnLocode("SESTO");
+            when(routeSpecification.getOrigin()).thenReturn(origin);
+            when(routeSpecification.getDestination()).thenReturn(destination);
+            when(origin.getUnLocode()).thenReturn(null);
+            when(destination.getUnLocode()).thenReturn(destinationUnLocode);
+            List<Itinerary> itineraries = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+            assertTrue(itineraries.isEmpty());
+        }
+
+    @Test
+        void testFetchRoutesForSpecificationWithNullDestinationUnLocode() {
+            RouteSpecification routeSpecification = mock(RouteSpecification.class);
+            Location origin = mock(Location.class);
+            Location destination = mock(Location.class);
+            UnLocode originUnLocode = new UnLocode("USNYC");
+            when(routeSpecification.getOrigin()).thenReturn(origin);
+            when(routeSpecification.getDestination()).thenReturn(destination);
+            when(origin.getUnLocode()).thenReturn(originUnLocode);
+            when(destination.getUnLocode()).thenReturn(null);
+            List<Itinerary> itineraries = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+            assertTrue(itineraries.isEmpty());
+        }
+
+    @Test
+        void testFetchRoutesForSpecificationWithNullOrigin() {
+            RouteSpecification routeSpecification = mock(RouteSpecification.class);
+            Location destination = mock(Location.class);
+            UnLocode destinationUnLocode = new UnLocode("SESTO");
+            when(routeSpecification.getOrigin()).thenReturn(null);
+            when(routeSpecification.getDestination()).thenReturn(destination);
+            when(destination.getUnLocode()).thenReturn(destinationUnLocode);
+            List<Itinerary> itineraries = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+            assertTrue(itineraries.isEmpty());
+        }
+
+    @Test
+        void testFetchRoutesForSpecificationWithNullDestination() {
+            RouteSpecification routeSpecification = mock(RouteSpecification.class);
+            Location origin = mock(Location.class);
+            UnLocode originUnLocode = new UnLocode("USNYC");
+            when(routeSpecification.getOrigin()).thenReturn(origin);
+            when(routeSpecification.getDestination()).thenReturn(null);
+            when(origin.getUnLocode()).thenReturn(originUnLocode);
+            List<Itinerary> itineraries = externalRoutingService.fetchRoutesForSpecification(routeSpecification);
+            assertTrue(itineraries.isEmpty());
+        }
+
+    @Test
+        void testFetchRoutesForSpecificationWithNullRouteSpecification() {
+            List<Itinerary> itineraries = externalRoutingService.fetchRoutesForSpecification(null);
+            assertTrue(itineraries.isEmpty());
+        }
+
+}
+
+
+
+VALID TESTS (REFERENCE ONLY):
+The following tests are PASSING. Their signatures are shown for reference.
+The system will automatically merge these valid tests with your new tests.
+
+DO NOT include these test signatures in your output - generate ONLY:
+- Fixed versions of failed tests
+- New tests for uncovered lines
+
+IMPORTANT: If you see any stray code fragments (like loops, assertions, or method calls 
+NOT preceded by JUnit annotations like @Test, @BeforeEach, @AfterEach), IGNORE them completely.
+Only valid Java class structure and annotated methods should be considered.
+
+
+Valid test signatures:
+    @Test
+    void testFetchRoutesForSpecificationWithNullUnLocodeOrigin() {}
+    @Test
+    void testFetchRoutesForSpecificationWithNullUnLocodeDestination() {}
+
+
+
+PROJECT CONTEXT:
+// CORRECT IMPORT PATHS (use these in test imports):
+//   PostConstruct -> jakarta.annotation.PostConstruct
+//   Resource -> jakarta.annotation.Resource
+//   Stateless -> jakarta.ejb.Stateless
+//   Inject -> jakarta.inject.Inject
+//   ClientBuilder -> jakarta.ws.rs.client.ClientBuilder
+//   WebTarget -> jakarta.ws.rs.client.WebTarget
+//   GenericType -> jakarta.ws.rs.core.GenericType
+//   MediaType -> jakarta.ws.rs.core.MediaType
+//   ArrayList -> java.util.ArrayList
+//   List -> java.util.List
+//   Level -> java.util.logging.Level
+//   Logger -> java.util.logging.Logger
+//   Collectors -> java.util.stream.Collectors
+//   Itinerary -> org.eclipse.cargotracker.domain.model.cargo.Itinerary
+//   Leg -> org.eclipse.cargotracker.domain.model.cargo.Leg
+//   RouteSpecification -> org.eclipse.cargotracker.domain.model.cargo.RouteSpecification
+//   LocationRepository -> org.eclipse.cargotracker.domain.model.location.LocationRepository
+//   UnLocode -> org.eclipse.cargotracker.domain.model.location.UnLocode
+//   VoyageNumber -> org.eclipse.cargotracker.domain.model.voyage.VoyageNumber
+//   VoyageRepository -> org.eclipse.cargotracker.domain.model.voyage.VoyageRepository
+//   RoutingService -> org.eclipse.cargotracker.domain.service.RoutingService
+//   TransitEdge -> org.eclipse.pathfinder.api.TransitEdge
+//   TransitPath -> org.eclipse.pathfinder.api.TransitPath
+
+// === Class: ExternalRoutingService ===
+// Fields (with actual visibility):
+    private Logger logger;
+    private String graphTraversalUrl;
+    private WebTarget graphTraversalResource;
+    private LocationRepository locationRepository;
+    private VoyageRepository voyageRepository;
+
+// === External Class: RouteSpecification ===
+// Import paths:
+//   Column -> jakarta.persistence.Column
+//   Embeddable -> jakarta.persistence.Embeddable
+//   JoinColumn -> jakarta.persistence.JoinColumn
+//   ManyToOne -> jakarta.persistence.ManyToOne
+//   NotNull -> jakarta.validation.constraints.NotNull
+// Fields (with actual visibility):
+    private static final long serialVersionUID;
+    private Location origin;
+    private Location destination;
+    private LocalDate arrivalDeadline;
+
+// Constructors:
+public RouteSpecification();
+public RouteSpecification(Location origin, Location destination, LocalDate arrivalDeadline);
+
+// Method Signatures (used by target method):
+public Location getDestination();
+public boolean isSatisfiedBy(Itinerary itinerary);
+public Location getOrigin();
+
+
+EXISTING HELPER METHODS (Available for use, DO NOT MODIFY):
+The following helper methods are already present in the test class. You CAN use them, but DO NOT modify or reimplement them unless necessary for a fix.
+```java
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(externalRoutingService, "logger", logger);
+        ReflectionTestUtils.setField(externalRoutingService, "graphTraversalUrl", "http://example.com");
+        ReflectionTestUtils.setField(externalRoutingService, "graphTraversalResource", graphTraversalResource);
+    }
+```
+
+
+ORIGINAL METHOD TO TEST:
+    The following is the complete original method that needs to be tested. Lines marked with "// NOT COVERED BY TESTS" are NOT covered by the current tests and MUST be covered by new test cases:
+
+    
+  @Override
+  public List<Itinerary> fetchRoutesForSpecification(RouteSpecification routeSpecification) {
+    // The RouteSpecification is picked apart and adapted to the external API.
+    String origin = routeSpecification.getOrigin().getUnLocode().getIdString();
+    String destination = routeSpecification.getDestination().getUnLocode().getIdString(); // NOT COVERED BY TESTS
+
+    List<TransitPath> transitPaths = // NOT COVERED BY TESTS
+            graphTraversalResource
+                    .queryParam("origin", origin) // NOT COVERED BY TESTS
+                    .queryParam("destination", destination) // NOT COVERED BY TESTS
+                    .request(MediaType.APPLICATION_JSON_TYPE) // NOT COVERED BY TESTS
+                    .get(new GenericType<List<TransitPath>>() { // NOT COVERED BY TESTS
+                    });
+
+    // The returned result is then translated back into our domain model.
+    List<Itinerary> itineraries = new ArrayList<>(); // NOT COVERED BY TESTS
+
+    // Use the specification to safe-guard against invalid itineraries
+    transitPaths // NOT COVERED BY TESTS
+            .stream() // NOT COVERED BY TESTS
+            .map(this::toItinerary) // NOT COVERED BY TESTS
+            .forEach( // NOT COVERED BY TESTS
+                    itinerary -> {
+                      if (routeSpecification.isSatisfiedBy(itinerary)) { // NOT COVERED BY TESTS
+                        itineraries.add(itinerary); // NOT COVERED BY TESTS
+                      } else {
+                        logger.log( // NOT COVERED BY TESTS
+                                Level.FINE, "Received itinerary that did not satisfy the route specification");
+                      }
+                    }); // NOT COVERED BY TESTS
+
+    return itineraries; // NOT COVERED BY TESTS
+  }
+
+
+COVERAGE ISSUES:
+Current line coverage: 7.69%
+Target line coverage: 100%
+
+CRITICAL: After fixing the failed tests above, you MUST also add NEW test cases to improve coverage. The uncovered lines of the original method are marked with "// NOT COVERED BY TESTS" in the method above. Analyze the target method to understand what scenarios need to be tested to cover these exact lines.
+
+
+
+INSTRUCTIONS:
+- Fix failed tests
+- Add tests for lines marked '// NOT COVERED BY TESTS'
+- Valid tests are for REFERENCE ONLY - do not include them in output
+- Generate ONLY the test class without explanations or comments outside the code
+- All methods MUST have JUnit annotations (@Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT use @Nested annotations
+- DO NOT create inner classes, helper classes, or custom implementations inside the test class
+- USE EXISTING HELPER METHODS if available (see above). Create NEW helpers only if ensuring unique names.
+- DO NOT mock the target class
+- ENSURE the file starts with the correct package declaration
+- Keep the SAME test class name as shown in TEST CLASS INFO
+- IGNORE any stray code fragments (loops, assertions, statements) NOT preceded by JUnit annotations - they are extraction artifacts

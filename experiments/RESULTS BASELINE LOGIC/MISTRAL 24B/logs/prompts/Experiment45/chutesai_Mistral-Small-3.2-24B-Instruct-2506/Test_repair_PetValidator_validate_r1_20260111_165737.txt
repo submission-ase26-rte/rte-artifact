@@ -1,0 +1,168 @@
+ROLE:
+You are an expert Java developer. Task: fix compilation errors.
+
+TEST CLASS INFO:
+Package: package org.springframework.samples.petclinic.owner;
+Class name (MUST be exactly): PetValidator_validateTestGenerated
+
+CURRENT TEST SUITE (with errors):
+package org.springframework.samples.petclinic.owner;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+
+import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+class PetValidator_validateTestGenerated {
+
+    @Mock
+    private Errors errors;
+
+    @InjectMocks
+    private PetValidator petValidator;
+
+    private Pet pet;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        pet = new Pet();
+        ReflectionTestUtils.setField(petValidator, "REQUIRED", "required");
+    }
+
+    @Test
+    void validate_WhenNameIsNull_ShouldRejectName() {
+        pet.setName(null);
+        petValidator.validate(pet, errors);
+        verify(errors).rejectValue("name", "required", "required");
+    }
+
+    @Test
+    void validate_WhenNameIsEmpty_ShouldRejectName() {
+        pet.setName("");
+        petValidator.validate(pet, errors);
+        verify(errors).rejectValue("name", "required", "required");
+    }
+
+    @Test
+    void validate_WhenNameIsBlank_ShouldRejectName() {
+        pet.setName("   ");
+        petValidator.validate(pet, errors);
+        verify(errors).rejectValue("name", "required", "required");
+    }
+
+    @Test
+    void validate_WhenNameIsValid_ShouldNotRejectName() {
+        pet.setName("Fluffy");
+        petValidator.validate(pet, errors);
+        verify(errors, never()).rejectValue("name", "required", "required");
+    }
+
+    @Test
+    void validate_WhenPetIsNewAndTypeIsNull_ShouldRejectType() {
+        pet.setName("Fluffy");
+        pet.setNew(true);
+        pet.setType(null);
+        petValidator.validate(pet, errors);
+        verify(errors).rejectValue("type", "required", "required");
+    }
+
+    @Test
+    void validate_WhenPetIsNewAndTypeIsNotNull_ShouldNotRejectType() {
+        pet.setName("Fluffy");
+        pet.setNew(true);
+        pet.setType(new PetType());
+        petValidator.validate(pet, errors);
+        verify(errors, never()).rejectValue("type", "required", "required");
+    }
+
+    @Test
+    void validate_WhenPetIsNotNewAndTypeIsNull_ShouldNotRejectType() {
+        pet.setName("Fluffy");
+        pet.setNew(false);
+        pet.setType(null);
+        petValidator.validate(pet, errors);
+        verify(errors, never()).rejectValue("type", "required", "required");
+    }
+
+    @Test
+    void validate_WhenBirthDateIsNull_ShouldRejectBirthDate() {
+        pet.setName("Fluffy");
+        pet.setBirthDate(null);
+        petValidator.validate(pet, errors);
+        verify(errors).rejectValue("birthDate", "required", "required");
+    }
+
+    @Test
+    void validate_WhenBirthDateIsNotNull_ShouldNotRejectBirthDate() {
+        pet.setName("Fluffy");
+        pet.setBirthDate(LocalDate.now());
+        petValidator.validate(pet, errors);
+        verify(errors, never()).rejectValue("birthDate", "required", "required");
+    }
+
+    @Test
+    void validate_WhenAllFieldsAreValid_ShouldNotRejectAnyField() {
+        pet.setName("Fluffy");
+        pet.setNew(true);
+        pet.setType(new PetType());
+        pet.setBirthDate(LocalDate.now());
+        petValidator.validate(pet, errors);
+        verify(errors, never()).rejectValue(anyString(), anyString(), anyString());
+    }
+
+    @Test
+    void validate_WhenInputIsNull_ShouldThrowNullPointerException() {
+        assertThrows(NullPointerException.class, () -> petValidator.validate(null, errors));
+    }
+
+    @Test
+    void validate_WhenErrorsIsNull_ShouldThrowNullPointerException() {
+        pet.setName("Fluffy");
+        assertThrows(NullPointerException.class, () -> petValidator.validate(pet, null));
+    }
+}
+
+COMPILATION ERRORS:
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/PetValidator_validateTestGenerated.java:[70] cannot find symbol
+  symbol:   method setNew(boolean)
+  location: variable pet of type org.springframework.samples.petclinic.owner.Pet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/PetValidator_validateTestGenerated.java:[79] cannot find symbol
+  symbol:   method setNew(boolean)
+  location: variable pet of type org.springframework.samples.petclinic.owner.Pet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/PetValidator_validateTestGenerated.java:[88] cannot find symbol
+  symbol:   method setNew(boolean)
+  location: variable pet of type org.springframework.samples.petclinic.owner.Pet
+/Workspace/Project/JAVA_PROJECTS/aster-main/java/aster/GPT-4/Petclinic/Run-1/src/test/java/org/springframework/samples/petclinic/owner/PetValidator_validateTestGenerated.java:[113] cannot find symbol
+  symbol:   method setNew(boolean)
+  location: variable pet of type org.springframework.samples.petclinic.owner.Pet
+
+INSTRUCTIONS:
+- Fix ALL compilation errors
+- Follow suggestions in error messages (e.g., "Use...", "Replace...")
+- Fix missing imports for "cannot find symbol" errors
+- IMPORTANT: All methods must have JUnit annotations (e.g., @Test, @BeforeEach, @AfterEach, etc.)
+- DO NOT create inner classes, helper classes, or custom Driver/Mock implementations inside the test class
+- DO NOT create helper methods inside the test class
+- DO NOT mock the target class
+- For PRIVATE fields without public setters, use one of these approaches:
+  * Spring's ReflectionTestUtils.setField(object, "fieldName", mockValue) - requires import org.springframework.test.util.ReflectionTestUtils
+  * OR Mockito's @InjectMocks with @Mock annotations
+- DO NOT try to access private fields directly (e.g., object.privateField = value) - this will NOT compile
+- Keep the SAME class name: PetValidator_validateTestGenerated
+- Generate ONLY the test class, not the original class
+- Provide ONLY Java code without explanations

@@ -1,0 +1,33 @@
+```java
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
+public OrderDataBean completeOrder(int orderID, boolean forceComplete) throws EJBException {
+    OrderDataBean order = entityManager.find(OrderDataBean.class, orderID);
+
+    if (order == null) {
+        throw new EJBException("Error: attempt to complete Order that is null");
+    }
+
+    if (order.isCompleted()) {
+        throw new EJBException("Error: attempt to complete Order that is already completed");
+    }
+
+    if (order.isSell()) {
+        HoldingDataBean holding = order.getHolding();
+        if (holding == null) {
+            order.cancel();
+            return order;
+        }
+
+        order.setHolding(null);
+        order.setOrderStatus("COMPLETED");
+        order.setCompletionDate(new Timestamp(System.currentTimeMillis()));
+        entityManager.remove(holding);
+    } else {
+        order.setOrderStatus("COMPLETED");
+        order.setCompletionDate(new Timestamp(System.currentTimeMillis()));
+    }
+
+    order.setCompleted(true);
+    return order;
+}
+```

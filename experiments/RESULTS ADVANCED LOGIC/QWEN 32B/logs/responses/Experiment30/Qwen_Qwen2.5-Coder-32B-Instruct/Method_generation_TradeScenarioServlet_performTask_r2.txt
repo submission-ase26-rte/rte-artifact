@@ -1,0 +1,61 @@
+```java
+public void performTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    HttpSession session = req.getSession(false);
+    String action = req.getParameter("action");
+    PrintWriter out = resp.getWriter();
+    resp.setContentType("text/html");
+
+    if (action == null) {
+        out.println("<html><body><h1>Hello</h1></body></html>");
+        return;
+    }
+
+    if (session == null) {
+        req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
+        return;
+    }
+
+    String userID = (String) session.getAttribute("uidBean");
+    if (userID == null) {
+        req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
+        return;
+    }
+
+    switch (action) {
+        case "n":
+            out.println("<html><body><h1>Hello</h1></body></html>");
+            break;
+        case "q":
+        case "a":
+        case "h":
+        case "l":
+        case "o":
+        case "p":
+            req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
+            break;
+        case "u":
+        case "r":
+            req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
+            req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
+            break;
+        case "s":
+            Collection<HoldingDataBean> holdings = (Collection<HoldingDataBean>) req.getAttribute("holdingDataBeans");
+            if (holdings == null || holdings.isEmpty()) {
+                TradeConfig.incrementSellDeficit();
+                req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
+                req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
+            } else {
+                req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
+                req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
+            }
+            break;
+        case "b":
+            req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
+            req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
+            break;
+        default:
+            req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
+            break;
+    }
+}
+```

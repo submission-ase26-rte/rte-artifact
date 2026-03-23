@@ -1,0 +1,219 @@
+ROLE:
+You are an expert Java developer specialized in regenerating methods from JUnit tests.
+
+PROVIDED TESTS:
+package org.apache.commons.jxpath.util;
+
+import org.apache.commons.jxpath.ExpressionContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Timeout;
+
+@Timeout(value = 2, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+public class MethodLookupUtils_lookupMethodTestGenerated {
+
+    private static final Class<?> TARGET_CLASS = ExpressionContext.class;
+    private static final String METHOD_NAME = "getVariables";
+    private static final Object[] NO_PARAMETERS = new Object[0];
+    private static final Object[] NULL_PARAMETERS = {null};
+    private static final Object[] INVALID_PARAMETERS = {new Object(), "invalid"};
+    private static final Object[] VALID_PARAMETERS = {new HashMap<>()};
+
+    @BeforeEach
+    public void setUp() {
+        // Setup code if necessary
+    }
+
+    @AfterEach
+    public void tearDown() {
+        // Teardown code if necessary
+    }
+
+    @Test
+    public void testLookupMethodWithNullParameters() {
+        assertNull(MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, null));
+    }
+
+    @Test
+    public void testLookupMethodWithEmptyParameters() {
+        assertNull(MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, NO_PARAMETERS));
+    }
+
+    @Test
+    public void testLookupMethodWithNullFirstParameter() {
+        assertNull(MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, NULL_PARAMETERS));
+    }
+
+    @Test
+    public void testLookupMethodWithInvalidFirstParameter() {
+        assertNull(MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, INVALID_PARAMETERS));
+    }
+
+    @Test
+    public void testLookupMethodWithValidParameters() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, METHOD_NAME, VALID_PARAMETERS);
+        assertNotNull(method);
+        assertEquals(METHOD_NAME, method.getName());
+    }
+
+    @Test
+    public void testLookupMethodWithAmbiguousMethods() {
+        assertThrows(JXPathException.class, () -> {
+            MethodLookupUtils.lookupMethod(TARGET_CLASS, "ambiguousMethod", new Object[]{});
+        });
+    }
+
+    @Test
+    public void testLookupMethodWithExactMatch() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, "getVariables", new Object[]{new HashMap<>()});
+        assertNotNull(method);
+        assertEquals("getVariables", method.getName());
+    }
+
+    @Test
+    public void testLookupMethodWithApproximateMatch() {
+        Method method = MethodLookupUtils.lookupMethod(TARGET_CLASS, "getVariables", new Object[]{new HashMap<>()});
+        assertNotNull(method);
+        assertEquals("getVariables", method.getName());
+    }
+
+    @Test
+    public void testLookupMethodWithNoMatch() {
+        assertNull(MethodLookupUtils.lookupMethod(TARGET_CLASS, "nonExistentMethod", new Object[]{new HashMap<>()}));
+    }
+}
+
+
+COVERAGE ON ORIGINAL METHOD:
+- Line: 9.30% | Branch: 21.88%
+- Tests: 5/9 passed
+
+TEST STATUS:
+- PASSED (5): testLookupMethodWithNullParameters, testLookupMethodWithEmptyParameters, testLookupMethodWithNullFirstParameter, testLookupMethodWithInvalidFirstParameter, testLookupMethodWithNoMatch
+- FAILED (4): testLookupMethodWithValidParameters, testLookupMethodWithAmbiguousMethods, testLookupMethodWithExactMatch, testLookupMethodWithApproximateMatch
+- ERRORS (0): none
+
+The regenerated method must pass all PASSED tests.
+
+
+
+CONTEXT - TARGET CLASS STRUCTURE:
+// === Original Class: MethodLookupUtils ===
+
+// --- Imports ---
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import org.apache.commons.jxpath.ExpressionContext;
+import org.apache.commons.jxpath.JXPathException;
+
+// --- Fields ---
+    private static final int NO_MATCH = 0;
+    private static final int APPROXIMATE_MATCH = 1;
+    private static final int EXACT_MATCH = 2;
+
+// --- Internal Methods (used by target method) ---
+    private static int matchParameterTypes(
+        final Class[] types,
+        final Object[] parameters) {
+        int pi = 0;
+        if (types.length >= 1
+            && ExpressionContext.class.isAssignableFrom(types[0])) {
+            pi++;
+        }
+        final int length = parameters == null ? 0 : parameters.length;
+        if (types.length != length + pi) {
+            return NO_MATCH;
+        }
+        int totalMatch = EXACT_MATCH;
+        for (int i = 0; i < length; i++) {
+            final int match = matchType(types[i + pi], parameters[i]);
+            if (match == NO_MATCH) {
+                return NO_MATCH;
+            }
+            if (match < totalMatch) {
+                totalMatch = match;
+            }
+        }
+        return totalMatch;
+    }
+    private static int matchType(final Class expected, final Object object) {
+        if (object == null) {
+            return APPROXIMATE_MATCH;
+        }
+
+        final Class actual = object.getClass();
+
+        if (expected.equals(actual)) {
+            return EXACT_MATCH;
+        }
+        if (expected.isAssignableFrom(actual)) {
+            return EXACT_MATCH;
+        }
+
+        if (TypeUtils.canConvert(object, expected)) {
+            return APPROXIMATE_MATCH;
+        }
+
+        return NO_MATCH;
+    }
+
+
+DEPENDENCIES (methods used by the original method):
+// === External class: TypeUtils ===
+
+// --- Fields ---
+    private static TypeConverter typeConverter = new BasicTypeConverter();
+    private static final HashMap PRIMITIVE_TYPE_MAP = new HashMap() {
+        private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
+
+// --- Methods used by the target method ---
+    public static Object convert(final Object object, final Class toType) {
+        return typeConverter.convert(object, toType);
+    }
+
+
+TASK:
+Regenerate ONLY the method "lookupMethod" OF CLASS "MethodLookupUtils" by analyzing the provided tests.
+
+CRITICAL OUTPUT FORMAT:
+- Generate ONLY the method implementation
+- DO NOT generate the full class, package, imports or class declaration
+- Output ONLY the method with its annotations (if any), signature and body
+
+EXPECTED OUTPUT FORMAT:
+```java
+public static Method lookupMethod( Class targetClass, final String name, final Object[] parameters) {
+    // your implementation here
+}
+```
+
+
+- Package: org.apache.commons.jxpath.util
+- Class annotations: none
+
+
+REQUIREMENTS:
+- The regenerated method must pass all VALID tests (failing tests provide context only)
+- Maintain the exact same method signature as the original (as shown in EXPECTED OUTPUT FORMAT)
+
+CONSTRAINTS:
+- Output ONLY the method code with its annotations (if any), signature, and body
+- DO NOT include package declaration, import statements, or class declaration
+- DO NOT include fields or constructors
+– Allowed imports: exactly those already present in MethodLookupUtils
+– Forbidden: new imports, wildcard imports, fully-qualified class references
+– If something is missing: rewrite the logic, do not extend dependencies
+- Provide ONLY Java code without explanations
+
+DOMAIN-SPECIFIC INSTRUCTIONS:
+None
