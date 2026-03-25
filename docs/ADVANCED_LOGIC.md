@@ -26,15 +26,14 @@ If the tests do not compile:
 ## Phase 2: Threshold Verification and First Regeneration
 
 ### 2.1 Minimum Thresholds for Regeneration
-- **Weighted Pass Rate** ≥ 70%
-- **Line Coverage** ≥ 30%
+- **Weighted Pass Rate** ≥ 70% (configurable)
+- **Line Coverage** ≥ 30% (configurable)
 
 ### 2.2 If thresholds are met:
 1. The LLM regenerates the method from the tests
-2. The regenerated method is **injected** into the original class (SafeClassInjector)
-3. The tests are executed on the regenerated method
-4. The **similarity** between original and regenerated is calculated
-5. If similarity ≥ threshold → **success**, otherwise → refinement loop
+2. The tests are executed on the regenerated method (in a temporary class)
+3. The **similarity** between original and regenerated is calculated
+4. If similarity ≥ threshold → **success**, otherwise → refinement loop
 
 ### 2.3 If thresholds are NOT met:
 - Skip regeneration
@@ -66,7 +65,7 @@ For each iteration:
 ### 3.4 Optimal Conditions (100% pass rate + 100% coverage)
 When optimal conditions are reached but similarity is still below threshold:
 - The system enters **Similarity Enhancement Mode**
-- Continues generating additional tests to better capture the semantics
+- Continues generating additional tests and modifying existing ones to better capture the semantics
 - Accepts a drop in pass rate % as long as the **absolute number of passed tests does not decrease**
 - The goal is to improve similarity without worsening the other metrics too much
 
@@ -96,7 +95,7 @@ This avoids false stops when expanding from a trivial suite (1 test, 100%) to a 
 Let **i** be the current iteration and **i-1** the previous iteration.
 An iteration **i** passes the quality criteria if at least one of the following conditions is verified:
 
-1. **Coverage increases** compared to i-1 AND the **number of passed tests does not decrease** (absolute)
+1. **Coverage increases** compared to i-1 AND the **number of passed tests does not decrease** (absolute, should not happen)
 2. The **number of passed tests increases** (absolute) compared to i-1 AND **coverage does not decrease**
 3. The **semantic similarity increases** compared to i-1 AND both coverage and absolute passed tests do not decrease
 
@@ -107,7 +106,7 @@ quality_ok = (coverage_improved AND tests_passed >= prev_tests_passed) OR
 ```
 
 **Example**: `1/1 (100%) → 11/14 (78%)` 
-- Pass rate %: 100% → 78% = **drop** (base logic = STOP ❌)
+- Pass rate %: 100% → 78% = **drop** (baseline logic = STOP ❌)
 - Tests passed: 1 → 11 = **+10 tests** (advanced logic = CONTINUE ✅)
 
 This rule allows favoring the progress of one metric at a time, while avoiding regressions on the fundamental metrics.
@@ -124,16 +123,6 @@ Formula: `threshold = base - (sloc - 10) * factor` with min/max limits
 
 ---
 
-## SafeClassInjector
-
-Mechanism to inject/restore methods in the original class:
-1. **inject_and_backup()**: saves the original method, injects the new one
-2. **restore()**: restores the original method
-
-This allows executing tests on the regenerated method without permanently modifying the file.
-
----
-
 ## Failure Handling
 
 ### If no test compiles:
@@ -144,7 +133,6 @@ This allows executing tests on the regenerated method without permanently modify
 ### If similarity is not reached:
 - The regenerated method is saved anyway
 - The report includes all attempted iterations
-- The original method is restored
 
 ---
 
@@ -179,20 +167,20 @@ public String getName();
 public int getId();
 ```
 
-### Key Features
+#### New Key Features (not in baseline)
 
-1.  **Class Type Detection (NEW)**:
+1.  **Class Type Detection**:
     - Detects whether the dependency is an `interface`, `abstract class`, `enum`, or concrete class.
     - Warns the LLM with an explicit message: `// Type: INTERFACE (cannot instantiate - use Mockito.mock())`
     - Implemented in `dependency_analyzer._estrai_tipo_classe()`.
 
-2.  **Enum Value Extraction (NEW)**:
+2.  **Enum Value Extraction**:
     - For enums, lists all valid values.
     - Example: `// Enum Values: LOAD, UNLOAD, RECEIVE, CLAIM, CUSTOMS`
     - Prevents "hallucinations" such as `LOADED` instead of `LOAD`.
     - Implemented in `dependency_analyzer._estrai_enum_values()`.
 
-3.  **Static Final Field Warning (NEW)**:
+3.  **Static Final Field Warning**:
     - `static final` fields are marked as `// IMMUTABLE - cannot modify via ReflectionTestUtils`.
     - Prevents erroneous patterns like `ReflectionTestUtils.setField(obj, "CONSTANT", value)`.
 
@@ -204,7 +192,7 @@ public int getId();
 5.  **Advanced Generics Support**:
     - Extracts parametric types from `List<Type>`, `Map<K,V>`, and nested types.
     - Handles wildcards (`? extends Type`).
-    - Includes the context of extracted types.
+    - Includes the context of extracted types.  
 
 6.  **Superclass Inclusion**:
     - Analyzes the hierarchy if the target class extends another.
@@ -215,7 +203,7 @@ public int getId();
     - Includes the definition of the container class.
 
 8.  **Helper Method Implementations**:
-    - For private internal methods called by the target, provides the **full body**.
+    - For internal methods called by the target (in the same class), provides the **full body**.
     - Allows understanding of side-effects and pre-conditions.
 
 ### Updated Constraints

@@ -25,7 +25,7 @@ This document describes how the system worked **BEFORE** the changes made to imp
 ### 4. Previous Method in Prompt
 
 **Before**: In the method regeneration prompt from tests, the method generated in the previous iteration was also passed.
-**Now**: The previous method is no longer passed in the prompt.
+**Now**: The previous method is no longer passed in the prompt, to avoid anchor bias.
 
 ### 5. Fixed Improvement Thresholds
 
@@ -44,5 +44,5 @@ This document describes how the system worked **BEFORE** the changes made to imp
 2. **Premature Stop**: Stopped with optimal conditions even without similarity reached
 3. **Strict Tolerance**: 1% relative without absolute tolerance
 4. **Non-Adaptive Thresholds**: Same thresholds for low and high coverage
-5. **Initial Test Generation prompt**: prompt not included some extra information in structural mode
+5. **Initial Test Generation prompt**: prompt not included some extra information in **STRUCTURAL context mode**
 6. **No Final Regeneration**: If stopped due to no improvement, no final method
