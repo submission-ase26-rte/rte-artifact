@@ -30,6 +30,12 @@ metrics:
   similarity_threshold: 0.7
   crystalbleu_stopwords: true
   use_dynamic_threshold: true  # If true, computes threshold based on method SLOC
+  similarity_weights:          # Optional: custom weights for similarity metrics (must sum to 1.0)
+    embedding_similarity: 0.35
+    ast_similarity: 0.22
+    crystalbleu_similarity: 0.20
+    token_similarity: 0.15
+    string_similarity: 0.08
 
 test_generation:
   mode: "single_method"
@@ -49,5 +55,5 @@ prompt:
 paths:
   base_dir: "./"
   java_projects_dir: "../../data/aster-main/java/aster/GPT-4/Daytrader/Run-1"
-  output_dir: "results/outputs"
-  logs_dir: "results/logs"
+  output_dir: "experiments/results"
+  logs_dir: "experiments/results/logs"

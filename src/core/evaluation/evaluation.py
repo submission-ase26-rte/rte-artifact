@@ -721,6 +721,7 @@ def confronta_metodi(
     metodo_rigenerato: str,
     soglia_similarita: float = 0.7,
     cb_use_stopwords: bool = True,
+    similarity_weights: dict = None,
 ) -> Dict[str, Any]:
     metodo_originale_pulito = rimuovi_commenti_java(metodo_originale)
     metodo_rigenerato_pulito = rimuovi_commenti_java(metodo_rigenerato)
@@ -746,14 +747,17 @@ def confronta_metodi(
         ),
     }
 
-    # PESI BILANCIATI PER LE METRICHE
-    weights = {
-        "crystalbleu_similarity": 0.20,
-        "string_similarity": 0.08,
-        "token_similarity": 0.15,
-        "ast_similarity": 0.22,
-        "embedding_similarity": 0.35,  # Peso alto per similarità semantica
-    }
+    # Use custom weights if provided, otherwise use defaults
+    if similarity_weights:
+        weights = similarity_weights
+    else:
+        weights = {
+            "crystalbleu_similarity": 0.20,
+            "string_similarity": 0.08,
+            "token_similarity": 0.15,
+            "ast_similarity": 0.22,
+            "embedding_similarity": 0.35,
+        }
 
     # Normalizza tutti i valori a [0, 1]
     for key in [

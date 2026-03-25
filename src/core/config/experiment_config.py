@@ -50,6 +50,30 @@ class ExperimentConfig:
         self.cb_use_stopwords = metriche.get("crystalbleu_stopwords", True)
         self.usa_soglia_dinamica = metriche.get("usa_soglia_dinamica", True)
         
+        # Pesi metriche di similarità
+        DEFAULT_WEIGHTS = {
+            "crystalbleu_similarity": 0.20,
+            "string_similarity": 0.08,
+            "token_similarity": 0.15,
+            "ast_similarity": 0.22,
+            "embedding_similarity": 0.35,
+        }
+        raw_weights = metriche.get("similarity_weights", None)
+        if raw_weights and isinstance(raw_weights, dict):
+            valid_keys = set(DEFAULT_WEIGHTS.keys())
+            filtered = {k: float(v) for k, v in raw_weights.items() if k in valid_keys}
+            if filtered:
+                # Normalizza a 1.0
+                total = sum(filtered.values())
+                if total > 0:
+                    self.similarity_weights = {k: v / total for k, v in filtered.items()}
+                else:
+                    self.similarity_weights = DEFAULT_WEIGHTS
+            else:
+                self.similarity_weights = DEFAULT_WEIGHTS
+        else:
+            self.similarity_weights = None  # Usa i default in evaluation.py
+        
         # SmartRetry
         self.max_retries_repair = smart_retry_cfg.get("max_retries_repair", 2)
         self.max_retries_refinement = smart_retry_cfg.get("max_retries_refinement", 3)
@@ -73,8 +97,6 @@ class ExperimentConfig:
         self.prompt_test_metodo = prompt_cfg.get("generazione_test_metodo", "")
         self.prompt_rigenera_metodo = prompt_cfg.get("rigenerazione_metodo", "")
         self.usa_istruzioni_speciali = prompt_cfg.get("usa_istruzioni_speciali", True)
-
-
         
         # Percorsi
         self.base_dir = percorsi.get("base_dir", "./")

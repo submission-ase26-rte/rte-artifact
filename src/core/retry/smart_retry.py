@@ -361,6 +361,7 @@ def esegui_smart_retry_loop(
                         metodo_rigenerato,
                         soglia_similarita_dinamica,
                         config.cb_use_stopwords,
+                        similarity_weights=config.similarity_weights,
                     )
                     overall_similarity = metriche_similarita.get("overall_similarity", 0.0)
                     passa_soglia = metriche_similarita.get("passes_threshold", False)
@@ -1066,6 +1067,7 @@ def esegui_refinement_loop(
                                 metodo_rigenerato_codice_forced,
                                 soglia_similarita_dinamica,
                                 config.cb_use_stopwords,
+                                similarity_weights=config.similarity_weights,
                             )
                             overall_similarity = metriche_similarita.get("overall_similarity", 0.0)
                             passa_soglia = metriche_similarita.get("passes_threshold", False)
@@ -1582,6 +1584,7 @@ def esegui_refinement_loop(
                     metodo_rigenerato,
                     soglia_similarita_dinamica,
                     config.cb_use_stopwords,
+                    similarity_weights=config.similarity_weights,
                 )
                 overall_similarity = metriche_similarita.get("overall_similarity", 0.0)
                 passa_soglia = metriche_similarita.get("passes_threshold", False)
@@ -1929,6 +1932,7 @@ def esegui_refinement_loop(
                                 metodo_rigenerato_codice_final,
                                 soglia_similarita_dinamica,
                                 config.cb_use_stopwords,
+                                similarity_weights=config.similarity_weights,
                             )
                             overall_similarity = metriche_similarita.get("overall_similarity", 0.0)
                             passa_soglia = metriche_similarita.get("passes_threshold", False)

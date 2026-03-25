@@ -978,6 +978,7 @@ def esegui_esperimento(esperimento_cfg_path: str):
                     metodo_rigenerato_codice,
                     soglia_dinamica,
                     config.cb_use_stopwords,
+                    similarity_weights=config.similarity_weights,
                 )
                 overall_similarity = metriche_similarita.get("overall_similarity", 0.0)
                 passa_soglia = metriche_similarita.get("passes_threshold", False)

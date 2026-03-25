@@ -50,9 +50,9 @@ To replicate the original research results with the **Advanced Logic**, use the 
 
 | Model | Command to run (from `src/experiments/`) |
 |-------|-------------------------------------------|
-| **Gemma 3 12B** | `python run_experiments.py --provider chutes --modello unsloth/gemma-3-12b-it --configs-dir "scripts/SCRIPTS GEMMA-12B ADVANCED LOGIC" --yaml-name "experiment_unsloth_gemma-3-12b-it.yaml"` |
-| **Mistral Small 24B** | `python run_experiments.py --provider chutes --modello unsloth/Mistral-Small-24B-Instruct-2501 --configs-dir "scripts/SCRIPTS MISTRAL-24B ADVANCED LOGIC" --yaml-name "experiment_unsloth_Mistral-Small-24B-Instruct-2501.yaml"` |
-| **Qwen 2.5 Coder 32B** | `python run_experiments.py --provider chutes --modello Qwen/Qwen2.5-Coder-32B-Instruct --configs-dir "scripts/SCRIPTS QWEN-32B ADVANCED LOGIC" --yaml-name "experiment_Qwen_Qwen2_5-Coder-32B-Instruct.yaml"` |
+| **Gemma 3 12B** | `python run_experiments.py --provider chutes --model unsloth/gemma-3-12b-it --configs-dir "scripts/SCRIPTS GEMMA-12B ADVANCED LOGIC" --yaml-name "experiment_unsloth_gemma-3-12b-it.yaml"` |
+| **Mistral Small 24B** | `python run_experiments.py --provider chutes --model unsloth/Mistral-Small-24B-Instruct-2501 --configs-dir "scripts/SCRIPTS MISTRAL-24B ADVANCED LOGIC" --yaml-name "experiment_unsloth_Mistral-Small-24B-Instruct-2501.yaml"` |
+| **Qwen 2.5 Coder 32B** | `python run_experiments.py --provider chutes --model Qwen/Qwen2.5-Coder-32B-Instruct --configs-dir "scripts/SCRIPTS QWEN-32B ADVANCED LOGIC" --yaml-name "experiment_Qwen_Qwen2_5-Coder-32B-Instruct.yaml"` |
 
 > [!TIP]
 > You can add `--start N --end M` to these commands to run only a subset of experiments (e.g., `--start 1 --end 10`).
@@ -156,14 +156,12 @@ The system runs experiments in two consecutive phases:
 1. The LLM generates a complete JUnit 5 test suite for the specified method.
 2. The **intelligent context** is dynamically built and includes:
    - The target method code
-   - The fields and constructors of the host class
-   - The relevant external dependencies (selected via TF-IDF, BM25, etc.)
+   - The relevant dependencies (selected via TF-IDF, BM25, Structural, etc.)
    - **Abstract class handling**: If the target class is abstract, the prompt includes explicit instructions on how to instantiate it via an anonymous class or subclass, specifying which abstract methods must be implemented with dummy implementations for the tests
    - **Custom exceptions**: All custom Exception classes used by the method are automatically included in the context (with constructors and fields), allowing the LLM to correctly handle tests that need to catch or verify specific exceptions
 3. The tests are automatically executed on the original method of the class.
 4. The coverage (line and branch coverage) of the tested method is calculated.
 5. The system outputs the results: tests executed, passed, failed, and coverage achieved.
-6. If some tests do not pass on the original method, the experiment continues unless the generated tests failed due to syntax/import errors.
 
 #### "Structural" Mode Detail (Context Generation)
 When using `dependencies.selection: "structural"`, the system builds the prompt surgically to save tokens and reduce noise:
@@ -232,35 +230,37 @@ To prevent poorly generated tests from blocking the computer (e.g., infinite loo
 ### Phase 2: Method Regeneration
 
 1. The LLM regenerates the method based on the tests generated in phase 1 (or on manually provided tests if only phase 2 is executed).
-2. The system always includes in the prompt a **CONTEXT - TARGET CLASS STRUCTURE** section that contains:
-   - Original class name
-   - Target class fields
-   - Target class constructors
-   - Signatures of internal methods used by the target method (excluding the target method itself, obviously)
-3. If configured (`use_dependencies_second_phase: true`), the system also passes the external dependencies used by the original method, including:
-   - External class name
-   - External class fields
-   - External class constructors
-   - Signatures of external methods actually called
-4. If only phase 2 is executed and a previously generated method is provided, the system:
+2. If configured (`use_dependencies_second_phase: true`), the system also passes the dependencies used by the original method (depending on the type of technique selected in the config file) 
+3. If only phase 2 is executed and a previously generated method is provided, the system:
    - Runs the tests on that method to obtain coverage and valid/invalid tests
    - Obfuscates the method name in the prompt (calling it 'x') to avoid bias
    - Passes the test results (coverage, valid/invalid tests) to the regeneration prompt
-5. The regeneration produces a new method without any other code.
-6. The same tests are executed on the regenerated method.
-7. The coverage of the regenerated method is calculated.
-8. The system outputs the detailed results for the regenerated method.
+4. The regeneration produces a new method without any other code.
+5. The same tests are executed on the regenerated method.
+6. The coverage of the regenerated method is calculated.
+7. The system outputs the detailed results for the regenerated method.
 
 ### Comparison and Metrics
 
 After both phases, the system automatically calculates various similarity metrics between the original and regenerated method:
 
 - **AST similarity**: Compares the syntax tree structure (if, loops, method calls, variables, etc.)
-- **UniXcoder similarity**: Semantic code analysis using neural embeddings via UniXcoder model (NLP)
+- **UniXcoder similarity (embedding)**: Semantic code analysis using neural embeddings via UniXcoder model (NLP)
 - **CrystalBLEU similarity**: Similarity metrics based on n-grams
-- **Token and String similarity**: Percentage of tokens and strings that are the same
+- **Token similarity**: Percentage of shared tokens between original and regenerated code
+- **String similarity**: Sequence-based string comparison (SequenceMatcher)
 - **Line and branch coverage**: Percentage of code covered by tests
 - **Pass rate**: Percentage of tests that passed on the method
+
+The **overall similarity** score is a weighted average of the individual metrics (can be changed in the config file):
+
+| Metric | Weight |
+|--------|--------|
+| Embedding similarity (UniXcoder) | 0.35 |
+| AST similarity | 0.22 |
+| CrystalBLEU similarity | 0.20 |
+| Token similarity | 0.15 |
+| String similarity | 0.08 |
 
 All results are saved in JSON format and an HTML report is automatically generated. The HTML report shows for both methods (original and regenerated):
 - Complete list of passed tests
@@ -300,39 +300,53 @@ dependencies:
   selection: "structural"   # "exact", "tfidf", "bm25", "pagerank", "hybrid", "summary", "structural"
   top_k: 5                  # Max dependencies to select (ignored for "exact", "summary", "structural")
   weights: [0.45, 0.45, 0.10]  # Only for "hybrid": [tfidf, bm25, pagerank] weights
-  use_dependencies_second_phase: false  # Pass dependencies also in phase 2
+  use_dependencies_second_phase: true  # Pass dependencies also in phase 2
 
 smart_retry:
   enable: true
-  max_retries_repair: 2        # Max attempts to fix compilation errors
-  max_retries_refinement: -1   # -1 = adaptive mode, or a fixed number (e.g., 1, 2)
+  max_retries_repair: 2                    # Max attempts to fix compilation errors
+  max_retries_refinement: -1               # -1 = adaptive mode, or a fixed number (e.g., 1, 2)
+  min_weighted_pass_rate_threshold: 0.7    # Min weighted pass rate to trigger method regeneration (70%)
+  min_coverage_threshold: 0.3              # Min line coverage to trigger method regeneration (30%)
 
 metrics:
   similarity_threshold: 0.7
   crystalbleu_stopwords: true
+  use_dynamic_threshold: true  # If true, computes threshold dynamically based on method SLOC
+  similarity_weights:          # Optional: custom weights for similarity metrics (must sum to 1.0)
+    embedding_similarity: 0.35
+    ast_similarity: 0.22
+    crystalbleu_similarity: 0.20
+    token_similarity: 0.15
+    string_similarity: 0.08
 
 test_generation:
   mode: "single_method"
   method_to_test: "myMethodName"
+  method_signature: "myMethodName(String arg1, int arg2)"  # Full signature (for overloaded methods)
 
 generation_phases:
   run_first_phase: true
   run_second_phase: true
   test_file_for_second_phase: ""       # Optional: path to existing test file (phase 2 only)
   previous_generated_method: ""        # Optional: path to previously generated method (phase 2 only)
+  include_previous_method: false       # Include previously generated method in the prompt
 
 provider:
   name: "chutes"  # "chutes", "ollama_cloud", "ollama_colab", "ollama_local", "huggingface", "google_gemini", "groq"
   model: "Qwen/Qwen2.5-Coder-32B-Instruct"
 
 prompt:
-  test_generation_prompt: "Generate complete JUnit 5 tests..."
-  method_regeneration_prompt: "Regenerate the method from provided tests..."
+  test_generation_prompt: |
+    None
+  method_regeneration_prompt: "None"
+  use_special_instructions: true  # Enables conditional instructions for Servlet/Spring/EJB
 
 paths:
   base_dir: "./"                          # Working directory (usually src/)
   java_projects_dir: "../../data/my-project"  # Root of the Java project (must contain pom.xml)
   output_dir: "results/outputs"
+  logs_dir: "results/logs"                # Directory for prompt/response logs
 ```
 
 ### Field Reference
@@ -343,12 +357,24 @@ paths:
 | `paths.java_projects_dir` | Root directory of the Java/Maven project (the folder containing `pom.xml`) |
 | `mode` | `"dependencies"` to include context from related classes, `"no_dependencies"` for isolated methods |
 | `dependencies.selection` | Algorithm to select relevant dependencies (see [Dependency Selection](#dependency-selection) below) |
+| `dependencies.use_dependencies_second_phase` | If `true`, passes external dependencies also to the regeneration prompt (phase 2) |
 | `test_generation.method_to_test` | Name of the method to generate tests for |
+| `test_generation.method_signature` | Full method signature, required to distinguish overloaded methods |
 | `provider.name` | LLM provider to use (see [Supported Providers](#supported-providers)) |
 | `provider.model` | Model identifier (provider-specific) |
+| `smart_retry.enable` | Set to `true` to activate the smart retry loop (repair + refinement) |
+| `smart_retry.max_retries_repair` | Max attempts to fix compilation errors (default: 2) |
 | `smart_retry.max_retries_refinement` | Number of refinement iterations, or `-1` for adaptive mode (see [Smart Retry](#smart-retry-configuration)) |
+| `smart_retry.min_weighted_pass_rate_threshold` | Min weighted pass rate required before regenerating the method (default: 0.7). Tests that pass count 1.0, runtime errors count 0.5, assertion failures count 0.0 |
+| `smart_retry.min_coverage_threshold` | Min line coverage required before regenerating the method (default: 0.3 = 30%) |
+| `metrics.similarity_threshold` | Base similarity threshold for comparing original and regenerated methods (default: 0.7) |
+| `metrics.use_dynamic_threshold` | If `true` (default), adjusts the similarity threshold based on method SLOC (see [Similarity Threshold Calculation](#similarity-threshold-calculation)) |
+| `metrics.similarity_weights` | Optional. Custom weights for similarity metrics. Must include: `embedding_similarity`, `ast_similarity`, `crystalbleu_similarity`, `token_similarity`, `string_similarity` |
+| `metrics.crystalbleu_stopwords` | If `true`, uses Java stopwords for CrystalBLEU metric |
 | `generation_phases.run_first_phase` | Set to `false` to skip test generation (phase 1) |
 | `generation_phases.run_second_phase` | Set to `false` to skip method regeneration (phase 2) |
+| `generation_phases.include_previous_method` | If `true`, includes a previously generated method in the regeneration prompt |
+| `prompt.use_special_instructions` | If `true` (default), adds Servlet/Spring/EJB-specific instructions to the prompt when applicable |
 
 ### Dependency Selection
 
@@ -394,7 +420,7 @@ The core idea is: *better tests produce a better regenerated method*. The system
 2. **Perfect test suite but similarity still below threshold** → **CONTINUE**
    - Line coverage = 100% on the original method AND all tests pass (tests_passed = tests_total)
    - BUT similarity < `similarity_threshold`
-   - The system **keeps refining the tests** hoping that improved tests will lead to a better regeneration (and therefore higher similarity)
+   - The system **keeps refining the tests** modifying them or adding new ones in order to improve the quality of the test suite (and therefore higher similarity of regenerated method)
 
 3. **Hard cap of 5 iterations** → **STOP**
    - Absolute maximum limit to prevent infinite loops
@@ -418,7 +444,7 @@ Example: `max_retries_refinement: -1` and `similarity_threshold: 0.7`
 
 *Iteration 4:*
 - Coverage: 100%, Tests passed: 11/11, Similarity: 0.73
-- → **STOP** ✅ (similarity 0.73 ≥ 0.7 — goal reached)
+- → **STOP** (similarity 0.73 ≥ 0.7 — goal reached)
 
 *Alternative — hard cap scenario after 5 iterations:*
 - Coverage: 95%, Tests passed: 9/10, Similarity: 0.62
@@ -432,7 +458,7 @@ The system evaluates the quality of the regenerated method by comparing it with 
 #### 1. Fixed Threshold (`use_dynamic_threshold: false`)
 The exact value specified in the YAML file is used:
 *   Default: `0.70` (70%)
-*   If the `metrics.similarity_threshold` attribute is set to `0.5`, the system will require at least 50% overall similarity.
+*   If the `metrics.similarity_threshold` attribute is set to `0.5`, the system will require at least 50% overall similarity, based on the configured weights for each similarity metric.
 
 #### 2. Dynamic Threshold (`use_dynamic_threshold: true`)
 The threshold is automatically recalculated based on the complexity of the original method, measured in **SLOC** (Source Lines of Code, excluding comments and empty lines).
@@ -445,8 +471,8 @@ The system applies a "logarithmic decrement" to the base threshold to account fo
 
 **Mathematical Formula:**
 ```python
-decremento = 0.05 * log10(max(sloc, 10) / 10)
-final_threshold = base_threshold - decremento
+decrement = 0.05 * log10(max(sloc, 10) / 10)
+final_threshold = base_threshold - decrement
 ```
 
 **Safety Limits (Caps):**
@@ -467,15 +493,6 @@ Example: `max_retries_refinement: 2` and `similarity_threshold: 0.7`
 4. After retry 2, stops even if 70% has not been reached (because max_retries has been reached)
 
 ---
-
-## Usage
-
-```bash
-cd src
-python main.py --config ../scripts/configs/Experiment1/experiment1.yaml
-```
-
-You can also execute only one of the two phases by setting `run_first_phase: false` or `run_second_phase: false` in the configuration file.
 
 ## Output
 

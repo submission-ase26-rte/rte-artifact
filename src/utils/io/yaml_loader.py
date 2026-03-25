@@ -36,6 +36,7 @@ EN_TO_IT_KEYS = {
     # metrics.*
     "similarity_threshold": "similarity_threshold",
     "use_dynamic_threshold": "usa_soglia_dinamica",
+    "similarity_weights": "similarity_weights",
 
     # test_generation.*
     "method_to_test": "metodo_da_testare",
