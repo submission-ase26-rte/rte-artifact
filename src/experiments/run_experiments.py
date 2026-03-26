@@ -105,8 +105,8 @@ def main():
                         help='Model name (es: gpt-oss:20b-cloud)')
     parser.add_argument('--start', type=int, default=1,
                         help='Start ID of the experiment (default: 1)')
-    parser.add_argument('--end', type=int, default=100,
-                        help='End ID of the experiment (default: 100)')
+    parser.add_argument('--end', type=int, default=50,
+                        help='End ID of the experiment (default: 50)')
     parser.add_argument('--only', type=str, default=None,
                         help='List of specific IDs separated by comma (es: 1,5,10)')
     parser.add_argument('--timeout', type=int, default=3600,

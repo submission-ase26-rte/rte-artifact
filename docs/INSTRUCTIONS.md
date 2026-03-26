@@ -44,15 +44,15 @@ All experiments use the 50 methods defined in `docs/TESTED METHODS.txt` (IDs 1â€
 
 ### Pre-generated Scripts (Recommended)
 
-To replicate the original research results with the **Advanced Logic**, use the pre-generated YAML configurations located in the `scripts/` folder. You have to set a valid CHUTES_API_KEY to replicate the same experiments.
+To replicate the original research results with the **Advanced Logic**, use the pre-generated YAML configurations located in the `scripts/` folder. You have to set a valid CHUTES_API_KEY to replicate the same experiments. You can also change the provider and model (LLM) in the YAML files.
 
-#### Batch Run Commands (Advanced Logic)
+#### Batch Run Commands (Advanced Logic) 
 
 | Model | Command to run (from `src/experiments/`) |
 |-------|-------------------------------------------|
-| **Gemma 3 12B** | `python run_experiments.py --provider chutes --model unsloth/gemma-3-12b-it --configs-dir "scripts/SCRIPTS GEMMA-12B ADVANCED LOGIC" --yaml-name "experiment_unsloth_gemma-3-12b-it.yaml"` |
-| **Mistral Small 24B** | `python run_experiments.py --provider chutes --model unsloth/Mistral-Small-24B-Instruct-2501 --configs-dir "scripts/SCRIPTS MISTRAL-24B ADVANCED LOGIC" --yaml-name "experiment_unsloth_Mistral-Small-24B-Instruct-2501.yaml"` |
-| **Qwen 2.5 Coder 32B** | `python run_experiments.py --provider chutes --model Qwen/Qwen2.5-Coder-32B-Instruct --configs-dir "scripts/SCRIPTS QWEN-32B ADVANCED LOGIC" --yaml-name "experiment_Qwen_Qwen2_5-Coder-32B-Instruct.yaml"` |
+| **Gemma 3 12B** | `python run_experiments.py --provider chutes --model unsloth/gemma-3-12b-it --configs-dir "scripts/SCRIPTS GEMMA-12B ADVANCED LOGIC" --yaml-name "experiment_unsloth_gemma-3-12b-it.yaml" --timeout 3600 --start 1 --end 50 --continue-on-error` |
+| **Mistral Small 24B** | `python run_experiments.py --provider chutes --model unsloth/Mistral-Small-24B-Instruct-2501 --configs-dir "scripts/SCRIPTS MISTRAL-24B ADVANCED LOGIC" --yaml-name "experiment_unsloth_Mistral-Small-24B-Instruct-2501.yaml" --timeout 3600 --start 1 --end 50 --continue-on-error` |
+| **Qwen 2.5 Coder 32B** | `python run_experiments.py --provider chutes --model Qwen/Qwen2.5-Coder-32B-Instruct --configs-dir "scripts/SCRIPTS QWEN-32B ADVANCED LOGIC" --yaml-name "experiment_Qwen_Qwen2_5-Coder-32B-Instruct.yaml" --timeout 3600 --start 1 --end 50 --continue-on-error` |
 
 > [!TIP]
 > You can add `--start N --end M` to these commands to run only a subset of experiments (e.g., `--start 1 --end 10`).
