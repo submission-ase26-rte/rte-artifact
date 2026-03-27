@@ -9,19 +9,14 @@ RTE - ASE 2026/
 │
 ├── docs/                                    # Documentation and analysis outputs
 │   ├── INSTRUCTIONS.md                      # Full usage & configuration guide
-│   ├── ADVANCED_LOGIC.md                    # Description of the Advanced Logic
-│   ├── BASELINE_LOGIC.md                    # Description of the Baseline Logic
+│   ├── LOGIC_DETAILS.md                     # Description of the Test Generation Logic
 │   ├── PROMPT_TEMPLATES.md                  # All prompt templates used by the system
 │   ├── TESTED METHODS.txt                   # 50 target methods (ID | signature | path | project)
 │   ├── requirements.txt                     # Python dependencies
 │   └── graphs/                              # Pre-generated analysis plots (PNG)
 │
 ├── experiments/                             # Raw experiment results (JSON + HTML reports)
-│   ├── RESULTS ADVANCED LOGIC/              # Results using the Advanced Logic
-│   │   ├── GEMMA 12B/
-│   │   ├── MISTRAL 24B/
-│   │   └── QWEN 32B/
-│   ├── RESULTS BASELINE LOGIC/              # Results using the Baseline Logic
+│   ├── RESULTS RTE-Test/                    # Results using the RTE-Test agent
 │   │   ├── GEMMA 12B/
 │   │   ├── MISTRAL 24B/
 │   │   └── QWEN 32B/
@@ -29,9 +24,9 @@ RTE - ASE 2026/
 │       └── Experiment1..50/
 │
 ├── scripts/                                 # Pre-generated YAML configs for batch runs
-│   ├── SCRIPTS GEMMA-12B ADVANCED LOGIC/    # Configs for Gemma 3 12B (Advanced)
-│   ├── SCRIPTS MISTRAL-24B ADVANCED LOGIC/  # Configs for Mistral Small 24B (Advanced)
-│   └── SCRIPTS QWEN-32B ADVANCED LOGIC/     # Configs for Qwen 2.5 Coder 32B (Advanced)
+│   ├── SCRIPTS GEMMA-12B/                   # Configs for Gemma 3 12B
+│   ├── SCRIPTS MISTRAL-24B/                 # Configs for Mistral Small 24B
+│   └── SCRIPTS QWEN-32B/                    # Configs for Qwen 2.5 Coder 32B
 │
 └── src/                                     # Source code
     ├── main.py                              # Entry point — runs a single experiment

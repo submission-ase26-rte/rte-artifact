@@ -12,8 +12,8 @@ logger = setup_logger()
 
 class JavaDependencyAnalyzer:
     """
-    Analizzatore per estrarre dipendenze Java da una classe target e risolvere
-    automaticamente le classi correlate in un progetto.
+    Analyzer to extract Java dependencies from a target class and automatically resolve
+    related classes in a project.
     """
     
     def __init__(self, project_root: str):
@@ -23,7 +23,7 @@ class JavaDependencyAnalyzer:
         self._project_base_package_cache = None
         
     def find_java_files(self, directory: str = None) -> List[str]:
-        """Trova tutti i file Java in un progetto."""
+        """Find all Java files in a project."""
         if directory is None:
             directory = self.project_root
             
@@ -37,7 +37,7 @@ class JavaDependencyAnalyzer:
         return java_files
     
     def extract_imports(self, java_code: str) -> List[str]:
-        """Estrae gli import da codice Java."""
+        """Extracts imports from Java code."""
         imports = []
         lines = java_code.split('\n')
         
@@ -57,7 +57,7 @@ class JavaDependencyAnalyzer:
         return imports
     
     def extract_class_name(self, java_code: str) -> Optional[str]:
-        """Estrae il nome della classe dal codice Java."""
+        """Extracts the class name from Java code."""
         if not java_code:
             return None
             
@@ -76,27 +76,27 @@ class JavaDependencyAnalyzer:
         return None
     
     def resolve_import_to_file(self, import_statement: str, project_files: List[str]) -> Optional[str]:
-        """Risolve un import statement al file Java corrispondente."""
-        # Converte import com.example.Class in path com/example/Class.java
+        """Resolves an import statement to the corresponding Java file."""
+        # Convert import com.example.Class to path com/example/Class.java
         import_path = import_statement.replace('.', '/') + '.java'
         
-        # Cerca corrispondenza esatta
+        # Searches for an exact match
         for file_path in project_files:
             if file_path.endswith(import_path):
                 return file_path
         
-        # Cerca con il nome della classe alla fine
+        # Searches for the class name at the end
         class_name = import_statement.split('.')[-1]
         for file_path in project_files:
             if file_path.endswith(f'/{class_name}.java'):
                 return file_path
         
-        # Cerca con pattern più flessibile (per gestire package diversi)
+        # Searches with a more flexible pattern (to handle different packages)
         for file_path in project_files:
             if f'/{class_name}.java' in file_path:
                 return file_path
                 
-        # Cerca per nome classe senza path
+        # Searches for the class name without path
         for file_path in project_files:
             filename = os.path.basename(file_path)
             if filename == f'{class_name}.java':
@@ -106,41 +106,41 @@ class JavaDependencyAnalyzer:
     
     def analyze_class_dependencies(self, target_class_path: str) -> Dict[str, str]:
         """
-        Analizza le dipendenze di una classe target e restituisce un dizionario
-        {nome_classe: codice_classe} per tutte le classi dipendenti.
-        Include anche classi dello stesso package usate senza import esplicito.
+        Analyzes the dependencies of a target class and returns a dictionary
+        {class_name: class_code} for all dependent classes.
+        Includes classes from the same package used without explicit import.
         """
         logger.info(f"Analyzing dependencies for: {target_class_path}")
         
-        # Carica il codice della classe target
+        # Loads the target class code
         target_code = leggi_file(target_class_path)
         if not target_code:
             logger.error(f"Unable to read {target_class_path}")
             return {}
             
-        # Estrae il classe target
+        # Extracts the target class
         target_class_name = self.extract_class_name(target_code)
         if not target_class_name:
             logger.error(f"Unable to extract class name from {target_class_path}")
             return {}
         
-        # Estrae il package della classe target
+        # Extracts the target class package
         target_package = self._extract_package(target_code)
         logger.info(f"Target class package: {target_package}")
             
-        # Trova tutti i file Java nel progetto
+        # Finds all Java files in the project
         java_files = self.find_java_files()
         logger.info(f"Found {len(java_files)} Java files in the project")
         
-        # Estrae gli import dalla classe target
+        # Extracts imports from the target class
         imports = self.extract_imports(target_code)
         logger.info(f"Found {len(imports)} imports")
         
-        # Risolve le dipendenze in modo ricorsivo
+        # Resolves dependencies recursively
         dependencies = {target_class_name: target_code}
         resolved_imports = set()
         
-        # Prima passata: risolve import diretti
+        # First pass: resolves direct imports
         for import_stmt in imports:
             if self._is_external_import(import_stmt):
                 continue
@@ -152,7 +152,7 @@ class JavaDependencyAnalyzer:
             else:
                 logger.warning(f"Not resolved: {import_stmt}")
         
-        # Carica le classi dipendenti dirette (da import)
+        # Loads direct dependent classes (from import)
         for file_path in resolved_imports:
             dep_code = leggi_file(file_path)
             if dep_code:
@@ -161,7 +161,7 @@ class JavaDependencyAnalyzer:
                     dependencies[dep_class_name] = dep_code
                     logger.info(f"Loaded dependency (import): {dep_class_name}")
         
-        # Trova classi dello stesso package usate senza import esplicito
+        # Finds classes in the same package used without explicit import
         if target_package:
             same_package_classes = self._find_same_package_classes(target_class_path, target_package, java_files)
             same_package_deps = self._find_same_package_dependencies(target_code, target_class_name, same_package_classes)
@@ -171,7 +171,7 @@ class JavaDependencyAnalyzer:
                     dependencies[class_name] = code
                     logger.info(f"Loaded dependency (same package, no import): {class_name}")
         
-        # Terza passata: analizza dipendenze delle dipendenze (ricorsivo)
+        # Third pass: analyzes dependencies of dependencies (recursive)
         new_dependencies = self._analyze_recursive_dependencies(dependencies, java_files)
         dependencies.update(new_dependencies)
         
@@ -179,23 +179,23 @@ class JavaDependencyAnalyzer:
         return dependencies
     
     def _analyze_recursive_dependencies(self, current_dependencies: Dict[str, str], java_files: List[str]) -> Dict[str, str]:
-        """Analizza le dipendenze delle dipendenze in modo ricorsivo."""
+        """Analyzes the dependencies of dependencies recursively."""
         new_dependencies = {}
         
         for class_name, class_code in current_dependencies.items():
-            # Estrae import da questa classe
+            # Extracts imports from this class
             imports = self.extract_imports(class_code)
             
             for import_stmt in imports:
                 if self._is_external_import(import_stmt):
                     continue
                     
-                # Controlla se questa dipendenza è già stata risolta
+                # Checks if this dependency has already been resolved
                 dep_class_name = import_stmt.split('.')[-1]
                 if dep_class_name in current_dependencies or dep_class_name in new_dependencies:
                     continue
                 
-                # Risolve la dipendenza
+                # Resolves the dependency
                 resolved_file = self.resolve_import_to_file(import_stmt, java_files)
                 if resolved_file:
                     dep_code = leggi_file(resolved_file)
@@ -208,8 +208,8 @@ class JavaDependencyAnalyzer:
         return new_dependencies
     
     def _get_project_base_package(self) -> Optional[str]:
-        """Rileva automaticamente il package base del progetto analizzando i file Java."""
-        # Usa la cache se disponibile
+        """Automatically detects the project base package by analyzing Java files."""
+        # Use cache if available
         if self._project_base_package_cache is not None:
             return self._project_base_package_cache
         
@@ -220,21 +220,21 @@ class JavaDependencyAnalyzer:
         
         packages = set()
         
-        # Analizza un campione di file per efficienza
+        # Analyzes a sample of files for efficiency
         sample_size = min(50, len(java_files))
         for file_path in java_files[:sample_size]:
             code = leggi_file(file_path)
             if code:
                 package = self._extract_package(code)
                 if package:
-                    # Estrae il package base (primi due livelli, es. com.example)
+                    # Extracts the base package (first two levels, e.g., com.example)
                     parts = package.split('.')
                     if len(parts) >= 2:
                         base_package = '.'.join(parts[:2])
                         packages.add(base_package)
         
         if packages:
-            # Conta le occorrenze su tutti i file
+            # Counts occurrences across all files
             package_counts = {}
             for file_path in java_files:
                 code = leggi_file(file_path)
@@ -247,7 +247,7 @@ class JavaDependencyAnalyzer:
                             package_counts[base_package] = package_counts.get(base_package, 0) + 1
             
             if package_counts:
-                # Restituisce il package più comune
+                # Returns the most common package
                 result = max(package_counts.items(), key=lambda x: x[1])[0]
                 self._project_base_package_cache = result
                 return result
@@ -256,7 +256,7 @@ class JavaDependencyAnalyzer:
         return None
     
     def _is_external_import(self, import_stmt: str) -> bool:
-        """Verifica se un import è esterno (librerie, framework, etc.)."""
+        """Checks if an import is external (libraries, frameworks, etc.)."""
         external_prefixes = [
             'java.', 'javax.', 'org.springframework', 'org.hibernate',
             'com.fasterxml', 'org.apache', 'org.slf4j', 'org.junit',
@@ -265,7 +265,7 @@ class JavaDependencyAnalyzer:
             'org.springframework.boot', 'org.springframework.data'
         ]
         
-        # Rileva automaticamente il package base del progetto
+        # Automatically detects the project base package
         project_base_package = self._get_project_base_package()
         if project_base_package and import_stmt.startswith(project_base_package):
             return False
@@ -274,7 +274,7 @@ class JavaDependencyAnalyzer:
 
     
     def _extract_package(self, java_code: str) -> Optional[str]:
-        """Estrae il package dal codice Java."""
+        """Extracts the package from Java code."""
         lines = java_code.split('\n')
         for line in lines:
             line = line.strip()
@@ -284,8 +284,8 @@ class JavaDependencyAnalyzer:
     
     def _find_same_package_classes(self, target_class_path: str, target_package: str, java_files: List[str]) -> Dict[str, str]:
         """
-        Trova tutte le classi nello stesso package della classe target.
-        Restituisce un dizionario {nome_classe: percorso_file} per le classi dello stesso package.
+        Finds all classes in the same package as the target class.
+        Returns a dictionary {class_name: file_path} for classes in the same package.
         """
         same_package_classes = {}
         
@@ -295,23 +295,23 @@ class JavaDependencyAnalyzer:
         target_file_normalized = os.path.normpath(target_class_path).lower()
         
         for file_path in java_files:
-            # Salta la classe target stessa
+            # Skip the target class itself
             if os.path.normpath(file_path).lower() == target_file_normalized:
                 continue
             
-            # Ottimizzazione: leggi solo prime righe per package
+            # Optimization: read only first lines for package
             try:
                 with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                     head = [next(f) for _ in range(20)]
                 code_head = "".join(head)
                 file_package = self._extract_package(code_head)
                 
-                # Se non trovato nelle prime righe, leggi tutto (caso raro commenti lunghi)
+                # If not found in first lines, read all (rare case of long comments)
                 if not file_package:
                     code = leggi_file(file_path)
                     file_package = self._extract_package(code)
                 else:
-                    code = None # Leggeremo dopo se serve
+                    code = None # Will read later if needed
                     
                 if file_package == target_package:
                     if code is None:
@@ -321,7 +321,7 @@ class JavaDependencyAnalyzer:
                         same_package_classes[class_name] = file_path
                         logger.debug(f"Found same package class: {class_name}")
             except StopIteration:
-                pass # File vuoto
+                pass # Empty file
             except Exception as e:
                 logger.debug(f"Error reading file {file_path}: {e}")
         
@@ -337,11 +337,11 @@ class JavaDependencyAnalyzer:
         
         # Types to exclude (primitives + common JDK)
         excluded_types = {
-            # Primitivi
+            # Primitives
             'void', 'int', 'long', 'short', 'byte', 'char', 'boolean', 'float', 'double',
             # Wrapper
             'Integer', 'Long', 'Short', 'Byte', 'Character', 'Boolean', 'Float', 'Double',
-            # Comune JDK
+            # Common JDK
             'String', 'Object', 'Class', 'System', 'Exception', 'RuntimeException',
             'Throwable', 'Error', 'Thread', 'Runnable',
             # Collections
@@ -349,14 +349,14 @@ class JavaDependencyAnalyzer:
             'Set', 'HashSet', 'TreeSet', 'LinkedHashSet', 'Collection', 'Collections',
             'Iterator', 'Iterable', 'Enumeration', 'Queue', 'Deque', 'ArrayDeque',
             'Optional', 'Stream', 'Collectors',
-            # Altri comuni
+            # Other common types
             'Arrays', 'Math', 'StringBuilder', 'StringBuffer', 'Comparator', 'Comparable',
             'Date', 'Calendar', 'LocalDate', 'LocalDateTime', 'Instant', 'Duration',
             'Pattern', 'Matcher', 'UUID', 'Random', 'File', 'Path', 'Files',
             'InputStream', 'OutputStream', 'Reader', 'Writer', 'BufferedReader', 'BufferedWriter',
             'IOException', 'FileNotFoundException', 'NullPointerException', 'IllegalArgumentException',
             'IllegalStateException', 'UnsupportedOperationException', 'IndexOutOfBoundsException',
-            # Annotation comuni
+            # Common annotations
             'Override', 'Deprecated', 'SuppressWarnings', 'FunctionalInterface',
             # Generics placeholder
             'T', 'E', 'K', 'V', 'R', 'U'
@@ -366,28 +366,28 @@ class JavaDependencyAnalyzer:
             tree = javalang.parse.parse(java_code)
             
             for path, node in tree:
-                # Estrae tipi da dichiarazioni di variabili locali
+                # Extracts types from local variable declarations
                 if isinstance(node, javalang.tree.LocalVariableDeclaration):
                     if hasattr(node, 'type') and hasattr(node.type, 'name'):
                         type_name = node.type.name.split('<')[0].split('[')[0]
                         if type_name not in excluded_types:
                             types_used.add(type_name)
                 
-                # Estrae tipi da parametri di metodi
+                # Extracts types from method parameters
                 if isinstance(node, javalang.tree.FormalParameter):
                     if hasattr(node, 'type') and hasattr(node.type, 'name'):
                         type_name = node.type.name.split('<')[0].split('[')[0]
                         if type_name not in excluded_types:
                             types_used.add(type_name)
                 
-                # Estrae tipi da dichiarazioni di campi
+                # Extracts types from field declarations
                 if isinstance(node, javalang.tree.FieldDeclaration):
                     if hasattr(node, 'type') and hasattr(node.type, 'name'):
                         type_name = node.type.name.split('<')[0].split('[')[0]
                         if type_name not in excluded_types:
                             types_used.add(type_name)
                 
-                # Estrae tipi da return type di metodi
+                # Extracts types from method return types
                 if isinstance(node, javalang.tree.MethodDeclaration):
                     if hasattr(node, 'return_type') and node.return_type and hasattr(node.return_type, 'name'):
                         type_name = node.return_type.name.split('<')[0].split('[')[0]
