@@ -1,12 +1,9 @@
-"""
-Modulo base per i provider LLM con funzioni comuni per la gestione dei token.
-"""
 from typing import Dict
 
-# Variabile globale per memorizzare le ultime informazioni sui token
+# Global variable to store the latest token information
 _last_token_usage = {
     "prompt_eval_count": None,
-    "eval_count": None,
+    "eval_count": None, 
     "prompt_tokens": None,
     "completion_tokens": None
 }
@@ -14,14 +11,14 @@ _last_token_usage = {
 
 def get_last_token_usage() -> Dict:
     """
-    Restituisce le informazioni sui token dell'ultima chiamata.
-    Supporta sia il formato Ollama (prompt_eval_count/eval_count) che Groq (prompt_tokens/completion_tokens).
+    Returns the token information from the last call.
+    Supports both Ollama format (prompt_eval_count/eval_count) and Groq format (prompt_tokens/completion_tokens).
     """
     return _last_token_usage.copy()
 
 
 def reset_token_usage():
-    """Resetta le informazioni sui token."""
+    """Resets the token information."""
     global _last_token_usage
     _last_token_usage = {
         "prompt_eval_count": None,
@@ -32,7 +29,7 @@ def reset_token_usage():
 
 
 def update_token_usage_ollama(prompt_eval_count: int = None, eval_count: int = None):
-    """Aggiorna le informazioni sui token per provider Ollama."""
+    """Updates the token information for the Ollama provider."""
     global _last_token_usage
     if prompt_eval_count is not None:
         _last_token_usage["prompt_eval_count"] = prompt_eval_count
@@ -41,7 +38,7 @@ def update_token_usage_ollama(prompt_eval_count: int = None, eval_count: int = N
 
 
 def update_token_usage_groq(prompt_tokens: int = None, completion_tokens: int = None):
-    """Aggiorna le informazioni sui token per provider Groq."""
+    """Updates the token information for the Groq provider."""
     global _last_token_usage
     if prompt_tokens is not None:
         _last_token_usage["prompt_tokens"] = prompt_tokens

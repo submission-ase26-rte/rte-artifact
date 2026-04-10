@@ -26,12 +26,12 @@ from utils.text.text_utils import sanitize_model_name
 
 
 def get_experiment_ids(args) -> list:
-    """Restituisce la lista degli ID esperimenti da eseguire."""
+    """Returns the list of experiment IDs to execute."""
     if args.only:
-        # Lista specifica di ID
+        # Specific list of IDs
         return [int(x.strip()) for x in args.only.split(',')]
     else:
-        # Range da start a end
+        # Range from start to end
         return list(range(args.start, args.end + 1))
 
 
@@ -39,8 +39,8 @@ def run_experiment(config_path: str, timeout: int = None) -> dict:
     start_time = time.time()
     
     try:
-        # Esegue main.py come sottoprocesso
-        # Cambio: eseguiamo da script_dir (src/experiments) per far sì che i path relativi nel YAML (../../data) funzionino
+        # Executes main.py as a subprocess
+        # Change: we run from script_dir (src/experiments) to make relative paths in YAML (../../data) work
         result = subprocess.run(
             [sys.executable, '../main.py', '--config', str(config_path)],
             capture_output=True,
@@ -84,7 +84,7 @@ def run_experiment(config_path: str, timeout: int = None) -> dict:
 
 
 def format_duration(seconds: float) -> str:
-    """Formatta la durata in formato leggibile."""
+    """Formats the duration in a readable format."""
     if seconds < 60:
         return f"{seconds:.1f}s"
     elif seconds < 3600:
@@ -98,7 +98,7 @@ def format_duration(seconds: float) -> str:
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Esegue gli esperimenti in sequenza')
+    parser = argparse.ArgumentParser(description='Runs the experiments in sequence')
     parser.add_argument('--provider', type=str, required=True,
                         help='Provider name (es: ollama_cloud, groq, ollama_colab)')
     parser.add_argument('--model', type=str, required=True,
@@ -130,7 +130,7 @@ def main():
     script_dir = Path(__file__).parent
     project_root = script_dir.parent.parent
     
-    # Risoluzione directory config
+    # Resolving config directory
     if args.configs_dir:
         configs_dir = Path(args.configs_dir)
         if not configs_dir.is_absolute():
@@ -140,7 +140,7 @@ def main():
     
     model_name_safe = sanitize_model_name(args.model)
     
-    # Risoluzione nome file YAML
+    # Resolving YAML filename
     if args.yaml_name:
         yaml_filename = args.yaml_name
     else:
@@ -150,7 +150,7 @@ def main():
     experiment_ids = get_experiment_ids(args)
     
     print("=" * 70)
-    print("RUNNING ASTER EXPERIMENTS")
+    print("RUNNING EXPERIMENTS")
     print("=" * 70)
     print(f"   Provider: {args.provider}")
     print(f"   Model: {args.model}")
@@ -172,7 +172,7 @@ def main():
         log_path = Path(args.log_file)
     else:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        # Cambio: i risultati ora vanno in /experiments/results
+        # Change: results now go to /experiments/results
         project_root = script_dir.parent.parent
         results_dir = project_root / 'experiments' / 'results'
         log_path = results_dir / 'logs' / f"batch_run_{model_name_safe}_{timestamp}.log"
@@ -181,7 +181,7 @@ def main():
     log_path.parent.mkdir(parents=True, exist_ok=True)
 
     
-    # Statistiche
+    # Statistics
     stats = {
         'total': len(experiment_ids),
         'completed': 0,
@@ -242,7 +242,7 @@ def main():
             })
             
             if not result['success'] and not args.continue_on_error:
-                print("\n⛔ Interruption due to error (use --continue-on-error to ignore)")
+                print("\nInterruption due to error (use --continue-on-error to ignore)")
                 break
                 
             if i < len(experiment_ids) and args.pause > 0:

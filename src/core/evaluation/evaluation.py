@@ -14,10 +14,10 @@ from utils.tracking.naturalness_evaluator import calcola_naturalezza_test
 
 def rimuovi_commenti_java(codice: str) -> str:
     """
-    Rimuove tutti i commenti Java dal codice:
-    - Commenti multi-linea: /* ... */
-    - Commenti single-line: // ...
-    - Commenti Javadoc: /** ... */
+    Remove all Java comments from the code:
+    - Multi-line comments: /* ... */
+    - Single-line comments: // ...
+    - Javadoc comments: /** ... */
     """
     codice = re.sub(r"/\*[\s\S]*?\*/", "", codice)
     codice = re.sub(r"//.*$", "", codice, flags=re.MULTILINE)
@@ -28,21 +28,21 @@ def rimuovi_commenti_java(codice: str) -> str:
 
 def estrai_metodo_singolo(codice: str, nome_metodo: str, include_javadoc: bool = False, signature: str = None) -> str:
     """
-    Estrae un singolo metodo dal codice Java.
+    Extract a single method from Java code.
     """
-    # Importa funzioni unificate da code_analysis
+    # Import unified functions from code_analysis
     from utils.code.code_analysis import estrai_tipi_parametri_da_signature as _estrai_tipi_parametri_unified, normalizza_tipo_java as _normalizza_tipo_unified
     
     def _estrai_tipi_parametri_da_signature(sig: str) -> list:
-        """Wrapper per retrocompatibilità - usa la funzione unificata"""
+        """Wrapper for backward compatibility - uses unified function"""
         return _estrai_tipi_parametri_unified(sig)
     
     def _normalizza_tipo(tipo_str: str) -> str:
-        """Wrapper per retrocompatibilità - usa la funzione unificata"""
+        """Wrapper for backward compatibility - uses unified function"""
         return _normalizza_tipo_unified(tipo_str)
     
     def _matcha_parametri(node_params, signature_types):
-        """Verifica se i parametri del nodo corrispondono ai tipi nella signature"""
+        """Check if node parameters match signature types"""
         if not signature_types and not node_params:
             return True
         if not node_params:
@@ -50,14 +50,14 @@ def estrai_metodo_singolo(codice: str, nome_metodo: str, include_javadoc: bool =
         if len(node_params) != len(signature_types):
             return False
         for i, param in enumerate(node_params):
-            # Estrai il tipo dal nodo javalang
+            # Extract type from javalang node
             param_type = param.type
             tipo_completo = ""
             
-            # Gestisci il nome base del tipo e eventuali sottotipi (es: HandlingEvent.Type)
+            # Handle base type name and any subtypes (e.g., HandlingEvent.Type)
             if hasattr(param_type, 'name'):
                 tipo_completo = param_type.name
-                # Gestisci puntatori/inner classes (es: HandlingEvent.Type -> ReferenceType(name=HandlingEvent, sub_type=ReferenceType(name=Type)))
+                # Handle pointers/inner classes (e.g., HandlingEvent.Type -> ReferenceType(name=HandlingEvent, sub_type=ReferenceType(name=Type)))
                 current_type = param_type
                 while hasattr(current_type, 'sub_type') and current_type.sub_type:
                     current_type = current_type.sub_type
@@ -67,11 +67,11 @@ def estrai_metodo_singolo(codice: str, nome_metodo: str, include_javadoc: bool =
             else:
                 tipo_completo = str(param_type)
             
-            # Gestisci array (javalang usa dimensions)
+            # Handle arrays (javalang uses dimensions)
             if hasattr(param_type, 'dimensions') and param_type.dimensions:
                 tipo_completo += '[]' * len(param_type.dimensions)
             
-            # Normalizza per confronto
+            # Normalize for comparison
             tipo_node = _normalizza_tipo(tipo_completo)
             tipo_expected = _normalizza_tipo(signature_types[i])
             
@@ -79,10 +79,10 @@ def estrai_metodo_singolo(codice: str, nome_metodo: str, include_javadoc: bool =
                 return False
         return True
     
-    # Estrai tipi parametri dalla signature se fornita
+    # Extract parameter types from signature if provided
     signature_types = _estrai_tipi_parametri_da_signature(signature) if signature else None
     
-    candidati = []
+    candidates = []
     
     try:
         tree = javalang.parse.parse(codice)
@@ -92,36 +92,34 @@ def estrai_metodo_singolo(codice: str, nome_metodo: str, include_javadoc: bool =
                 isinstance(node, javalang.tree.MethodDeclaration)
                 and node.name == nome_metodo
             ):
-                # Se signature fornita, verifica che i parametri corrispondano
+                # If signature provided, check that parameters match
                 if signature_types is not None:
                     node_params = node.parameters if node.parameters else []
                     if not _matcha_parametri(node_params, signature_types):
-                        continue  # Non corrisponde, cerca il prossimo
+                        continue  # Doesn't match, search next
                 
                 if hasattr(node, "position") and node.position:
                     start_line = node.position.line - 1
                 else:
                     continue
                 
-                # Se include_javadoc, risali per trovare JavaDoc e annotazioni
+                # If include_javadoc, risali per trovare JavaDoc e annotazioni
                 javadoc_start_line = start_line
                 if include_javadoc:
-                    # Risali per trovare JavaDoc/annotazioni
                     for i in range(start_line - 1, -1, -1):
                         stripped = lines[i].strip()
                         if stripped.startswith('@') or stripped.startswith('*') or stripped.startswith('/*') or stripped.startswith('//') or stripped.endswith('*/') or stripped == '':
                             javadoc_start_line = i
                         elif stripped:
-                            # Trovata una riga non vuota che non è annotazione/commento
                             break
-                    # Rimuovi le righe vuote iniziali
+                    # Remove leading empty lines
                     while javadoc_start_line < start_line and lines[javadoc_start_line].strip() == '':
                         javadoc_start_line += 1
                 
                 effective_start_line = javadoc_start_line if include_javadoc else start_line
                 start_char = sum(len(lines[i]) + 1 for i in range(effective_start_line))
                 
-                # Trova la fine del metodo dalla posizione originale (non JavaDoc)
+                # Find the end of the method from the original position (not JavaDoc)
                 method_start_char = sum(len(lines[i]) + 1 for i in range(start_line))
                 brace_count = 0
                 in_method = False
@@ -141,16 +139,16 @@ def estrai_metodo_singolo(codice: str, nome_metodo: str, include_javadoc: bool =
                 if signature_types is not None:
                     return metodo_estratto
                 
-                candidati.append(metodo_estratto)
+                candidates.append(metodo_estratto)
         
-        if candidati:
-            # Restituisce il candidato più lungo (euristica per overload principale)
-            return max(candidati, key=len)
+        if candidates:
+            # Return the longest candidate (heuristic for main overload)
+            return max(candidates, key=len)
             
     except Exception:
         pass
     
-    # Fallback con regex (senza JavaDoc) - SOLO SE NON E' RICHIESTA SIGNATURE ESATTA
+    # Fallback with regex (without JavaDoc) - ONLY IF EXACT SIGNATURE IS NOT REQUIRED
     if not signature:
         pattern = rf"(public|private|protected)?\s*(static)?\s*([\w\.<>\[\]]+)\s+({re.escape(nome_metodo)})\s*\([^)]*\)\s*\{{[^{{}}]*(?:\{{[^{{}}]*\}}[^{{}}]*)*\}}"
         match = re.search(pattern, codice, re.MULTILINE | re.DOTALL)
@@ -162,8 +160,8 @@ def estrai_metodo_singolo(codice: str, nome_metodo: str, include_javadoc: bool =
 
 def estrai_metodo_con_javadoc(codice: str, nome_metodo: str, signature: str = None) -> str:
     """
-    Estrae un metodo CON i commenti JavaDoc e le annotazioni.
-    Usato per il display nel report HTML.
+    Extract a method WITH JavaDoc comments and annotations.
+    Used for display in the HTML report.
     """
     return estrai_metodo_singolo(codice, nome_metodo, include_javadoc=True, signature=signature)
 
@@ -288,7 +286,7 @@ def calcola_similarita_token(codice1: str, codice2: str) -> float:
 
 
 def analizza_ast_java(codice: str) -> Dict[str, Any]:
-    """Analizza l'AST del codice Java e restituisce un dizionario con i conteggi degli elementi strutturali."""
+    """Analyze the AST of Java code and return a dictionary with the counts of structural elements."""
 
     elementi = Counter(
         {
@@ -303,7 +301,7 @@ def analizza_ast_java(codice: str) -> Dict[str, Any]:
         }
     )
 
-    # Rimuovi commenti prima di analizzare l'AST per evitare che influenzino il parsing
+    # Remove comments before analyzing the AST to avoid influencing parsing
     codice_pulito = rimuovi_commenti_java(codice)
     codice_da_parsare = codice_pulito.strip()
     if not codice_da_parsare.startswith(
@@ -336,7 +334,7 @@ def analizza_ast_java(codice: str) -> Dict[str, Any]:
 
         return dict(elementi)
     except Exception:
-        # Se il parsing con wrapper fallisce, prova senza wrapper (usa codice pulito)
+        # If parsing with wrapper fails, try without wrapper (use cleaned code)
         try:
             tree = javalang.parse.parse(codice_pulito)
             for path, node in tree:
@@ -356,7 +354,7 @@ def analizza_ast_java(codice: str) -> Dict[str, Any]:
                     elementi["assignments"] += 1
             return dict(elementi)
         except Exception:
-            # Se il parsing fallisce completamente, restituisce un dizionario di default
+            # If parsing fails completely, return a default dictionary
             return {
                 "metodi": 1,
                 "variabili": 0,
@@ -370,7 +368,7 @@ def analizza_ast_java(codice: str) -> Dict[str, Any]:
 
 
 def calcola_similarita_ast(codice1: str, codice2: str) -> float:
-    """Calcola la similarità strutturale AST tra due metodi Java."""
+    """Calculate the structural AST similarity between two Java methods."""
     ast1 = analizza_ast_java(codice1)
     ast2 = analizza_ast_java(codice2)
 
@@ -393,17 +391,17 @@ def calcola_similarita_ast(codice1: str, codice2: str) -> float:
 
 def calcola_complexity_loc(codice: str) -> Dict[str, int]:
     """
-    Calcola Lines of Code (LOC), Source Lines of Code (SLOC) e Complessità Ciclomatica.
+    Calculate Lines of Code (LOC), Source Lines of Code (SLOC) and Cyclomatic Complexity.
     """
     if not codice:
         return {"loc": 0, "sloc": 0, "complexity": 1}
 
-    # Calcolo LOC (totale righe)
+    # Calculate LOC (total lines)
     lines = codice.splitlines() if isinstance(codice, str) else []
     
     loc = len(lines)
     
-    # Calcolo SLOC (esclude righe vuote e commenti single-line banali)
+    # Calculate SLOC (excludes empty lines and trivial single-line comments)
     sloc = 0
     in_block_comment = False
     for line in lines:
@@ -411,7 +409,7 @@ def calcola_complexity_loc(codice: str) -> Dict[str, int]:
         if not line:
             continue
         
-        # Gestione commenti multi-linea semplice
+        # Simple multi-line comment handling
         if "/*" in line and "*/" in line:
             if not line.startswith("/") and not line.startswith("*"):
                  sloc += 1
@@ -419,13 +417,13 @@ def calcola_complexity_loc(codice: str) -> Dict[str, int]:
             
         if "/*" in line:
             in_block_comment = True
-            if not line.startswith("/*"): # Codice prima del commento
+            if not line.startswith("/*"): # Code before comment
                 sloc += 1
             continue
             
         if "*/" in line:
             in_block_comment = False
-            if not line.endswith("*/"): # Codice dopo il commento
+            if not line.endswith("*/"): # Code after comment
                 sloc += 1
             continue
             
@@ -437,13 +435,13 @@ def calcola_complexity_loc(codice: str) -> Dict[str, int]:
             
         sloc += 1
 
-    # Calcolo Complexity
+    # Calculate Complexity
     complexity = 1
     try:
-        # Usa il parser javalang
+        # Use javalang parser
         codice_pulito = rimuovi_commenti_java(codice)
         
-        # Wrapper per parsing se necessario
+        # Wrapper for parsing if necessary
         codice_da_parsare = codice_pulito.strip()
         if not codice_da_parsare.startswith(("package", "import", "class", "public", "protected", "private", "interface", "enum")):
              codice_da_parsare = f"public class TempClassWrapper {{ {codice_da_parsare} }}"
@@ -464,7 +462,7 @@ def calcola_complexity_loc(codice: str) -> Dict[str, int]:
         for root_node in nodes:
             if not root_node: continue
             
-            # Conta decision points
+            # Count decision points
             if hasattr(root_node, 'filter'):
                 for path, node in root_node.filter(javalang.tree.Node):
                     if isinstance(node, (javalang.tree.IfStatement, 
@@ -493,7 +491,7 @@ def calcola_complexity_loc(codice: str) -> Dict[str, int]:
     return {"loc": loc, "sloc": sloc, "complexity": complexity}
 
 def _calcola_complexity_regex(codice: str) -> int:
-    """Fallback approssimativo con regex"""
+    """Approximate fallback with regex"""
     complexity = 1
     # Use raw strings with single backslash for word boundary
     keywords = [r'\bif\b', r'\bfor\b', r'\bwhile\b', r'\bcase\b', r'\bcatch\b', r'\bthrow\b', r'&&', r'\|\|', r'\?']
@@ -504,18 +502,11 @@ def _calcola_complexity_regex(codice: str) -> int:
 
 def calcola_soglia_dinamica(sloc: int, base: float = 0.70) -> float:
     """
-    Calcola la soglia di similarità dinamica basata sulle SLOC del metodo originale.
+    Calculate the dynamic similarity threshold based on the original method's SLOC.
     
-    - Metodi piccoli (< 10 SLOC): soglia più alta (~0.80) - meno variabilità implementativa
-    - Metodi medi (~20 SLOC): soglia base (0.70)
-    - Metodi grandi (> 50 SLOC): soglia più bassa (~0.60) - più variabilità stilistica
-    
-    Args:
-        sloc: Source Lines of Code (esclude commenti e righe vuote)
-        base: Soglia base di partenza (default 0.70)
-    
-    Returns:
-        Soglia di similarità (tra 0.55 e 0.80)
+    - Small methods (< 10 SLOC): higher threshold (~0.80) - less implementation variability
+    - Medium methods (~20 SLOC): base threshold (0.70)
+    - Large methods (> 50 SLOC): lower threshold (~0.60) - more stylistic variability
     """
     import math
 
@@ -533,7 +524,7 @@ _unixcoder_model = None
 
 def _get_unixcoder():
     """
-    Carica UniXcoder solo quando necessario.
+    Load UniXcoder only when needed.
     """
     global _unixcoder_tokenizer, _unixcoder_model
     if _unixcoder_tokenizer is None or _unixcoder_model is None:
@@ -552,17 +543,17 @@ def _get_unixcoder():
 
 def calcola_similarita_embedding(codice1: str, codice2: str) -> float:
     """
-    Calcola la similarità semantica tra due metodi usando embeddings UniXcoder.
+    Calculate the semantic similarity between two methods using UniXcoder embeddings.
     
-    Restituisce cosine similarity tra 0 e 1.
+    Returns cosine similarity between 0 and 1.
     """
     tokenizer, model = _get_unixcoder()
 
     if tokenizer is None or model is None:
         raise RuntimeError(
-            "UniXcoder non disponibile. Installare transformers e torch:\n"
+            "UniXcoder not available. Install transformers and torch:\n"
             "  pip install transformers torch\n"
-            "L'esperimento non può continuare senza embedding similarity."
+            "The experiment cannot continue without embedding similarity."
         )
 
     try:
@@ -571,17 +562,17 @@ def calcola_similarita_embedding(codice1: str, codice2: str) -> float:
 
         def get_embedding(codice):
             """
-            Calcola embedding usando UniXcoder.
-            Usa sliding window per metodi più lunghi di 512 token.
-            Usa il token [CLS] per la rappresentazione del codice.
+            Calculate embedding using UniXcoder.
+            Uses sliding window for methods longer than 512 tokens.
+            Uses the [CLS] token for code representation.
             """
             max_length = 512
             
-            # Tokenizza il codice completo per vedere quanti token ha
+            # Tokenize the complete code to see how many tokens it has
             tokens = tokenizer.encode(codice, add_special_tokens=False)
             
-            # Se il codice è corto, processa normalmente
-            if len(tokens) <= max_length - 2:  # -2 per [CLS] e [SEP]
+            # If the code is short, process normally
+            if len(tokens) <= max_length - 2:  # -2 for [CLS] and [SEP]
                 inputs = tokenizer(
                     codice,
                     return_tensors="pt",
@@ -592,18 +583,18 @@ def calcola_similarita_embedding(codice1: str, codice2: str) -> float:
                 
                 with torch.no_grad():
                     outputs = model(**inputs)
-                    # Usa l'embedding del token [CLS] (primo token)
+                    # Use the [CLS] token embedding (first token)
                     cls_embedding = outputs.last_hidden_state[:, 0, :]
-                    # Normalizza l'embedding
+                    # Normalize the embedding
                     cls_embedding = torch.nn.functional.normalize(cls_embedding, p=2, dim=1)
                     return cls_embedding
             
-            # Se il codice è più lungo, usa sliding window
+            # If the code is longer, use sliding window
             block_embeddings = []
-            stride = (max_length - 2) // 2  # Overlap del 50%
-            max_tokens_per_block = max_length - 2  # Spazio per [CLS] e [SEP]
+            stride = (max_length - 2) // 2  # 50% overlap
+            max_tokens_per_block = max_length - 2  # Space for [CLS] and [SEP]
             
-            # Token speciali
+            # Special tokens
             cls_token_id = tokenizer.cls_token_id if tokenizer.cls_token_id is not None else 0
             sep_token_id = tokenizer.sep_token_id if tokenizer.sep_token_id is not None else 2
             pad_token_id = tokenizer.pad_token_id if tokenizer.pad_token_id is not None else 1
@@ -612,17 +603,17 @@ def calcola_similarita_embedding(codice1: str, codice2: str) -> float:
                 end_idx = min(start_idx + max_tokens_per_block, len(tokens))
                 block_tokens = tokens[start_idx:end_idx]
                 
-                # Aggiungi [CLS] e [SEP]
+                # Add [CLS] and [SEP]
                 input_ids = [cls_token_id] + block_tokens + [sep_token_id]
                 
-                # Padding se necessario
+                # Padding if necessary
                 attention_mask = [1] * len(input_ids)
                 if len(input_ids) < max_length:
                     padding_length = max_length - len(input_ids)
                     input_ids = input_ids + [pad_token_id] * padding_length
                     attention_mask = attention_mask + [0] * padding_length
                 
-                # Converte in tensor
+                # Convert in tensor
                 input_ids_tensor = torch.tensor([input_ids], dtype=torch.long)
                 attention_mask_tensor = torch.tensor([attention_mask], dtype=torch.long)
                 
@@ -631,23 +622,23 @@ def calcola_similarita_embedding(codice1: str, codice2: str) -> float:
                         input_ids=input_ids_tensor,
                         attention_mask=attention_mask_tensor
                     )
-                    # Usa l'embedding del token [CLS]
+                    # Use the [CLS] token embedding
                     cls_embedding = outputs.last_hidden_state[:, 0, :]
                     block_embeddings.append(cls_embedding)
                 
-                # Se abbiamo raggiunto la fine, termina
+                # If we reached the end, terminate
                 if end_idx >= len(tokens):
                     break
             
-            # Media degli embeddings di tutti i blocchi
+            # Average of embeddings of all blocks
             if block_embeddings:
                 stacked = torch.cat(block_embeddings, dim=0)
                 mean_embedding = stacked.mean(dim=0, keepdim=True)
-                # Normalizza l'embedding medio
+                # Normalize the mean embedding
                 mean_embedding = torch.nn.functional.normalize(mean_embedding, p=2, dim=1)
                 return mean_embedding
             else:
-                # Fallback (non dovrebbe mai accadere)
+                # Fallback (should never happen)
                 inputs = tokenizer(
                     codice,
                     return_tensors="pt",
@@ -664,25 +655,25 @@ def calcola_similarita_embedding(codice1: str, codice2: str) -> float:
         emb1 = get_embedding(codice1)
         emb2 = get_embedding(codice2)
 
-        # Calcola cosine similarity
+        # Calculate cosine similarity
         similarity = cosine_similarity(emb1, emb2).item()
         
-        # Con UniXcoder e CLS token, la similarity è più discriminativa.
-        # Assicuriamo range [0, 1]
+        # With UniXcoder and CLS token, similarity is more discriminative.
+        # Ensure range [0, 1]
         similarity = max(0.0, min(1.0, similarity))
         
         return float(similarity)
 
     except ImportError as e:
         raise RuntimeError(
-            f"Dipendenze mancanti per embedding similarity: {e}\n"
-            "Installare: pip install transformers torch\n"
-            "L'esperimento non può continuare senza embedding similarity."
+            f"Missing dependencies for embedding similarity: {e}\n"
+            "Install: pip install transformers torch\n"
+            "The experiment cannot continue without embedding similarity."
         )
     except Exception as e:
         raise RuntimeError(
-            f"Errore nel calcolo di embedding similarity: {e}\n"
-            "L'esperimento non può continuare senza embedding similarity."
+            f"Error calculating embedding similarity: {e}\n"
+            "The experiment cannot continue without embedding similarity."
         ) from e
 
 
@@ -759,7 +750,7 @@ def confronta_metodi(
             "embedding_similarity": 0.35,
         }
 
-    # Normalizza tutti i valori a [0, 1]
+    # Normalize all values to [0, 1]
     for key in [
         "crystalbleu_similarity",
         "string_similarity",
@@ -783,10 +774,10 @@ def _remove_refinement_prompts_from_retry_history(
     retry_history: Optional[List[Dict]], remove_methods: bool = False
 ) -> List[Dict]:
     """
-    Rimuove solo i refinement_prompt e righe_non_coperte dal retry_history prima di salvare nel JSON.
-    MANTIENE TUTTO IL RESTO: metodi originali/rigenerati, metriche di similarità, coverage, test results.
-    Questo permette di tracciare l'intera storia di refinement/repair nel JSON.
-    Rimuove entry duplicate e entry non necessarie (repair se non ci sono errori di compilazione).
+    Remove only refinement_prompt and righe_non_coperte from retry_history before saving to JSON.
+    KEEPS EVERYTHING ELSE: original/regenerated methods, similarity metrics, coverage, test results.
+    This allows tracking the entire refinement/repair history in the JSON.
+    Removes duplicate entries and unnecessary entries (repair if no compilation errors).
     """
     if not retry_history:
         return []
@@ -797,7 +788,7 @@ def _remove_refinement_prompts_from_retry_history(
     for retry in retry_history:
         retry_type = retry.get("type", "unknown")
 
-        # Rimuovi entry duplicate (stesso tipo e stessi risultati)
+        # Remove duplicate entries (same type and same results)
         is_duplicate = False
         for existing in cleaned_history:
             if (
@@ -814,7 +805,7 @@ def _remove_refinement_prompts_from_retry_history(
         if is_duplicate:
             continue
 
-        # Traccia se ci sono stati repair/refinement
+        # Track if repairs/refinements have occurred
         if retry_type == "repair":
             seen_types["repair"] = True
         elif retry_type == "refinement":
@@ -862,7 +853,7 @@ def salva_metriche_esperimento(
     retry_history: list = None,
     soglia_coverage: float = None,
     test_file_path: str = None,
-    metodo_originale_con_javadoc: str = None,  # Per il display nel report (con commenti)
+    metodo_originale_con_javadoc: str = None,
     usa_soglia_dinamica: bool = True,
 ) -> None:
     metriche = {}
@@ -873,10 +864,10 @@ def salva_metriche_esperimento(
         )
         passa_soglia = metriche.get("overall_similarity", 0) >= soglia_similarita
 
-    # Crea la directory se necessario
+    # Create the directory if needed
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
-    # Carica dati esistenti se il file esiste già (per aggiungere versioni invece di sovrascrivere)
+    # Load existing data if the file already exists (to add versions instead of overwriting)
     dati_esistenti = {}
     if os.path.exists(output_path):
         try:
@@ -885,7 +876,7 @@ def salva_metriche_esperimento(
         except:
             dati_esistenti = {}
 
-    # Inizializza struttura se non esiste
+    # Initialize structure if it doesn't exist
     if "experiments" not in dati_esistenti:
         dati_esistenti["experiments"] = {}
 
@@ -916,19 +907,19 @@ def salva_metriche_esperimento(
         )
         if retry_history
         else [],
-        # Salva i metodi per il report HTML (originale con JavaDoc, rigenerato senza)
+        # Save methods for HTML report (original with JavaDoc, regenerated without)
         "original_method_display": metodo_originale_con_javadoc or metodo_originale,
         "regenerated_method_display": metodo_rigenerato,
     }
     
-    # Aggiungi informazioni sui token usati (solo per Ollama Cloud)
+    # Add token usage information (only for Ollama Cloud)
     token_info = get_token_info_for_report()
     if token_info:
         esperimento_data["token_usage"] = token_info
-        # Reset token info dopo averla salvata
+        # Reset token info after saving
         reset_token_info()
     
-    # Calcola metriche di naturalezza per i test finali
+    # Calculate naturalness metrics for final tests
     if test_file_path and os.path.exists(test_file_path):
         try:
             with open(test_file_path, "r", encoding="utf-8") as f:
@@ -949,7 +940,7 @@ def salva_metriche_esperimento(
         "usa_soglia_dinamica": usa_soglia_dinamica,
     }
 
-    # Aggiungi informazioni YAML se disponibili
+    # Add YAML information if available
     if descrizione_esperimento:
         info_generale["description"] = descrizione_esperimento
     if provider_nome:
@@ -989,7 +980,7 @@ def aggiorna_metriche_esperimento(
     soglia_coverage: float = None,
     model_name: str = None,
     test_file_path: str = None,
-    metodo_originale_con_javadoc: str = None,  # Per il display nel report (con commenti)
+    metodo_originale_con_javadoc: str = None,
     usa_soglia_dinamica: bool = True,
 ) -> None:
     metriche = {}
@@ -1039,19 +1030,19 @@ def aggiorna_metriche_esperimento(
         )
         if retry_history
         else [],
-        # Salva i metodi per il report HTML (originale con JavaDoc, rigenerato senza)
+        # Save methods for HTML report (original with JavaDoc, regenerated without)
         "original_method_display": metodo_originale_con_javadoc or metodo_originale,
         "regenerated_method_display": metodo_rigenerato,
     }
     
-    # Aggiungi informazioni sui token usati (solo per Ollama Cloud)
+    # Add token usage information (only for Ollama Cloud)
     token_info = get_token_info_for_report()
     if token_info:
         esperimento_data["token_usage"] = token_info
-        # Reset token info dopo averla salvata
+        # Reset token info after saving
         reset_token_info()
 
-    # Calcola metriche di naturalezza per i test finali
+    # Calculate naturalness metrics for final tests
     naturalezza = None
     if test_file_path and os.path.exists(test_file_path):
         try:
@@ -1080,28 +1071,28 @@ def aggiorna_metriche_esperimento(
                 "original_metrics": calcola_complexity_loc(metodo_originale),
             }
         )
-        # Aggiorna test_results se forniti
+        # Update test_results if provided
         if test_results_info:
             if "test_results" not in esperimento_existente:
                 esperimento_existente["test_results"] = {}
             esperimento_existente["test_results"].update(test_results_info)
-        # Aggiorna retry_history se fornito (senza refinement_prompt e senza metodi)
+        # Update retry_history if provided (without refinement_prompt and without methods)
         if retry_history is not None:
             esperimento_existente["retry_history"] = (
                 _remove_refinement_prompts_from_retry_history(
                     retry_history, remove_methods=False
                 )
             )
-        # Aggiorna token_usage se disponibile (solo per Ollama Cloud)
+        # Update token_usage if available (only for Ollama Cloud)
         if token_info:
             esperimento_existente["token_usage"] = token_info
-        # Aggiorna naturalezza se calcolata
+        # Update naturalness if calculated
         if naturalezza:
             esperimento_existente["test_naturalness"] = naturalezza
     else:
         dati_esistenti["experiments"][f"version_{versione}"] = esperimento_data
 
-    # Aggiorna info generale mantenendo i valori esistenti
+    # Update general info maintaining existing values
     if "general_info" not in dati_esistenti:
         dati_esistenti["general_info"] = {}
 
@@ -1115,7 +1106,7 @@ def aggiorna_metriche_esperimento(
         }
     )
 
-    # Aggiungi soglia_coverage se specificata
+    # Add soglia_coverage if specified
     if soglia_coverage is not None and soglia_coverage > 0:
         info_generale["soglia_coverage"] = soglia_coverage
     
@@ -1152,12 +1143,12 @@ def salva_metriche_solo_originale(
     """Salva le metriche quando viene eseguita solo la prima fase"""
     from utils.reporting.report_generator import genera_report_html
 
-    # Crea cartella per esperimento se specificato
-    # Sanitizza model_name se presente
+    # Create folder for experiment if specified
+    # Sanitize model_name if present
     if model_name:
         model_name = model_name.replace(":", "_").replace("/", "_").replace("\\", "_")
 
-    # Crea cartella per esperimento se specificato
+    # Create folder for experiment if specified
     if nome_esperimento:
         if model_name:
             metrics_dir = os.path.join(output_dir, "metrics", nome_esperimento, model_name)
@@ -1174,7 +1165,7 @@ def salva_metriche_solo_originale(
         f"Experiment_{nome_classe_solo}_{metodo_da_testare}_{provider_nome}.json",
     )
 
-    # Estrai test_info con tutti i campi necessari
+    # Extract test_info with all necessary fields
     test_info_orig = test_results_originale.get(
         "test_info", {"valid_tests": [], "invalid_tests": [], "failed_assert_tests": [], "runtime_error_tests": []}
     )
@@ -1191,7 +1182,7 @@ def salva_metriche_solo_originale(
             "has_compilation_errors": test_results_originale.get(
                 "has_compilation_errors", False
             ),
-            # error_test_names rimosso - usare solo test_info
+            # error_test_names removed - use only test_info
             "test_info": {
                 "valid_tests": test_info_orig.get("valid_tests", []),
                 "invalid_tests": test_info_orig.get("invalid_tests", []),
@@ -1253,14 +1244,14 @@ def gestisci_errori_sintassi(
     model_name: str = None,
     usa_soglia_dinamica: bool = True,
 ) -> bool:
-    """Gestisce gli errori critici (sintassi/import o nessun test passato) e salva le metriche"""
+    """Handles critical errors (syntax/import or no tests passed) and saves metrics"""
     from utils.reporting.report_generator import genera_report_html
 
     tests_total = test_results.get("tests_total", 0)
     tests_passed = test_results.get("tests_passed", 0)
     has_compilation_errors = test_results.get("has_compilation_errors", False)
 
-    # Determina il motivo del fallimento
+    # Determine the reason for failure
     if has_compilation_errors or (tests_total == 0 and tests_passed == 0):
         failure_reason = "Syntax/import errors - no tests executed"
         error_message = (
@@ -1287,19 +1278,19 @@ def gestisci_errori_sintassi(
             "line_coverage": test_results.get("line_coverage", 0.0),
             "branch_coverage": test_results.get("branch_coverage", 0.0),
             "has_compilation_errors": test_results.get("has_compilation_errors", False),
-            # error_test_names rimosso - usare solo test_info
+            # error_test_names removed - use only test_info
             "test_info": test_results.get(
                 "test_info", {"valid_tests": [], "invalid_tests": []}
             ),
         }
     }
 
-    # Crea cartella per esperimento se specificato
-    # Sanitizza model_name se presente
+    # Create folder for experiment if specified
+    # Sanitize model_name if present
     if model_name:
         model_name = model_name.replace(":", "_").replace("/", "_").replace("\\", "_")
 
-    # Crea cartella per esperimento se specificato
+    # Create folder for experiment if specified
     if nome_esperimento:
         if model_name:
             metrics_dir = os.path.join(output_dir, "metrics", nome_esperimento, model_name)

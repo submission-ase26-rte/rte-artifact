@@ -7,11 +7,11 @@ from utils.text.text_utils import estrai_codice_java, estrai_solo_metodo
 
 def genera_huggingface(prompt: str, model_name: str, max_retries: int = 10, max_429_retries: int = 10) -> str:
     """
-    Genera testo usando il modello Hugging Face (chat o text).
-    Include retry logic per gestire risposte None o errori temporanei.
+    Generates text using the Hugging Face model (chat or text).
+    Includes retry logic to handle None responses or temporary errors.
     
-    Per errori 429 (rate limit), attende con backoff esponenziale fino a max_429_retries.
-    I retry per 429 sono SEPARATI dai retry per altri errori.
+    For 429 errors (rate limit), waits with exponential backoff up to max_429_retries.
+    429 retries are SEPARATE from other errors.
     """
     token = get_huggingface_token()
     if not token:
@@ -32,10 +32,10 @@ def genera_huggingface(prompt: str, model_name: str, max_retries: int = 10, max_
     while attempt < max_retries:
         attempt += 1
         
-        # Loop interno per gestire 429/502/503 senza consumare attempt
+        # Inner loop to handle 429/502/503 without consuming attempt
         while True:
             try:
-                # Prima prova API chat
+                # First try chat API
                 content = None
                 try:
                     response = client.chat.completions.create(
@@ -44,34 +44,34 @@ def genera_huggingface(prompt: str, model_name: str, max_retries: int = 10, max_
                     )
                     content = response.choices[0].message["content"]
                 except Exception:
-                    # Fallback: modelli text-only
+                    # Fallback: text-only models
                     output = client.text_generation(prompt, max_new_tokens=8192)
                     content = output
 
                 if content is not None and content.strip() != "":
-                    # --- VALIDAZIONE SINTASSI ---
+                    # --- SYNTAX VALIDATION ---
                     codice_estratto = estrai_codice_java(content)
                     try:
-                        # Prova prima come classe Java completa
+                        # Try first as a complete Java class
                         if codice_estratto and codice_estratto.strip():
                             try:
                                 javalang.parse.parse(codice_estratto)
                             except javalang.parser.JavaSyntaxError:
-                                # Se fallisce come classe, prova come metodo singolo
+                                # If it fails as a class, try as a single method
                                 dummy_class = f"public class Dummy {{ {codice_estratto} }}"
                                 try:
                                     javalang.parse.parse(dummy_class)
                                 except (javalang.parser.JavaSyntaxError, LexerError):
-                                    # Se fallisce ancora, prova a estrarre solo il metodo
+                                    # If it fails again, try to extract only the method
                                     codice_metodo = estrai_solo_metodo(codice_estratto)
                                     if codice_metodo and codice_metodo != codice_estratto:
                                         dummy_class = f"public class Dummy {{ {codice_metodo} }}"
                                         javalang.parse.parse(dummy_class)
                                         print(f"   INFO: Extracted only method (imports removed) - validation OK")
                                     else:
-                                        raise  # Rilancia l'errore originale
+                                        raise  # Raise original error
                         else:
-                            # Codice estratto vuoto
+                            # Empty extracted code
                             print(f"   WARNING: No Java code block found in response")
                             print(f"   DEBUG: First 200 chars of response: {content[:200] if content else 'None'}...")
                             last_error = "No Java code block found in response"
@@ -84,7 +84,7 @@ def genera_huggingface(prompt: str, model_name: str, max_retries: int = 10, max_
                             prime_righe = '\n'.join(codice_estratto.split('\n')[:5])
                             print(f"   DEBUG: First 5 lines of code: {prime_righe}")
                         last_error = f"Invalid Java syntax: {error_msg}"
-                        break  # Esci dal loop 429, incrementa attempt
+                        break  # Exit 429 loop, increment attempt
                 else:
                     print(f"   WARNING: Empty or None response (attempt {attempt}/{max_retries}) - tokens NOT counted")
                     last_error = "Empty response"
@@ -94,7 +94,7 @@ def genera_huggingface(prompt: str, model_name: str, max_retries: int = 10, max_
                 error_str = str(e)
                 status_code = getattr(e, 'status_code', None)
                 
-                # === GESTIONE ERRORI TEMPORANEI (429 Rate Limit, 502 Bad Gateway, 503 Service Unavailable) ===
+                # === TEMPORARY ERROR HANDLING (429 Rate Limit, 502 Bad Gateway, 503 Service Unavailable) ===
                 is_rate_limit = (status_code in [429, 502, 503] or 
                                 "429" in error_str or "rate limit" in error_str.lower() or
                                 "502" in error_str or "503" in error_str or
@@ -108,29 +108,29 @@ def genera_huggingface(prompt: str, model_name: str, max_retries: int = 10, max_
                     
                     if retry_429_count <= max_429_retries:
                         wait_time = min(base_wait_429 * (2 ** (retry_429_count - 1)), 300)
-                        print(f"⏳ {error_name} (attempt {retry_429_count}/{max_429_retries}). Waiting {wait_time}s...")
+                        print(f"{error_name} (attempt {retry_429_count}/{max_429_retries}). Waiting {wait_time}s...")
                         time.sleep(wait_time)
                         print(f"   Waiting finished, retrying call...")
-                        continue  # Ritenta SENZA incrementare attempt
+                        continue  # Retry WITHOUT incrementing attempt
                     else:
-                        print(f"✗ {error_name}: reached max retry ({max_429_retries}). Aborting.")
+                        print(f"{error_name}: reached max retry ({max_429_retries}). Aborting.")
                         return None
                 
                 elif "timeout" in error_str.lower():
-                    print(f"✗ Timeout during Hugging Face call (attempt {attempt}/{max_retries})")
+                    print(f"Timeout during Hugging Face call (attempt {attempt}/{max_retries})")
                     last_error = "Timeout"
-                    break  # Esci dal loop 429, incrementa attempt
+                    break  # Exit 429 loop, increment attempt
                     
                 else:
-                    print(f"✗ Error during Hugging Face call: {e}")
+                    print(f"Error during Hugging Face call: {e}")
                     import traceback
                     traceback.print_exc()
                     last_error = str(e)
-                    return None  # Non ritentare per errori non-temporanei
+                    return None  # Do not retry for non-temporary errors
         
-        # Pausa tra tentativi (fuori dal loop 429)
+        # Pause between attempts (outside 429 loop)
         if attempt < max_retries:
             time.sleep(2)
     
-    print(f"✗ All attempts failed. Last error: {last_error}")
+    print(f"All attempts failed. Last error: {last_error}")
     return None

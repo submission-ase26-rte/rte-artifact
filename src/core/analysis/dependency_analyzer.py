@@ -394,21 +394,21 @@ class JavaDependencyAnalyzer:
                         if type_name not in excluded_types:
                             types_used.add(type_name)
                 
-                # Estrae tipi da creazione oggetti (new Classe())
+                # Extracts types from object creation (new Classe())
                 if isinstance(node, javalang.tree.ClassCreator):
                     if hasattr(node, 'type') and hasattr(node.type, 'name'):
                         type_name = node.type.name.split('<')[0].split('[')[0]
                         if type_name not in excluded_types:
                             types_used.add(type_name)
                 
-                # Estrae tipi da cast
+                # Extracts types from cast
                 if isinstance(node, javalang.tree.Cast):
                     if hasattr(node, 'type') and hasattr(node.type, 'name'):
                         type_name = node.type.name.split('<')[0].split('[')[0]
                         if type_name not in excluded_types:
                             types_used.add(type_name)
                 
-                # Estrae tipi da instanceof
+                # Extracts types from instanceof
                 if isinstance(node, javalang.tree.BinaryOperation):
                     if hasattr(node, 'operator') and node.operator == 'instanceof':
                         if hasattr(node, 'operandr') and hasattr(node.operandr, 'name'):
@@ -416,7 +416,7 @@ class JavaDependencyAnalyzer:
                             if type_name not in excluded_types:
                                 types_used.add(type_name)
                 
-                # Estrae tipi da throws
+                # Extracts types from throws
                 if isinstance(node, javalang.tree.MethodDeclaration):
                     if hasattr(node, 'throws') and node.throws:
                         for throw_type in node.throws:
@@ -428,7 +428,7 @@ class JavaDependencyAnalyzer:
                                 if throw_type not in excluded_types:
                                     types_used.add(throw_type)
                 
-                # Estrae tipi da extends/implements
+                # Extracts types from extends/implements
                 if isinstance(node, javalang.tree.ClassDeclaration):
                     if hasattr(node, 'extends') and node.extends:
                         if hasattr(node.extends, 'name'):
@@ -485,19 +485,19 @@ class JavaDependencyAnalyzer:
     def _find_same_package_dependencies(self, target_code: str, target_class_name: str, 
                                          same_package_classes: Dict[str, str]) -> Dict[str, str]:
         """
-        Identifica quali classi dello stesso package sono effettivamente usate nel codice target.
-        Restituisce {nome_classe: codice_classe} per le dipendenze dello stesso package.
+        Identifies which classes in the same package are actually used in the target code.
+        Returns {class_name: class_code} for same-package dependencies.
         """
         dependencies = {}
         
         if not same_package_classes:
             return dependencies
         
-        # Estrae tutti i tipi usati nel codice
+        # Extracts all types used in the code
         types_used = self._extract_types_used_in_code(target_code)
         logger.debug(f"Types used in code: {types_used}")
         
-        # Controlla quali tipi corrispondono a classi dello stesso package
+        # Checks which types correspond to classes in the same package
         for class_name, file_path in same_package_classes.items():
             if class_name == target_class_name:
                 continue
@@ -512,20 +512,20 @@ class JavaDependencyAnalyzer:
     
     def create_test_context(self, target_class_path: str, max_dependencies: int = 10) -> Tuple[str, Dict[str, str]]:
         """
-        Crea un contesto completo per la generation di test, includendo
-        la classe target e le sue dipendenze principali.
+        Creates a complete context for test generation, including
+        the target class and its main dependencies.
         """
         dependencies = self.analyze_class_dependencies(target_class_path)
         
-        # Limita il numero di dipendenze per evitare prompt troppo lunghi
+        # Limit the number of dependencies to avoid overly long prompts
         if len(dependencies) > max_dependencies:
             logger.warning(f"Too many dependencies ({len(dependencies)}), limiting to {max_dependencies}")
-            # Mantiene la classe target e le prime dipendenze
+            # Keeps the target class and the first dependencies
             limited_deps = dict(list(dependencies.items())[:max_dependencies])
         else:
             limited_deps = dependencies
         
-        # Crea il contesto per il prompt
+        # Creates the context for the prompt
         context_parts = []
         for class_name, code in limited_deps.items():
             context_parts.append(f"// === Class: {class_name} ===\n{code}\n")
@@ -542,12 +542,12 @@ class JavaDependencyAnalyzer:
         dependencies: Dict[str, str]
     ) -> Dict[str, str]:
         """
-        Estrae solo i metodi effettivamente usati dal metodo originale dalle classi dipendenti.
-        Invece di passare l'intera classe, passa solo i metodi chiamati.
+        Extracts only the methods actually used by the original method from the dependent classes.
+        Instead of passing the entire class, pass only the called methods.
         """
         logger.info(f"Extracting methods used from method {nome_metodo}")
         
-        # Estrae il metodo originale
+        # Extracts the original method
         target_code = leggi_file(target_class_path)
         if not target_code:
             logger.error(f"Unable to read {target_class_path}")
@@ -561,16 +561,16 @@ class JavaDependencyAnalyzer:
         logger.debug(f"Original method extracted (first 200 characters): {metodo_originale[:200]}...")
         logger.info(f"Available dependencies: {list(dependencies.keys())}")
         
-        # Estrae anche i campi della classe per identificare le dipendenze
+        # Extracts class fields to identify dependencies
         campi_classe = self._estrai_campi_classe(target_code)
         logger.debug(f"Class fields: {campi_classe}")
         
-        # Analizza il metodo per trovare le chiamate a metodi (inclusi campi e parametri)
+        # Analyzes the method to find method calls (including fields and parameters)
         metodi_chiamati_per_classe = self._analizza_chiamate_metodi(metodo_originale, dependencies, campi_classe)
         logger.info(f"Methods called per class: {metodi_chiamati_per_classe}")
         
-        # Estrae solo i metodi usati da ogni classe, insieme a fields e costruttori
-        # Restituisce un dizionario con struttura: {class_name: {'nome_classe': str, 'fields': List[str], 'costruttori': List[str], 'metodi': List[str]}}
+        # Extracts only the methods used by each class, along with fields and constructors
+        # Returns a dictionary with structure: {class_name: {'nome_classe': str, 'fields': List[str], 'costruttori': List[str], 'metodi': List[str]}}
         metodi_estratti = {}
         for class_name, metodi_chiamati in metodi_chiamati_per_classe.items():
             if class_name in dependencies:
@@ -583,22 +583,22 @@ class JavaDependencyAnalyzer:
                         metodi_codice.append(metodo_codice)
                 
                 if metodi_codice:
-                    # Estrae nome classe
+                    # Extracts class name
                     nome_classe_estratto = self.extract_class_name(codice_classe) or class_name
                     
-                    # Estrae fields e costruttori della classe esterna (parsing AST una sola volta)
+                    # Extracts fields and constructors of the external class (AST parsing once)
                     campi_codice = []
                     costruttori_codice = []
                     try:
                         tree = javalang.parse.parse(codice_classe)
                         lines = codice_classe.split('\n')
                         for path, node in tree:
-                            # Estrae fields
+                            # Extracts fields
                             if isinstance(node, javalang.tree.FieldDeclaration):
                                 if hasattr(node, 'position') and node.position:
                                     start_line = node.position.line - 1
                                     end_line = start_line
-                                    # Trova la fine della dichiarazione (fino al ;)
+                                    # Finds the end of the declaration (up to ;)
                                     for i in range(start_line, len(lines)):
                                         if ';' in lines[i]:
                                             end_line = i
@@ -606,7 +606,7 @@ class JavaDependencyAnalyzer:
                                     campo_codice = '\n'.join(lines[start_line:end_line + 1])
                                     campi_codice.append(campo_codice)
                             
-                            # Estrae costruttori (completi con implementazione)
+                            # Extracts constructors (complete with implementation)
                             elif isinstance(node, javalang.tree.ConstructorDeclaration):
                                 if hasattr(node, 'position') and node.position:
                                     start_line = node.position.line - 1
@@ -627,14 +627,14 @@ class JavaDependencyAnalyzer:
                                     costruttori_codice.append(costruttore_completo)
                     except Exception as e:
                         logger.warning(f"Error extracting fields/constructors class {class_name}: {e}")
-                        # Fallback per costruttori: usa solo le signature
+                        # Fallback for constructors: use only signatures
                         costruttori_signature = self._estrai_costruttori(codice_classe)
                         for costruttore_signature in costruttori_signature:
-                            # Rimuove il ; finale e aggiunge corpo vuoto
+                            # Removes trailing ; and adds empty body
                             signature_clean = costruttore_signature.rstrip(';').strip()
                             costruttori_codice.append(f"{signature_clean} {{}}")
                     
-                    # Salva in struttura separata per formattazione migliore nel prompt
+                    # Saves in separate structure for better prompt formatting
                     metodi_estratti[class_name] = {
                         'nome_classe': nome_classe_estratto,
                         'fields': campi_codice,
@@ -680,19 +680,19 @@ class JavaDependencyAnalyzer:
             tree = javalang.parse.parse(codice_classe)
             for path, node in tree:
                 if isinstance(node, javalang.tree.MethodDeclaration) and node.name == nome_metodo:
-                    # Costruisce la signature dai componenti del nodo
+                    # Builds signature from node components
                     modifiers = " ".join(node.modifiers) if hasattr(node, 'modifiers') and node.modifiers else ""
                     return_type = node.return_type.name if hasattr(node, 'return_type') and node.return_type else "void"
                     params_list = []
                     if hasattr(node, 'parameters'):
                         for p in node.parameters:
                             if hasattr(p, 'type') and hasattr(p, 'name'):
-                                # Gestisci modifiers (es. final)
+                                # Handles modifiers (e.g., final)
                                 p_modifiers = ""
                                 if hasattr(p, 'modifiers') and 'final' in p.modifiers:
                                      p_modifiers = "final "
                                 
-                                # Gestisci tipo (base logic, generics complessi omessi per ora ma array gestiti)
+                                # Handles type (base logic, complex generics omitted for now but arrays handled)
                                 p_type = p.type.name
                                 if hasattr(p.type, 'dimensions') and p.type.dimensions:
                                     p_type += '[]' * len(p.type.dimensions)
@@ -707,7 +707,7 @@ class JavaDependencyAnalyzer:
                     return signature + ";"
         except Exception as e:
             logger.warning(f"Error extracting method signature {nome_metodo}: {e}")
-            # Fallback: cerca la signature nel codice
+            # Fallback: search for signature in code
             try:
                 pattern = rf'(public|private|protected)?\s*(static)?\s*(\w+)\s+({re.escape(nome_metodo)})\s*\([^)]*\)'
                 match = re.search(pattern, codice_classe, re.MULTILINE)
@@ -719,10 +719,10 @@ class JavaDependencyAnalyzer:
     
     def _estrai_getter_pubblici(self, codice_classe: str) -> List[str]:
         """
-        Estrae le signature di tutti i metodi getter pubblici di una classe.
-        Include: get*, is*, has*, size(), isEmpty(), length(), iterator(), toArray(), etc.
+        Extracts signatures of all public getter methods in a class.
+        Includes: get*, is*, has*, size(), isEmpty(), length(), iterator(), toArray(), etc.
         
-        Utile per fornire all'LLM i metodi disponibili per le asserzioni nei test.
+        Useful for providing the LLM with available methods for test assertions.
         """
         getter_signatures = []
         getter_patterns = ['get', 'is', 'has', 'can', 'should', 'will', 'was', 'to', 'as']
@@ -734,7 +734,7 @@ class JavaDependencyAnalyzer:
             tree = javalang.parse.parse(codice_classe)
             for path, node in tree:
                 if isinstance(node, javalang.tree.MethodDeclaration):
-                    # Verifica che sia pubblico
+                    # Checks if it's public
                     modifiers = set(node.modifiers) if hasattr(node, 'modifiers') and node.modifiers else set()
                     if 'public' not in modifiers:
                         continue
@@ -745,7 +745,7 @@ class JavaDependencyAnalyzer:
                     # Check if it's a getter pattern (getX, isX, etc.)
                     for pattern in getter_patterns:
                         if method_name.startswith(pattern) and len(method_name) > len(pattern):
-                            # Il carattere dopo il pattern deve essere maiuscolo (getOptions, non getoptions)
+                            # Character after pattern must be uppercase (getOptions, not getoptions)
                             if method_name[len(pattern)].isupper():
                                 is_getter = True
                                 break
@@ -755,7 +755,7 @@ class JavaDependencyAnalyzer:
                         is_getter = True
                     
                     if is_getter:
-                        # Costruisci la signature
+                        # Build signature
                         return_type = "void"
                         if hasattr(node, 'return_type') and node.return_type:
                             return_type = node.return_type.name
@@ -768,7 +768,7 @@ class JavaDependencyAnalyzer:
                                 if args:
                                     return_type += f"<{', '.join(args)}>"
                         
-                        # Parametri
+                        # Parameters
                         params_list = []
                         if hasattr(node, 'parameters') and node.parameters:
                             for p in node.parameters:
@@ -836,7 +836,7 @@ class JavaDependencyAnalyzer:
     
     def _estrai_campi_classe_con_visibilita(self, codice_classe: str) -> Dict[str, Dict[str, str]]:
         """
-        Estrae i campi della classe con informazioni complete.
+        Extracts class fields with complete information.
         Returns: {nome_campo: {'tipo': str, 'visibilita': str, 'static': bool, 'final': bool}}
         """
         campi = {}
@@ -881,13 +881,13 @@ class JavaDependencyAnalyzer:
     def _estrai_import_mapping(self, codice_classe: str) -> Dict[str, str]:
         """
         Extracts a mapping {simple_class_name: fully_qualified_name} for all imports.
-        Utile per fornire all'LLM i percorsi corretti delle classi.
+        Useful for providing the LLM with correct class paths.
         
-        Risolve anche i wildcard imports (es. import com.example.*) cercando
-        tutti i file Java nella directory corrispondente del progetto.
+        Also resolves wildcard imports (e.g., import com.example.*) by searching
+        all Java files in the corresponding project directory.
         """
         import_mapping = {}
-        wildcard_packages = []  # Lista di package con wildcard da risolvere
+        wildcard_packages = []  # List of packages with wildcard to resolve
         
         try:
             lines = codice_classe.split('\n')
@@ -899,8 +899,8 @@ class JavaDependencyAnalyzer:
                     if '.' in fqn:
                         simple_name = fqn.split('.')[-1]
                         if simple_name == '*':
-                            # Wildcard import - salva il package per risoluzione successiva
-                            package_path = fqn[:-2]  # Rimuove ".*"
+                            # Wildcard import - save package for later resolution
+                            package_path = fqn[:-2]  # Remove ".*"
                             wildcard_packages.append(package_path)
                         else:
                             import_mapping[simple_name] = fqn
@@ -909,12 +909,12 @@ class JavaDependencyAnalyzer:
                     # Stop when class definition starts
                     break
             
-            # Risolvi wildcard imports cercando nel progetto
+            # Resolve wildcard imports by searching in the project
             if wildcard_packages and self.project_root:
                 for package in wildcard_packages:
                     resolved_classes = self._resolve_wildcard_import(package)
                     for simple_name, fqn in resolved_classes.items():
-                        # Non sovrascrivere import espliciti
+                        # Don't overwrite explicit imports
                         if simple_name not in import_mapping:
                             import_mapping[simple_name] = fqn
                             
@@ -924,14 +924,14 @@ class JavaDependencyAnalyzer:
     
     def _resolve_wildcard_import(self, package: str) -> Dict[str, str]:
         """
-        Risolve un wildcard import cercando tutte le classi Java nel package specificato.
+        Resolves a wildcard import by searching for all Java classes in the specified package.
         """
         resolved = {}
         try:
-            # Converti package in path relativo (com.example -> com/example)
+            # Convert package to relative path (com.example -> com/example)
             package_path = package.replace('.', os.sep)
             
-            # Cerca la directory del package in vari possibili percorsi src
+            # Search for package directory in various possible src paths
             possible_src_dirs = ['src/main/java', 'src', 'java', '']
             
             for src_dir in possible_src_dirs:
@@ -941,12 +941,12 @@ class JavaDependencyAnalyzer:
                     full_package_dir = os.path.join(self.project_root, package_path)
                 
                 if os.path.isdir(full_package_dir):
-                    # Trovato! Lista tutti i file .java nella directory
+                    # Found! List all .java files in the directory
                     for filename in os.listdir(full_package_dir):
                         if filename.endswith('.java'):
-                            # Estrai nome classe (rimuovi .java)
+                            # Extract class name (remove .java)
                             class_name = filename[:-5]
-                            # Costruisci FQN
+                            # Build FQN
                             fqn = f"{package}.{class_name}"
                             resolved[class_name] = fqn
                     
@@ -960,7 +960,7 @@ class JavaDependencyAnalyzer:
         return resolved
 
     def _estrai_parametri_metodo(self, codice_metodo: str) -> Dict[str, str]:
-        """Estrae i parametri del metodo {nome_parametro: tipo}."""
+        """Extracts method parameters {parameter_name: type}."""
         parametri = {}
         try:
             codice_wrapped = f"class Temp {{\n{codice_metodo}\n}}"
@@ -979,9 +979,9 @@ class JavaDependencyAnalyzer:
     
     def _analizza_chiamate_metodi(self, codice_metodo: str, dependencies: Dict[str, str], campi_classe: Dict[str, str] = None, nome_classe_target: str = None) -> Dict[str, Set[str]]:
         """
-        Analizza il codice del metodo per trovare le chiamate a metodi su oggetti di classi dipendenti.
-        Restituisce {nome_classe: {nomi_metodi_chiamati}}
-        Include anche metodi interni chiamati direttamente (metodo() o this.metodo()).
+        Analyzes method code to find method calls on objects of dependent classes.
+        Returns {class_name: {called_method_names}}
+        Also includes internal methods called directly (method() or this.method()).
         """
         metodi_per_classe = {}
         
@@ -991,67 +991,67 @@ class JavaDependencyAnalyzer:
         if campi_classe is None:
             campi_classe = {}
         
-        # Estrae parametri del metodo
+        # Extracts method parameters
         parametri_metodo = self._estrai_parametri_metodo(codice_metodo)
         
-        # Crea mappa case-insensitive dei nomi delle classi nelle dipendenze
+        # Creates case-insensitive map of class names in dependencies
         class_names_lower = {name.lower(): name for name in dependencies.keys()}
         
-        # Identifica metodi interni chiamati direttamente (metodo() o this.metodo())
+        # Identifies internal methods called directly (method() or this.method())
         if nome_classe_target:
-            # Pattern per chiamate dirette: metodo() o this.metodo()
-            # Esclude parole chiave Java e metodi comuni
+            # Patterns for direct calls: method() or this.method()
+            # Excludes Java keywords and common methods
             java_keywords = {'if', 'for', 'while', 'switch', 'catch', 'try', 'new', 'return', 'throw', 'assert', 'synchronized'}
             common_methods = {'toString', 'equals', 'hashCode', 'getClass', 'notify', 'notifyAll', 'wait', 'print', 'println'}
             
-            # Pattern per identificare chiamate dirette a metodi (non su oggetti)
-            # Cerca: metodo( oppure this.metodo(
-            # Usa negative lookbehind per escludere chiamate con punto prima (es. obj.metodo)
+            # Pattern for direct method calls (not on objects)
+            # Searches for: method( or this.method(
+            # Uses negative lookbehind to exclude calls with a preceding dot (e.g., obj.method)
             pattern_direct = r'(?<!\.)\b(?:this\.)?(\w+)\s*\('
             matches_direct = re.finditer(pattern_direct, codice_metodo)
             
             for match in matches_direct:
                 method_name = match.group(1)
                 
-                # Salta parole chiave Java e metodi comuni
+                # Skip Java keywords and common methods
                 if method_name in java_keywords or method_name in common_methods:
                     continue
                 
                 start_pos = match.start()
                 
-                # Verifica che non sia una dichiarazione di variabile o altro
-                # Cerca pattern tipo: Tipo metodo( che indicherebbe una dichiarazione
+                # Check that it's not a variable declaration or something else
+                # Search for pattern: Type method( which would indicate a declaration
                 before_match = codice_metodo[max(0, start_pos - 50):start_pos]
                 if re.search(r'\b(public|private|protected|static|final|abstract|synchronized|native|strictfp)\s+(\w+\s+)*' + re.escape(method_name) + r'\s*\(', before_match):
-                    continue  # Probabilmente una dichiarazione di metodo
+                    continue  # Probably a method declaration
                 
-                # Aggiunge come metodo interno della classe target
+                # Adds as internal method of the target class
                 metodi_per_classe.setdefault(nome_classe_target, set()).add(method_name)
                 logger.debug(f"Found direct internal method call: {method_name}() -> {nome_classe_target}")
         
-        # Pattern regex per trovare chiamate a metodi: variabile.metodo() o this.variabile.metodo()
+        # Pattern regex to find method calls: variable.method() or this.variable.method()
         pattern = r'(?:this\.)?(\w+)\.(\w+)\s*\('
         matches = re.finditer(pattern, codice_metodo)
 
-        # Pattern per method references: this::method o ClassName::method o var::method
+        # Pattern for method references: this::method or ClassName::method or var::method
         method_ref_pattern = r'(?:this|(\w+))::(\w+)'
         method_ref_matches = re.finditer(method_ref_pattern, codice_metodo)
         
         for match in method_ref_matches:
-            qualifier = match.group(1) # None se 'this', altrimenti nome classe/var
+            qualifier = match.group(1) # None if 'this', otherwise class/var name
             method_name = match.group(2)
             
-            if not qualifier: # Caso this::method
+            if not qualifier: # Case this::method
                 metodi_per_classe.setdefault(nome_classe_target, set()).add(method_name)
                 logger.debug(f"Found internal method reference: this::{method_name} -> {nome_classe_target}")
             else:
-                # Caso ClassName::method o var::method
-                # 1. Controlla se è una classe (metodo statico o costruttore array)
+                # Case ClassName::method or var::method
+                # 1. Check if it's a class (static method or array constructor)
                 if qualifier.lower() in class_names_lower:
                      class_name = class_names_lower[qualifier.lower()]
                      metodi_per_classe.setdefault(class_name, set()).add(method_name)
                      logger.debug(f"Found static method reference: {qualifier}::{method_name} -> {class_name}")
-                # 2. Controlla se è una variabile (campo, parametro, locale)
+                # 2. Check if it's a variable (field, parameter, local)
                 elif qualifier in campi_classe:
                     tipo = campi_classe[qualifier]
                     if tipo.lower() in class_names_lower:
@@ -1079,39 +1079,39 @@ class JavaDependencyAnalyzer:
             var_name = match.group(1)
             method_name = match.group(2)
             
-            # Salta metodi comuni che non sono chiamate a dipendenze
+            # Skip common methods that are not dependency calls
             if method_name in ('toString', 'equals', 'hashCode', 'getClass', 'notify', 'notifyAll', 'wait'):
                 continue
             
             class_name = None
             
-            # Controlla se è una chiamata statica (var_name inizia con maiuscola e corrisponde a una classe)
+            # Check if it's a static call (var_name starts with uppercase and matches a class)
             if var_name[0].isupper() and var_name.lower() in class_names_lower:
                 class_name = class_names_lower[var_name.lower()]
                 logger.debug(f"Found static call: {var_name}.{method_name}() -> {class_name}")
             
-            # Controlla se è un campo della classe
+            # Check if it's a class field
             elif var_name in campi_classe:
                 tipo_campo = campi_classe[var_name]
                 if tipo_campo.lower() in class_names_lower:
                     class_name = class_names_lower[tipo_campo.lower()]
                     logger.debug(f"Found call (class field): {var_name}.{method_name}() -> {class_name}")
             
-            #  Controlla se è un parametro del metodo
+            # Check if it's a method parameter
             elif var_name in parametri_metodo:
                 tipo_param = parametri_metodo[var_name]
                 if tipo_param.lower() in class_names_lower:
                     class_name = class_names_lower[tipo_param.lower()]
                     logger.debug(f"Found call (method parameter): {var_name}.{method_name}() -> {class_name}")
             
-            # Controlla se è una variabile for-each
+            # Check if it's a for-each variable
             elif var_name in foreach_vars:
                 tipo_foreach = foreach_vars[var_name]
                 if tipo_foreach.lower() in class_names_lower:
                     class_name = class_names_lower[tipo_foreach.lower()]
                     logger.debug(f"Found call (for-each variable): {var_name}.{method_name}() -> {class_name}")
             
-            # 3. Cerca dichiarazione variabile locale nel metodo
+            # 3. Search for local variable declaration in the method
             else:
                 var_pattern = rf'\b(\w+)\s+{re.escape(var_name)}\s*[=;]'
                 var_match = re.search(var_pattern, codice_metodo)
@@ -1121,7 +1121,7 @@ class JavaDependencyAnalyzer:
                         class_name = class_names_lower[potential_type.lower()]
                         logger.debug(f"Found call (local variable): {var_name}.{method_name}() -> {class_name}")
                 else:
-                    # 4. Se il nome della variabile corrisponde (case-insensitive) a una classe nelle dipendenze
+                    # 4. If the variable name matches (case-insensitive) a class in dependencies
                     if var_name.lower() in class_names_lower:
                         class_name = class_names_lower[var_name.lower()]
                         logger.debug(f"Found call (by variable name): {var_name}.{method_name}() -> {class_name}")
@@ -1137,7 +1137,7 @@ class JavaDependencyAnalyzer:
             variabili_tipi = {}
             
             for path, node in tree:
-                # Estrae variabili locali
+                # Extracts local variables
                 if isinstance(node, javalang.tree.LocalVariableDeclaration):
                     if hasattr(node, 'type') and hasattr(node.type, 'name') and hasattr(node, 'declarators'):
                         tipo = node.type.name.split('<')[0].split('[')[0]
@@ -1145,7 +1145,7 @@ class JavaDependencyAnalyzer:
                             if hasattr(declarator, 'name'):
                                 variabili_tipi[declarator.name] = tipo
                 
-                # Estrae variabili da for-each loop
+                # Extracts for-each loop variables
                 if isinstance(node, javalang.tree.EnhancedForControl):
                     if hasattr(node, 'var') and hasattr(node.var, 'type') and hasattr(node.var.type, 'name'):
                         tipo = node.var.type.name.split('<')[0].split('[')[0]
@@ -1157,7 +1157,7 @@ class JavaDependencyAnalyzer:
                     if hasattr(node, 'qualifier') and node.qualifier:
                         if isinstance(node.qualifier, str):
                             qualifier = node.qualifier
-                            # Cerca nelle variabili locali (incluse for-each)
+                            # Search in local variables (including for-each)
                             if qualifier in variabili_tipi:
                                 class_name = variabili_tipi[qualifier]
                                 if class_name.lower() in class_names_lower:
@@ -1165,13 +1165,13 @@ class JavaDependencyAnalyzer:
                                     if hasattr(node, 'member') and node.member:
                                         metodi_per_classe.setdefault(class_name, set()).add(node.member)
                                         logger.debug(f"AST: {qualifier}.{node.member}() -> {class_name}")
-                            # Controlla se è una chiamata statica (qualifier inizia con maiuscola)
+                            # Check if it's a static call (qualifier starts with uppercase)
                             elif qualifier[0].isupper() and qualifier.lower() in class_names_lower:
                                 class_name = class_names_lower[qualifier.lower()]
                                 if hasattr(node, 'member') and node.member:
                                     metodi_per_classe.setdefault(class_name, set()).add(node.member)
                                     logger.debug(f"AST static call: {qualifier}.{node.member}() -> {class_name}")
-                            # Cerca direttamente nelle dipendenze (case-insensitive)
+                            # Search directly in dependencies (case-insensitive)
                             elif qualifier.lower() in class_names_lower:
                                 class_name = class_names_lower[qualifier.lower()]
                                 if hasattr(node, 'member') and node.member:
@@ -1187,7 +1187,7 @@ class JavaDependencyAnalyzer:
         cast_matches = re.finditer(cast_pattern, codice_metodo)
         for match in cast_matches:
             type_name = match.group(1)
-            # Verifica se è una dipendenza nota (esatto case)
+            # Check if it's a known dependency (exact case)
             if type_name in class_names_lower.values(): 
                 if type_name not in metodi_per_classe:
                     metodi_per_classe[type_name] = set()
@@ -1198,25 +1198,25 @@ class JavaDependencyAnalyzer:
                     metodi_per_classe[real_name] = set()
                     logger.debug(f"Found cast to {real_name} (from {type_name}): forcing context inclusion")
 
-        # Estrae tipi da GENERICS per garantire che il loro contesto sia incluso (es. List<Type>)
-        # Pattern: <Type> o <Type, Type2>
+        # Extracts types from GENERICS to ensure their context is included (e.g. List<Type>)
+        # Pattern: <Type> or <Type, Type2>
         generics_pattern = r'<([^>]+)>'
         generics_matches = re.finditer(generics_pattern, codice_metodo)
         for match in generics_matches:
             content = match.group(1)
-            # Gestisce tipi multipli (Map<K,V>)
-            types = [t.strip().split('[')[0] for t in content.split(',')] # Rimuove anche array dimensions
+            # Handles multiple types (Map<K,V>)
+            types = [t.strip().split('[')[0] for t in content.split(',')] # Removes array dimensions
             for type_name in types:
                 type_name = type_name.strip()
                 if not type_name or type_name == '?': continue 
                 
-                # Gestisce Wildcards (List<? extends Type>)
+                # Handles Wildcards (List<? extends Type>)
                 if 'extends' in type_name:
                     type_name = type_name.split('extends')[1].strip()
                 elif 'super' in type_name:
                     type_name = type_name.split('super')[1].strip()
                 
-                type_name = type_name.split('<')[0].strip() # Gestisce nested generics (Type<Sub>)
+                type_name = type_name.split('<')[0].strip() # Handles nested generics (Type<Sub>)
                 
                 if type_name in class_names_lower.values():
                     if type_name not in metodi_per_classe:
@@ -1228,17 +1228,17 @@ class JavaDependencyAnalyzer:
                         metodi_per_classe[real_name] = set()
                         logger.debug(f"Found generic type {real_name} (from {type_name}): forcing context inclusion")
 
-        # Estrae tipi da STATIC CONSTANTS (Class.CONSTANT)
-        # Pattern: Class.PROP o Class.CONST_NAME (solo maiuscole per costanti o PascalCase per proprietà statiche)
+        # Extracts types from STATIC CONSTANTS (Class.CONSTANT)
+        # Pattern: Class.PROP or Class.CONST_NAME (only uppercase for constants or PascalCase for static properties)
         static_const_pattern = r'\b([A-Z]\w+)\.([A-Z][A-Z0-9_]*|[A-Z]\w+)\b'
         static_matches = re.finditer(static_const_pattern, codice_metodo)
         for match in static_matches:
             class_name = match.group(1)
             member_name = match.group(2)
             
-            # Esclude chiamate metodo già gestite (es. Class.method()) - qui cerchiamo campi
-            # Se è seguito da ( è un metodo, l'abbiamo già gestito
-            # Cerca nel codice originale se dopo il match c'è una (
+            # Excludes method calls already handled (e.g. Class.method()) - here we look for fields
+            # If followed by ( it's a method, already handled
+            # Search in original code if there is a ( after the match
             start, end = match.span()
             if end < len(codice_metodo) and codice_metodo[end:].lstrip().startswith('('):
                 continue
@@ -1257,18 +1257,18 @@ class JavaDependencyAnalyzer:
     
     def estrai_eccezioni_metodo(self, codice_classe: str, nome_metodo: str, metodo_signature: str = None) -> List[str]:
         """
-        Estrae le eccezioni dichiarate nella clausola throws di un metodo.
+        Extracts exceptions declared in a method's throws clause.
         """
         eccezioni = []
         try:
             tree = javalang.parse.parse(codice_classe)
             
-            # Funzione helper per matching signature
+            # Helper function for signature matching
             def _match_signature(node, signature):
                 if not signature:
                     return True
                     
-                # Estrae i tipi dei parametri dalla signature cercata
+                # Extracts parameter types from the searched signature
                 import re
                 match = re.search(r'\(([^)]*)\)', signature)
                 if not match:
@@ -1278,16 +1278,16 @@ class JavaDependencyAnalyzer:
                 if not params_str:
                     expected_types = []
                 else:
-                    # Estrae il tipo dai parametri, gestendo 'final' keyword
+                    # Extracts the type from parameters, handling 'final' keyword
                     expected_types = []
                     for p in params_str.split(','):
                         parts = p.strip().split()
-                        # Rimuove 'final' se presente
+                        # Removes 'final' if present
                         type_parts = [part for part in parts if part != 'final']
                         if type_parts:
-                            expected_types.append(type_parts[0])  # Il primo rimanente è il tipo
+                            expected_types.append(type_parts[0])  # The first remaining is the type
                 
-                # Confronta con i parametri del nodo
+                # Compare with node parameters
                 if not hasattr(node, 'parameters') or not node.parameters:
                     return len(expected_types) == 0
                     
@@ -1297,11 +1297,11 @@ class JavaDependencyAnalyzer:
                 for i, param in enumerate(node.parameters):
                     if hasattr(param, 'type') and hasattr(param.type, 'name'):
                         param_type = param.type.name
-                        # Gestisce array
+                        # Handles arrays
                         if hasattr(param.type, 'dimensions') and param.type.dimensions:
                             param_type += '[]' * len(param.type.dimensions)
                         
-                        # Confronto semplificato (solo nome base del tipo)
+                        # Simplified comparison (only base type name)
                         if param_type.split('<')[0].split('[')[0] != expected_types[i].split('<')[0].split('[')[0]:
                             return False
                             
@@ -1309,11 +1309,11 @@ class JavaDependencyAnalyzer:
             
             for path, node in tree:
                 if isinstance(node, javalang.tree.MethodDeclaration) and node.name == nome_metodo:
-                    # Verifica signature se fornita
+                    # Verify signature if provided
                     if metodo_signature and not _match_signature(node, metodo_signature):
                         continue
                     
-                    # Estrae le eccezioni dalla clausola throws
+                    # Extracts exceptions from the throws clause
                     if hasattr(node, 'throws') and node.throws:
                         for throw_type in node.throws:
                             if hasattr(throw_type, 'name'):
@@ -1321,13 +1321,13 @@ class JavaDependencyAnalyzer:
                             elif isinstance(throw_type, str):
                                 eccezioni.append(throw_type)
                     
-                    # Se troviamo il metodo giusto, interrompi
+                    # If we find the right method, stop
                     if not metodo_signature or _match_signature(node, metodo_signature):
                         break
                         
         except Exception as e:
             logger.warning(f"Error extracting method exceptions {nome_metodo}: {e}")
-            # Fallback con regex
+            # Fallback with regex
             try:
                 import re
                 pattern = rf'{re.escape(nome_metodo)}\s*\([^)]*\)\s*throws\s+([\w\s,]+)\s*\{{'
@@ -1342,12 +1342,12 @@ class JavaDependencyAnalyzer:
     
     def estrai_contesto_eccezione(self, exception_name: str, java_files: List[str] = None) -> Optional[Dict]:
         """
-        Trova la classe dell'eccezione nel progetto e ne estrae i costruttori.
+        Finds the exception class in the project and extracts its constructors.
         """
         if java_files is None:
             java_files = self.find_java_files()
         
-        # Eccezioni standard Java da ignorare
+        # Standard Java exceptions to ignore
         standard_exceptions = {
             'Exception', 'RuntimeException', 'Throwable', 'Error',
             'IOException', 'FileNotFoundException', 'NullPointerException',
@@ -1360,7 +1360,7 @@ class JavaDependencyAnalyzer:
         if exception_name in standard_exceptions:
             return None
         
-        # Cerca il file della classe eccezione
+        # Search for the exception class file
         exception_file = None
         for file_path in java_files:
             if file_path.endswith(f'{exception_name}.java'):
@@ -1371,15 +1371,15 @@ class JavaDependencyAnalyzer:
             logger.debug(f"Exception file {exception_name} not found in project")
             return None
         
-        # Leggi e analizza il file
+        # Read and analyze the file
         codice_eccezione = leggi_file(exception_file)
         if not codice_eccezione:
             return None
         
-        # Estrae package
+        # Extracts package
         package = self._extract_package(codice_eccezione)
         
-        # Estrae costruttori
+        # Extracts constructors
         costruttori = self._estrai_costruttori(codice_eccezione)
         
         return {
@@ -1391,7 +1391,7 @@ class JavaDependencyAnalyzer:
 
     
     def _estrai_imports_completi(self, codice_classe: str) -> str:
-        """Estrae tutti gli import dal codice."""
+        """Extracts all imports from the code."""
         imports = []
         lines = codice_classe.split('\n')
         for line in lines:
@@ -1405,14 +1405,14 @@ class JavaDependencyAnalyzer:
         return '\n'.join(imports) if imports else ""
     
     def _estrai_costruttori(self, codice_classe: str) -> List[str]:
-        """Estrae tutti i costruttori della classe (solo signature)."""
+        """Extracts all constructors of the class (signature only)."""
         costruttori = []
         try:
             tree = javalang.parse.parse(codice_classe)
             lines = codice_classe.split('\n')
             for path, node in tree:
                 if isinstance(node, javalang.tree.ConstructorDeclaration):
-                    # Costruisce la signature del costruttore
+                    # Builds the constructor signature
                     modifiers = " ".join(node.modifiers) if hasattr(node, 'modifiers') and node.modifiers else ""
                     params = ", ".join([
                         f"{p.type.name} {p.name}" if hasattr(p, 'type') and hasattr(p, 'name')
@@ -1424,14 +1424,14 @@ class JavaDependencyAnalyzer:
                     costruttori.append(signature + ";")
         except Exception as e:
             logger.warning(f"Error extracting constructors: {e}")
-            # Fallback: cerca costruttori con regex
+            # Fallback: search constructors with regex
             try:
                 pattern = r'(public|private|protected)?\s*(\w+)\s*\([^)]*\)\s*\{'
                 matches = re.finditer(pattern, codice_classe)
                 class_name = self.extract_class_name(codice_classe)
                 if class_name:
                     for match in matches:
-                        if match.group(2) == class_name:  # Il costruttore ha lo stesso nome della classe
+                        if match.group(2) == class_name:  # The constructor has the same name as the class
                             signature = match.group(0).split('{')[0].strip() + ";"
                             if signature not in costruttori:
                                 costruttori.append(signature)
@@ -1441,7 +1441,7 @@ class JavaDependencyAnalyzer:
 
     def _estrai_enum_values(self, codice_classe: str) -> Dict[str, List[str]]:
         """
-        Estrae tutti gli enum definiti nella classe e i loro valori.
+        Extracts all enums defined in the class and their values.
         """
         enum_values = {}
         try:
@@ -1458,22 +1458,22 @@ class JavaDependencyAnalyzer:
                         enum_values[enum_name] = values
         except Exception as e:
             logger.warning(f"Error extracting enum (javalang): {e}")
-            # Fallback: cerca enum con regex
+            # Fallback: search enum with regex
             try:
-                # Pattern per enum: public enum Type { VALUE1, VALUE2, ... }
-                # o enum interno: enum Type { VALUE1(true), VALUE2(false) }
+                # Pattern for enum: public enum Type { VALUE1, VALUE2, ... }
+                # or inner enum: enum Type { VALUE1(true), VALUE2(false) }
                 pattern = r'(?:public\s+)?enum\s+(\w+)\s*\{([^}]+)\}'
                 for match in re.finditer(pattern, codice_classe, re.DOTALL):
                     enum_name = match.group(1)
                     body = match.group(2)
-                    # Estrai i valori (prima del primo metodo o costruttore)
-                    # I valori possono essere: VALUE, VALUE(args), VALUE { body }
+                    # Extract values (before the first method or constructor)
+                    # Values can be: VALUE, VALUE(args), VALUE { body }
                     values = []
-                    # Split su ';' per separare valori da metodi
+                    # Split on ';' to separate values from methods
                     parts = body.split(';')
                     if parts:
                         values_section = parts[0]
-                        # Estrai i nomi dei valori
+                        # Extract values names
                         value_pattern = r'([A-Z][A-Z0-9_]*)\s*(?:\([^)]*\))?'
                         for val_match in re.finditer(value_pattern, values_section):
                             val_name = val_match.group(1)

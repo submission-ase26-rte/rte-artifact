@@ -8,11 +8,11 @@ from utils.text.text_utils import estrai_codice_java, estrai_solo_metodo
 
 def genera_google_gemini(prompt: str, model_name: str, max_retries: int = 10, max_429_retries: int = 10) -> str:
     """
-    Genera testo utilizzando il modello Google Gemini.
-    Include retry logic per gestire risposte None o errori temporanei.
+    Generates text using the Google Gemini model.
+    Includes retry logic to handle None responses or temporary errors.
     
-    Per errori 429 (rate limit), attende con backoff esponenziale fino a max_429_retries.
-    I retry per 429 sono SEPARATI dai retry per altri errori.
+    For 429 errors (rate limit), waits with exponential backoff up to max_429_retries.
+    429 retries are SEPARATE from other errors.
     """
     api_key = get_gemini_api_key()
     if not api_key:
@@ -27,19 +27,19 @@ def genera_google_gemini(prompt: str, model_name: str, max_retries: int = 10, ma
     while attempt < max_retries:
         attempt += 1
         
-        # Loop interno per gestire 429/502/503 senza consumare attempt
+        # Inner loop to handle 429/502/503 without consuming attempt
         while True:
             try:
-                # Inizializza il client con la chiave API
+                # Initialize client with API key
                 client = genai.Client(api_key=api_key)
                 
-                # Genera contenuto usando il modello specificato
+                # Generate content using the specified model
                 response = client.models.generate_content(
                     model=model_name,
                     contents=prompt
                 )
                 
-                # Estrai informazioni sui token dalla risposta
+                # Extract token information from response
                 prompt_tokens = None
                 completion_tokens = None
                 if hasattr(response, 'usage_metadata') and response.usage_metadata:
@@ -50,7 +50,7 @@ def genera_google_gemini(prompt: str, model_name: str, max_retries: int = 10, ma
                     if prompt_tokens is not None or completion_tokens is not None:
                         print(f"   Token usage - prompt: {prompt_tokens}, completion: {completion_tokens}, total: {total_tokens}")
                 
-                # Estrae il testo dalla risposta
+                # Extract text from response
                 content = None
                 if hasattr(response, 'text'):
                     content = response.text
@@ -74,29 +74,29 @@ def genera_google_gemini(prompt: str, model_name: str, max_retries: int = 10, ma
                                 content = parts[0].get('text', '')
                 
                 if content is not None and content.strip() != "":
-                    # --- VALIDAZIONE SINTASSI ---
+                    # --- SYNTAX VALIDATION ---
                     codice_estratto = estrai_codice_java(content)
                     try:
-                        # Prova prima come classe Java completa
+                        # Try first as a complete Java class
                         if codice_estratto and codice_estratto.strip():
                             try:
                                 javalang.parse.parse(codice_estratto)
                             except javalang.parser.JavaSyntaxError:
-                                # Se fallisce come classe, prova come metodo singolo
+                                # If it fails as a class, try as a single method
                                 dummy_class = f"public class Dummy {{ {codice_estratto} }}"
                                 try:
                                     javalang.parse.parse(dummy_class)
                                 except (javalang.parser.JavaSyntaxError, LexerError):
-                                    # Se fallisce ancora, prova a estrarre solo il metodo
+                                    # If it fails again, try to extract only the method
                                     codice_metodo = estrai_solo_metodo(codice_estratto)
                                     if codice_metodo and codice_metodo != codice_estratto:
                                         dummy_class = f"public class Dummy {{ {codice_metodo} }}"
                                         javalang.parse.parse(dummy_class)
                                         print(f"   INFO: Extracted only method (imports removed) - validation OK")
                                     else:
-                                        raise  # Rilancia l'errore originale
+                                        raise  # Raise original error
                         else:
-                            # Codice estratto vuoto
+                            # Empty extracted code
                             print(f"   WARNING: No Java code block found in response")
                             print(f"   DEBUG: First 200 chars of response: {content[:200] if content else 'None'}...")
                             last_error = "No Java code block found in response"
@@ -110,7 +110,7 @@ def genera_google_gemini(prompt: str, model_name: str, max_retries: int = 10, ma
                             prime_righe = '\n'.join(codice_estratto.split('\n')[:5])
                             print(f"   DEBUG: First 5 lines of code: {prime_righe}")
                         last_error = f"Invalid Java syntax: {error_msg}"
-                        break  # Esci dal loop 429, incrementa attempt
+                        break  # Exit 429 loop, increment attempt
                 else:
                     print(f"   WARNING: Empty or None response (attempt {attempt}/{max_retries}) - tokens NOT counted")
                     last_error = "Empty response"
@@ -120,7 +120,7 @@ def genera_google_gemini(prompt: str, model_name: str, max_retries: int = 10, ma
                 error_str = str(e)
                 status_code = getattr(e, 'code', None) or getattr(e, 'status_code', None)
                 
-                # === GESTIONE ERRORI TEMPORANEI (429 Rate Limit, 502 Bad Gateway, 503 Service Unavailable) ===
+                # === TEMPORARY ERROR HANDLING (429 Rate Limit, 502 Bad Gateway, 503 Service Unavailable) ===
                 is_rate_limit = (status_code in [429, 502, 503] or 
                                 "429" in error_str or "rate limit" in error_str.lower() or
                                 "resource exhausted" in error_str.lower() or
@@ -134,29 +134,29 @@ def genera_google_gemini(prompt: str, model_name: str, max_retries: int = 10, ma
                     
                     if retry_429_count <= max_429_retries:
                         wait_time = min(base_wait_429 * (2 ** (retry_429_count - 1)), 300)
-                        print(f"⏳ {error_name} (attempt {retry_429_count}/{max_429_retries}). Waiting {wait_time}s...")
+                        print(f"{error_name} (attempt {retry_429_count}/{max_429_retries}). Waiting {wait_time}s...")
                         time.sleep(wait_time)
                         print(f"   Waiting finished, retrying call...")
-                        continue  # Ritenta SENZA incrementare attempt
+                        continue  # Retry WITHOUT incrementing attempt
                     else:
-                        print(f"✗ {error_name}: reached max retry ({max_429_retries}). Aborting.")
+                        print(f"{error_name}: reached max retry ({max_429_retries}). Aborting.")
                         return None
                 
                 elif "timeout" in error_str.lower() or "deadline" in error_str.lower():
-                    print(f"✗ Timeout during Google Gemini call (attempt {attempt}/{max_retries})")
+                    print(f"Timeout during Google Gemini call (attempt {attempt}/{max_retries})")
                     last_error = "Timeout"
-                    break  # Esci dal loop 429, incrementa attempt
+                    break  # Exit 429 loop, increment attempt
                     
                 else:
-                    print(f"✗ Error during Google Gemini call: {e}")
+                    print(f"Error during Google Gemini call: {e}")
                     import traceback
                     traceback.print_exc()
                     last_error = str(e)
-                    return None  # Non ritentare per errori non-temporanei
+                    return None  # Do not retry for non-temporary errors
         
-        # Pausa tra tentativi (fuori dal loop 429)
+        # Pause between attempts (outside 429 loop)
         if attempt < max_retries:
             time.sleep(2)
     
-    print(f"✗ All attempts failed. Last error: {last_error}")
+    print(f"All attempts failed. Last error: {last_error}")
     return None

@@ -6,13 +6,13 @@ from config import get_chutes_api_key, get_chutes_chute_id
 from providers.provider_base import update_token_usage_groq
 from utils.text.text_utils import estrai_codice_java, estrai_solo_metodo
 
-# Chute ID letto dal .env tramite config
+# Chute ID read from .env via config
 CHUTE_ID = get_chutes_chute_id()
 
 def get_chutes_quota_usage() -> dict:
     """
-    Recupera le informazioni sulla quota usage da Chutes API.
-    Restituisce un dizionario con le informazioni sulla quota o None in caso di errore.
+    Retrieves quota usage information from Chutes API.
+    Returns a dictionary with quota information or None in case of error.
     """
     api_key = get_chutes_api_key()
     if not api_key:
@@ -34,12 +34,12 @@ def get_chutes_quota_usage() -> dict:
 
 def genera_chutes(prompt: str, model_name: str, max_retries: int = 10, max_429_retries: int = 10) -> str:
     """
-    Genera testo utilizzando il provider Chutes.
-    Usa l'API REST con streaming disabilitato per chiamata sincrona.
-    Include retry logic per gestire risposte None o errori temporanei.
+    Generates text using the Chutes provider.
+    Uses REST API with streaming disabled for synchronous call.
+    Includes retry logic to handle None responses or temporary errors.
     
-    Per errori 429 (rate limit), attende con backoff esponenziale fino a max_429_retries.
-    I retry per 429 sono SEPARATI dai retry per altri errori.
+    For 429 errors (rate limit), waits with exponential backoff up to max_429_retries.
+    429 retries are SEPARATE from other errors.
     """
     import time
     
@@ -56,7 +56,7 @@ def genera_chutes(prompt: str, model_name: str, max_retries: int = 10, max_429_r
     while attempt < max_retries:
         attempt += 1
         
-        # Loop interno per gestire 429 senza consumare attempt
+        # Inner loop to handle 429 without consuming attempt
         while True:
             try:
                 headers = {
@@ -78,7 +78,7 @@ def genera_chutes(prompt: str, model_name: str, max_retries: int = 10, max_429_r
                     "https://llm.chutes.ai/v1/chat/completions",
                     headers=headers,
                     json=body,
-                    timeout=120 # Timeout ridotto a 120s (da 300s) per fail-fast su overload
+                    timeout=120 # Timeout reduced to 120s (from 300s) for fail-fast on overload
                 )
                 
                 response.raise_for_status()
@@ -101,32 +101,32 @@ def genera_chutes(prompt: str, model_name: str, max_retries: int = 10, max_429_r
                     content = message.get("content")
                     
                     if content is not None and content.strip() != "":
-                        # --- VALIDAZIONE SINTASSI ---
+                        # --- SYNTAX VALIDATION ---
                         codice_estratto = estrai_codice_java(content)
                         try:
-                            # Prova prima come classe Java completa
+                            # Try first as a complete Java class
                             if codice_estratto and codice_estratto.strip():
                                 try:
                                     javalang.parse.parse(codice_estratto)
                                 except javalang.parser.JavaSyntaxError:
-                                    # Se fallisce come classe, prova come metodo singolo
-                                    # Avvolgi in una classe dummy per il parsing
+                                    # If it fails as a class, try as a single method
+                                    # Wrap in a dummy class for parsing
                                     dummy_class = f"public class Dummy {{ {codice_estratto} }}"
                                     try:
                                         javalang.parse.parse(dummy_class)
                                     except (javalang.parser.JavaSyntaxError, LexerError):
-                                        # Se fallisce ancora, prova a estrarre solo il metodo
-                                        # (rimuove import, package, etc.)
+                                        # If it fails again, try to extract only the method
+                                        # (removes imports, package, etc.)
                                         codice_metodo = estrai_solo_metodo(codice_estratto)
                                         if codice_metodo and codice_metodo != codice_estratto:
                                             dummy_class = f"public class Dummy {{ {codice_metodo} }}"
                                             javalang.parse.parse(dummy_class)
-                                            # Se arriviamo qui, il parsing è riuscito
+                                            # If we get here, parsing succeeded
                                             print(f"   INFO: Extracted only method (imports removed) - validation OK")
                                         else:
-                                            raise  # Rilancia l'errore originale
+                                            raise  # Raise original error
                             else:
-                                # Codice estratto vuoto - l'LLM non ha generato blocchi ```java
+                                # Empty extracted code - LLM did not generate ```java blocks
                                 print(f"   WARNING: No Java code block found in response")
                                 print(f"   DEBUG: First 200 chars of response: {content[:200] if content else 'None'}...")
                                 last_error = "No Java code block found in response"
@@ -136,40 +136,40 @@ def genera_chutes(prompt: str, model_name: str, max_retries: int = 10, max_429_r
                         except (javalang.parser.JavaSyntaxError, LexerError) as e:
                             error_msg = str(e) if str(e) else "Unknown parsing error"
                             print(f"   WARNING: Invalid or incomplete Java syntax (attempt {attempt}/{max_retries}): {error_msg}")
-                            # DEBUG: mostra le prime righe del codice problematico
+                            # DEBUG: show first lines of problematic code
                             if codice_estratto:
                                 prime_righe = '\n'.join(codice_estratto.split('\n')[:5])
                                 print(f"   DEBUG: First 5 lines of code: {prime_righe}")
                             last_error = f"Invalid Java syntax: {error_msg}"
-                            break  # Esci dal loop 429, incrementa attempt
+                            break  # Exit 429 loop, increment attempt
                     else:
                         print(f"   WARNING: Empty or None response (attempt {attempt}/{max_retries}) - tokens NOT counted")
                         last_error = "Empty response"
-                        break  # Esci dal loop 429, incrementa attempt
+                        break  # Exit 429 loop, increment attempt
                 else:
                     print(f"   WARNING: No 'choices' in response (attempt {attempt}/{max_retries})")
                     last_error = "No choices in response"
-                    break  # Esci dal loop 429, incrementa attempt
+                    break  # Exit 429 loop, increment attempt
 
             except requests.exceptions.Timeout:
-                print(f"✗ Timeout during Chutes call (attempt {attempt}/{max_retries})")
+                print(f"Timeout during Chutes call (attempt {attempt}/{max_retries})")
                 last_error = "Timeout"
-                break  # Esci dal loop 429, incrementa attempt
+                break  # Exit 429 loop, increment attempt
                 
             except requests.exceptions.HTTPError as e:
                 status_code = e.response.status_code if hasattr(e, 'response') and e.response is not None else None
                 
-                # === GESTIONE ERRORI TEMPORANEI (429 Rate Limit, 502 Bad Gateway, 503 Service Unavailable) ===
+                # === TEMPORARY ERROR HANDLING (429 Rate Limit, 502 Bad Gateway, 503 Service Unavailable) ===
                 if status_code in [429, 502, 503]:
                     retry_429_count += 1
                     error_names = {429: "Rate limit 429", 502: "Bad Gateway 502", 503: "Service Unavailable 503"}
                     error_name = error_names.get(status_code, f"HTTP {status_code}")
                     
                     if retry_429_count <= max_429_retries:
-                        # Backoff esponenziale: 5s, 10s, 20s, 40s... max 300s
+                        # Exponential backoff: 5s, 10s, 20s, 40s... max 300s
                         wait_time = min(base_wait_429 * (2 ** (retry_429_count - 1)), 300)
                         
-                        print(f"⏳ {error_name} (attempt {retry_429_count}/{max_429_retries}). Waiting {wait_time}s...")
+                        print(f"{error_name} (attempt {retry_429_count}/{max_429_retries}). Waiting {wait_time}s...")
                         try:
                             error_detail = e.response.json()
                             print(f"   Detail: {error_detail.get('detail', 'N/A')}")
@@ -178,13 +178,13 @@ def genera_chutes(prompt: str, model_name: str, max_retries: int = 10, max_429_r
                         
                         time.sleep(wait_time)
                         print(f"   Waiting finished, retrying call...")
-                        continue  # Ritenta SENZA incrementare attempt
+                        continue  # Retry WITHOUT incrementing attempt
                     else:
-                        print(f"✗ {error_name}: reached max retry ({max_429_retries}). Aborting.")
+                        print(f"{error_name}: reached max retry ({max_429_retries}). Aborting.")
                         return None
                 else:
-                    # Altri errori HTTP (non 429/503)
-                    print(f"✗ HTTP error during Chutes call: {e}")
+                    # Other HTTP errors (not 429/503)
+                    print(f"HTTP error during Chutes call: {e}")
                     if hasattr(e, 'response') and e.response is not None:
                         print(f"   Status code: {e.response.status_code}")
                         try:
@@ -193,23 +193,23 @@ def genera_chutes(prompt: str, model_name: str, max_retries: int = 10, max_429_r
                         except:
                             print(f"   Body: {e.response.text[:500]}")
                     last_error = str(e)
-                    return None  # Non ritentare per errori HTTP non-429
+                    return None  # Do not retry for non-429 HTTP errors
                     
             except requests.exceptions.RequestException as e:
-                print(f"✗ Connection error to Chutes: {e}")
+                print(f"Connection error to Chutes: {e}")
                 last_error = str(e)
-                break  # Esci dal loop 429, incrementa attempt
+                break  # Exit 429 loop, increment attempt
                 
             except Exception as e:
-                print(f"✗ Unexpected error during Chutes call: {e}")
+                print(f"Unexpected error during Chutes call: {e}")
                 import traceback
                 traceback.print_exc()
                 last_error = str(e)
                 return None
         
-        # Pausa tra tentativi (fuori dal loop 429)
+        # Pause between attempts (outside 429 loop)
         if attempt < max_retries:
             time.sleep(2)
     
-    print(f"✗ All attempts failed. Last error: {last_error}")
+    print(f"All attempts failed. Last error: {last_error}")
     return None
